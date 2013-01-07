@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -125,10 +124,13 @@ public class AnnouncementsEntryLocalServiceImpl
 	public void checkEntries() throws PortalException, SystemException {
 		Date now = new Date();
 
+		if (_previousCheckDate == null) {
+			_previousCheckDate = new Date(
+				now.getTime() - _ANNOUNCEMENTS_ENTRY_CHECK_INTERVAL);
+		}
+
 		List<AnnouncementsEntry> entries =
-			announcementsEntryFinder.findByDisplayDate(
-				now,
-				new Date(now.getTime() - _ANNOUNCEMENTS_ENTRY_CHECK_INTERVAL));
+			announcementsEntryFinder.findByDisplayDate(now, _previousCheckDate);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Processing " + entries.size() + " entries");
@@ -137,6 +139,8 @@ public class AnnouncementsEntryLocalServiceImpl
 		for (AnnouncementsEntry entry : entries) {
 			notifyUsers(entry);
 		}
+
+		_previousCheckDate = now;
 	}
 
 	public void deleteEntry(AnnouncementsEntry entry)
@@ -458,8 +462,9 @@ public class AnnouncementsEntryLocalServiceImpl
 
 		subscriptionSender.setBody(body);
 		subscriptionSender.setCompanyId(entry.getCompanyId());
+		subscriptionSender.setContextAttribute(
+			"[$ENTRY_CONTENT$]", entry.getContent(), false);
 		subscriptionSender.setContextAttributes(
-			"[$ENTRY_CONTENT$]", HtmlUtil.extractText(entry.getContent()),
 			"[$ENTRY_ID$]", entry.getEntryId(), "[$ENTRY_TITLE$]",
 			entry.getTitle(), "[$ENTRY_TYPE$]",
 			LanguageUtil.get(company.getLocale(), entry.getType()),
@@ -501,5 +506,7 @@ public class AnnouncementsEntryLocalServiceImpl
 
 	private static Log _log = LogFactoryUtil.getLog(
 		AnnouncementsEntryLocalServiceImpl.class);
+
+	private Date _previousCheckDate;
 
 }

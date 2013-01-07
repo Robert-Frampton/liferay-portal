@@ -77,15 +77,10 @@ iteratorURL.setParameter("messageId", String.valueOf(messageId));
 		keyProperty="fileEntryId"
 		modelVar="fileEntry"
 	>
-
-		<%
-		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
-		%>
-
 		<portlet:actionURL var="rowURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 			<portlet:param name="struts_action" value="/message_boards/get_message_attachment" />
 			<portlet:param name="messageId" value="<%= String.valueOf(message.getMessageId()) %>" />
-			<portlet:param name="attachment" value="<%= dlFileEntry.getTitle() %>" />
+			<portlet:param name="attachment" value="<%= fileEntry.getTitle() %>" />
 			<portlet:param name="status" value="<%= String.valueOf(WorkflowConstants.STATUS_IN_TRASH) %>" />
 		</portlet:actionURL>
 
@@ -94,16 +89,16 @@ iteratorURL.setParameter("messageId", String.valueOf(messageId));
 			name="file-name"
 		>
 			<liferay-ui:icon
-				image='<%= "../file_system/small/" + DLUtil.getFileIcon(dlFileEntry.getExtension()) %>'
+				image='<%= "../file_system/small/" + DLUtil.getFileIcon(fileEntry.getExtension()) %>'
 				label="<%= true %>"
-				message="<%= TrashUtil.stripTrashNamespace(dlFileEntry.getTitle()) %>"
+				message="<%= TrashUtil.getOriginalTitle(fileEntry.getTitle()) %>"
 			/>
 		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-text
 			href="<%= rowURL %>"
 			name="size"
-			value="<%= TextFormatter.formatStorageSize(dlFileEntry.getSize(), locale) %>"
+			value="<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>"
 		/>
 
 		<liferay-ui:search-container-column-jsp
@@ -115,17 +110,9 @@ iteratorURL.setParameter("messageId", String.valueOf(messageId));
 	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 
-<aui:script use="liferay-restore-entry">
-	<portlet:actionURL var="restoreEntryURL">
-		<portlet:param name="struts_action" value="/message_boards/restore_message_attachment" />
-		<portlet:param name="redirect" value="<%= redirect %>" />
-	</portlet:actionURL>
-
-	new Liferay.RestoreEntry(
-		{
-			checkEntryURL: '<portlet:actionURL><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.CHECK %>" /><portlet:param name="struts_action" value="/message_boards/restore_message_attachment" /></portlet:actionURL>',
-			namespace: '<portlet:namespace />',
-			restoreEntryURL: '<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/message_boards/restore_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /><portlet:param name="restoreEntryURL" value="<%= restoreEntryURL %>" /></portlet:renderURL>'
-		}
-	);
-</aui:script>
+<liferay-ui:restore-entry
+	duplicateEntryAction="/message_boards/restore_entry"
+	overrideMessage="overwrite-the-existing-attachment-with-the-removed-one"
+	renameMessage="keep-both-attachments-and-rename-the-removed-attachment-as"
+	restoreEntryAction="/message_boards/restore_message_attachment"
+/>

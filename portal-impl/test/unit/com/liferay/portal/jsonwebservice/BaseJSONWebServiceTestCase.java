@@ -72,6 +72,12 @@ public abstract class BaseJSONWebServiceTestCase extends PowerMockito {
 	}
 
 	protected static void registerActionClass(Class<?> actionClass) {
+		registerActionClass(actionClass, StringPool.BLANK);
+	}
+
+	protected static void registerActionClass(
+		Class<?> actionClass, String servletContextPath) {
+
 		JSONWebServiceMappingResolver jsonWebServiceMappingResolver =
 			new JSONWebServiceMappingResolver();
 
@@ -88,7 +94,7 @@ public abstract class BaseJSONWebServiceTestCase extends PowerMockito {
 				actionMethod);
 
 			JSONWebServiceActionsManagerUtil.registerJSONWebServiceAction(
-				StringPool.BLANK, actionClass, actionMethod, path, method);
+				servletContextPath, actionClass, actionMethod, path, method);
 		}
 	}
 
@@ -129,6 +135,19 @@ public abstract class BaseJSONWebServiceTestCase extends PowerMockito {
 		JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 
 		jsonSerializer.exclude("*.class");
+
+		return jsonSerializer.serialize(object);
+	}
+
+	protected String toJSON(Object object, String... includes) {
+		if (object instanceof JSONSerializable) {
+			return ((JSONSerializable)object).toJSONString();
+		}
+
+		JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
+
+		jsonSerializer.exclude("*.class");
+		jsonSerializer.include(includes);
 
 		return jsonSerializer.serialize(object);
 	}

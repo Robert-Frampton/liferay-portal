@@ -50,6 +50,7 @@
 			'asset-categories-selector': ['aui-tree', 'liferay-asset-tags-selector'],
 			'asset-tags-selector': ['array-extras', 'async-queue', 'aui-autocomplete', 'aui-dialog', 'aui-form-textfield', 'aui-io-request', 'aui-live-search', 'aui-template', 'aui-textboxlist', 'datasource-cache', 'liferay-service-datasource'],
 			'auto-fields': ['aui-base', 'aui-data-set', 'aui-io-request', 'aui-parse-content', 'sortable', 'base', 'liferay-undo-manager'],
+			'ddm-repeatable-field': ['aui-base', 'aui-io-request', 'aui-parse-content'],
 			'dockbar': ['aui-node', 'event-touch'],
 			'dockbar-underlay': ['aui-button-item', 'aui-io-plugin', 'aui-overlay-manager'],
 			'dynamic-select': ['aui-base'],
@@ -96,7 +97,8 @@
 			'undo-manager': ['aui-data-set', 'base'],
 			'upload': ['aui-io-request', 'aui-template', 'collection', 'liferay-portlet-base', 'uploader'],
 			'util-list-fields': ['aui-base'],
-			'util-window': ['aui-dialog', 'aui-dialog-iframe']
+			'util-window': ['aui-dialog', 'aui-dialog-iframe'],
+			'xml-formatter': ['aui-base']
 		};
 
 		for (var i in moduleList) {

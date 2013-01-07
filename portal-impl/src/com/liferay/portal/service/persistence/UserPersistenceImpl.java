@@ -52,19 +52,6 @@ import com.liferay.portal.model.impl.UserImpl;
 import com.liferay.portal.model.impl.UserModelImpl;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.announcements.service.persistence.AnnouncementsDeliveryPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
-import com.liferay.portlet.blogs.service.persistence.BlogsStatsUserPersistence;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileRankPersistence;
-import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBBanPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBStatsUserPersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBThreadFlagPersistence;
-import com.liferay.portlet.shopping.service.persistence.ShoppingCartPersistence;
-import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
-import com.liferay.portlet.social.service.persistence.SocialRequestPersistence;
-
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -6327,43 +6314,326 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(User user) {
+		if (user.isNew()) {
+			Object[] args = new Object[] { Long.valueOf(user.getContactId()) };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CONTACTID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args, user);
+
+			args = new Object[] { Long.valueOf(user.getPortraitId()) };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_PORTRAITID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID, args,
+				user);
+
+			args = new Object[] {
+					Long.valueOf(user.getCompanyId()),
+					Long.valueOf(user.getUserId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_U, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U, args, user);
+
+			args = new Object[] {
+					Long.valueOf(user.getCompanyId()),
+					Boolean.valueOf(user.getDefaultUser())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_DU, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU, args, user);
+
+			args = new Object[] {
+					Long.valueOf(user.getCompanyId()),
+					
+					user.getScreenName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_SN, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN, args, user);
+
+			args = new Object[] {
+					Long.valueOf(user.getCompanyId()),
+					
+					user.getEmailAddress()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_EA, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA, args, user);
+
+			args = new Object[] {
+					Long.valueOf(user.getCompanyId()),
+					Long.valueOf(user.getFacebookId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_FID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID, args, user);
+
+			args = new Object[] {
+					Long.valueOf(user.getCompanyId()),
+					
+					user.getOpenId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_O, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O, args, user);
+		}
+		else {
+			UserModelImpl userModelImpl = (UserModelImpl)user;
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { Long.valueOf(user.getContactId()) };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CONTACTID, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args,
+					user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { Long.valueOf(user.getPortraitId()) };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_PORTRAITID,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
+					args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(user.getCompanyId()),
+						Long.valueOf(user.getUserId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_U, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(user.getCompanyId()),
+						Boolean.valueOf(user.getDefaultUser())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_DU, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(user.getCompanyId()),
+						
+						user.getScreenName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_SN, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(user.getCompanyId()),
+						
+						user.getEmailAddress()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_EA, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(user.getCompanyId()),
+						Long.valueOf(user.getFacebookId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_FID, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID, args, user);
+			}
+
+			if ((userModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(user.getCompanyId()),
+						
+						user.getOpenId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_O, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O, args, user);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(User user) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID,
-			new Object[] { Long.valueOf(user.getContactId()) });
+		UserModelImpl userModelImpl = (UserModelImpl)user;
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-			new Object[] { Long.valueOf(user.getPortraitId()) });
+		Object[] args = new Object[] { Long.valueOf(user.getContactId()) };
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalContactId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
+		}
+
+		args = new Object[] { Long.valueOf(user.getPortraitId()) };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalPortraitId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(user.getCompanyId()),
 				Long.valueOf(user.getUserId())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalCompanyId()),
+					Long.valueOf(userModelImpl.getOriginalUserId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(user.getCompanyId()),
 				Boolean.valueOf(user.getDefaultUser())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN,
-			new Object[] { Long.valueOf(user.getCompanyId()), user.getScreenName() });
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA,
-			new Object[] {
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalCompanyId()),
+					Boolean.valueOf(userModelImpl.getOriginalDefaultUser())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(user.getCompanyId()),
 				
-			user.getEmailAddress()
-			});
+				user.getScreenName()
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalCompanyId()),
+					
+					userModelImpl.getOriginalScreenName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
+		}
+
+		args = new Object[] {
+				Long.valueOf(user.getCompanyId()),
+				
+				user.getEmailAddress()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalCompanyId()),
+					
+					userModelImpl.getOriginalEmailAddress()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(user.getCompanyId()),
 				Long.valueOf(user.getFacebookId())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O,
-			new Object[] { Long.valueOf(user.getCompanyId()), user.getOpenId() });
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalCompanyId()),
+					Long.valueOf(userModelImpl.getOriginalFacebookId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
+		}
+
+		args = new Object[] { Long.valueOf(user.getCompanyId()), user.getOpenId() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(userModelImpl.getOriginalCompanyId()),
+					
+					userModelImpl.getOriginalOpenId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
+		}
 	}
 
 	/**
@@ -6733,196 +7003,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		EntityCacheUtil.putResult(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserImpl.class, user.getPrimaryKey(), user);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID,
-				new Object[] { Long.valueOf(user.getContactId()) }, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-				new Object[] { Long.valueOf(user.getPortraitId()) }, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					Long.valueOf(user.getUserId())
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					Boolean.valueOf(user.getDefaultUser())
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					
-				user.getScreenName()
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					
-				user.getEmailAddress()
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID,
-				new Object[] {
-					Long.valueOf(user.getCompanyId()),
-					Long.valueOf(user.getFacebookId())
-				}, user);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O,
-				new Object[] { Long.valueOf(user.getCompanyId()), user.getOpenId() },
-				user);
-		}
-		else {
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalContactId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CONTACTID,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CONTACTID,
-					new Object[] { Long.valueOf(user.getContactId()) }, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalPortraitId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-					new Object[] { Long.valueOf(user.getPortraitId()) }, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						Long.valueOf(userModelImpl.getOriginalUserId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						Long.valueOf(user.getUserId())
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						Boolean.valueOf(userModelImpl.getOriginalDefaultUser())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_DU,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						Boolean.valueOf(user.getDefaultUser())
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
-						userModelImpl.getOriginalScreenName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_SN,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						
-					user.getScreenName()
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
-						userModelImpl.getOriginalEmailAddress()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_EA,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						
-					user.getEmailAddress()
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						Long.valueOf(userModelImpl.getOriginalFacebookId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_FID,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						Long.valueOf(user.getFacebookId())
-					}, user);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userModelImpl.getOriginalCompanyId()),
-						
-						userModelImpl.getOriginalOpenId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_O,
-					new Object[] {
-						Long.valueOf(user.getCompanyId()),
-						
-					user.getOpenId()
-					}, user);
-			}
-		}
+		clearUniqueFindersCache(user);
+		cacheUniqueFindersCache(user);
 
 		return user;
 	}
@@ -9755,168 +9837,32 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AccountPersistence.class)
-	protected AccountPersistence accountPersistence;
-	@BeanReference(type = AddressPersistence.class)
-	protected AddressPersistence addressPersistence;
-	@BeanReference(type = BrowserTrackerPersistence.class)
-	protected BrowserTrackerPersistence browserTrackerPersistence;
-	@BeanReference(type = ClassNamePersistence.class)
-	protected ClassNamePersistence classNamePersistence;
-	@BeanReference(type = ClusterGroupPersistence.class)
-	protected ClusterGroupPersistence clusterGroupPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = ContactPersistence.class)
-	protected ContactPersistence contactPersistence;
-	@BeanReference(type = CountryPersistence.class)
-	protected CountryPersistence countryPersistence;
-	@BeanReference(type = EmailAddressPersistence.class)
-	protected EmailAddressPersistence emailAddressPersistence;
 	@BeanReference(type = GroupPersistence.class)
 	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = LayoutBranchPersistence.class)
-	protected LayoutBranchPersistence layoutBranchPersistence;
-	@BeanReference(type = LayoutPrototypePersistence.class)
-	protected LayoutPrototypePersistence layoutPrototypePersistence;
-	@BeanReference(type = LayoutRevisionPersistence.class)
-	protected LayoutRevisionPersistence layoutRevisionPersistence;
-	@BeanReference(type = LayoutSetPersistence.class)
-	protected LayoutSetPersistence layoutSetPersistence;
-	@BeanReference(type = LayoutSetBranchPersistence.class)
-	protected LayoutSetBranchPersistence layoutSetBranchPersistence;
-	@BeanReference(type = LayoutSetPrototypePersistence.class)
-	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
-	@BeanReference(type = ListTypePersistence.class)
-	protected ListTypePersistence listTypePersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = MembershipRequestPersistence.class)
-	protected MembershipRequestPersistence membershipRequestPersistence;
-	@BeanReference(type = OrganizationPersistence.class)
-	protected OrganizationPersistence organizationPersistence;
-	@BeanReference(type = OrgGroupRolePersistence.class)
-	protected OrgGroupRolePersistence orgGroupRolePersistence;
-	@BeanReference(type = OrgLaborPersistence.class)
-	protected OrgLaborPersistence orgLaborPersistence;
-	@BeanReference(type = PasswordPolicyPersistence.class)
-	protected PasswordPolicyPersistence passwordPolicyPersistence;
-	@BeanReference(type = PasswordPolicyRelPersistence.class)
-	protected PasswordPolicyRelPersistence passwordPolicyRelPersistence;
-	@BeanReference(type = PasswordTrackerPersistence.class)
-	protected PasswordTrackerPersistence passwordTrackerPersistence;
-	@BeanReference(type = PhonePersistence.class)
-	protected PhonePersistence phonePersistence;
-	@BeanReference(type = PluginSettingPersistence.class)
-	protected PluginSettingPersistence pluginSettingPersistence;
-	@BeanReference(type = PortalPreferencesPersistence.class)
-	protected PortalPreferencesPersistence portalPreferencesPersistence;
-	@BeanReference(type = PortletPersistence.class)
-	protected PortletPersistence portletPersistence;
-	@BeanReference(type = PortletItemPersistence.class)
-	protected PortletItemPersistence portletItemPersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = RegionPersistence.class)
-	protected RegionPersistence regionPersistence;
-	@BeanReference(type = ReleasePersistence.class)
-	protected ReleasePersistence releasePersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = RepositoryEntryPersistence.class)
-	protected RepositoryEntryPersistence repositoryEntryPersistence;
-	@BeanReference(type = ResourceActionPersistence.class)
-	protected ResourceActionPersistence resourceActionPersistence;
-	@BeanReference(type = ResourceBlockPersistence.class)
-	protected ResourceBlockPersistence resourceBlockPersistence;
-	@BeanReference(type = ResourceBlockPermissionPersistence.class)
-	protected ResourceBlockPermissionPersistence resourceBlockPermissionPersistence;
-	@BeanReference(type = ResourcePermissionPersistence.class)
-	protected ResourcePermissionPersistence resourcePermissionPersistence;
-	@BeanReference(type = ResourceTypePermissionPersistence.class)
-	protected ResourceTypePermissionPersistence resourceTypePermissionPersistence;
-	@BeanReference(type = RolePersistence.class)
-	protected RolePersistence rolePersistence;
-	@BeanReference(type = ServiceComponentPersistence.class)
-	protected ServiceComponentPersistence serviceComponentPersistence;
-	@BeanReference(type = ShardPersistence.class)
-	protected ShardPersistence shardPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = TeamPersistence.class)
-	protected TeamPersistence teamPersistence;
-	@BeanReference(type = TicketPersistence.class)
-	protected TicketPersistence ticketPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = UserGroupPersistence.class)
-	protected UserGroupPersistence userGroupPersistence;
-	@BeanReference(type = UserGroupGroupRolePersistence.class)
-	protected UserGroupGroupRolePersistence userGroupGroupRolePersistence;
-	@BeanReference(type = UserGroupRolePersistence.class)
-	protected UserGroupRolePersistence userGroupRolePersistence;
-	@BeanReference(type = UserIdMapperPersistence.class)
-	protected UserIdMapperPersistence userIdMapperPersistence;
-	@BeanReference(type = UserNotificationEventPersistence.class)
-	protected UserNotificationEventPersistence userNotificationEventPersistence;
-	@BeanReference(type = UserTrackerPersistence.class)
-	protected UserTrackerPersistence userTrackerPersistence;
-	@BeanReference(type = UserTrackerPathPersistence.class)
-	protected UserTrackerPathPersistence userTrackerPathPersistence;
-	@BeanReference(type = VirtualHostPersistence.class)
-	protected VirtualHostPersistence virtualHostPersistence;
-	@BeanReference(type = WebDAVPropsPersistence.class)
-	protected WebDAVPropsPersistence webDAVPropsPersistence;
-	@BeanReference(type = WebsitePersistence.class)
-	protected WebsitePersistence websitePersistence;
-	@BeanReference(type = WorkflowDefinitionLinkPersistence.class)
-	protected WorkflowDefinitionLinkPersistence workflowDefinitionLinkPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@BeanReference(type = AnnouncementsDeliveryPersistence.class)
-	protected AnnouncementsDeliveryPersistence announcementsDeliveryPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = BlogsStatsUserPersistence.class)
-	protected BlogsStatsUserPersistence blogsStatsUserPersistence;
-	@BeanReference(type = DLFileRankPersistence.class)
-	protected DLFileRankPersistence dlFileRankPersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = MBBanPersistence.class)
-	protected MBBanPersistence mbBanPersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = MBStatsUserPersistence.class)
-	protected MBStatsUserPersistence mbStatsUserPersistence;
-	@BeanReference(type = MBThreadFlagPersistence.class)
-	protected MBThreadFlagPersistence mbThreadFlagPersistence;
-	@BeanReference(type = ShoppingCartPersistence.class)
-	protected ShoppingCartPersistence shoppingCartPersistence;
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = SocialRequestPersistence.class)
-	protected SocialRequestPersistence socialRequestPersistence;
 	protected ContainsGroup containsGroup;
 	protected AddGroup addGroup;
 	protected ClearGroups clearGroups;
 	protected RemoveGroup removeGroup;
+	@BeanReference(type = OrganizationPersistence.class)
+	protected OrganizationPersistence organizationPersistence;
 	protected ContainsOrganization containsOrganization;
 	protected AddOrganization addOrganization;
 	protected ClearOrganizations clearOrganizations;
 	protected RemoveOrganization removeOrganization;
+	@BeanReference(type = RolePersistence.class)
+	protected RolePersistence rolePersistence;
 	protected ContainsRole containsRole;
 	protected AddRole addRole;
 	protected ClearRoles clearRoles;
 	protected RemoveRole removeRole;
+	@BeanReference(type = TeamPersistence.class)
+	protected TeamPersistence teamPersistence;
 	protected ContainsTeam containsTeam;
 	protected AddTeam addTeam;
 	protected ClearTeams clearTeams;
 	protected RemoveTeam removeTeam;
+	@BeanReference(type = UserGroupPersistence.class)
+	protected UserGroupPersistence userGroupPersistence;
 	protected ContainsUserGroup containsUserGroup;
 	protected AddUserGroup addUserGroup;
 	protected ClearUserGroups clearUserGroups;

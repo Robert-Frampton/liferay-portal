@@ -81,14 +81,14 @@
 			</tr>
 
 			<%
-			Stack recentStructures = JournalUtil.getRecentStructures(renderRequest);
+			Stack recentDDMStructures = JournalUtil.getRecentDDMStructures(renderRequest);
 
-			int recentStructuresSize = recentStructures.size();
+			int recentDDMStructuresSize = recentDDMStructures.size();
 
-			for (int i = recentStructuresSize - 1; i >= 0; i--) {
-				JournalStructure structure = (JournalStructure)recentStructures.get(i);
+			for (int i = recentDDMStructuresSize - 1; i >= 0; i--) {
+				DDMStructure ddmStructure = (DDMStructure)recentDDMStructures.get(i);
 
-				structure = structure.toEscapedModel();
+				ddmStructure = ddmStructure.toEscapedModel();
 
 				String className = "portlet-section-body results-row";
 				String classHoverName = "portlet-section-body-hover results-row hover";
@@ -99,19 +99,9 @@
 				}
 			%>
 
-				<portlet:renderURL var="editStructureURL">
-					<portlet:param name="struts_action" value="/journal/edit_structure" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-					<portlet:param name="groupId" value="<%= String.valueOf(structure.getGroupId()) %>" />
-					<portlet:param name="structureId" value="<%= structure.getStructureId() %>" />
-				</portlet:renderURL>
-
 				<tr class="<%= className %>" onMouseEnter="this.className = '<%= classHoverName %>';" onMouseLeave="this.className = '<%= className %>';" style="font-size: x-small;">
 					<td>
-						<aui:a href="<%= editStructureURL %>"><%= structure.getId() %></aui:a>
-					</td>
-					<td>
-						<aui:a href="<%= editStructureURL %>"><%= structure.getName(locale) %></aui:a>
+						<%= ddmStructure.getName(locale) %>
 					</td>
 				</tr>
 
@@ -130,37 +120,27 @@
 			</tr>
 
 			<%
-			Stack recentTemplates = JournalUtil.getRecentTemplates(renderRequest);
+			Stack recentDDMTemplates = JournalUtil.getRecentDDMTemplates(renderRequest);
 
-			int recentTemplatesSize = recentTemplates.size();
+			int recentDDMTemplatesSize = recentDDMTemplates.size();
 
-			for (int i = recentTemplatesSize - 1; i >= 0; i--) {
-				JournalTemplate template = (JournalTemplate)recentTemplates.get(i);
+			for (int i = recentDDMTemplatesSize - 1; i >= 0; i--) {
+				DDMTemplate ddmTemplate = (DDMTemplate)recentDDMTemplates.get(i);
 
-				template = template.toEscapedModel();
+				ddmTemplate = ddmTemplate.toEscapedModel();
 
 				String className = "portlet-section-body results-row";
 				String classHoverName = "portlet-section-body-hover results-row hover";
 
-				if (MathUtil.isEven(recentTemplatesSize - i - 1)) {
+				if (MathUtil.isEven(recentDDMTemplatesSize - i - 1)) {
 					className = "portlet-section-alternate results-row alt";
 					classHoverName = "portlet-section-alternate-hover results-row alt hover";
 				}
 			%>
 
-				<portlet:renderURL var="editTemplateURL">
-					<portlet:param name="struts_action" value="/journal/edit_template" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-					<portlet:param name="groupId" value="<%= String.valueOf(template.getGroupId()) %>" />
-					<portlet:param name="templateId" value="<%= template.getTemplateId() %>" />
-				</portlet:renderURL>
-
 				<tr class="<%= className %>" onMouseEnter="this.className = '<%= classHoverName %>';" onMouseLeave="this.className = '<%= className %>';" style="font-size: x-small;">
 					<td>
-						<aui:a href="<%= editTemplateURL %>"><%= template.getId() %></aui:a>
-					</td>
-					<td>
-						<aui:a href="<%= editTemplateURL %>"><%= template.getName(locale) %></aui:a>
+						<%= ddmTemplate.getName(locale) %>
 					</td>
 				</tr>
 

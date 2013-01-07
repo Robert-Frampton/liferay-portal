@@ -360,6 +360,12 @@ public class ExpandoValueWrapper implements ExpandoValue,
 		_expandoValue.persist();
 	}
 
+	public java.util.List<java.util.Locale> getAvailableLocales()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expandoValue.getAvailableLocales();
+	}
+
 	public boolean getBoolean()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -388,6 +394,12 @@ public class ExpandoValueWrapper implements ExpandoValue,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _expandoValue.getDateArray();
+	}
+
+	public java.util.Locale getDefaultLocale()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expandoValue.getDefaultLocale();
 	}
 
 	public double getDouble()
@@ -474,10 +486,34 @@ public class ExpandoValueWrapper implements ExpandoValue,
 		return _expandoValue.getString();
 	}
 
+	public java.lang.String getString(java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expandoValue.getString(locale);
+	}
+
 	public java.lang.String[] getStringArray()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _expandoValue.getStringArray();
+	}
+
+	public java.lang.String[] getStringArray(java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expandoValue.getStringArray(locale);
+	}
+
+	public java.util.Map<java.util.Locale, java.lang.String[]> getStringArrayMap()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expandoValue.getStringArrayMap();
+	}
+
+	public java.util.Map<java.util.Locale, java.lang.String> getStringMap()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expandoValue.getStringMap();
 	}
 
 	public void setBoolean(boolean data)
@@ -587,10 +623,40 @@ public class ExpandoValueWrapper implements ExpandoValue,
 		_expandoValue.setString(data);
 	}
 
+	public void setString(java.lang.String data, java.util.Locale locale,
+		java.util.Locale defaultLocale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expandoValue.setString(data, locale, defaultLocale);
+	}
+
 	public void setStringArray(java.lang.String[] data)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_expandoValue.setStringArray(data);
+	}
+
+	public void setStringArray(java.lang.String[] data,
+		java.util.Locale locale, java.util.Locale defaultLocale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expandoValue.setStringArray(data, locale, defaultLocale);
+	}
+
+	public void setStringArrayMap(
+		java.util.Map<java.util.Locale, java.lang.String[]> dataMap,
+		java.util.Locale defaultLocale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expandoValue.setStringArrayMap(dataMap, defaultLocale);
+	}
+
+	public void setStringMap(
+		java.util.Map<java.util.Locale, java.lang.String> dataMap,
+		java.util.Locale defaultLocale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expandoValue.setStringMap(dataMap, defaultLocale);
 	}
 
 	/**

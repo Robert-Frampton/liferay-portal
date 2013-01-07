@@ -15,7 +15,6 @@
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -38,7 +37,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.dynamicdatamapping.NoSuchStorageLinkException;
@@ -1373,9 +1371,51 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 		}
 	}
 
+	protected void cacheUniqueFindersCache(DDMStorageLink ddmStorageLink) {
+		if (ddmStorageLink.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(ddmStorageLink.getClassPK())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CLASSPK, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK, args,
+				ddmStorageLink);
+		}
+		else {
+			DDMStorageLinkModelImpl ddmStorageLinkModelImpl = (DDMStorageLinkModelImpl)ddmStorageLink;
+
+			if ((ddmStorageLinkModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_CLASSPK.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(ddmStorageLink.getClassPK())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CLASSPK, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK, args,
+					ddmStorageLink);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(DDMStorageLink ddmStorageLink) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK,
-			new Object[] { Long.valueOf(ddmStorageLink.getClassPK()) });
+		DDMStorageLinkModelImpl ddmStorageLinkModelImpl = (DDMStorageLinkModelImpl)ddmStorageLink;
+
+		Object[] args = new Object[] { Long.valueOf(ddmStorageLink.getClassPK()) };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSPK, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK, args);
+
+		if ((ddmStorageLinkModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CLASSPK.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(ddmStorageLinkModelImpl.getOriginalClassPK())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSPK, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK, args);
+		}
 	}
 
 	/**
@@ -1571,27 +1611,8 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			DDMStorageLinkImpl.class, ddmStorageLink.getPrimaryKey(),
 			ddmStorageLink);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK,
-				new Object[] { Long.valueOf(ddmStorageLink.getClassPK()) },
-				ddmStorageLink);
-		}
-		else {
-			if ((ddmStorageLinkModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_CLASSPK.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(ddmStorageLinkModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSPK, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK,
-					new Object[] { Long.valueOf(ddmStorageLink.getClassPK()) },
-					ddmStorageLink);
-			}
-		}
+		clearUniqueFindersCache(ddmStorageLink);
+		cacheUniqueFindersCache(ddmStorageLink);
 
 		return ddmStorageLink;
 	}
@@ -1914,18 +1935,6 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = DDMContentPersistence.class)
-	protected DDMContentPersistence ddmContentPersistence;
-	@BeanReference(type = DDMStorageLinkPersistence.class)
-	protected DDMStorageLinkPersistence ddmStorageLinkPersistence;
-	@BeanReference(type = DDMStructurePersistence.class)
-	protected DDMStructurePersistence ddmStructurePersistence;
-	@BeanReference(type = DDMStructureLinkPersistence.class)
-	protected DDMStructureLinkPersistence ddmStructureLinkPersistence;
-	@BeanReference(type = DDMTemplatePersistence.class)
-	protected DDMTemplatePersistence ddmTemplatePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_DDMSTORAGELINK = "SELECT ddmStorageLink FROM DDMStorageLink ddmStorageLink";
 	private static final String _SQL_SELECT_DDMSTORAGELINK_WHERE = "SELECT ddmStorageLink FROM DDMStorageLink ddmStorageLink WHERE ";
 	private static final String _SQL_COUNT_DDMSTORAGELINK = "SELECT COUNT(ddmStorageLink) FROM DDMStorageLink ddmStorageLink";

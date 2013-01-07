@@ -279,7 +279,7 @@ public class MBThreadServiceImpl extends MBThreadServiceBaseImpl {
 	public Lock lockThread(long threadId)
 		throws PortalException, SystemException {
 
-		MBThread thread = mbThreadLocalService.getThread(threadId);
+		MBThread thread = mbThreadPersistence.findByPrimaryKey(threadId);
 
 		MBCategoryPermission.check(
 			getPermissionChecker(), thread.getGroupId(), thread.getCategoryId(),
@@ -306,6 +306,19 @@ public class MBThreadServiceImpl extends MBThreadServiceBaseImpl {
 
 		return mbThreadLocalService.moveThread(
 			thread.getGroupId(), categoryId, threadId);
+	}
+
+	public MBThread moveThreadFromTrash(long categoryId, long threadId)
+		throws PortalException, SystemException {
+
+		MBThread thread = mbThreadLocalService.getThread(threadId);
+
+		MBCategoryPermission.check(
+			getPermissionChecker(), thread.getGroupId(), thread.getCategoryId(),
+			ActionKeys.UPDATE);
+
+		return mbThreadLocalService.moveThreadFromTrash(
+			getUserId(), categoryId, threadId);
 	}
 
 	public MBThread moveThreadToTrash(long threadId)

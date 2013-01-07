@@ -627,15 +627,35 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 		return _wikiPageLocalService.getPagesCount(format);
 	}
 
+	/**
+	* @deprecated {@link #getRecentChanges(long, long, int, int)}
+	*/
 	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getRecentChanges(
 		long nodeId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return _wikiPageLocalService.getRecentChanges(nodeId, start, end);
 	}
 
-	public int getRecentChangesCount(long nodeId)
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getRecentChanges(
+		long groupId, long nodeId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
+		return _wikiPageLocalService.getRecentChanges(groupId, nodeId, start,
+			end);
+	}
+
+	/**
+	* @deprecated {@link #getRecentChangesCount(long, long)}
+	*/
+	public int getRecentChangesCount(long nodeId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return _wikiPageLocalService.getRecentChangesCount(nodeId);
+	}
+
+	public int getRecentChangesCount(long groupId, long nodeId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _wikiPageLocalService.getRecentChangesCount(groupId, nodeId);
 	}
 
 	public java.lang.String[] getTempPageAttachmentNames(long userId,
@@ -762,15 +782,6 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _wikiPageLocalService.updateStatus(userId, resourcePrimKey,
 			status, serviceContext);
-	}
-
-	public com.liferay.portlet.wiki.model.WikiPage updateStatus(long userId,
-		com.liferay.portlet.wiki.model.WikiPage page, int status,
-		int nodeStatus, com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _wikiPageLocalService.updateStatus(userId, page, status,
-			nodeStatus, serviceContext);
 	}
 
 	public com.liferay.portlet.wiki.model.WikiPage updateStatus(long userId,

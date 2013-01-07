@@ -45,6 +45,8 @@ public class MBThreadTrashRenderer extends BaseTrashRenderer {
 	public MBThreadTrashRenderer(MBThread thread)
 		throws PortalException, SystemException {
 
+		_thread = thread;
+
 		_rootMessage = MBMessageLocalServiceUtil.getMBMessage(
 			thread.getRootMessageId());
 	}
@@ -54,7 +56,7 @@ public class MBThreadTrashRenderer extends BaseTrashRenderer {
 	}
 
 	public long getClassPK() {
-		return _rootMessage.getClassPK();
+		return _thread.getPrimaryKey();
 	}
 
 	@Override
@@ -78,6 +80,7 @@ public class MBThreadTrashRenderer extends BaseTrashRenderer {
 		return TYPE;
 	}
 
+	@Override
 	public String render(
 			RenderRequest renderRequest, RenderResponse renderResponse,
 			String template)
@@ -115,5 +118,6 @@ public class MBThreadTrashRenderer extends BaseTrashRenderer {
 	}
 
 	private MBMessage _rootMessage;
+	private MBThread _thread;
 
 }

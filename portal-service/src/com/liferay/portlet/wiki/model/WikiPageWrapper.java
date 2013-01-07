@@ -935,8 +935,20 @@ public class WikiPageWrapper implements WikiPage, ModelWrapper<WikiPage> {
 		return _wikiPage.getRedirectPage();
 	}
 
-	public boolean isInTrashFolder() {
-		return _wikiPage.isInTrashFolder();
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getViewableChildPages() {
+		return _wikiPage.getViewableChildPages();
+	}
+
+	public com.liferay.portlet.wiki.model.WikiPage getViewableParentPage() {
+		return _wikiPage.getViewableParentPage();
+	}
+
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getViewableParentPages() {
+		return _wikiPage.getViewableParentPages();
+	}
+
+	public boolean isInTrashContainer() {
+		return _wikiPage.isInTrashContainer();
 	}
 
 	public void setAttachmentsFolderId(long attachmentsFolderId) {

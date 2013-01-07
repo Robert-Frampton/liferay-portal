@@ -42,7 +42,21 @@ public class MBMessageTrashHandler extends BaseTrashHandler {
 
 		MBMessage message = MBMessageLocalServiceUtil.getMBMessage(classPK);
 
-		return message.isInTrash();
+		if (message.isInTrash() || message.isInTrashThread()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isInTrashContainer(long classPK)
+		throws PortalException, SystemException {
+
+		MBMessage message = MBMessageLocalServiceUtil.getMBMessage(classPK);
+
+		return message.isInTrashThread();
 	}
 
 	public void restoreTrashEntries(long[] classPKs) {

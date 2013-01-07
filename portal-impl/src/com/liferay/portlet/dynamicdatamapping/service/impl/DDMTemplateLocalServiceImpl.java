@@ -60,6 +60,19 @@ public class DDMTemplateLocalServiceImpl
 
 	public DDMTemplate addTemplate(
 			long userId, long groupId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
+			String type, String mode, String language, String script,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return addTemplate(
+			userId, groupId, classNameId, classPK, null, nameMap,
+			descriptionMap, type, mode, language, script, false, false, null,
+			null, serviceContext);
+	}
+
+	public DDMTemplate addTemplate(
+			long userId, long groupId, long classNameId, long classPK,
 			String templateKey, Map<Locale, String> nameMap,
 			Map<Locale, String> descriptionMap, String type, String mode,
 			String language, String script, boolean cacheable,
@@ -171,6 +184,43 @@ public class DDMTemplateLocalServiceImpl
 			template.getTemplateId(), groupPermissions, guestPermissions);
 	}
 
+	public DDMTemplate copyTemplate(
+			long userId, long templateId, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DDMTemplate template = ddmTemplatePersistence.findByPrimaryKey(
+			templateId);
+
+		File smallImageFile = null;
+
+		if (template.isSmallImage() &&
+				Validator.isNull(template.getSmallImageURL())) {
+
+			Image smallImage = ImageUtil.fetchByPrimaryKey(
+				template.getSmallImageId());
+
+			if (smallImage != null) {
+				smallImageFile = FileUtil.createTempFile(smallImage.getType());
+
+				try {
+					FileUtil.write(smallImageFile, smallImage.getTextObj());
+				}
+				catch (IOException ioe) {
+					_log.error(ioe);
+				}
+			}
+		}
+
+		return addTemplate(
+			userId, template.getGroupId(), template.getClassNameId(),
+			template.getClassPK(), null, nameMap, descriptionMap,
+			template.getType(), template.getMode(), template.getLanguage(),
+			template.getScript(), template.isCacheable(),
+			template.isSmallImage(), template.getSmallImageURL(),
+			smallImageFile, serviceContext);
+	}
+
 	public List<DDMTemplate> copyTemplates(
 			long userId, long classNameId, long oldClassPK, long newClassPK,
 			String type, ServiceContext serviceContext)
@@ -178,39 +228,13 @@ public class DDMTemplateLocalServiceImpl
 
 		List<DDMTemplate> newTemplates = new ArrayList<DDMTemplate>();
 
-		List<DDMTemplate> oldTemplates = getTemplates(
+		List<DDMTemplate> oldTemplates = ddmTemplatePersistence.findByC_C_T(
 			classNameId, oldClassPK, type);
 
 		for (DDMTemplate oldTemplate : oldTemplates) {
-			File smallImageFile = null;
-
-			if (oldTemplate.isSmallImage() &&
-					Validator.isNull(oldTemplate.getSmallImageURL())) {
-
-				Image smallImage = ImageUtil.fetchByPrimaryKey(
-					oldTemplate.getSmallImageId());
-
-				if (smallImage != null) {
-					smallImageFile = FileUtil.createTempFile(
-						smallImage.getType());
-
-					try {
-						FileUtil.write(smallImageFile, smallImage.getTextObj());
-					}
-					catch (IOException ioe) {
-						_log.error(ioe);
-					}
-				}
-			}
-
-			DDMTemplate newTemplate = addTemplate(
-				userId, oldTemplate.getGroupId(), oldTemplate.getClassNameId(),
-				newClassPK, null, oldTemplate.getNameMap(),
-				oldTemplate.getDescriptionMap(), oldTemplate.getType(),
-				oldTemplate.getMode(), oldTemplate.getLanguage(),
-				oldTemplate.getScript(), oldTemplate.isCacheable(),
-				oldTemplate.isSmallImage(), oldTemplate.getSmallImageURL(),
-				smallImageFile, serviceContext);
+			DDMTemplate newTemplate = copyTemplate(
+				userId, oldTemplate.getTemplateId(), oldTemplate.getNameMap(),
+				oldTemplate.getDescriptionMap(), serviceContext);
 
 			newTemplates.add(newTemplate);
 		}

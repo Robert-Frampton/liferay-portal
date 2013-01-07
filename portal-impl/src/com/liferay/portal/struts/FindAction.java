@@ -17,6 +17,7 @@ package com.liferay.portal.struts;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -24,7 +25,10 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -79,7 +83,23 @@ public abstract class FindAction extends Action {
 			portletURL.setParameter(
 				"struts_action", getStrutsAction(request, portletId));
 
-			String redirect = ParamUtil.getString(request, "redirect");
+			boolean inheritRedirect = ParamUtil.getBoolean(
+				request, "inheritRedirect");
+
+			String redirect = null;
+
+			if (inheritRedirect) {
+				String noSuchEntryRedirect = ParamUtil.getString(
+					request, "noSuchEntryRedirect");
+
+				redirect = HttpUtil.getParameter(
+					noSuchEntryRedirect, "redirect", false);
+
+				redirect = HttpUtil.decodeURL(redirect);
+			}
+			else {
+				redirect = ParamUtil.getString(request, "redirect");
+			}
 
 			if (Validator.isNotNull(redirect)) {
 				portletURL.setParameter("redirect", redirect);
@@ -122,6 +142,9 @@ public abstract class FindAction extends Action {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
 		long groupId = ParamUtil.getLong(
 			request, "groupId", themeDisplay.getScopeGroupId());
 
@@ -146,9 +169,16 @@ public abstract class FindAction extends Action {
 					(LayoutTypePortlet)layout.getLayoutType();
 
 				for (String portletId : _portletIds) {
-					if (layoutTypePortlet.hasPortletId(portletId)) {
-						return new Object[] {plid, portletId};
+					if (!layoutTypePortlet.hasPortletId(portletId) ||
+						!LayoutPermissionUtil.contains(
+							permissionChecker, layout, ActionKeys.VIEW)) {
+
+						continue;
 					}
+
+					portletId = getPortletId(layoutTypePortlet, portletId);
+
+					return new Object[] {plid, portletId};
 				}
 			}
 			catch (NoSuchLayoutException nsle) {
@@ -158,28 +188,42 @@ public abstract class FindAction extends Action {
 		for (String portletId : _portletIds) {
 			plid = PortalUtil.getPlidFromPortletId(groupId, portletId);
 
-			if (plid != LayoutConstants.DEFAULT_PLID) {
-				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
-
-				LayoutTypePortlet layoutTypePortlet =
-					(LayoutTypePortlet)layout.getLayoutType();
-
-				for (String curPortletId : layoutTypePortlet.getPortletIds()) {
-					String curRootPortletId = PortletConstants.getRootPortletId(
-						curPortletId);
-
-					if (portletId.equals(curRootPortletId)) {
-						portletId = curPortletId;
-
-						break;
-					}
-				}
-
-				return new Object[] {plid, portletId};
+			if (plid == LayoutConstants.DEFAULT_PLID) {
+				continue;
 			}
+
+			Layout layout = LayoutLocalServiceUtil.getLayout(plid);
+
+			if (!LayoutPermissionUtil.contains(
+					permissionChecker, layout, ActionKeys.VIEW)) {
+
+				continue;
+			}
+
+			LayoutTypePortlet layoutTypePortlet =
+				(LayoutTypePortlet)layout.getLayoutType();
+
+			portletId = getPortletId(layoutTypePortlet, portletId);
+
+			return new Object[] {plid, portletId};
 		}
 
 		throw new NoSuchLayoutException();
+	}
+
+	protected String getPortletId(
+		LayoutTypePortlet layoutTypePortlet, String portletId) {
+
+		for (String curPortletId : layoutTypePortlet.getPortletIds()) {
+			String curRootPortletId = PortletConstants.getRootPortletId(
+				curPortletId);
+
+			if (portletId.equals(curRootPortletId)) {
+				return curPortletId;
+			}
+		}
+
+		return portletId;
 	}
 
 	protected abstract String getPrimaryKeyParameterName();

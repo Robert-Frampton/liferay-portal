@@ -39,6 +39,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.dynamicdatamapping.NoSuchStructureException;
 import com.liferay.portlet.dynamicdatamapping.RequiredStructureException;
 import com.liferay.portlet.dynamicdatamapping.StructureDuplicateElementException;
@@ -138,6 +139,41 @@ public class DDMStructureLocalServiceImpl
 		return structure;
 	}
 
+	public DDMStructure addStructure(
+			long userId, long groupId, long classNameId,
+			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
+			String xsd, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return addStructure(
+			userId, groupId, DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,
+			classNameId, null, nameMap, descriptionMap, xsd,
+			PropsValues.DYNAMIC_DATA_LISTS_STORAGE_TYPE,
+			DDMStructureConstants.TYPE_DEFAULT, serviceContext);
+	}
+
+	public DDMStructure addStructure(
+			long userId, long groupId, String parentStructureKey,
+			long classNameId, String structureKey, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, String xsd, String storageType,
+			int type, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DDMStructure parentStructure = fetchStructure(
+			groupId, parentStructureKey);
+
+		long parentStructureId =
+			DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID;
+
+		if (parentStructure != null) {
+			parentStructureId = parentStructure.getStructureId();
+		}
+
+		return addStructure(
+			userId, groupId, parentStructureId, classNameId, structureKey,
+			nameMap, descriptionMap, xsd, storageType, type, serviceContext);
+	}
+
 	public void addStructureResources(
 			DDMStructure structure, boolean addGroupPermissions,
 			boolean addGuestPermissions)
@@ -166,7 +202,8 @@ public class DDMStructureLocalServiceImpl
 			Map<Locale, String> descriptionMap, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		DDMStructure structure = getStructure(structureId);
+		DDMStructure structure = ddmStructurePersistence.findByPrimaryKey(
+			structureId);
 
 		return addStructure(
 			userId, structure.getGroupId(), structure.getParentStructureId(),
@@ -344,7 +381,7 @@ public class DDMStructureLocalServiceImpl
 
 		if (!includeGlobalStructures) {
 			throw new NoSuchStructureException(
-				"No JournalStructure exists with the structure key " +
+				"No DDMStructure exists with the structure key " +
 					structureKey);
 		}
 

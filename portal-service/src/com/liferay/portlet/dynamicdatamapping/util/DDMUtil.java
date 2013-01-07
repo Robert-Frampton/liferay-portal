@@ -87,30 +87,34 @@ public class DDMUtil {
 		return getDDM().getTemplateOrderByComparator(orderByCol, orderByType);
 	}
 
-	public static void sendFieldFile(
-			HttpServletRequest request, HttpServletResponse response,
-			Field field)
-		throws Exception {
-
-		getDDM().sendFieldFile(request, response, field);
+	public static Fields mergeFields(Fields newFields, Fields existingFields) {
+		return getDDM().mergeFields(newFields, existingFields);
 	}
 
-	public static String uploadFieldFile(
+	public static void sendFieldFile(
+			HttpServletRequest request, HttpServletResponse response,
+			Field field, int valueIndex)
+		throws Exception {
+
+		getDDM().sendFieldFile(request, response, field, valueIndex);
+	}
+
+	public static void uploadFieldFile(
 			long structureId, long storageId, BaseModel<?> baseModel,
 			String fieldName, ServiceContext serviceContext)
 		throws Exception {
 
-		return getDDM().uploadFieldFile(
+		getDDM().uploadFieldFile(
 			structureId, storageId, baseModel, fieldName, serviceContext);
 	}
 
-	public static String uploadFieldFile(
+	public static void uploadFieldFile(
 			long structureId, long storageId, BaseModel<?> baseModel,
 			String fieldName, String fieldNamespace,
 			ServiceContext serviceContext)
 		throws Exception {
 
-		return getDDM().uploadFieldFile(
+		getDDM().uploadFieldFile(
 			structureId, storageId, baseModel, fieldName, fieldNamespace,
 			serviceContext);
 	}

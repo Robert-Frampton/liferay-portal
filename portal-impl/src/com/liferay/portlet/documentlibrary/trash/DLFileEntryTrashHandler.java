@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.Repository;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -40,7 +40,6 @@ import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.trash.DuplicateEntryException;
 import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
-import com.liferay.portlet.trash.util.TrashUtil;
 
 import javax.portlet.PortletRequest;
 
@@ -66,13 +65,7 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 			containerModelId = dlFileEntry.getFolderId();
 		}
 
-		String restoredTitle = dlFileEntry.getTitle();
-
-		if (Validator.isNotNull(newName)) {
-			restoredTitle = newName;
-		}
-
-		String originalTitle = TrashUtil.stripTrashNamespace(restoredTitle);
+		String originalTitle = trashEntry.getTypeSettingsProperty("title");
 
 		DLFileEntry duplicateDLFileEntry =
 			DLFileEntryLocalServiceUtil.fetchFileEntry(
@@ -104,6 +97,21 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 
 	public String getClassName() {
 		return CLASS_NAME;
+	}
+
+	@Override
+	public ContainerModel getParentContainerModel(long classPK)
+		throws PortalException, SystemException {
+
+		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
+
+		long parentFolderId = dlFileEntry.getFolderId();
+
+		if (parentFolderId <= 0) {
+			return null;
+		}
+
+		return getContainerModel(parentFolderId);
 	}
 
 	@Override
@@ -145,24 +153,43 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 	public boolean isInTrash(long classPK)
 		throws PortalException, SystemException {
 
+		try {
+			DLFileEntry dlFileEntry = getDLFileEntry(classPK);
+
+			DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
+
+			if (dlFileEntry.isInTrashContainer() || dlFileVersion.isInTrash()) {
+				return true;
+			}
+
+			return false;
+		}
+		catch (InvalidRepositoryException ire) {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isInTrashContainer(long classPK)
+		throws PortalException, SystemException {
+
 		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
 
-		DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
-
-		if (dlFileEntry.isInTrashFolder() || dlFileVersion.isInTrash()) {
-			return true;
-		}
-
-		return false;
+		return dlFileEntry.isInTrashContainer();
 	}
 
 	@Override
 	public boolean isRestorable(long classPK)
 		throws PortalException, SystemException {
 
-		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
+		try {
+			DLFileEntry dlFileEntry = getDLFileEntry(classPK);
 
-		return !dlFileEntry.isInTrashFolder();
+			return !dlFileEntry.isInTrashContainer();
+		}
+		catch (InvalidRepositoryException ire) {
+			return false;
+		}
 	}
 
 	@Override

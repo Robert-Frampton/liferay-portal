@@ -15,7 +15,6 @@
 package com.liferay.portlet.documentlibrary.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -38,8 +37,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.RepositoryPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.documentlibrary.NoSuchSyncException;
@@ -935,9 +932,46 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(DLSync dlSync) {
+		if (dlSync.isNew()) {
+			Object[] args = new Object[] { Long.valueOf(dlSync.getFileId()) };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_FILEID, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FILEID, args, dlSync);
+		}
+		else {
+			DLSyncModelImpl dlSyncModelImpl = (DLSyncModelImpl)dlSync;
+
+			if ((dlSyncModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_FILEID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { Long.valueOf(dlSync.getFileId()) };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_FILEID, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FILEID, args,
+					dlSync);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(DLSync dlSync) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FILEID,
-			new Object[] { Long.valueOf(dlSync.getFileId()) });
+		DLSyncModelImpl dlSyncModelImpl = (DLSyncModelImpl)dlSync;
+
+		Object[] args = new Object[] { Long.valueOf(dlSync.getFileId()) };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FILEID, args);
+
+		if ((dlSyncModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_FILEID.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(dlSyncModelImpl.getOriginalFileId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEID, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FILEID, args);
+		}
 	}
 
 	/**
@@ -1048,8 +1082,6 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 
 		boolean isNew = dlSync.isNew();
 
-		DLSyncModelImpl dlSyncModelImpl = (DLSyncModelImpl)dlSync;
-
 		Session session = null;
 
 		try {
@@ -1080,25 +1112,8 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 		EntityCacheUtil.putResult(DLSyncModelImpl.ENTITY_CACHE_ENABLED,
 			DLSyncImpl.class, dlSync.getPrimaryKey(), dlSync);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FILEID,
-				new Object[] { Long.valueOf(dlSync.getFileId()) }, dlSync);
-		}
-		else {
-			if ((dlSyncModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_FILEID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(dlSyncModelImpl.getOriginalFileId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FILEID, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FILEID, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FILEID,
-					new Object[] { Long.valueOf(dlSync.getFileId()) }, dlSync);
-			}
-		}
+		clearUniqueFindersCache(dlSync);
+		cacheUniqueFindersCache(dlSync);
 
 		return dlSync;
 	}
@@ -1426,28 +1441,6 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = DLContentPersistence.class)
-	protected DLContentPersistence dlContentPersistence;
-	@BeanReference(type = DLFileEntryPersistence.class)
-	protected DLFileEntryPersistence dlFileEntryPersistence;
-	@BeanReference(type = DLFileEntryMetadataPersistence.class)
-	protected DLFileEntryMetadataPersistence dlFileEntryMetadataPersistence;
-	@BeanReference(type = DLFileEntryTypePersistence.class)
-	protected DLFileEntryTypePersistence dlFileEntryTypePersistence;
-	@BeanReference(type = DLFileRankPersistence.class)
-	protected DLFileRankPersistence dlFileRankPersistence;
-	@BeanReference(type = DLFileShortcutPersistence.class)
-	protected DLFileShortcutPersistence dlFileShortcutPersistence;
-	@BeanReference(type = DLFileVersionPersistence.class)
-	protected DLFileVersionPersistence dlFileVersionPersistence;
-	@BeanReference(type = DLFolderPersistence.class)
-	protected DLFolderPersistence dlFolderPersistence;
-	@BeanReference(type = DLSyncPersistence.class)
-	protected DLSyncPersistence dlSyncPersistence;
-	@BeanReference(type = RepositoryPersistence.class)
-	protected RepositoryPersistence repositoryPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_DLSYNC = "SELECT dlSync FROM DLSync dlSync";
 	private static final String _SQL_SELECT_DLSYNC_WHERE = "SELECT dlSync FROM DLSync dlSync WHERE ";
 	private static final String _SQL_COUNT_DLSYNC = "SELECT COUNT(dlSync) FROM DLSync dlSync";

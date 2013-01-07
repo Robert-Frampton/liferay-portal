@@ -105,10 +105,6 @@ try {
 catch (NoSuchLayoutException nsle) {
 }
 
-if (selLayout != null) {
-	layoutId = selLayout.getLayoutId();
-}
-
 Organization organization = null;
 User selUser = null;
 UserGroup userGroup = null;
@@ -182,7 +178,7 @@ request.setAttribute(WebKeys.LAYOUT_LISTER_LIST, layoutList);
 	<portlet:param name="tabs1" value="<%= tabs1 %>" />
 	<portlet:param name="redirect" value="<%= redirect %>" />
 
-	<c:if test="<%= (portletName.equals(PortletKeys.LAYOUTS_ADMIN) || portletName.equals(PortletKeys.MY_ACCOUNT)) %>">
+	<c:if test="<%= (portletName.equals(PortletKeys.LAYOUTS_ADMIN) || portletName.equals(PortletKeys.MY_ACCOUNT) || portletName.equals(PortletKeys.USERS_ADMIN)) %>">
 		<portlet:param name="backURL" value="<%= backURL %>" />
 	</c:if>
 
@@ -195,7 +191,7 @@ request.setAttribute(WebKeys.LAYOUT_LISTER_LIST, layoutList);
 	<portlet:param name="redirect" value="<%= redirect %>" />
 	<portlet:param name="closeRedirect" value="<%= closeRedirect %>" />
 
-	<c:if test="<%= (portletName.equals(PortletKeys.LAYOUTS_ADMIN) || portletName.equals(PortletKeys.MY_ACCOUNT)) %>">
+	<c:if test="<%= (portletName.equals(PortletKeys.LAYOUTS_ADMIN) || portletName.equals(PortletKeys.MY_ACCOUNT) || portletName.equals(PortletKeys.USERS_ADMIN)) %>">
 		<portlet:param name="backURL" value="<%= backURL %>" />
 	</c:if>
 

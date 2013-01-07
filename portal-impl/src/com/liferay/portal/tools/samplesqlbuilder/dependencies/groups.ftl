@@ -3,15 +3,9 @@
 <#assign mbMessageCounter = dataFactory.newInteger()>
 <#assign wikiPageCounter = dataFactory.newInteger()>
 
+${sampleSQLBuilder.insertGroup(dataFactory.guestGroup, [], [dataFactory.addLayout(1, "Welcome", "/welcome", "58,", "47,")])}
+
 <#assign privateLayouts = []>
-
-<#list dataFactory.groups as group>
-	<#assign publicLayouts = [
-		dataFactory.addLayout(1, "Welcome", "/welcome", "58,", "47,")
-	]>
-
-	${sampleSQLBuilder.insertGroup(group, privateLayouts, publicLayouts)}
-</#list>
 
 <#list 1..maxGroupCount as groupCount>
 	<#assign groupId = groupCount>
@@ -26,20 +20,6 @@
 		dataFactory.addLayout(5, "Wiki", "/wiki", "", "36,")
 	]>
 
-	<#assign journalArticleLayouts = []>
-
-	<#list 1..maxJournalArticleCount as journalArticleCount>
-		<#assign journalArticleLayouts = journalArticleLayouts + [dataFactory.addLayout(5 + journalArticleCount, "Web Content " + journalArticleCount, "/journal_article_" + journalArticleCount, "", "56,")]>
-
-		${writerLayoutCSV.write("journal_article_" + journalArticleCount + "\n")}
-	</#list>
-
-	<#assign publicLayouts = publicLayouts + journalArticleLayouts>
-
-	${sampleSQLBuilder.insertGroup(group, privateLayouts, publicLayouts)}
-
-	${sampleSQLBuilder.insertJournalArticle(groupId, journalArticleLayouts)}
-
 	<#include "users.ftl">
 
 	<#include "blogs.ftl">
@@ -48,7 +28,11 @@
 
 	<#include "dl.ftl">
 
+	<#include "journal_article.ftl">
+
 	<#include "mb.ftl">
 
 	<#include "wiki.ftl">
+
+	${sampleSQLBuilder.insertGroup(group, privateLayouts, publicLayouts)}
 </#list>

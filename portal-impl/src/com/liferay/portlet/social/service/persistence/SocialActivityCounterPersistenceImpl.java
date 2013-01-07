@@ -15,7 +15,6 @@
 package com.liferay.portlet.social.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -37,12 +36,8 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.LockPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
 import com.liferay.portlet.social.NoSuchActivityCounterException;
 import com.liferay.portlet.social.model.SocialActivityCounter;
 import com.liferay.portlet.social.model.impl.SocialActivityCounterImpl;
@@ -2024,29 +2019,141 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		}
 	}
 
+	protected void cacheUniqueFindersCache(
+		SocialActivityCounter socialActivityCounter) {
+		if (socialActivityCounter.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(socialActivityCounter.getGroupId()),
+					Long.valueOf(socialActivityCounter.getClassNameId()),
+					Long.valueOf(socialActivityCounter.getClassPK()),
+					
+					socialActivityCounter.getName(),
+					Integer.valueOf(socialActivityCounter.getOwnerType()),
+					Integer.valueOf(socialActivityCounter.getStartPeriod())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S, args,
+				socialActivityCounter);
+
+			args = new Object[] {
+					Long.valueOf(socialActivityCounter.getGroupId()),
+					Long.valueOf(socialActivityCounter.getClassNameId()),
+					Long.valueOf(socialActivityCounter.getClassPK()),
+					
+					socialActivityCounter.getName(),
+					Integer.valueOf(socialActivityCounter.getOwnerType()),
+					Integer.valueOf(socialActivityCounter.getEndPeriod())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E, args,
+				socialActivityCounter);
+		}
+		else {
+			SocialActivityCounterModelImpl socialActivityCounterModelImpl = (SocialActivityCounterModelImpl)socialActivityCounter;
+
+			if ((socialActivityCounterModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_C_C_N_O_S.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(socialActivityCounter.getGroupId()),
+						Long.valueOf(socialActivityCounter.getClassNameId()),
+						Long.valueOf(socialActivityCounter.getClassPK()),
+						
+						socialActivityCounter.getName(),
+						Integer.valueOf(socialActivityCounter.getOwnerType()),
+						Integer.valueOf(socialActivityCounter.getStartPeriod())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S,
+					args, socialActivityCounter);
+			}
+
+			if ((socialActivityCounterModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_C_C_N_O_E.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(socialActivityCounter.getGroupId()),
+						Long.valueOf(socialActivityCounter.getClassNameId()),
+						Long.valueOf(socialActivityCounter.getClassPK()),
+						
+						socialActivityCounter.getName(),
+						Integer.valueOf(socialActivityCounter.getOwnerType()),
+						Integer.valueOf(socialActivityCounter.getEndPeriod())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E,
+					args, socialActivityCounter);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(
 		SocialActivityCounter socialActivityCounter) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S,
-			new Object[] {
+		SocialActivityCounterModelImpl socialActivityCounterModelImpl = (SocialActivityCounterModelImpl)socialActivityCounter;
+
+		Object[] args = new Object[] {
 				Long.valueOf(socialActivityCounter.getGroupId()),
 				Long.valueOf(socialActivityCounter.getClassNameId()),
 				Long.valueOf(socialActivityCounter.getClassPK()),
 				
-			socialActivityCounter.getName(),
+				socialActivityCounter.getName(),
 				Integer.valueOf(socialActivityCounter.getOwnerType()),
 				Integer.valueOf(socialActivityCounter.getStartPeriod())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S, args);
+
+		if ((socialActivityCounterModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_C_C_N_O_S.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(socialActivityCounterModelImpl.getOriginalGroupId()),
+					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
+					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK()),
+					
+					socialActivityCounterModelImpl.getOriginalName(),
+					Integer.valueOf(socialActivityCounterModelImpl.getOriginalOwnerType()),
+					Integer.valueOf(socialActivityCounterModelImpl.getOriginalStartPeriod())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(socialActivityCounter.getGroupId()),
 				Long.valueOf(socialActivityCounter.getClassNameId()),
 				Long.valueOf(socialActivityCounter.getClassPK()),
 				
-			socialActivityCounter.getName(),
+				socialActivityCounter.getName(),
 				Integer.valueOf(socialActivityCounter.getOwnerType()),
 				Integer.valueOf(socialActivityCounter.getEndPeriod())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E, args);
+
+		if ((socialActivityCounterModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_C_C_N_O_E.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(socialActivityCounterModelImpl.getOriginalGroupId()),
+					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
+					Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK()),
+					
+					socialActivityCounterModelImpl.getOriginalName(),
+					Integer.valueOf(socialActivityCounterModelImpl.getOriginalOwnerType()),
+					Integer.valueOf(socialActivityCounterModelImpl.getOriginalEndPeriod())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E, args);
+		}
 	}
 
 	/**
@@ -2240,90 +2347,8 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 			SocialActivityCounterImpl.class,
 			socialActivityCounter.getPrimaryKey(), socialActivityCounter);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S,
-				new Object[] {
-					Long.valueOf(socialActivityCounter.getGroupId()),
-					Long.valueOf(socialActivityCounter.getClassNameId()),
-					Long.valueOf(socialActivityCounter.getClassPK()),
-					
-				socialActivityCounter.getName(),
-					Integer.valueOf(socialActivityCounter.getOwnerType()),
-					Integer.valueOf(socialActivityCounter.getStartPeriod())
-				}, socialActivityCounter);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E,
-				new Object[] {
-					Long.valueOf(socialActivityCounter.getGroupId()),
-					Long.valueOf(socialActivityCounter.getClassNameId()),
-					Long.valueOf(socialActivityCounter.getClassPK()),
-					
-				socialActivityCounter.getName(),
-					Integer.valueOf(socialActivityCounter.getOwnerType()),
-					Integer.valueOf(socialActivityCounter.getEndPeriod())
-				}, socialActivityCounter);
-		}
-		else {
-			if ((socialActivityCounterModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_C_C_N_O_S.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalGroupId()),
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK()),
-						
-						socialActivityCounterModelImpl.getOriginalName(),
-						Integer.valueOf(socialActivityCounterModelImpl.getOriginalOwnerType()),
-						Integer.valueOf(socialActivityCounterModelImpl.getOriginalStartPeriod())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_S,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S,
-					new Object[] {
-						Long.valueOf(socialActivityCounter.getGroupId()),
-						Long.valueOf(socialActivityCounter.getClassNameId()),
-						Long.valueOf(socialActivityCounter.getClassPK()),
-						
-					socialActivityCounter.getName(),
-						Integer.valueOf(socialActivityCounter.getOwnerType()),
-						Integer.valueOf(socialActivityCounter.getStartPeriod())
-					}, socialActivityCounter);
-			}
-
-			if ((socialActivityCounterModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_C_C_N_O_E.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalGroupId()),
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassNameId()),
-						Long.valueOf(socialActivityCounterModelImpl.getOriginalClassPK()),
-						
-						socialActivityCounterModelImpl.getOriginalName(),
-						Integer.valueOf(socialActivityCounterModelImpl.getOriginalOwnerType()),
-						Integer.valueOf(socialActivityCounterModelImpl.getOriginalEndPeriod())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_C_N_O_E,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E,
-					new Object[] {
-						Long.valueOf(socialActivityCounter.getGroupId()),
-						Long.valueOf(socialActivityCounter.getClassNameId()),
-						Long.valueOf(socialActivityCounter.getClassPK()),
-						
-					socialActivityCounter.getName(),
-						Integer.valueOf(socialActivityCounter.getOwnerType()),
-						Integer.valueOf(socialActivityCounter.getEndPeriod())
-					}, socialActivityCounter);
-			}
-		}
+		clearUniqueFindersCache(socialActivityCounter);
+		cacheUniqueFindersCache(socialActivityCounter);
 
 		return socialActivityCounter;
 	}
@@ -2655,28 +2680,6 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = SocialActivityAchievementPersistence.class)
-	protected SocialActivityAchievementPersistence socialActivityAchievementPersistence;
-	@BeanReference(type = SocialActivityCounterPersistence.class)
-	protected SocialActivityCounterPersistence socialActivityCounterPersistence;
-	@BeanReference(type = SocialActivityLimitPersistence.class)
-	protected SocialActivityLimitPersistence socialActivityLimitPersistence;
-	@BeanReference(type = SocialActivitySettingPersistence.class)
-	protected SocialActivitySettingPersistence socialActivitySettingPersistence;
-	@BeanReference(type = SocialRelationPersistence.class)
-	protected SocialRelationPersistence socialRelationPersistence;
-	@BeanReference(type = SocialRequestPersistence.class)
-	protected SocialRequestPersistence socialRequestPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = LockPersistence.class)
-	protected LockPersistence lockPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
 	private static final String _SQL_SELECT_SOCIALACTIVITYCOUNTER = "SELECT socialActivityCounter FROM SocialActivityCounter socialActivityCounter";
 	private static final String _SQL_SELECT_SOCIALACTIVITYCOUNTER_WHERE = "SELECT socialActivityCounter FROM SocialActivityCounter socialActivityCounter WHERE ";
 	private static final String _SQL_COUNT_SOCIALACTIVITYCOUNTER = "SELECT COUNT(socialActivityCounter) FROM SocialActivityCounter socialActivityCounter";

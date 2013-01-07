@@ -95,7 +95,7 @@ String content = BeanParamUtil.getString(entry, request, "content");
 			for (String curType : AnnouncementsEntryConstants.TYPES) {
 			%>
 
-				<aui:option label="<%= curType %>" />
+				<aui:option label="<%= curType %>" selected="<%= (entry != null) && curType.equals(entry.getType()) %>" />
 
 			<%
 			}
@@ -104,8 +104,8 @@ String content = BeanParamUtil.getString(entry, request, "content");
 		</aui:select>
 
 		<aui:select name="priority">
-			<aui:option label="normal" value="0" />
-			<aui:option label="important" value="1" />
+			<aui:option label="normal" selected="<%= (entry != null) && (entry.getPriority() == 0) %>" value="0" />
+			<aui:option label="important" selected="<%= (entry != null) && (entry.getPriority() == 1) %>" value="1" />
 		</aui:select>
 
 		<aui:input name="displayDate" />

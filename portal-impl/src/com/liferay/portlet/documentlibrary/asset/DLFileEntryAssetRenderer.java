@@ -37,6 +37,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.Locale;
 
@@ -114,12 +115,16 @@ public class DLFileEntryAssetRenderer
 	}
 
 	public String getTitle(Locale locale) {
+		String title = null;
+
 		if (_type == AssetRendererFactory.TYPE_LATEST) {
-			return _fileVersion.getTitle();
+			title = _fileVersion.getTitle();
 		}
 		else {
-			return _fileEntry.getTitle();
+			title = _fileEntry.getTitle();
 		}
+
+		return TrashUtil.getOriginalTitle(title);
 	}
 
 	public String getType() {
@@ -253,15 +258,6 @@ public class DLFileEntryAssetRenderer
 		else {
 			return null;
 		}
-	}
-
-	@Override
-	public String renderActions(
-		RenderRequest renderRequest, RenderResponse renderResponse) {
-
-		renderRequest.setAttribute("view_entries.jsp-fileEntry", _fileEntry);
-
-		return "/html/portlet/document_library/file_entry_action.jsp";
 	}
 
 	private FileEntry _fileEntry;

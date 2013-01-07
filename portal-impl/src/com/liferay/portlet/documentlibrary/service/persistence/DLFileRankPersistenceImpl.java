@@ -15,7 +15,6 @@
 package com.liferay.portlet.documentlibrary.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,8 +35,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.LayoutPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.documentlibrary.NoSuchFileRankException;
@@ -2444,13 +2441,61 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(DLFileRank dlFileRank) {
+		if (dlFileRank.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(dlFileRank.getCompanyId()),
+					Long.valueOf(dlFileRank.getUserId()),
+					Long.valueOf(dlFileRank.getFileEntryId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_U_F, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U_F, args,
+				dlFileRank);
+		}
+		else {
+			DLFileRankModelImpl dlFileRankModelImpl = (DLFileRankModelImpl)dlFileRank;
+
+			if ((dlFileRankModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_U_F.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(dlFileRank.getCompanyId()),
+						Long.valueOf(dlFileRank.getUserId()),
+						Long.valueOf(dlFileRank.getFileEntryId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_U_F, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U_F, args,
+					dlFileRank);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(DLFileRank dlFileRank) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U_F,
-			new Object[] {
+		DLFileRankModelImpl dlFileRankModelImpl = (DLFileRankModelImpl)dlFileRank;
+
+		Object[] args = new Object[] {
 				Long.valueOf(dlFileRank.getCompanyId()),
 				Long.valueOf(dlFileRank.getUserId()),
 				Long.valueOf(dlFileRank.getFileEntryId())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U_F, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U_F, args);
+
+		if ((dlFileRankModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_U_F.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(dlFileRankModelImpl.getOriginalCompanyId()),
+					Long.valueOf(dlFileRankModelImpl.getOriginalUserId()),
+					Long.valueOf(dlFileRankModelImpl.getOriginalFileEntryId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U_F, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U_F, args);
+		}
 	}
 
 	/**
@@ -2681,35 +2726,8 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 		EntityCacheUtil.putResult(DLFileRankModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileRankImpl.class, dlFileRank.getPrimaryKey(), dlFileRank);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U_F,
-				new Object[] {
-					Long.valueOf(dlFileRank.getCompanyId()),
-					Long.valueOf(dlFileRank.getUserId()),
-					Long.valueOf(dlFileRank.getFileEntryId())
-				}, dlFileRank);
-		}
-		else {
-			if ((dlFileRankModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_U_F.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(dlFileRankModelImpl.getOriginalCompanyId()),
-						Long.valueOf(dlFileRankModelImpl.getOriginalUserId()),
-						Long.valueOf(dlFileRankModelImpl.getOriginalFileEntryId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_U_F, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U_F, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U_F,
-					new Object[] {
-						Long.valueOf(dlFileRank.getCompanyId()),
-						Long.valueOf(dlFileRank.getUserId()),
-						Long.valueOf(dlFileRank.getFileEntryId())
-					}, dlFileRank);
-			}
-		}
+		clearUniqueFindersCache(dlFileRank);
+		cacheUniqueFindersCache(dlFileRank);
 
 		return dlFileRank;
 	}
@@ -3033,28 +3051,6 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = DLContentPersistence.class)
-	protected DLContentPersistence dlContentPersistence;
-	@BeanReference(type = DLFileEntryPersistence.class)
-	protected DLFileEntryPersistence dlFileEntryPersistence;
-	@BeanReference(type = DLFileEntryMetadataPersistence.class)
-	protected DLFileEntryMetadataPersistence dlFileEntryMetadataPersistence;
-	@BeanReference(type = DLFileEntryTypePersistence.class)
-	protected DLFileEntryTypePersistence dlFileEntryTypePersistence;
-	@BeanReference(type = DLFileRankPersistence.class)
-	protected DLFileRankPersistence dlFileRankPersistence;
-	@BeanReference(type = DLFileShortcutPersistence.class)
-	protected DLFileShortcutPersistence dlFileShortcutPersistence;
-	@BeanReference(type = DLFileVersionPersistence.class)
-	protected DLFileVersionPersistence dlFileVersionPersistence;
-	@BeanReference(type = DLFolderPersistence.class)
-	protected DLFolderPersistence dlFolderPersistence;
-	@BeanReference(type = DLSyncPersistence.class)
-	protected DLSyncPersistence dlSyncPersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_DLFILERANK = "SELECT dlFileRank FROM DLFileRank dlFileRank";
 	private static final String _SQL_SELECT_DLFILERANK_WHERE = "SELECT dlFileRank FROM DLFileRank dlFileRank WHERE ";
 	private static final String _SQL_COUNT_DLFILERANK = "SELECT COUNT(dlFileRank) FROM DLFileRank dlFileRank";

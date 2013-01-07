@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ResourceConstants;
@@ -293,8 +294,8 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			return dlFolderPersistence.findByG_P(groupId, parentFolderId);
 		}
 		else {
-			return dlFolderPersistence.findByG_M_P(
-				groupId, false, parentFolderId);
+			return dlFolderPersistence.findByG_M_P_H(
+				groupId, false, parentFolderId, false);
 		}
 	}
 
@@ -308,8 +309,8 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 				groupId, parentFolderId, start, end, obc);
 		}
 		else {
-			return dlFolderPersistence.findByG_M_P(
-				groupId, false, parentFolderId, start, end, obc);
+			return dlFolderPersistence.findByG_M_P_H(
+				groupId, false, parentFolderId, false, start, end, obc);
 		}
 	}
 
@@ -421,8 +422,8 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			return dlFolderPersistence.countByG_P(groupId, parentFolderId);
 		}
 		else {
-			return dlFolderPersistence.countByG_M_P(
-				groupId, false, parentFolderId);
+			return dlFolderPersistence.countByG_M_P_H(
+				groupId, false, parentFolderId, false);
 		}
 	}
 
@@ -437,14 +438,15 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			OrderByComparator obc)
 		throws SystemException {
 
-		return dlFolderPersistence.findByG_M_P(
-			groupId, true, parentFolderId, start, end, obc);
+		return dlFolderPersistence.findByG_M_P_H(
+			groupId, true, parentFolderId, false, start, end, obc);
 	}
 
 	public int getMountFoldersCount(long groupId, long parentFolderId)
 		throws SystemException {
 
-		return dlFolderPersistence.countByG_M_P(groupId, true, parentFolderId);
+		return dlFolderPersistence.countByG_M_P_H(
+			groupId, true, parentFolderId, false);
 	}
 
 	public void getSubfolderIds(
@@ -618,7 +620,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 		if (dlFolder.isInTrash() &&
 			(status == WorkflowConstants.STATUS_APPROVED)) {
 
-			dlFolder.setName(TrashUtil.stripTrashNamespace(dlFolder.getName()));
+			dlFolder.setName(TrashUtil.getOriginalTitle(dlFolder.getName()));
 		}
 
 		dlFolder.setStatus(status);
@@ -637,16 +639,20 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			getFoldersAndFileEntriesAndFileShortcuts(
 				dlFolder.getGroupId(), folderId, null, false, queryDefinition);
 
-		dlAppHelperLocalService.updateStatuses(
+		dlAppHelperLocalService.updateDependentStatus(
 			user, foldersAndFileEntriesAndFileShortcuts, status);
 
 		// Trash
 
 		if (status == WorkflowConstants.STATUS_IN_TRASH) {
+			UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+			typeSettingsProperties.put("title", dlFolder.getName());
+
 			trashEntryLocalService.addTrashEntry(
 				userId, dlFolder.getGroupId(), DLFolderConstants.getClassName(),
 				dlFolder.getFolderId(), WorkflowConstants.STATUS_APPROVED, null,
-				null);
+				typeSettingsProperties);
 		}
 
 		return dlFolder;

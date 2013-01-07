@@ -15,7 +15,6 @@
 package com.liferay.portlet.social.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -37,8 +36,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.social.NoSuchActivityAchievementException;
@@ -3109,15 +3106,68 @@ public class SocialActivityAchievementPersistenceImpl
 		}
 	}
 
+	protected void cacheUniqueFindersCache(
+		SocialActivityAchievement socialActivityAchievement) {
+		if (socialActivityAchievement.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(socialActivityAchievement.getGroupId()),
+					Long.valueOf(socialActivityAchievement.getUserId()),
+					
+					socialActivityAchievement.getName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_U_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_N, args,
+				socialActivityAchievement);
+		}
+		else {
+			SocialActivityAchievementModelImpl socialActivityAchievementModelImpl =
+				(SocialActivityAchievementModelImpl)socialActivityAchievement;
+
+			if ((socialActivityAchievementModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_U_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(socialActivityAchievement.getGroupId()),
+						Long.valueOf(socialActivityAchievement.getUserId()),
+						
+						socialActivityAchievement.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_U_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_N, args,
+					socialActivityAchievement);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(
 		SocialActivityAchievement socialActivityAchievement) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_N,
-			new Object[] {
+		SocialActivityAchievementModelImpl socialActivityAchievementModelImpl = (SocialActivityAchievementModelImpl)socialActivityAchievement;
+
+		Object[] args = new Object[] {
 				Long.valueOf(socialActivityAchievement.getGroupId()),
 				Long.valueOf(socialActivityAchievement.getUserId()),
 				
-			socialActivityAchievement.getName()
-			});
+				socialActivityAchievement.getName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_N, args);
+
+		if ((socialActivityAchievementModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_U_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(socialActivityAchievementModelImpl.getOriginalGroupId()),
+					Long.valueOf(socialActivityAchievementModelImpl.getOriginalUserId()),
+					
+					socialActivityAchievementModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_N, args);
+		}
 	}
 
 	/**
@@ -3374,38 +3424,8 @@ public class SocialActivityAchievementPersistenceImpl
 			SocialActivityAchievementImpl.class,
 			socialActivityAchievement.getPrimaryKey(), socialActivityAchievement);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_N,
-				new Object[] {
-					Long.valueOf(socialActivityAchievement.getGroupId()),
-					Long.valueOf(socialActivityAchievement.getUserId()),
-					
-				socialActivityAchievement.getName()
-				}, socialActivityAchievement);
-		}
-		else {
-			if ((socialActivityAchievementModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_U_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(socialActivityAchievementModelImpl.getOriginalGroupId()),
-						Long.valueOf(socialActivityAchievementModelImpl.getOriginalUserId()),
-						
-						socialActivityAchievementModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_N,
-					new Object[] {
-						Long.valueOf(socialActivityAchievement.getGroupId()),
-						Long.valueOf(socialActivityAchievement.getUserId()),
-						
-					socialActivityAchievement.getName()
-					}, socialActivityAchievement);
-			}
-		}
+		clearUniqueFindersCache(socialActivityAchievement);
+		cacheUniqueFindersCache(socialActivityAchievement);
 
 		return socialActivityAchievement;
 	}
@@ -3733,24 +3753,6 @@ public class SocialActivityAchievementPersistenceImpl
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = SocialActivityAchievementPersistence.class)
-	protected SocialActivityAchievementPersistence socialActivityAchievementPersistence;
-	@BeanReference(type = SocialActivityCounterPersistence.class)
-	protected SocialActivityCounterPersistence socialActivityCounterPersistence;
-	@BeanReference(type = SocialActivityLimitPersistence.class)
-	protected SocialActivityLimitPersistence socialActivityLimitPersistence;
-	@BeanReference(type = SocialActivitySettingPersistence.class)
-	protected SocialActivitySettingPersistence socialActivitySettingPersistence;
-	@BeanReference(type = SocialRelationPersistence.class)
-	protected SocialRelationPersistence socialRelationPersistence;
-	@BeanReference(type = SocialRequestPersistence.class)
-	protected SocialRequestPersistence socialRequestPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_SOCIALACTIVITYACHIEVEMENT = "SELECT socialActivityAchievement FROM SocialActivityAchievement socialActivityAchievement";
 	private static final String _SQL_SELECT_SOCIALACTIVITYACHIEVEMENT_WHERE = "SELECT socialActivityAchievement FROM SocialActivityAchievement socialActivityAchievement WHERE ";
 	private static final String _SQL_COUNT_SOCIALACTIVITYACHIEVEMENT = "SELECT COUNT(socialActivityAchievement) FROM SocialActivityAchievement socialActivityAchievement";

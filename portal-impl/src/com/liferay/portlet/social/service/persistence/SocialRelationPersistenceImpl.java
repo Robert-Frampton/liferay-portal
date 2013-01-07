@@ -15,7 +15,6 @@
 package com.liferay.portlet.social.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -38,7 +37,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.social.NoSuchRelationException;
@@ -5464,13 +5462,61 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		}
 	}
 
+	protected void cacheUniqueFindersCache(SocialRelation socialRelation) {
+		if (socialRelation.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(socialRelation.getUserId1()),
+					Long.valueOf(socialRelation.getUserId2()),
+					Integer.valueOf(socialRelation.getType())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U1_U2_T, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U1_U2_T, args,
+				socialRelation);
+		}
+		else {
+			SocialRelationModelImpl socialRelationModelImpl = (SocialRelationModelImpl)socialRelation;
+
+			if ((socialRelationModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_U1_U2_T.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(socialRelation.getUserId1()),
+						Long.valueOf(socialRelation.getUserId2()),
+						Integer.valueOf(socialRelation.getType())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U1_U2_T, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U1_U2_T, args,
+					socialRelation);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(SocialRelation socialRelation) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U1_U2_T,
-			new Object[] {
+		SocialRelationModelImpl socialRelationModelImpl = (SocialRelationModelImpl)socialRelation;
+
+		Object[] args = new Object[] {
 				Long.valueOf(socialRelation.getUserId1()),
 				Long.valueOf(socialRelation.getUserId2()),
 				Integer.valueOf(socialRelation.getType())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_U2_T, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U1_U2_T, args);
+
+		if ((socialRelationModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_U1_U2_T.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(socialRelationModelImpl.getOriginalUserId1()),
+					Long.valueOf(socialRelationModelImpl.getOriginalUserId2()),
+					Integer.valueOf(socialRelationModelImpl.getOriginalType())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_U2_T, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U1_U2_T, args);
+		}
 	}
 
 	/**
@@ -5828,35 +5874,8 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			SocialRelationImpl.class, socialRelation.getPrimaryKey(),
 			socialRelation);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U1_U2_T,
-				new Object[] {
-					Long.valueOf(socialRelation.getUserId1()),
-					Long.valueOf(socialRelation.getUserId2()),
-					Integer.valueOf(socialRelation.getType())
-				}, socialRelation);
-		}
-		else {
-			if ((socialRelationModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U1_U2_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId1()),
-						Long.valueOf(socialRelationModelImpl.getOriginalUserId2()),
-						Integer.valueOf(socialRelationModelImpl.getOriginalType())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U1_U2_T, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U1_U2_T, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U1_U2_T,
-					new Object[] {
-						Long.valueOf(socialRelation.getUserId1()),
-						Long.valueOf(socialRelation.getUserId2()),
-						Integer.valueOf(socialRelation.getType())
-					}, socialRelation);
-			}
-		}
+		clearUniqueFindersCache(socialRelation);
+		cacheUniqueFindersCache(socialRelation);
 
 		return socialRelation;
 	}
@@ -6181,22 +6200,6 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = SocialActivityAchievementPersistence.class)
-	protected SocialActivityAchievementPersistence socialActivityAchievementPersistence;
-	@BeanReference(type = SocialActivityCounterPersistence.class)
-	protected SocialActivityCounterPersistence socialActivityCounterPersistence;
-	@BeanReference(type = SocialActivityLimitPersistence.class)
-	protected SocialActivityLimitPersistence socialActivityLimitPersistence;
-	@BeanReference(type = SocialActivitySettingPersistence.class)
-	protected SocialActivitySettingPersistence socialActivitySettingPersistence;
-	@BeanReference(type = SocialRelationPersistence.class)
-	protected SocialRelationPersistence socialRelationPersistence;
-	@BeanReference(type = SocialRequestPersistence.class)
-	protected SocialRequestPersistence socialRequestPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_SOCIALRELATION = "SELECT socialRelation FROM SocialRelation socialRelation";
 	private static final String _SQL_SELECT_SOCIALRELATION_WHERE = "SELECT socialRelation FROM SocialRelation socialRelation WHERE ";
 	private static final String _SQL_COUNT_SOCIALRELATION = "SELECT COUNT(socialRelation) FROM SocialRelation socialRelation";

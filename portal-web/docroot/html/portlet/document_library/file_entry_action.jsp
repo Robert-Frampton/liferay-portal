@@ -97,6 +97,8 @@ else if (fileEntry != null) {
 	folderId = fileEntry.getFolderId();
 }
 
+boolean checkedOut = fileEntry.isCheckedOut();
+boolean hasLock = fileEntry.hasLock();
 boolean restore = false;
 
 PortletURL viewFolderURL = liferayPortletResponse.createRenderURL();

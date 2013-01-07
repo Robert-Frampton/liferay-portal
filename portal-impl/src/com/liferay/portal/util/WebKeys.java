@@ -160,9 +160,9 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 
 	public static final String JOURNAL_RECENT_ARTICLES = "JOURNAL_RECENT_ARTICLES";
 
-	public static final String JOURNAL_RECENT_STRUCTURES = "JOURNAL_RECENT_STRUCTURES";
+	public static final String JOURNAL_RECENT_DYNAMIC_DATA_MAPPING_STRUCTURES = "JOURNAL_RECENT_DYNAMIC_DATA_MAPPING_STRUCTURES";
 
-	public static final String JOURNAL_RECENT_TEMPLATES = "JOURNAL_RECENT_TEMPLATES";
+	public static final String JOURNAL_RECENT_DYNAMIC_DATA_MAPPING_TEMPLATES = "JOURNAL_RECENT_DYNAMIC_DATA_MAPPING_TEMPLATES";
 
 	public static final String JOURNAL_STRUCTURE = "JOURNAL_STRUCTURE";
 
@@ -433,6 +433,8 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 	public static final String TRASH_CONTAINER_MODEL = "TRASH_CONTAINER_MODEL";
 
 	public static final String TRASH_ENTRY = "TRASH_ENTRY";
+
+	public static final String TRASH_RENDERER = "TRASH_RENDERER";
 
 	public static final String TREE_GROUP_ID = "TREE_GROUP_ID";
 

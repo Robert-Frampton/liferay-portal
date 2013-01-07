@@ -40,6 +40,26 @@ public class DDMXSDUtil {
 		return _ddmXSD;
 	}
 
+	public static String getFieldHTML(
+			PageContext pageContext, Element element, Fields fields,
+			String namespace, String mode, boolean readOnly, Locale locale)
+		throws Exception {
+
+		return getDDMXSD().getFieldHTML(
+			pageContext, element, fields, namespace, mode, readOnly, locale);
+	}
+
+	public static String getFieldHTMLByName(
+			PageContext pageContext, long classNameId, long classPK,
+			String fieldName, Fields fields, String namespace, String mode,
+			boolean readOnly, Locale locale)
+		throws Exception {
+
+		return getDDMXSD().getFieldHTMLByName(
+			pageContext, classNameId, classPK, fieldName, fields, namespace,
+			mode, readOnly, locale);
+	}
+
 	public static String getHTML(
 			PageContext pageContext, DDMStructure ddmStructure, Fields fields,
 			String namespace, boolean readOnly, Locale locale)
@@ -89,6 +109,12 @@ public class DDMXSDUtil {
 		return getDDMXSD().getHTML(pageContext, xml, locale);
 	}
 
+	public static JSONArray getJSONArray(DDMStructure structure, String xsd)
+		throws PortalException, SystemException {
+
+		return getDDMXSD().getJSONArray(structure, xsd);
+	}
+
 	public static JSONArray getJSONArray(Document document)
 		throws PortalException {
 
@@ -105,6 +131,12 @@ public class DDMXSDUtil {
 		throws PortalException, SystemException {
 
 		return getDDMXSD().getJSONArray(xml);
+	}
+
+	public static String getXSD(long classNameId, long classPK)
+		throws PortalException, SystemException {
+
+		return getDDMXSD().getXSD(classNameId, classPK);
 	}
 
 	public void setDDMXSD(DDMXSD ddmXSD) {

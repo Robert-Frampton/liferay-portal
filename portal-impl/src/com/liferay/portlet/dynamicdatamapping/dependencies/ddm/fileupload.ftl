@@ -1,6 +1,6 @@
 <#include "../init.ftl">
 
-<div class="aui-field-wrapper-content lfr-forms-field-wrapper">
+<@aui["field-wrapper"] data=data helpMessage=escape(fieldStructure.tip)>
 	<@aui.input cssClass=cssClass helpMessage=escape(fieldStructure.tip) label=escape(label) name=namespacedFieldName type="file">
 		<@aui.validator name="acceptFiles">
 			'${escapeJS(fieldStructure.acceptFiles)}'
@@ -18,7 +18,7 @@
 		<#assign className = fileJSONObject.getString("className")>
 		<#assign classPK = fileJSONObject.getString("classPK")>
 
-		<a href="/documents/ddm/${className}/${classPK}/${fieldName}">${fileName}</a>
+		<a href="/documents/ddm/${className}/${classPK}/${fieldName}/${valueIndex}">${fileName}</a>
 
 		<#if !required>
 			-
@@ -30,6 +30,7 @@
 					<@liferay_portlet.param name="redirect" value=portalUtil.getCurrentURL(request) />
 					<@liferay_portlet.param name="recordId" value=recordId />
 					<@liferay_portlet.param name="fieldName" value=fieldName />
+					<@liferay_portlet.param name="valueIndex" value=valueIndex?string />
 				</@>">
 
 				<@liferay_ui.message key="delete" />
@@ -38,4 +39,4 @@
 	</#if>
 
 	${fieldStructure.children}
-</div>
+</@>

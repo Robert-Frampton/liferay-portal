@@ -160,6 +160,10 @@
 					<replacefilter token="../../../../../build/aui-skin-base/images/" value="" />
 				</replace>
 
+				<replace file="docroot/html/ALLOY_ZIP/build/aui-skins/tmp/alloy.css">
+					<replacefilter token="../../../../../build/aui-skin-classic/images/" value="" />
+				</replace>
+
 				<copy
 					file="docroot/html/ALLOY_ZIP/build/aui-skins/tmp/alloy.css"
 					tofile="docroot/html/css/portal/aui.css"
@@ -170,6 +174,10 @@
 
 				<copy todir="docroot/html/themes/_unstyled/images/aui/">
 					<fileset dir="docroot/html/ALLOY_ZIP/build/aui-skin-base/images/" />
+				</copy>
+
+				<copy todir="docroot/html/themes/_unstyled/images/aui/">
+					<fileset dir="docroot/html/ALLOY_ZIP/build/aui-skin-classic/images/" />
 				</copy>
 
 				<!-- Clean up -->
@@ -324,6 +332,64 @@
 							<replacetoken><![CDATA[return node.type = CKEDITOR.NODE_ELEMENT && node.is( 'li' );]]></replacetoken>
 							<replacevalue>
 								<![CDATA[return node.type = CKEDITOR.NODE_ELEMENT && node.is && node.is( 'li' );]]>
+							</replacevalue>
+						</replace>
+
+						<replace file="docroot/html/js/editor/ckeditor/_source/plugins/htmldataprocessor/plugin.js">
+							<replacetoken><![CDATA[function trimFillers( block, fromSource )]]></replacetoken>
+							<replacevalue>
+								<![CDATA[
+									function getNodeIndex( node ) {
+										var parent = node.parent;
+										return parent ? CKEDITOR.tools.indexOf( parent.children, node ) : -1;
+									}
+
+									function trimFillers( block, fromSource )
+								]]>
+							</replacevalue>
+						</replace>
+
+						<replace file="docroot/html/js/editor/ckeditor/_source/plugins/htmldataprocessor/plugin.js">
+							<replacetoken><![CDATA[var children = element.children;]]></replacetoken>
+							<replacevalue>
+								<![CDATA[
+
+									// Clone the array as it would become empty during the sort call
+
+									var children = element.children.slice( 0 );
+								]]>
+							</replacevalue>
+						</replace>
+
+						<replace file="docroot/html/js/editor/ckeditor/_source/plugins/htmldataprocessor/plugin.js">
+							<replacetoken><![CDATA[return node1.type == CKEDITOR.NODE_ELEMENT && node2.type == node1.type ?]]></replacetoken>
+							<replacevalue>
+								<![CDATA[
+									var index1, index2;
+
+									// Compare in the predefined order
+
+									if (node1.type == CKEDITOR.NODE_ELEMENT && node2.type == node1.type) {
+										index1 = CKEDITOR.tools.indexOf( tableOrder, node1.name );
+										index2 = CKEDITOR.tools.indexOf( tableOrder, node2.name );
+									}
+
+									// Make sure the sort is stable if no order can be established above
+
+									if (!(index1 > -1 && index2 > -1 && index1 != index2)) {
+										index1 = getNodeIndex( node1 );
+										index2 = getNodeIndex( node2 );
+									}
+
+									return index1 > index2 ? 1 : -1;
+								]]>
+							</replacevalue>
+						</replace>
+
+						<replace file="docroot/html/js/editor/ckeditor/_source/plugins/htmldataprocessor/plugin.js">
+							<replacetoken><![CDATA[CKEDITOR.tools.indexOf( tableOrder, node1.name )  > CKEDITOR.tools.indexOf( tableOrder, node2.name ) ? 1 : -1 : 0;]]></replacetoken>
+							<replacevalue>
+								<![CDATA[]]>
 							</replacevalue>
 						</replace>
 
@@ -907,7 +973,7 @@
 				<copy todir="@{module.name}" overwrite="true" preservelastmodified="true">
 					<fileset
 						dir="docroot/html/themes/_unstyled"
-						excludes="templates/init.vm"
+						excludes="templates/init.ftl,templates/init.vm"
 					/>
 				</copy>
 
@@ -1158,7 +1224,7 @@
 						</antelope:stringutil>
 
 						<fail>
-The following JSPs may be too large for some application servers. Ssee LPS-27841
+The following JSPs may be too large for some application servers. See LPS-27841
 for more information.
 
 ${oversize.files.jsp}</fail>

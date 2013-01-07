@@ -642,15 +642,34 @@ public class WikiPageLocalServiceUtil {
 		return getService().getPagesCount(format);
 	}
 
+	/**
+	* @deprecated {@link #getRecentChanges(long, long, int, int)}
+	*/
 	public static java.util.List<com.liferay.portlet.wiki.model.WikiPage> getRecentChanges(
 		long nodeId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getRecentChanges(nodeId, start, end);
 	}
 
-	public static int getRecentChangesCount(long nodeId)
+	public static java.util.List<com.liferay.portlet.wiki.model.WikiPage> getRecentChanges(
+		long groupId, long nodeId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getRecentChanges(groupId, nodeId, start, end);
+	}
+
+	/**
+	* @deprecated {@link #getRecentChangesCount(long, long)}
+	*/
+	public static int getRecentChangesCount(long nodeId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getRecentChangesCount(nodeId);
+	}
+
+	public static int getRecentChangesCount(long groupId, long nodeId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getRecentChangesCount(groupId, nodeId);
 	}
 
 	public static java.lang.String[] getTempPageAttachmentNames(long userId,
@@ -778,16 +797,6 @@ public class WikiPageLocalServiceUtil {
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .updateStatus(userId, resourcePrimKey, status, serviceContext);
-	}
-
-	public static com.liferay.portlet.wiki.model.WikiPage updateStatus(
-		long userId, com.liferay.portlet.wiki.model.WikiPage page, int status,
-		int nodeStatus, com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .updateStatus(userId, page, status, nodeStatus,
-			serviceContext);
 	}
 
 	public static com.liferay.portlet.wiki.model.WikiPage updateStatus(

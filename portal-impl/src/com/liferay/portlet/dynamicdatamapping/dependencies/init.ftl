@@ -8,7 +8,17 @@
 
 <#assign cssClass = escapeAttribute(fieldStructure.fieldCssClass!"")>
 
+<#-- Repeatable -->
+
+<#assign repeatable = false>
+
+<#if fieldStructure.repeatable?? && (fieldStructure.repeatable == "true")>
+	<#assign repeatable = true>
+</#if>
+
 <#-- Field name -->
+
+<#assign fieldNamespace = "_INSTANCE_" + fieldStructure.fieldNamespace>
 
 <#assign fieldName = fieldStructure.name>
 
@@ -21,9 +31,19 @@
 	<#assign fieldName = parentName>
 </#if>
 
-<#assign namespacedFieldName = "${namespace}${fieldName}">
+<#assign namespace = namespace!"">
+
+<#assign namespacedFieldName = "${namespace}${fieldName}${fieldNamespace}">
 
 <#assign namespacedParentName = "${namespace}${parentName}">
+
+<#-- Data -->
+
+<#assign data = {
+	"fieldName": fieldStructure.name,
+	"fieldNamespace": fieldNamespace,
+	"repeatable": repeatable?string
+}>
 
 <#-- Predefined value -->
 
@@ -41,8 +61,10 @@
 <#if fields?? && fields.get(fieldName)??>
 	<#assign field = fields.get(fieldName)>
 
-	<#assign fieldValue = field.getRenderedValue(locale)>
-	<#assign fieldRawValue = field.getValue()>
+	<#assign valueIndex = getterUtil.getInteger(fieldStructure.valueIndex)>
+
+	<#assign fieldValue = field.getRenderedValue(requestedLocale, valueIndex)>
+	<#assign fieldRawValue = field.getValue(requestedLocale, valueIndex)>
 </#if>
 
 <#-- Label -->

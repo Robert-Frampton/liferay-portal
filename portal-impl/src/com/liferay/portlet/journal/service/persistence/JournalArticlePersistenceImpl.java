@@ -15,7 +15,6 @@
 package com.liferay.portlet.journal.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -41,26 +40,12 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
-import com.liferay.portal.service.persistence.CompanyPersistence;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.ImagePersistence;
-import com.liferay.portal.service.persistence.PortletPreferencesPersistence;
-import com.liferay.portal.service.persistence.SubscriptionPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
-import com.liferay.portal.service.persistence.WorkflowInstanceLinkPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.asset.service.persistence.AssetCategoryPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
-import com.liferay.portlet.asset.service.persistence.AssetTagPersistence;
-import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
 import com.liferay.portlet.journal.NoSuchArticleException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.impl.JournalArticleImpl;
 import com.liferay.portlet.journal.model.impl.JournalArticleModelImpl;
-import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistence;
-import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
 
 import java.io.Serializable;
 
@@ -24312,28 +24297,157 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		}
 	}
 
+	protected void cacheUniqueFindersCache(JournalArticle journalArticle) {
+		if (journalArticle.isNew()) {
+			Object[] args = new Object[] {
+					journalArticle.getUuid(),
+					Long.valueOf(journalArticle.getGroupId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+				journalArticle);
+
+			args = new Object[] {
+					Long.valueOf(journalArticle.getGroupId()),
+					Long.valueOf(journalArticle.getClassNameId()),
+					
+					journalArticle.getStructureId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_S, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_S, args,
+				journalArticle);
+
+			args = new Object[] {
+					Long.valueOf(journalArticle.getGroupId()),
+					
+					journalArticle.getArticleId(),
+					Double.valueOf(journalArticle.getVersion())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_A_V, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_A_V, args,
+				journalArticle);
+		}
+		else {
+			JournalArticleModelImpl journalArticleModelImpl = (JournalArticleModelImpl)journalArticle;
+
+			if ((journalArticleModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						journalArticle.getUuid(),
+						Long.valueOf(journalArticle.getGroupId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+					journalArticle);
+			}
+
+			if ((journalArticleModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_C_S.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(journalArticle.getGroupId()),
+						Long.valueOf(journalArticle.getClassNameId()),
+						
+						journalArticle.getStructureId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C_S, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_S, args,
+					journalArticle);
+			}
+
+			if ((journalArticleModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_A_V.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(journalArticle.getGroupId()),
+						
+						journalArticle.getArticleId(),
+						Double.valueOf(journalArticle.getVersion())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_A_V, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_A_V, args,
+					journalArticle);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(JournalArticle journalArticle) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
+		JournalArticleModelImpl journalArticleModelImpl = (JournalArticleModelImpl)journalArticle;
+
+		Object[] args = new Object[] {
 				journalArticle.getUuid(),
 				Long.valueOf(journalArticle.getGroupId())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_S,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+
+		if ((journalArticleModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					journalArticleModelImpl.getOriginalUuid(),
+					Long.valueOf(journalArticleModelImpl.getOriginalGroupId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(journalArticle.getGroupId()),
 				Long.valueOf(journalArticle.getClassNameId()),
 				
-			journalArticle.getStructureId()
-			});
+				journalArticle.getStructureId()
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_A_V,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_S, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_S, args);
+
+		if ((journalArticleModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_C_S.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(journalArticleModelImpl.getOriginalGroupId()),
+					Long.valueOf(journalArticleModelImpl.getOriginalClassNameId()),
+					
+					journalArticleModelImpl.getOriginalStructureId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_S, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_S, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(journalArticle.getGroupId()),
 				
-			journalArticle.getArticleId(),
+				journalArticle.getArticleId(),
 				Double.valueOf(journalArticle.getVersion())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_A_V, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_A_V, args);
+
+		if ((journalArticleModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_A_V.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(journalArticleModelImpl.getOriginalGroupId()),
+					
+					journalArticleModelImpl.getOriginalArticleId(),
+					Double.valueOf(journalArticleModelImpl.getOriginalVersion())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_A_V, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_A_V, args);
+		}
 	}
 
 	/**
@@ -25101,92 +25215,8 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			JournalArticleImpl.class, journalArticle.getPrimaryKey(),
 			journalArticle);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-				new Object[] {
-					journalArticle.getUuid(),
-					Long.valueOf(journalArticle.getGroupId())
-				}, journalArticle);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_S,
-				new Object[] {
-					Long.valueOf(journalArticle.getGroupId()),
-					Long.valueOf(journalArticle.getClassNameId()),
-					
-				journalArticle.getStructureId()
-				}, journalArticle);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_A_V,
-				new Object[] {
-					Long.valueOf(journalArticle.getGroupId()),
-					
-				journalArticle.getArticleId(),
-					Double.valueOf(journalArticle.getVersion())
-				}, journalArticle);
-		}
-		else {
-			if ((journalArticleModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						journalArticleModelImpl.getOriginalUuid(),
-						Long.valueOf(journalArticleModelImpl.getOriginalGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-					new Object[] {
-						journalArticle.getUuid(),
-						Long.valueOf(journalArticle.getGroupId())
-					}, journalArticle);
-			}
-
-			if ((journalArticleModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_C_S.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(journalArticleModelImpl.getOriginalGroupId()),
-						Long.valueOf(journalArticleModelImpl.getOriginalClassNameId()),
-						
-						journalArticleModelImpl.getOriginalStructureId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_S, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_S, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C_S,
-					new Object[] {
-						Long.valueOf(journalArticle.getGroupId()),
-						Long.valueOf(journalArticle.getClassNameId()),
-						
-					journalArticle.getStructureId()
-					}, journalArticle);
-			}
-
-			if ((journalArticleModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_A_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(journalArticleModelImpl.getOriginalGroupId()),
-						
-						journalArticleModelImpl.getOriginalArticleId(),
-						Double.valueOf(journalArticleModelImpl.getOriginalVersion())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_A_V, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_A_V, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_A_V,
-					new Object[] {
-						Long.valueOf(journalArticle.getGroupId()),
-						
-					journalArticle.getArticleId(),
-						Double.valueOf(journalArticle.getVersion())
-					}, journalArticle);
-			}
-		}
+		clearUniqueFindersCache(journalArticle);
+		cacheUniqueFindersCache(journalArticle);
 
 		return journalArticle;
 	}
@@ -25535,50 +25565,6 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = JournalArticlePersistence.class)
-	protected JournalArticlePersistence journalArticlePersistence;
-	@BeanReference(type = JournalArticleImagePersistence.class)
-	protected JournalArticleImagePersistence journalArticleImagePersistence;
-	@BeanReference(type = JournalArticleResourcePersistence.class)
-	protected JournalArticleResourcePersistence journalArticleResourcePersistence;
-	@BeanReference(type = JournalContentSearchPersistence.class)
-	protected JournalContentSearchPersistence journalContentSearchPersistence;
-	@BeanReference(type = JournalFeedPersistence.class)
-	protected JournalFeedPersistence journalFeedPersistence;
-	@BeanReference(type = JournalFolderPersistence.class)
-	protected JournalFolderPersistence journalFolderPersistence;
-	@BeanReference(type = JournalStructurePersistence.class)
-	protected JournalStructurePersistence journalStructurePersistence;
-	@BeanReference(type = JournalTemplatePersistence.class)
-	protected JournalTemplatePersistence journalTemplatePersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = PortletPreferencesPersistence.class)
-	protected PortletPreferencesPersistence portletPreferencesPersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
-	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@BeanReference(type = AssetCategoryPersistence.class)
-	protected AssetCategoryPersistence assetCategoryPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
-	@BeanReference(type = AssetTagPersistence.class)
-	protected AssetTagPersistence assetTagPersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = RatingsStatsPersistence.class)
-	protected RatingsStatsPersistence ratingsStatsPersistence;
 	private static final String _SQL_SELECT_JOURNALARTICLE = "SELECT journalArticle FROM JournalArticle journalArticle";
 	private static final String _SQL_SELECT_JOURNALARTICLE_WHERE = "SELECT journalArticle FROM JournalArticle journalArticle WHERE ";
 	private static final String _SQL_COUNT_JOURNALARTICLE = "SELECT COUNT(journalArticle) FROM JournalArticle journalArticle";

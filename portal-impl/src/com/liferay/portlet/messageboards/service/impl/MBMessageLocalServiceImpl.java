@@ -307,7 +307,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		message.setSubject(subject);
 		message.setBody(body);
 		message.setFormat(format);
-		message.setAttachments(!inputStreamOVPs.isEmpty());
 		message.setAnonymous(anonymous);
 
 		if (message.isDiscussion()) {
@@ -394,6 +393,23 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			userId, userName, groupId, categoryId, threadId, parentMessageId,
 			subject, body, format, inputStreamOVPs, anonymous, priority,
 			allowPingbacks, serviceContext);
+	}
+
+	public MBMessage addMessage(
+			long userId, String userName, long categoryId, String subject,
+			String body, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		MBCategory category = mbCategoryPersistence.findByPrimaryKey(
+			categoryId);
+
+		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
+			Collections.emptyList();
+
+		return addMessage(
+			userId, userName, category.getGroupId(), categoryId, 0, 0, subject,
+			body, MBMessageConstants.DEFAULT_FORMAT, inputStreamOVPs, false,
+			0.0, false, serviceContext);
 	}
 
 	public void addMessageResources(
@@ -495,10 +511,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 		// Attachments
 
-		if (message.isAttachments()) {
-			PortletFileRepositoryUtil.deleteFolder(
-				message.getAttachmentsFolderId());
-		}
+		PortletFileRepositoryUtil.deleteFolder(
+			message.getAttachmentsFolderId());
 
 		// Thread
 
@@ -1369,8 +1383,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		message.setModifiedDate(modifiedDate);
 		message.setSubject(subject);
 		message.setBody(body);
-		message.setAttachments(
-			!inputStreamOVPs.isEmpty() || !existingFiles.isEmpty());
 		message.setAllowPingbacks(allowPingbacks);
 
 		if (priority != MBThreadConstants.PRIORITY_NOT_GIVEN) {

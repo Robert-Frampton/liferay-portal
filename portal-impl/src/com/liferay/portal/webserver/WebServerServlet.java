@@ -337,19 +337,19 @@ public class WebServerServlet extends HttpServlet {
 		if (path.startsWith("/company_logo") ||
 			path.startsWith("/layout_set_logo") || path.startsWith("/logo")) {
 
-			return ImageLocalServiceUtil.getDefaultCompanyLogo();
+			return ImageToolUtil.getDefaultCompanyLogo();
 		}
 		else if (path.startsWith("/organization_logo")) {
-			return ImageLocalServiceUtil.getDefaultOrganizationLogo();
+			return ImageToolUtil.getDefaultOrganizationLogo();
 		}
 		else if (path.startsWith("/user_female_portrait")) {
-			return ImageLocalServiceUtil.getDefaultUserFemalePortrait();
+			return ImageToolUtil.getDefaultUserFemalePortrait();
 		}
 		else if (path.startsWith("/user_male_portrait")) {
-			return ImageLocalServiceUtil.getDefaultUserMalePortrait();
+			return ImageToolUtil.getDefaultUserMalePortrait();
 		}
 		else if (path.startsWith("/user_portrait")) {
-			return ImageLocalServiceUtil.getDefaultUserMalePortrait();
+			return ImageToolUtil.getDefaultUserMalePortrait();
 		}
 		else {
 			return null;
@@ -693,10 +693,11 @@ public class WebServerServlet extends HttpServlet {
 			String[] pathArray)
 		throws Exception {
 
-		if (pathArray.length == 4) {
+		if (pathArray.length == 5) {
 			String className = GetterUtil.getString(pathArray[1]);
 			long classPK = GetterUtil.getLong(pathArray[2]);
 			String fieldName = GetterUtil.getString(pathArray[3]);
+			int valueIndex = GetterUtil.getInteger(pathArray[4]);
 
 			Field field = null;
 
@@ -717,7 +718,7 @@ public class WebServerServlet extends HttpServlet {
 				field = fields.get(fieldName);
 			}
 
-			DDMUtil.sendFieldFile(request, response, field);
+			DDMUtil.sendFieldFile(request, response, field, valueIndex);
 		}
 	}
 
@@ -842,7 +843,7 @@ public class WebServerServlet extends HttpServlet {
 				(LiferayFileVersion)fileVersion;
 
 			if (liferayFileVersion.isInTrash() ||
-				liferayFileVersion.isInTrashFolder()) {
+				liferayFileVersion.isInTrashContainer()) {
 
 				int status = ParamUtil.getInteger(
 					request, "status", WorkflowConstants.STATUS_APPROVED);
@@ -869,7 +870,7 @@ public class WebServerServlet extends HttpServlet {
 
 			InputStream inputStream = fileVersion.getContentStream(true);
 
-			Image image = ImageLocalServiceUtil.getImage(inputStream);
+			Image image = ImageToolUtil.getImage(inputStream);
 
 			writeImage(image, request, response);
 

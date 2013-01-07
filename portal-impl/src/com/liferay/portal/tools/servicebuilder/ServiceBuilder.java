@@ -115,6 +115,81 @@ public class ServiceBuilder {
 
 	public static final String AUTHOR = "Brian Wing Shun Chan";
 
+	public static String getContent(String fileName) throws Exception {
+		Document document = _getContentDocument(fileName);
+
+		Element rootElement = document.getRootElement();
+
+		Element authorElement = null;
+		Element namespaceElement = null;
+		Map<String, Element> entityElements = new TreeMap<String, Element>();
+		Map<String, Element> exceptionElements = new TreeMap<String, Element>();
+
+		for (Element element : rootElement.elements()) {
+			String elementName = element.getName();
+
+			if (elementName.equals("author")) {
+				element.detach();
+
+				if (authorElement != null) {
+					throw new IllegalArgumentException(
+						"There can only be one author element");
+				}
+
+				authorElement = element;
+			}
+			else if (elementName.equals("namespace")) {
+				element.detach();
+
+				if (namespaceElement != null) {
+					throw new IllegalArgumentException(
+						"There can only be one namespace element");
+				}
+
+				namespaceElement = element;
+			}
+			else if (elementName.equals("entity")) {
+				element.detach();
+
+				String name = element.attributeValue("name");
+
+				entityElements.put(name.toLowerCase(), element);
+			}
+			else if (elementName.equals("exceptions")) {
+				element.detach();
+
+				for (Element exceptionElement : element.elements("exception")) {
+					exceptionElement.detach();
+
+					exceptionElements.put(
+						exceptionElement.getText(), exceptionElement);
+				}
+			}
+		}
+
+		if (authorElement != null) {
+			rootElement.add(authorElement);
+		}
+
+		if (namespaceElement == null) {
+			throw new IllegalArgumentException(
+				"The namespace element is required");
+		}
+		else {
+			rootElement.add(namespaceElement);
+		}
+
+		_addElements(rootElement, entityElements);
+
+		if (!exceptionElements.isEmpty()) {
+			Element exceptionsElement = rootElement.addElement("exceptions");
+
+			_addElements(exceptionsElement, exceptionElements);
+		}
+
+		return document.asXML();
+	}
+
 	public static void main(String[] args) {
 		Map<String, String> arguments = ArgumentsUtil.parseArguments(args);
 
@@ -127,7 +202,6 @@ public class ServiceBuilder {
 		String springFileName = arguments.get("service.spring.file");
 		String springBaseFileName = arguments.get("service.spring.base.file");
 		String springClusterFileName = arguments.get("service.spring.cluster.file");
-		String springDynamicDataSourceFileName = arguments.get("service.spring.dynamic.data.source.file");
 		String springHibernateFileName = arguments.get("service.spring.hibernate.file");
 		String springInfrastructureFileName = arguments.get("service.spring.infrastructure.file");
 		String springShardDataSourceFileName = arguments.get("service.spring.shard.data.source.file");
@@ -152,13 +226,13 @@ public class ServiceBuilder {
 			new ServiceBuilder(
 				fileName, hbmFileName, ormFileName, modelHintsFileName,
 				springFileName, springBaseFileName, springClusterFileName,
-				springDynamicDataSourceFileName, springHibernateFileName,
-				springInfrastructureFileName, springShardDataSourceFileName,
-				apiDir, implDir, remotingFileName, sqlDir,
-				sqlFileName, sqlIndexesFileName, sqlIndexesPropertiesFileName,
-				sqlSequencesFileName, autoNamespaceTables, beanLocatorUtil,
-				propsUtil, pluginName, targetEntityName, testDir, true,
-				buildNumber, buildNumberIncrement);
+				springHibernateFileName, springInfrastructureFileName,
+				springShardDataSourceFileName, apiDir, implDir,
+				remotingFileName, sqlDir, sqlFileName, sqlIndexesFileName,
+				sqlIndexesPropertiesFileName, sqlSequencesFileName,
+				autoNamespaceTables, beanLocatorUtil, propsUtil, pluginName,
+				targetEntityName, testDir, true, buildNumber,
+				buildNumberIncrement);
 		}
 		catch (RuntimeException re) {
 			System.out.println(
@@ -227,7 +301,6 @@ public class ServiceBuilder {
 				"\t-Dservice.tpl.service_util=" + _TPL_ROOT + "service_util.ftl\n"+
 				"\t-Dservice.tpl.service_wrapper=" + _TPL_ROOT + "service_wrapper.ftl\n"+
 				"\t-Dservice.tpl.spring_base_xml=" + _TPL_ROOT + "spring_base_xml.ftl\n"+
-				"\t-Dservice.tpl.spring_dynamic_data_source_xml=" + _TPL_ROOT + "spring_dynamic_data_source_xml.ftl\n"+
 				"\t-Dservice.tpl.spring_hibernate_xml=" + _TPL_ROOT + "spring_hibernate_xml.ftl\n"+
 				"\t-Dservice.tpl.spring_infrastructure_xml=" + _TPL_ROOT + "spring_infrastructure_xml.ftl\n"+
 				"\t-Dservice.tpl.spring_xml=" + _TPL_ROOT + "spring_xml.ftl\n"+
@@ -419,8 +492,7 @@ public class ServiceBuilder {
 		String fileName, String hbmFileName, String ormFileName,
 		String modelHintsFileName, String springFileName,
 		String springBaseFileName, String springClusterFileName,
-		String springDynamicDataSourceFileName, String springHibernateFileName,
-		String springInfrastructureFileName,
+		String springHibernateFileName, String springInfrastructureFileName,
 		String springShardDataSourceFileName, String apiDir, String implDir,
 		String remotingFileName, String sqlDir, String sqlFileName,
 		String sqlIndexesFileName, String sqlIndexesPropertiesFileName,
@@ -431,9 +503,9 @@ public class ServiceBuilder {
 		this(
 			fileName, hbmFileName, ormFileName, modelHintsFileName,
 			springFileName, springBaseFileName, springClusterFileName,
-			springDynamicDataSourceFileName, springHibernateFileName,
-			springInfrastructureFileName, springShardDataSourceFileName, apiDir,
-			implDir, remotingFileName, sqlDir, sqlFileName, sqlIndexesFileName,
+			springHibernateFileName, springInfrastructureFileName,
+			springShardDataSourceFileName, apiDir, implDir, remotingFileName,
+			sqlDir, sqlFileName, sqlIndexesFileName,
 			sqlIndexesPropertiesFileName, sqlSequencesFileName,
 			autoNamespaceTables, beanLocatorUtil, propsUtil, pluginName,
 			targetEntityName, testDir, true, 1, true);
@@ -443,8 +515,7 @@ public class ServiceBuilder {
 		String fileName, String hbmFileName, String ormFileName,
 		String modelHintsFileName, String springFileName,
 		String springBaseFileName, String springClusterFileName,
-		String springDynamicDataSourceFileName, String springHibernateFileName,
-		String springInfrastructureFileName,
+		String springHibernateFileName, String springInfrastructureFileName,
 		String springShardDataSourceFileName, String apiDir, String implDir,
 		String remotingFileName, String sqlDir, String sqlFileName,
 		String sqlIndexesFileName, String sqlIndexesPropertiesFileName,
@@ -509,8 +580,6 @@ public class ServiceBuilder {
 			"spring_base_xml", _tplSpringBaseXml);
 		_tplSpringClusterXml = _getTplProperty(
 			"spring_cluster_xml", _tplSpringClusterXml);
-		_tplSpringDynamicDataSourceXml = _getTplProperty(
-			"spring_dynamic_data_source_xml", _tplSpringDynamicDataSourceXml);
 		_tplSpringHibernateXml = _getTplProperty(
 			"spring_hibernate_xml", _tplSpringHibernateXml);
 		_tplSpringInfrastructureXml = _getTplProperty(
@@ -529,7 +598,6 @@ public class ServiceBuilder {
 			_springFileName = springFileName;
 			_springBaseFileName = springBaseFileName;
 			_springClusterFileName = springClusterFileName;
-			_springDynamicDataSourceFileName = springDynamicDataSourceFileName;
 			_springHibernateFileName = springHibernateFileName;
 			_springInfrastructureFileName = springInfrastructureFileName;
 			_springShardDataSourceFileName = springShardDataSourceFileName;
@@ -553,7 +621,7 @@ public class ServiceBuilder {
 			_buildNumber = buildNumber;
 			_buildNumberIncrement = buildNumberIncrement;
 
-			String content = _getContent(fileName);
+			String content = getContent(fileName);
 
 			Document document = SAXReaderUtil.read(content, true);
 
@@ -767,7 +835,6 @@ public class ServiceBuilder {
 				_createProps();
 				_createSpringBaseXml();
 				_createSpringClusterXml();
-				_createSpringDynamicDataSourceXml();
 				_createSpringHibernateXml();
 				_createSpringInfrastructureXml();
 				_createSpringShardDataSourceXml();
@@ -934,13 +1001,13 @@ public class ServiceBuilder {
 			ServiceBuilder serviceBuilder = new ServiceBuilder(
 				refFileName, _hbmFileName, _ormFileName, _modelHintsFileName,
 				_springFileName, _springBaseFileName, _springClusterFileName,
-				_springDynamicDataSourceFileName, _springHibernateFileName,
-				_springInfrastructureFileName, _springShardDataSourceFileName,
-				_apiDir, _implDir, _remotingFileName, _sqlDir, _sqlFileName,
-				_sqlIndexesFileName, _sqlIndexesPropertiesFileName,
-				_sqlSequencesFileName, _autoNamespaceTables, _beanLocatorUtil,
-				_propsUtil, _pluginName, _targetEntityName, _testDir, false,
-				_buildNumber, _buildNumberIncrement);
+				_springHibernateFileName, _springInfrastructureFileName,
+				_springShardDataSourceFileName, _apiDir, _implDir,
+				_remotingFileName, _sqlDir, _sqlFileName, _sqlIndexesFileName,
+				_sqlIndexesPropertiesFileName, _sqlSequencesFileName,
+				_autoNamespaceTables, _beanLocatorUtil, _propsUtil, _pluginName,
+				_targetEntityName, _testDir, false, _buildNumber,
+				_buildNumberIncrement);
 
 			entity = serviceBuilder.getEntity(refEntity);
 
@@ -1582,6 +1649,57 @@ public class ServiceBuilder {
 		return false;
 	}
 
+	private static void _addElements(
+		Element element, Map<String, Element> elements) {
+
+		for (Map.Entry<String, Element> entry : elements.entrySet()) {
+			Element childElement = entry.getValue();
+
+			element.add(childElement);
+		}
+	}
+
+	private static Document _getContentDocument(String fileName)
+		throws Exception {
+
+		String content = FileUtil.read(new File(fileName));
+
+		Document document = SAXReaderUtil.read(content);
+
+		Element rootElement = document.getRootElement();
+
+		for (Element element : rootElement.elements()) {
+			String elementName = element.getName();
+
+			if (!elementName.equals("service-builder-import")) {
+				continue;
+			}
+
+			element.detach();
+
+			String dirName = fileName.substring(
+				0, fileName.lastIndexOf(StringPool.SLASH) + 1);
+			String serviceBuilderImportFileName = element.attributeValue(
+				"file");
+
+			Document serviceBuilderImportDocument = _getContentDocument(
+				dirName + serviceBuilderImportFileName);
+
+			Element serviceBuilderImportRootElement =
+				serviceBuilderImportDocument.getRootElement();
+
+			for (Element serviceBuilderImportElement :
+					serviceBuilderImportRootElement.elements()) {
+
+				serviceBuilderImportElement.detach();
+
+				rootElement.add(serviceBuilderImportElement);
+			}
+		}
+
+		return document;
+	}
+
 	private static String _getPackagePath(File file) {
 		String fileName = StringUtil.replace(file.toString(), "\\", "/");
 
@@ -1596,14 +1714,6 @@ public class ServiceBuilder {
 		fileName = fileName.substring(x + 4, y);
 
 		return StringUtil.replace(fileName, "/", ".");
-	}
-
-	private void _addElements(Element element, Map<String, Element> elements) {
-		for (Map.Entry<String, Element> entry : elements.entrySet()) {
-			Element childElement = entry.getValue();
-
-			element.add(childElement);
-		}
 	}
 
 	private void _createActionableDynamicQuery(Entity entity) throws Exception {
@@ -3061,22 +3171,6 @@ public class ServiceBuilder {
 		FileUtil.write(ejbFile, content, true);
 	}
 
-	private void _createSpringDynamicDataSourceXml() throws Exception {
-		if (Validator.isNull(_springDynamicDataSourceFileName)) {
-			return;
-		}
-
-		// Content
-
-		String content = _processTemplate(_tplSpringDynamicDataSourceXml);
-
-		// Write file
-
-		File ejbFile = new File(_springDynamicDataSourceFileName);
-
-		FileUtil.write(ejbFile, content, true);
-	}
-
 	private void _createSpringHibernateXml() throws Exception {
 		if (Validator.isNull(_springHibernateFileName)) {
 			return;
@@ -3779,120 +3873,6 @@ public class ServiceBuilder {
 		}
 
 		return javaFields.toArray(new JavaField[javaFields.size()]);
-	}
-
-	private String _getContent(String fileName) throws Exception {
-		Document document = _getContentDocument(fileName);
-
-		Element rootElement = document.getRootElement();
-
-		Element authorElement = null;
-		Element namespaceElement = null;
-		Map<String, Element> entityElements = new TreeMap<String, Element>();
-		Map<String, Element> exceptionElements = new TreeMap<String, Element>();
-
-		for (Element element : rootElement.elements()) {
-			String elementName = element.getName();
-
-			if (elementName.equals("author")) {
-				element.detach();
-
-				if (authorElement != null) {
-					throw new IllegalArgumentException(
-						"There can only be one author element");
-				}
-
-				authorElement = element;
-			}
-			else if (elementName.equals("namespace")) {
-				element.detach();
-
-				if (namespaceElement != null) {
-					throw new IllegalArgumentException(
-						"There can only be one namespace element");
-				}
-
-				namespaceElement = element;
-			}
-			else if (elementName.equals("entity")) {
-				element.detach();
-
-				String name = element.attributeValue("name");
-
-				entityElements.put(name.toLowerCase(), element);
-			}
-			else if (elementName.equals("exceptions")) {
-				element.detach();
-
-				for (Element exceptionElement : element.elements("exception")) {
-					exceptionElement.detach();
-
-					exceptionElements.put(
-						exceptionElement.getText(), exceptionElement);
-				}
-			}
-		}
-
-		if (authorElement != null) {
-			rootElement.add(authorElement);
-		}
-
-		if (namespaceElement == null) {
-			throw new IllegalArgumentException(
-				"The namespace element is required");
-		}
-		else {
-			rootElement.add(namespaceElement);
-		}
-
-		_addElements(rootElement, entityElements);
-
-		if (!exceptionElements.isEmpty()) {
-			Element exceptionsElement = rootElement.addElement("exceptions");
-
-			_addElements(exceptionsElement, exceptionElements);
-		}
-
-		return document.asXML();
-	}
-
-	private Document _getContentDocument(String fileName) throws Exception {
-		String content = FileUtil.read(new File(fileName));
-
-		Document document = SAXReaderUtil.read(content);
-
-		Element rootElement = document.getRootElement();
-
-		for (Element element : rootElement.elements()) {
-			String elementName = element.getName();
-
-			if (!elementName.equals("service-builder-import")) {
-				continue;
-			}
-
-			element.detach();
-
-			String dirName = fileName.substring(
-				0, fileName.lastIndexOf(StringPool.SLASH) + 1);
-			String serviceBuilderImportFileName = element.attributeValue(
-				"file");
-
-			Document serviceBuilderImportDocument = _getContentDocument(
-				dirName + serviceBuilderImportFileName);
-
-			Element serviceBuilderImportRootElement =
-				serviceBuilderImportDocument.getRootElement();
-
-			for (Element serviceBuilderImportElement :
-					serviceBuilderImportRootElement.elements()) {
-
-				serviceBuilderImportElement.detach();
-
-				rootElement.add(serviceBuilderImportElement);
-			}
-		}
-
-		return document;
 	}
 
 	private Map<String, Object> _getContext() throws TemplateModelException {
@@ -4934,7 +4914,6 @@ public class ServiceBuilder {
 	private String _serviceOutputPath;
 	private String _springBaseFileName;
 	private String _springClusterFileName;
-	private String _springDynamicDataSourceFileName;
 	private String _springFileName;
 	private String _springHibernateFileName;
 	private String _springInfrastructureFileName;
@@ -4995,8 +4974,6 @@ public class ServiceBuilder {
 	private String _tplServiceWrapper = _TPL_ROOT + "service_wrapper.ftl";
 	private String _tplSpringBaseXml = _TPL_ROOT + "spring_base_xml.ftl";
 	private String _tplSpringClusterXml = _TPL_ROOT + "spring_cluster_xml.ftl";
-	private String _tplSpringDynamicDataSourceXml =
-		_TPL_ROOT + "spring_dynamic_data_source_xml.ftl";
 	private String _tplSpringHibernateXml =
 		_TPL_ROOT + "spring_hibernate_xml.ftl";
 	private String _tplSpringInfrastructureXml =

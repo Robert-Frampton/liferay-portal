@@ -21,15 +21,21 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.DuplicateDirectoryException;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata;
@@ -56,7 +62,11 @@ import com.liferay.portlet.dynamicdatamapping.util.comparator.TemplateModifiedDa
 import java.io.InputStream;
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,8 +76,13 @@ import javax.servlet.http.HttpServletResponse;
  * @author Eduardo Lundgren
  * @author Brian Wing Shun Chan
  * @author Eduardo Garcia
+ * @author Marcellus Tavares
  */
 public class DDMImpl implements DDM {
+
+	public static final String FIELDS_DISPLAY_NAME = "_fieldsDisplay";
+
+	public static final String INSTANCE_SEPARATOR = "_INSTANCE_";
 
 	public static final String TYPE_CHECKBOX = "checkbox";
 
@@ -93,76 +108,36 @@ public class DDMImpl implements DDM {
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
-			ddmStructureId);
-
-		try {
-			DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(
-				ddmTemplateId);
-
-			// Clone ddmStructure to make sure changes are never persisted
-
-			ddmStructure = (DDMStructure)ddmStructure.clone();
-
-			ddmStructure.setXsd(ddmTemplate.getScript());
-		}
-		catch (NoSuchTemplateException nste) {
-		}
+		DDMStructure ddmStructure = getDDMStructure(
+			ddmStructureId, ddmTemplateId);
 
 		Set<String> fieldNames = ddmStructure.getFieldNames();
 
 		Fields fields = new Fields();
 
 		for (String fieldName : fieldNames) {
-			Field field = new Field();
+			List<Serializable> fieldValues = getFieldValues(
+				ddmStructure, fieldName, fieldNamespace, serviceContext);
 
-			field.setName(fieldName);
-
-			String fieldDataType = ddmStructure.getFieldDataType(fieldName);
-			String fieldType = ddmStructure.getFieldType(fieldName);
-			Serializable fieldValue = serviceContext.getAttribute(
-				fieldNamespace + fieldName);
-
-			if (fieldDataType.equals(FieldConstants.DATE)) {
-				int fieldValueMonth = GetterUtil.getInteger(
-					serviceContext.getAttribute(
-						fieldNamespace + fieldName + "Month"));
-				int fieldValueYear = GetterUtil.getInteger(
-					serviceContext.getAttribute(
-						fieldNamespace + fieldName + "Year"));
-				int fieldValueDay = GetterUtil.getInteger(
-					serviceContext.getAttribute(
-						fieldNamespace + fieldName + "Day"));
-
-				Date fieldValueDate = PortalUtil.getDate(
-					fieldValueMonth, fieldValueDay, fieldValueYear);
-
-				if (fieldValueDate != null) {
-					fieldValue = String.valueOf(fieldValueDate.getTime());
-				}
-			}
-
-			if ((fieldValue == null) ||
-				fieldDataType.equals(FieldConstants.FILE_UPLOAD)) {
-
+			if ((fieldValues == null) || fieldValues.isEmpty()) {
 				continue;
 			}
 
-			if (fieldType.equals(DDMImpl.TYPE_RADIO) ||
-				fieldType.equals(DDMImpl.TYPE_SELECT)) {
+			String languageId = GetterUtil.getString(
+				serviceContext.getAttribute("languageId"),
+				serviceContext.getLanguageId());
 
-				if (fieldValue instanceof String) {
-					fieldValue = new String[] {String.valueOf(fieldValue)};
-				}
+			Locale locale = LocaleUtil.fromLanguageId(languageId);
 
-				fieldValue = JSONFactoryUtil.serialize(fieldValue);
-			}
+			Field field = new Field(
+				ddmStructureId, fieldName, fieldValues, locale);
 
-			Serializable fieldValueSerializable =
-				FieldConstants.getSerializable(
-					fieldDataType, GetterUtil.getString(fieldValue));
+			String defaultLanguageId = GetterUtil.getString(
+				serviceContext.getAttribute("defaultLanguageId"));
 
-			field.setValue(fieldValueSerializable);
+			Locale defaultLocale = LocaleUtil.fromLanguageId(defaultLanguageId);
+
+			field.setDefaultLocale(defaultLocale);
 
 			fields.put(field);
 		}
@@ -269,18 +244,46 @@ public class DDMImpl implements DDM {
 		return orderByComparator;
 	}
 
+	public Fields mergeFields(Fields newFields, Fields existingFields) {
+		Iterator<Field> itr = newFields.iterator(true);
+
+		while (itr.hasNext()) {
+			Field newField = itr.next();
+
+			Field existingField = existingFields.get(newField.getName());
+
+			if (existingField == null) {
+				existingFields.put(newField);
+			}
+			else {
+				for (Locale locale : newField.getAvailableLocales()) {
+					existingField.setValues(locale, newField.getValues(locale));
+				}
+
+				existingField.setDefaultLocale(newField.getDefaultLocale());
+			}
+
+		}
+
+		return existingFields;
+	}
+
 	public void sendFieldFile(
 			HttpServletRequest request, HttpServletResponse response,
-			Field field)
+			Field field, int valueIndex)
 		throws Exception {
 
 		if (field == null) {
 			return;
 		}
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		DDMStructure structure = field.getDDMStructure();
 
-		Serializable fieldValue = field.getValue();
+		Serializable fieldValue = field.getValue(
+			themeDisplay.getLocale(), valueIndex);
 
 		JSONObject fileJSONObject = JSONFactoryUtil.createJSONObject(
 			String.valueOf(fieldValue));
@@ -298,17 +301,17 @@ public class DDMImpl implements DDM {
 			request, response, fileName, is, contentLength, contentType);
 	}
 
-	public String uploadFieldFile(
+	public void uploadFieldFile(
 			long structureId, long storageId, BaseModel<?> baseModel,
 			String fieldName, ServiceContext serviceContext)
 		throws Exception {
 
-		return uploadFieldFile(
+		uploadFieldFile(
 			structureId, storageId, baseModel, fieldName, StringPool.BLANK,
 			serviceContext);
 	}
 
-	public String uploadFieldFile(
+	public void uploadFieldFile(
 			long structureId, long storageId, BaseModel<?> baseModel,
 			String fieldName, String fieldNamespace,
 			ServiceContext serviceContext)
@@ -317,54 +320,176 @@ public class DDMImpl implements DDM {
 		HttpServletRequest request = serviceContext.getRequest();
 
 		if (!(request instanceof UploadRequest)) {
-			return StringPool.BLANK;
+			return;
 		}
 
 		UploadRequest uploadRequest = (UploadRequest)request;
 
-		String fileName = uploadRequest.getFileName(fieldNamespace + fieldName);
-
-		String fieldValue = StringPool.BLANK;
-
-		InputStream inputStream = null;
-
 		Fields fields = StorageEngineUtil.getFields(storageId);
 
+		List<String> fieldNames = getFieldNames(
+			fieldNamespace, fieldName, serviceContext);
+
+		List<Serializable> fieldValues = new ArrayList<Serializable>(
+			fieldNames.size());
+
+		for (String fieldNameValue : fieldNames) {
+			InputStream inputStream = null;
+
+			try {
+				String fileName = uploadRequest.getFileName(fieldNameValue);
+
+				inputStream = uploadRequest.getFileAsStream(fieldName, true);
+
+				if (inputStream != null) {
+					String filePath = storeFieldFile(
+						baseModel, fieldName, inputStream, serviceContext);
+
+					JSONObject recordFileJSONObject =
+						JSONFactoryUtil.createJSONObject();
+
+					recordFileJSONObject.put("name", fileName);
+					recordFileJSONObject.put("path", filePath);
+					recordFileJSONObject.put(
+						"className", baseModel.getModelClassName());
+					recordFileJSONObject.put(
+						"classPK",
+						String.valueOf(baseModel.getPrimaryKeyObj()));
+
+					String fieldValue = recordFileJSONObject.toString();
+
+					fieldValues.add(fieldValue);
+				}
+				else if (fields.contains(fieldName)) {
+					continue;
+				}
+			}
+			finally {
+				StreamUtil.cleanUp(inputStream);
+			}
+		}
+
+		Field field = new Field(
+			structureId, fieldName, fieldValues, serviceContext.getLocale());
+
+		fields.put(field);
+
+		StorageEngineUtil.update(storageId, fields, true, serviceContext);
+	}
+
+	protected DDMStructure getDDMStructure(
+			long ddmStructureId, long ddmTemplateId)
+		throws PortalException, SystemException {
+
+		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
+			ddmStructureId);
+
 		try {
-			inputStream = uploadRequest.getFileAsStream(
-				fieldNamespace + fieldName, true);
+			DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(
+				ddmTemplateId);
 
-			if (inputStream != null) {
-				String filePath = storeFieldFile(
-					baseModel, fieldName, inputStream, serviceContext);
+			// Clone ddmStructure to make sure changes are never persisted
 
-				JSONObject recordFileJSONObject =
-					JSONFactoryUtil.createJSONObject();
+			ddmStructure = (DDMStructure)ddmStructure.clone();
 
-				recordFileJSONObject.put("name", fileName);
-				recordFileJSONObject.put("path", filePath);
-				recordFileJSONObject.put(
-					"className", baseModel.getModelClassName());
-				recordFileJSONObject.put(
-					"classPK", String.valueOf(baseModel.getPrimaryKeyObj()));
-
-				fieldValue = recordFileJSONObject.toString();
-			}
-			else if (fields.contains(fieldName)) {
-				return StringPool.BLANK;
-			}
-
-			Field field = new Field(structureId, fieldName, fieldValue);
-
-			fields.put(field);
-
-			StorageEngineUtil.update(storageId, fields, true, serviceContext);
+			ddmStructure.setXsd(ddmTemplate.getScript());
 		}
-		finally {
-			StreamUtil.cleanUp(inputStream);
+		catch (NoSuchTemplateException nste) {
 		}
 
-		return fieldValue;
+		return ddmStructure;
+	}
+
+	protected List<String> getFieldNames(
+		String fieldNamespace, String fieldName,
+		ServiceContext serviceContext) {
+
+		String[] fieldsDisplayValues = StringUtil.split(
+			(String)serviceContext.getAttribute(
+				fieldNamespace + FIELDS_DISPLAY_NAME));
+
+		List<String> privateFieldNames = ListUtil.fromArray(
+			PropsValues.DYNAMIC_DATA_MAPPING_STRUCTURE_PRIVATE_FIELD_NAMES);
+
+		List<String> fieldNames = new ArrayList<String>();
+
+		if ((fieldsDisplayValues.length == 0) ||
+			 privateFieldNames.contains(fieldName)) {
+
+			fieldNames.add(fieldNamespace + fieldName);
+		}
+		else {
+			for (String namespacedFieldName : fieldsDisplayValues) {
+				String fieldNameValue = StringUtil.extractFirst(
+					namespacedFieldName, INSTANCE_SEPARATOR);
+
+				if (fieldNameValue.equals(fieldName)) {
+					fieldNames.add(fieldNamespace + namespacedFieldName);
+				}
+			}
+		}
+
+		return fieldNames;
+	}
+
+	protected List<Serializable> getFieldValues(
+			DDMStructure ddmStructure, String fieldName, String fieldNamespace,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		String fieldDataType = ddmStructure.getFieldDataType(fieldName);
+		String fieldType = ddmStructure.getFieldType(fieldName);
+
+		List<String> fieldNames = getFieldNames(
+			fieldNamespace, fieldName, serviceContext);
+
+		List<Serializable> fieldValues = new ArrayList<Serializable>(
+			fieldNames.size());
+
+		for (String fieldNameValue : fieldNames) {
+			Serializable fieldValue = serviceContext.getAttribute(
+				fieldNameValue);
+
+			if (fieldDataType.equals(FieldConstants.DATE)) {
+				int fieldValueMonth = GetterUtil.getInteger(
+					serviceContext.getAttribute(fieldNameValue + "Month"));
+				int fieldValueDay = GetterUtil.getInteger(
+					serviceContext.getAttribute(fieldNameValue + "Day"));
+				int fieldValueYear = GetterUtil.getInteger(
+					serviceContext.getAttribute(fieldNameValue + "Year"));
+
+				Date fieldValueDate = PortalUtil.getDate(
+					fieldValueMonth, fieldValueDay, fieldValueYear);
+
+				if (fieldValueDate != null) {
+					fieldValue = String.valueOf(fieldValueDate.getTime());
+				}
+			}
+
+			if ((fieldValue == null) ||
+				fieldDataType.equals(FieldConstants.FILE_UPLOAD)) {
+
+				return null;
+			}
+
+			if (DDMImpl.TYPE_RADIO.equals(fieldType) ||
+				DDMImpl.TYPE_SELECT.equals(fieldType)) {
+
+				if (fieldValue instanceof String) {
+					fieldValue = new String[] {String.valueOf(fieldValue)};
+				}
+
+				fieldValue = JSONFactoryUtil.serialize(fieldValue);
+			}
+
+			Serializable fieldValueSerializable =
+				FieldConstants.getSerializable(
+					fieldDataType, GetterUtil.getString(fieldValue));
+
+			fieldValues.add(fieldValueSerializable);
+		}
+
+		return fieldValues;
 	}
 
 	protected String storeFieldFile(

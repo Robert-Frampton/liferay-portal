@@ -45,26 +45,12 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.CompanyPersistence;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.impl.AssetEntryImpl;
 import com.liferay.portlet.asset.model.impl.AssetEntryModelImpl;
-import com.liferay.portlet.blogs.service.persistence.BlogsEntryPersistence;
-import com.liferay.portlet.bookmarks.service.persistence.BookmarksEntryPersistence;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryPersistence;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFolderPersistence;
-import com.liferay.portlet.journal.service.persistence.JournalArticlePersistence;
-import com.liferay.portlet.journal.service.persistence.JournalArticleResourcePersistence;
-import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistence;
-import com.liferay.portlet.social.service.persistence.SocialActivityCounterPersistence;
-import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
-import com.liferay.portlet.wiki.service.persistence.WikiPagePersistence;
-import com.liferay.portlet.wiki.service.persistence.WikiPageResourcePersistence;
 
 import java.io.Serializable;
 
@@ -3165,19 +3151,102 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(AssetEntry assetEntry) {
+		if (assetEntry.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(assetEntry.getGroupId()),
+					
+					assetEntry.getClassUuid()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_CU, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_CU, args,
+				assetEntry);
+
+			args = new Object[] {
+					Long.valueOf(assetEntry.getClassNameId()),
+					Long.valueOf(assetEntry.getClassPK())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C, args, assetEntry);
+		}
+		else {
+			AssetEntryModelImpl assetEntryModelImpl = (AssetEntryModelImpl)assetEntry;
+
+			if ((assetEntryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_CU.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(assetEntry.getGroupId()),
+						
+						assetEntry.getClassUuid()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_CU, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_CU, args,
+					assetEntry);
+			}
+
+			if ((assetEntryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(assetEntry.getClassNameId()),
+						Long.valueOf(assetEntry.getClassPK())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C, args,
+					assetEntry);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(AssetEntry assetEntry) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_CU,
-			new Object[] {
+		AssetEntryModelImpl assetEntryModelImpl = (AssetEntryModelImpl)assetEntry;
+
+		Object[] args = new Object[] {
 				Long.valueOf(assetEntry.getGroupId()),
 				
-			assetEntry.getClassUuid()
-			});
+				assetEntry.getClassUuid()
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_CU, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_CU, args);
+
+		if ((assetEntryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_CU.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(assetEntryModelImpl.getOriginalGroupId()),
+					
+					assetEntryModelImpl.getOriginalClassUuid()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_CU, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_CU, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(assetEntry.getClassNameId()),
 				Long.valueOf(assetEntry.getClassPK())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+
+		if ((assetEntryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(assetEntryModelImpl.getOriginalClassNameId()),
+					Long.valueOf(assetEntryModelImpl.getOriginalClassPK())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		}
 	}
 
 	/**
@@ -3441,59 +3510,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 		EntityCacheUtil.putResult(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
 			AssetEntryImpl.class, assetEntry.getPrimaryKey(), assetEntry);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_CU,
-				new Object[] {
-					Long.valueOf(assetEntry.getGroupId()),
-					
-				assetEntry.getClassUuid()
-				}, assetEntry);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-				new Object[] {
-					Long.valueOf(assetEntry.getClassNameId()),
-					Long.valueOf(assetEntry.getClassPK())
-				}, assetEntry);
-		}
-		else {
-			if ((assetEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_CU.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(assetEntryModelImpl.getOriginalGroupId()),
-						
-						assetEntryModelImpl.getOriginalClassUuid()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_CU, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_CU, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_CU,
-					new Object[] {
-						Long.valueOf(assetEntry.getGroupId()),
-						
-					assetEntry.getClassUuid()
-					}, assetEntry);
-			}
-
-			if ((assetEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(assetEntryModelImpl.getOriginalClassNameId()),
-						Long.valueOf(assetEntryModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-					new Object[] {
-						Long.valueOf(assetEntry.getClassNameId()),
-						Long.valueOf(assetEntry.getClassPK())
-					}, assetEntry);
-			}
-		}
+		clearUniqueFindersCache(assetEntry);
+		cacheUniqueFindersCache(assetEntry);
 
 		return assetEntry;
 	}
@@ -4851,52 +4869,12 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 	@BeanReference(type = AssetCategoryPersistence.class)
 	protected AssetCategoryPersistence assetCategoryPersistence;
-	@BeanReference(type = AssetCategoryPropertyPersistence.class)
-	protected AssetCategoryPropertyPersistence assetCategoryPropertyPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
-	@BeanReference(type = AssetTagPersistence.class)
-	protected AssetTagPersistence assetTagPersistence;
-	@BeanReference(type = AssetTagPropertyPersistence.class)
-	protected AssetTagPropertyPersistence assetTagPropertyPersistence;
-	@BeanReference(type = AssetTagStatsPersistence.class)
-	protected AssetTagStatsPersistence assetTagStatsPersistence;
-	@BeanReference(type = AssetVocabularyPersistence.class)
-	protected AssetVocabularyPersistence assetVocabularyPersistence;
-	@BeanReference(type = CompanyPersistence.class)
-	protected CompanyPersistence companyPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = BlogsEntryPersistence.class)
-	protected BlogsEntryPersistence blogsEntryPersistence;
-	@BeanReference(type = BookmarksEntryPersistence.class)
-	protected BookmarksEntryPersistence bookmarksEntryPersistence;
-	@BeanReference(type = DLFileEntryPersistence.class)
-	protected DLFileEntryPersistence dlFileEntryPersistence;
-	@BeanReference(type = DLFolderPersistence.class)
-	protected DLFolderPersistence dlFolderPersistence;
-	@BeanReference(type = JournalArticlePersistence.class)
-	protected JournalArticlePersistence journalArticlePersistence;
-	@BeanReference(type = JournalArticleResourcePersistence.class)
-	protected JournalArticleResourcePersistence journalArticleResourcePersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = SocialActivityCounterPersistence.class)
-	protected SocialActivityCounterPersistence socialActivityCounterPersistence;
-	@BeanReference(type = WikiPagePersistence.class)
-	protected WikiPagePersistence wikiPagePersistence;
-	@BeanReference(type = WikiPageResourcePersistence.class)
-	protected WikiPageResourcePersistence wikiPageResourcePersistence;
 	protected ContainsAssetCategory containsAssetCategory;
 	protected AddAssetCategory addAssetCategory;
 	protected ClearAssetCategories clearAssetCategories;
 	protected RemoveAssetCategory removeAssetCategory;
+	@BeanReference(type = AssetTagPersistence.class)
+	protected AssetTagPersistence assetTagPersistence;
 	protected ContainsAssetTag containsAssetTag;
 	protected AddAssetTag addAssetTag;
 	protected ClearAssetTags clearAssetTags;

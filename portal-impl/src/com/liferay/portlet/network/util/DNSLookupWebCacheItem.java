@@ -63,7 +63,7 @@ public class DNSLookupWebCacheItem implements WebCacheItem {
 						sb.append(ia[i].getHostName());
 
 						if ((i + 1) <= ia.length) {
-							sb.append(",");
+							sb.append(StringPool.COMMA);
 						}
 					}
 

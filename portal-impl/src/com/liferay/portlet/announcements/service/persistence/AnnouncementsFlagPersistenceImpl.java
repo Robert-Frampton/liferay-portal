@@ -15,7 +15,6 @@
 package com.liferay.portlet.announcements.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,7 +35,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.announcements.NoSuchFlagException;
@@ -911,13 +909,61 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 		}
 	}
 
+	protected void cacheUniqueFindersCache(AnnouncementsFlag announcementsFlag) {
+		if (announcementsFlag.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(announcementsFlag.getUserId()),
+					Long.valueOf(announcementsFlag.getEntryId()),
+					Integer.valueOf(announcementsFlag.getValue())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_E_V, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_E_V, args,
+				announcementsFlag);
+		}
+		else {
+			AnnouncementsFlagModelImpl announcementsFlagModelImpl = (AnnouncementsFlagModelImpl)announcementsFlag;
+
+			if ((announcementsFlagModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_U_E_V.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(announcementsFlag.getUserId()),
+						Long.valueOf(announcementsFlag.getEntryId()),
+						Integer.valueOf(announcementsFlag.getValue())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_E_V, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_E_V, args,
+					announcementsFlag);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(AnnouncementsFlag announcementsFlag) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_E_V,
-			new Object[] {
+		AnnouncementsFlagModelImpl announcementsFlagModelImpl = (AnnouncementsFlagModelImpl)announcementsFlag;
+
+		Object[] args = new Object[] {
 				Long.valueOf(announcementsFlag.getUserId()),
 				Long.valueOf(announcementsFlag.getEntryId()),
 				Integer.valueOf(announcementsFlag.getValue())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_E_V, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_E_V, args);
+
+		if ((announcementsFlagModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_U_E_V.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(announcementsFlagModelImpl.getOriginalUserId()),
+					Long.valueOf(announcementsFlagModelImpl.getOriginalEntryId()),
+					Integer.valueOf(announcementsFlagModelImpl.getOriginalValue())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_E_V, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_E_V, args);
+		}
 	}
 
 	/**
@@ -1084,35 +1130,8 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 			AnnouncementsFlagImpl.class, announcementsFlag.getPrimaryKey(),
 			announcementsFlag);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_E_V,
-				new Object[] {
-					Long.valueOf(announcementsFlag.getUserId()),
-					Long.valueOf(announcementsFlag.getEntryId()),
-					Integer.valueOf(announcementsFlag.getValue())
-				}, announcementsFlag);
-		}
-		else {
-			if ((announcementsFlagModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_E_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(announcementsFlagModelImpl.getOriginalUserId()),
-						Long.valueOf(announcementsFlagModelImpl.getOriginalEntryId()),
-						Integer.valueOf(announcementsFlagModelImpl.getOriginalValue())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_E_V, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_E_V, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_E_V,
-					new Object[] {
-						Long.valueOf(announcementsFlag.getUserId()),
-						Long.valueOf(announcementsFlag.getEntryId()),
-						Integer.valueOf(announcementsFlag.getValue())
-					}, announcementsFlag);
-			}
-		}
+		clearUniqueFindersCache(announcementsFlag);
+		cacheUniqueFindersCache(announcementsFlag);
 
 		return announcementsFlag;
 	}
@@ -1436,14 +1455,6 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AnnouncementsDeliveryPersistence.class)
-	protected AnnouncementsDeliveryPersistence announcementsDeliveryPersistence;
-	@BeanReference(type = AnnouncementsEntryPersistence.class)
-	protected AnnouncementsEntryPersistence announcementsEntryPersistence;
-	@BeanReference(type = AnnouncementsFlagPersistence.class)
-	protected AnnouncementsFlagPersistence announcementsFlagPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_ANNOUNCEMENTSFLAG = "SELECT announcementsFlag FROM AnnouncementsFlag announcementsFlag";
 	private static final String _SQL_SELECT_ANNOUNCEMENTSFLAG_WHERE = "SELECT announcementsFlag FROM AnnouncementsFlag announcementsFlag WHERE ";
 	private static final String _SQL_COUNT_ANNOUNCEMENTSFLAG = "SELECT COUNT(announcementsFlag) FROM AnnouncementsFlag announcementsFlag";

@@ -249,6 +249,11 @@ public interface MBThreadLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public void deleteThreads(long groupId, long categoryId,
+		boolean includeTrashedEntries)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portlet.messageboards.model.MBThread fetchThread(
 		long threadId)
@@ -280,8 +285,8 @@ public interface MBThreadLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* @deprecated {@link #getGroupThreads(
-	long, long, boolean, boolean, QueryDefinition)}
+	* @deprecated {As of 6.2.0, replaced by @link #getGroupThreads( long, long,
+	boolean, boolean, QueryDefinition)}
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.portlet.messageboards.model.MBThread> getGroupThreads(
@@ -290,8 +295,8 @@ public interface MBThreadLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* @deprecated {@link #getGroupThreads(
-	long, long, boolean, QueryDefinition)}
+	* @deprecated {As of 6.2.0, replaced by @link #getGroupThreads( long, long,
+	boolean, QueryDefinition)}
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.portlet.messageboards.model.MBThread> getGroupThreads(
@@ -299,8 +304,8 @@ public interface MBThreadLocalService extends BaseLocalService,
 		int end) throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* @deprecated {@link #getGroupThreads(
-	long, long, QueryDefinition)}
+	* @deprecated {As of 6.2.0, replaced by @link #getGroupThreads( long, long,
+	QueryDefinition)}
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.portlet.messageboards.model.MBThread> getGroupThreads(
@@ -320,8 +325,8 @@ public interface MBThreadLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* @deprecated {@link #getGroupThreadsCount(
-	long, QueryDefinition)}
+	* @deprecated {As of 6.2.0, replaced by @link #getGroupThreadsCount( long,
+	QueryDefinition)}
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGroupThreadsCount(long groupId, int status)
@@ -340,16 +345,16 @@ public interface MBThreadLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* @deprecated {@link #getGroupThreadsCount(
-	long, long, QueryDefinition)}
+	* @deprecated {As of 6.2.0, replaced by @link #getGroupThreadsCount( long,
+	long, QueryDefinition)}
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGroupThreadsCount(long groupId, long userId, int status)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* @deprecated {@link #getGroupThreadsCount(
-	long, long, boolean, QueryDefinition)}
+	* @deprecated {As of 6.2.0, replaced by @link #getGroupThreadsCount( long,
+	long, boolean, QueryDefinition)}
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGroupThreadsCount(long groupId, long userId, int status,
@@ -357,8 +362,8 @@ public interface MBThreadLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* @deprecated {@link #getGroupThreadsCount(
-	long, long, boolean, boolean, QueryDefinition)}
+	* @deprecated {As of 6.2.0, replaced by @link #getGroupThreadsCount( long,
+	long, boolean, boolean, QueryDefinition)}
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGroupThreadsCount(long groupId, long userId, int status,
@@ -420,6 +425,11 @@ public interface MBThreadLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.portlet.messageboards.model.MBThread moveThreadFromTrash(
+		long userId, long categoryId, long threadId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public void moveThreadsToTrash(long groupId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
@@ -445,6 +455,11 @@ public interface MBThreadLocalService extends BaseLocalService,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	public void updateQuestion(long threadId, boolean question)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.portlet.messageboards.model.MBThread updateStatus(
+		long userId, long threadId, int status, int categoryStatus)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

@@ -15,7 +15,6 @@
 package com.liferay.portlet.expando.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -40,7 +39,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.expando.NoSuchColumnException;
@@ -1761,13 +1759,61 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		}
 	}
 
+	protected void cacheUniqueFindersCache(ExpandoColumn expandoColumn) {
+		if (expandoColumn.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(expandoColumn.getTableId()),
+					
+					expandoColumn.getName()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_N, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_N, args,
+				expandoColumn);
+		}
+		else {
+			ExpandoColumnModelImpl expandoColumnModelImpl = (ExpandoColumnModelImpl)expandoColumn;
+
+			if ((expandoColumnModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_T_N.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(expandoColumn.getTableId()),
+						
+						expandoColumn.getName()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_N, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_N, args,
+					expandoColumn);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(ExpandoColumn expandoColumn) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_N,
-			new Object[] {
+		ExpandoColumnModelImpl expandoColumnModelImpl = (ExpandoColumnModelImpl)expandoColumn;
+
+		Object[] args = new Object[] {
 				Long.valueOf(expandoColumn.getTableId()),
 				
-			expandoColumn.getName()
-			});
+				expandoColumn.getName()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_N, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_N, args);
+
+		if ((expandoColumnModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_T_N.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(expandoColumnModelImpl.getOriginalTableId()),
+					
+					expandoColumnModelImpl.getOriginalName()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_N, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_N, args);
+		}
 	}
 
 	/**
@@ -1957,35 +2003,8 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			ExpandoColumnImpl.class, expandoColumn.getPrimaryKey(),
 			expandoColumn);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_N,
-				new Object[] {
-					Long.valueOf(expandoColumn.getTableId()),
-					
-				expandoColumn.getName()
-				}, expandoColumn);
-		}
-		else {
-			if ((expandoColumnModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_T_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(expandoColumnModelImpl.getOriginalTableId()),
-						
-						expandoColumnModelImpl.getOriginalName()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_N, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_N, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_N,
-					new Object[] {
-						Long.valueOf(expandoColumn.getTableId()),
-						
-					expandoColumn.getName()
-					}, expandoColumn);
-			}
-		}
+		clearUniqueFindersCache(expandoColumn);
+		cacheUniqueFindersCache(expandoColumn);
 
 		return expandoColumn;
 	}
@@ -2309,16 +2328,6 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = ExpandoColumnPersistence.class)
-	protected ExpandoColumnPersistence expandoColumnPersistence;
-	@BeanReference(type = ExpandoRowPersistence.class)
-	protected ExpandoRowPersistence expandoRowPersistence;
-	@BeanReference(type = ExpandoTablePersistence.class)
-	protected ExpandoTablePersistence expandoTablePersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_EXPANDOCOLUMN = "SELECT expandoColumn FROM ExpandoColumn expandoColumn";
 	private static final String _SQL_SELECT_EXPANDOCOLUMN_WHERE = "SELECT expandoColumn FROM ExpandoColumn expandoColumn WHERE ";
 	private static final String _SQL_COUNT_EXPANDOCOLUMN = "SELECT COUNT(expandoColumn) FROM ExpandoColumn expandoColumn";

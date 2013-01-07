@@ -17,9 +17,7 @@ package com.liferay.portlet.trash.util;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Hits;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -36,14 +34,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface Trash {
 
-	public void addContainerModelBreadcrumbEntries(
-			HttpServletRequest request, TrashHandler trashHandler,
-			ContainerModel containerModel, PortletURL containerModelURL)
+	public void addBaseModelBreadcrumbEntries(
+			HttpServletRequest request, String className, long classPK,
+			PortletURL containerModelURL)
 		throws PortalException, SystemException;
 
-	public String appendTrashNamespace(String title);
-
-	public String appendTrashNamespace(String title, String separator);
+	public void addContainerModelBreadcrumbEntries(
+			HttpServletRequest request, String className, long classPK,
+			PortletURL containerModelURL)
+		throws PortalException, SystemException;
 
 	public void deleteEntriesAttachments(
 			long companyId, long repositoryId, Date date,
@@ -60,16 +59,16 @@ public interface Trash {
 
 	public String getNewName(ThemeDisplay themeDisplay, String oldName);
 
+	public String getOriginalTitle(String title);
+
 	public String getTrashTime(String title, String separator);
+
+	public String getTrashTitle(long trashEntryId);
 
 	public boolean isInTrash(String className, long classPK)
 		throws PortalException, SystemException;
 
 	public boolean isTrashEnabled(long groupId)
 		throws PortalException, SystemException;
-
-	public String stripTrashNamespace(String title);
-
-	public String stripTrashNamespace(String title, String separator);
 
 }

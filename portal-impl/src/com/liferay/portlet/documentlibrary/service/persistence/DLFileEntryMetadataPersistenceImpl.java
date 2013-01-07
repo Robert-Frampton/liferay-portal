@@ -15,7 +15,6 @@
 package com.liferay.portlet.documentlibrary.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -38,14 +37,12 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryMetadataException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata;
 import com.liferay.portlet.documentlibrary.model.impl.DLFileEntryMetadataImpl;
 import com.liferay.portlet.documentlibrary.model.impl.DLFileEntryMetadataModelImpl;
-import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureLinkPersistence;
 
 import java.io.Serializable;
 
@@ -2392,13 +2389,59 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 		}
 	}
 
+	protected void cacheUniqueFindersCache(
+		DLFileEntryMetadata dlFileEntryMetadata) {
+		if (dlFileEntryMetadata.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
+					Long.valueOf(dlFileEntryMetadata.getFileVersionId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_D_F, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_D_F, args,
+				dlFileEntryMetadata);
+		}
+		else {
+			DLFileEntryMetadataModelImpl dlFileEntryMetadataModelImpl = (DLFileEntryMetadataModelImpl)dlFileEntryMetadata;
+
+			if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_D_F.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
+						Long.valueOf(dlFileEntryMetadata.getFileVersionId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_D_F, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_D_F, args,
+					dlFileEntryMetadata);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(
 		DLFileEntryMetadata dlFileEntryMetadata) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_D_F,
-			new Object[] {
+		DLFileEntryMetadataModelImpl dlFileEntryMetadataModelImpl = (DLFileEntryMetadataModelImpl)dlFileEntryMetadata;
+
+		Object[] args = new Object[] {
 				Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
 				Long.valueOf(dlFileEntryMetadata.getFileVersionId())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_D_F, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_D_F, args);
+
+		if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_D_F.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalDDMStructureId()),
+					Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalFileVersionId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_D_F, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_D_F, args);
+		}
 	}
 
 	/**
@@ -2636,32 +2679,8 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 			DLFileEntryMetadataImpl.class, dlFileEntryMetadata.getPrimaryKey(),
 			dlFileEntryMetadata);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_D_F,
-				new Object[] {
-					Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
-					Long.valueOf(dlFileEntryMetadata.getFileVersionId())
-				}, dlFileEntryMetadata);
-		}
-		else {
-			if ((dlFileEntryMetadataModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_D_F.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalDDMStructureId()),
-						Long.valueOf(dlFileEntryMetadataModelImpl.getOriginalFileVersionId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_D_F, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_D_F, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_D_F,
-					new Object[] {
-						Long.valueOf(dlFileEntryMetadata.getDDMStructureId()),
-						Long.valueOf(dlFileEntryMetadata.getFileVersionId())
-					}, dlFileEntryMetadata);
-			}
-		}
+		clearUniqueFindersCache(dlFileEntryMetadata);
+		cacheUniqueFindersCache(dlFileEntryMetadata);
 
 		return dlFileEntryMetadata;
 	}
@@ -2988,28 +3007,6 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = DLContentPersistence.class)
-	protected DLContentPersistence dlContentPersistence;
-	@BeanReference(type = DLFileEntryPersistence.class)
-	protected DLFileEntryPersistence dlFileEntryPersistence;
-	@BeanReference(type = DLFileEntryMetadataPersistence.class)
-	protected DLFileEntryMetadataPersistence dlFileEntryMetadataPersistence;
-	@BeanReference(type = DLFileEntryTypePersistence.class)
-	protected DLFileEntryTypePersistence dlFileEntryTypePersistence;
-	@BeanReference(type = DLFileRankPersistence.class)
-	protected DLFileRankPersistence dlFileRankPersistence;
-	@BeanReference(type = DLFileShortcutPersistence.class)
-	protected DLFileShortcutPersistence dlFileShortcutPersistence;
-	@BeanReference(type = DLFileVersionPersistence.class)
-	protected DLFileVersionPersistence dlFileVersionPersistence;
-	@BeanReference(type = DLFolderPersistence.class)
-	protected DLFolderPersistence dlFolderPersistence;
-	@BeanReference(type = DLSyncPersistence.class)
-	protected DLSyncPersistence dlSyncPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = DDMStructureLinkPersistence.class)
-	protected DDMStructureLinkPersistence ddmStructureLinkPersistence;
 	private static final String _SQL_SELECT_DLFILEENTRYMETADATA = "SELECT dlFileEntryMetadata FROM DLFileEntryMetadata dlFileEntryMetadata";
 	private static final String _SQL_SELECT_DLFILEENTRYMETADATA_WHERE = "SELECT dlFileEntryMetadata FROM DLFileEntryMetadata dlFileEntryMetadata WHERE ";
 	private static final String _SQL_COUNT_DLFILEENTRYMETADATA = "SELECT COUNT(dlFileEntryMetadata) FROM DLFileEntryMetadata dlFileEntryMetadata";

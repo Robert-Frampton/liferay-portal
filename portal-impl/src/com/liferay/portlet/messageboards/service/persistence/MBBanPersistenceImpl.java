@@ -15,7 +15,6 @@
 package com.liferay.portlet.messageboards.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,7 +35,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.messageboards.NoSuchBanException;
@@ -1813,12 +1811,55 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(MBBan mbBan) {
+		if (mbBan.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(mbBan.getGroupId()),
+					Long.valueOf(mbBan.getBanUserId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_B, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B, args, mbBan);
+		}
+		else {
+			MBBanModelImpl mbBanModelImpl = (MBBanModelImpl)mbBan;
+
+			if ((mbBanModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(mbBan.getGroupId()),
+						Long.valueOf(mbBan.getBanUserId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_B, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B, args, mbBan);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(MBBan mbBan) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B,
-			new Object[] {
+		MBBanModelImpl mbBanModelImpl = (MBBanModelImpl)mbBan;
+
+		Object[] args = new Object[] {
 				Long.valueOf(mbBan.getGroupId()),
 				Long.valueOf(mbBan.getBanUserId())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
+
+		if ((mbBanModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(mbBanModelImpl.getOriginalGroupId()),
+					Long.valueOf(mbBanModelImpl.getOriginalBanUserId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
+		}
 	}
 
 	/**
@@ -2014,32 +2055,8 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		EntityCacheUtil.putResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 			MBBanImpl.class, mbBan.getPrimaryKey(), mbBan);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B,
-				new Object[] {
-					Long.valueOf(mbBan.getGroupId()),
-					Long.valueOf(mbBan.getBanUserId())
-				}, mbBan);
-		}
-		else {
-			if ((mbBanModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(mbBanModelImpl.getOriginalGroupId()),
-						Long.valueOf(mbBanModelImpl.getOriginalBanUserId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_B,
-					new Object[] {
-						Long.valueOf(mbBan.getGroupId()),
-						Long.valueOf(mbBan.getBanUserId())
-					}, mbBan);
-			}
-		}
+		clearUniqueFindersCache(mbBan);
+		cacheUniqueFindersCache(mbBan);
 
 		return mbBan;
 	}
@@ -2361,24 +2378,6 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = MBBanPersistence.class)
-	protected MBBanPersistence mbBanPersistence;
-	@BeanReference(type = MBCategoryPersistence.class)
-	protected MBCategoryPersistence mbCategoryPersistence;
-	@BeanReference(type = MBDiscussionPersistence.class)
-	protected MBDiscussionPersistence mbDiscussionPersistence;
-	@BeanReference(type = MBMailingListPersistence.class)
-	protected MBMailingListPersistence mbMailingListPersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = MBStatsUserPersistence.class)
-	protected MBStatsUserPersistence mbStatsUserPersistence;
-	@BeanReference(type = MBThreadPersistence.class)
-	protected MBThreadPersistence mbThreadPersistence;
-	@BeanReference(type = MBThreadFlagPersistence.class)
-	protected MBThreadFlagPersistence mbThreadFlagPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_MBBAN = "SELECT mbBan FROM MBBan mbBan";
 	private static final String _SQL_SELECT_MBBAN_WHERE = "SELECT mbBan FROM MBBan mbBan WHERE ";
 	private static final String _SQL_COUNT_MBBAN = "SELECT COUNT(mbBan) FROM MBBan mbBan";

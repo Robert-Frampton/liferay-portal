@@ -148,8 +148,10 @@ import com.liferay.portal.webserver.WebServerServlet;
 import com.liferay.portlet.ActionResponseImpl;
 import com.liferay.portlet.ControlPanelEntry;
 import com.liferay.portlet.DefaultControlPanelEntryFactory;
+import com.liferay.portlet.InvokerPortlet;
 import com.liferay.portlet.PortletConfigFactoryUtil;
 import com.liferay.portlet.PortletConfigImpl;
+import com.liferay.portlet.PortletInstanceFactoryUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
 import com.liferay.portlet.PortletPreferencesWrapper;
@@ -222,6 +224,7 @@ import java.util.regex.Pattern;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletException;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
@@ -711,9 +714,9 @@ public class PortalImpl implements Portal {
 
 		String domain = HttpUtil.getDomain(url);
 
-		int pos = -1;
+		int pos = domain.indexOf(CharPool.COLON);
 
-		if ((pos = domain.indexOf(CharPool.COLON)) != -1) {
+		if (pos != -1) {
 			domain = domain.substring(0, pos);
 		}
 
@@ -759,25 +762,31 @@ public class PortalImpl implements Portal {
 			else if (securityMode.equals("ip")) {
 				String[] allowedIps = PropsValues.REDIRECT_URL_IPS_ALLOWED;
 
+				if (allowedIps.length == 0) {
+					return url;
+				}
+
 				InetAddress inetAddress = InetAddress.getByName(domain);
 
-				if ((allowedIps.length > 0) &&
-					!ArrayUtil.contains(
-						allowedIps, inetAddress.getHostAddress())) {
+				String hostAddress = inetAddress.getHostAddress();
 
-					String serverIp = getComputerAddress();
+				String serverIp = getComputerAddress();
 
-					if (!serverIp.equals(inetAddress.getHostAddress()) ||
-						!ArrayUtil.contains(allowedIps, "SERVER_IP")) {
+				boolean serverIpIsHostAddress = serverIp.equals(hostAddress);
 
-						if (_log.isDebugEnabled()) {
-							_log.debug(
-								"Redirect URL " + url + " is not allowed");
-						}
+				for (String ip : allowedIps) {
+					if ((serverIpIsHostAddress && ip.equals("SERVER_IP")) ||
+						ip.equals(hostAddress)) {
 
-						url = null;
+						return url;
 					}
 				}
+
+				if (_log.isDebugEnabled()) {
+					_log.debug("Redirect URL " + url + " is not allowed");
+				}
+
+				url = null;
 			}
 		}
 		catch (UnknownHostException uhe) {
@@ -1437,12 +1446,12 @@ public class PortalImpl implements Portal {
 				request, PortletKeys.LOGIN, themeDisplay.getPlid(),
 				PortletRequest.RENDER_PHASE);
 
-			createAccountURL.setWindowState(WindowState.MAXIMIZED);
-			createAccountURL.setPortletMode(PortletMode.VIEW);
-
-			createAccountURL.setParameter("saveLastPath", "0");
+			createAccountURL.setParameter(
+				"saveLastPath", Boolean.FALSE.toString());
 			createAccountURL.setParameter(
 				"struts_action", "/login/create_account");
+			createAccountURL.setPortletMode(PortletMode.VIEW);
+			createAccountURL.setWindowState(WindowState.MAXIMIZED);
 
 			if (!PropsValues.COMPANY_SECURITY_AUTH_REQUIRES_HTTPS) {
 				return createAccountURL.toString();
@@ -2377,14 +2386,11 @@ public class PortalImpl implements Portal {
 		String queryString = StringPool.BLANK;
 
 		if (Validator.isNull(friendlyURL)) {
-			List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			layout = LayoutLocalServiceUtil.fetchFirstLayout(
 				groupId, privateLayout,
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
-			if (!layouts.isEmpty()) {
-				layout = layouts.get(0);
-			}
-			else {
+			if (layout == null) {
 				throw new NoSuchLayoutException(
 					"{groupId=" + groupId + ",privateLayout=" + privateLayout +
 						"} does not have any layouts");
@@ -3218,6 +3224,19 @@ public class PortalImpl implements Portal {
 		}
 
 		return (List<BreadcrumbEntry>)request.getAttribute(name);
+	}
+
+	public PortletConfig getPortletConfig(
+			long companyId, String portletId, ServletContext servletContext)
+		throws PortletException, SystemException {
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			companyId, portletId);
+
+		InvokerPortlet invokerPortlet = PortletInstanceFactoryUtil.create(
+			portlet, servletContext);
+
+		return invokerPortlet.getPortletConfig();
 	}
 
 	public String getPortletDescription(
@@ -5084,6 +5103,10 @@ public class PortalImpl implements Portal {
 	public boolean isSecure(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 
+		if (session == null) {
+			return request.isSecure();
+		}
+
 		Boolean httpsInitial = (Boolean)session.getAttribute(
 			WebKeys.HTTPS_INITIAL);
 
@@ -5773,7 +5796,16 @@ public class PortalImpl implements Portal {
 				companyId, name, ResourceConstants.SCOPE_INDIVIDUAL,
 				primaryKey);
 
-		if (count == 0) {
+		if (count > 0) {
+			return;
+		}
+
+		if (layout.isTypeControlPanel()) {
+			ResourceLocalServiceUtil.addResources(
+				companyId, groupId, 0, name, primaryKey, portletActions, true,
+				true);
+		}
+		else {
 			ResourceLocalServiceUtil.addResources(
 				companyId, groupId, 0, name, primaryKey, portletActions, true,
 				!layout.isPrivateLayout());
@@ -5874,8 +5906,8 @@ public class PortalImpl implements Portal {
 						DefaultControlPanelEntryFactory.getInstance();
 				}
 
-				if (!controlPanelEntry.isVisible(
-						portlet, category, themeDisplay)) {
+				if (!controlPanelEntry.hasAccessPermission(
+						themeDisplay.getPermissionChecker(), group, portlet)) {
 
 					itr.remove();
 				}

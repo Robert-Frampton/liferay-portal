@@ -15,7 +15,6 @@
 package com.liferay.portlet.journal.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -40,10 +39,8 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
 import com.liferay.portlet.journal.NoSuchFeedException;
 import com.liferay.portlet.journal.model.JournalFeed;
 import com.liferay.portlet.journal.model.impl.JournalFeedImpl;
@@ -2586,18 +2583,102 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 		}
 	}
 
-	protected void clearUniqueFindersCache(JournalFeed journalFeed) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				journalFeed.getUuid(), Long.valueOf(journalFeed.getGroupId())
-			});
+	protected void cacheUniqueFindersCache(JournalFeed journalFeed) {
+		if (journalFeed.isNew()) {
+			Object[] args = new Object[] {
+					journalFeed.getUuid(),
+					Long.valueOf(journalFeed.getGroupId())
+				};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F,
-			new Object[] {
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+				journalFeed);
+
+			args = new Object[] {
+					Long.valueOf(journalFeed.getGroupId()),
+					
+					journalFeed.getFeedId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_F, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_F, args,
+				journalFeed);
+		}
+		else {
+			JournalFeedModelImpl journalFeedModelImpl = (JournalFeedModelImpl)journalFeed;
+
+			if ((journalFeedModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						journalFeed.getUuid(),
+						Long.valueOf(journalFeed.getGroupId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+					journalFeed);
+			}
+
+			if ((journalFeedModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_F.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(journalFeed.getGroupId()),
+						
+						journalFeed.getFeedId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_F, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_F, args,
+					journalFeed);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(JournalFeed journalFeed) {
+		JournalFeedModelImpl journalFeedModelImpl = (JournalFeedModelImpl)journalFeed;
+
+		Object[] args = new Object[] {
+				journalFeed.getUuid(), Long.valueOf(journalFeed.getGroupId())
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+
+		if ((journalFeedModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					journalFeedModelImpl.getOriginalUuid(),
+					Long.valueOf(journalFeedModelImpl.getOriginalGroupId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(journalFeed.getGroupId()),
 				
-			journalFeed.getFeedId()
-			});
+				journalFeed.getFeedId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_F, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F, args);
+
+		if ((journalFeedModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_F.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(journalFeedModelImpl.getOriginalGroupId()),
+					
+					journalFeedModelImpl.getOriginalFeedId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_F, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F, args);
+		}
 	}
 
 	/**
@@ -2811,59 +2892,8 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 		EntityCacheUtil.putResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFeedImpl.class, journalFeed.getPrimaryKey(), journalFeed);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-				new Object[] {
-					journalFeed.getUuid(),
-					Long.valueOf(journalFeed.getGroupId())
-				}, journalFeed);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_F,
-				new Object[] {
-					Long.valueOf(journalFeed.getGroupId()),
-					
-				journalFeed.getFeedId()
-				}, journalFeed);
-		}
-		else {
-			if ((journalFeedModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						journalFeedModelImpl.getOriginalUuid(),
-						Long.valueOf(journalFeedModelImpl.getOriginalGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-					new Object[] {
-						journalFeed.getUuid(),
-						Long.valueOf(journalFeed.getGroupId())
-					}, journalFeed);
-			}
-
-			if ((journalFeedModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_F.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(journalFeedModelImpl.getOriginalGroupId()),
-						
-						journalFeedModelImpl.getOriginalFeedId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_F, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_F,
-					new Object[] {
-						Long.valueOf(journalFeed.getGroupId()),
-						
-					journalFeed.getFeedId()
-					}, journalFeed);
-			}
-		}
+		clearUniqueFindersCache(journalFeed);
+		cacheUniqueFindersCache(journalFeed);
 
 		return journalFeed;
 	}
@@ -3202,26 +3232,6 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = JournalArticlePersistence.class)
-	protected JournalArticlePersistence journalArticlePersistence;
-	@BeanReference(type = JournalArticleImagePersistence.class)
-	protected JournalArticleImagePersistence journalArticleImagePersistence;
-	@BeanReference(type = JournalArticleResourcePersistence.class)
-	protected JournalArticleResourcePersistence journalArticleResourcePersistence;
-	@BeanReference(type = JournalContentSearchPersistence.class)
-	protected JournalContentSearchPersistence journalContentSearchPersistence;
-	@BeanReference(type = JournalFeedPersistence.class)
-	protected JournalFeedPersistence journalFeedPersistence;
-	@BeanReference(type = JournalFolderPersistence.class)
-	protected JournalFolderPersistence journalFolderPersistence;
-	@BeanReference(type = JournalStructurePersistence.class)
-	protected JournalStructurePersistence journalStructurePersistence;
-	@BeanReference(type = JournalTemplatePersistence.class)
-	protected JournalTemplatePersistence journalTemplatePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
 	private static final String _SQL_SELECT_JOURNALFEED = "SELECT journalFeed FROM JournalFeed journalFeed";
 	private static final String _SQL_SELECT_JOURNALFEED_WHERE = "SELECT journalFeed FROM JournalFeed journalFeed WHERE ";
 	private static final String _SQL_COUNT_JOURNALFEED = "SELECT COUNT(journalFeed) FROM JournalFeed journalFeed";

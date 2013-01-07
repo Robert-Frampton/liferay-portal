@@ -45,11 +45,17 @@ String script = BeanParamUtil.getString(structure, request, "xsd");
 JSONArray scriptJSONArray = null;
 
 if (Validator.isNotNull(script)) {
-	scriptJSONArray = DDMXSDUtil.getJSONArray(script);
-}
-
-if (scriptJSONArray != null) {
-	scriptJSONArray = _addStructureFieldAttributes(structure, scriptJSONArray);
+	if (structure != null) {
+		try {
+			scriptJSONArray = DDMXSDUtil.getJSONArray(structure, script);
+		}
+		catch (Exception e) {
+			scriptJSONArray = DDMXSDUtil.getJSONArray(structure.getDocument());
+		}
+	}
+	else {
+		scriptJSONArray = DDMXSDUtil.getJSONArray(script);
+	}
 }
 %>
 
@@ -155,7 +161,7 @@ if (scriptJSONArray != null) {
 
 				<aui:input name="description" />
 
-				<aui:field-wrapper label="parent-data-definition">
+				<aui:field-wrapper label='<%= LanguageUtil.format(pageContext, "parent-x", scopeStructureName) %>'>
 					<aui:input name="parentStructureId" type="hidden" value="<%= parentStructureId %>" />
 
 					<c:choose>
@@ -213,6 +219,7 @@ if (scriptJSONArray != null) {
 	function <portlet:namespace />openParentStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 		{
+			classPK: <%= (structure != null) ? structure.getPrimaryKey() : 0 %>,
 			ddmResource: '<%= ddmResource %>',
 			dialog: {
 				width: 820
@@ -220,11 +227,11 @@ if (scriptJSONArray != null) {
 			saveCallback: '<%= renderResponse.getNamespace() + "selectParentStructure" %>',
 			showGlobalScope: true,
 			showManageTemplates: false,
-			storageType: '<%= PropsValues.DYNAMIC_DATA_LISTS_STORAGE_TYPE %>',
-			structureName: 'data-definition',
-			structureType: 'com.liferay.portlet.dynamicdatalists.model.DDLRecordSet',
+			storageType: '<%= scopeStorageType %>',
+			structureName: '<%= scopeStructureName %>',
+			structureType: '<%= scopeStructureType %>',
 			struts_action: '/dynamic_data_mapping/select_structure',
-			title: '<%= UnicodeLanguageUtil.get(pageContext, "data-definitions") %>'
+			title: '<%= scopeTitle %>'
 		}
 		);
 	}
@@ -260,51 +267,19 @@ if (scriptJSONArray != null) {
 	);
 </aui:script>
 
-<aui:script use="liferay-portlet-dynamic-data-mapping">
+<aui:script>
 	Liferay.provide(
 		window,
 		'<portlet:namespace />saveStructure',
 		function() {
-			document.<portlet:namespace />fm.<portlet:namespace />xsd.value = window.<portlet:namespace />formBuilder.getXSD();
+			document.<portlet:namespace />fm.<portlet:namespace />xsd.value = window.<portlet:namespace />formBuilder.getContentXSD();
 
 			submitForm(document.<portlet:namespace />fm);
 		},
-		['aui-base']
+		['aui-base', 'liferay-portlet-dynamic-data-mapping']
 	);
 
 	<c:if test="<%= Validator.isNotNull(saveCallback) && (classPK != 0) %>">
 		window.parent['<%= HtmlUtil.escapeJS(saveCallback) %>']('<%= classPK %>', '<%= HtmlUtil.escape(structure.getName(locale)) %>');
 	</c:if>
 </aui:script>
-
-<%!
-public JSONArray _addStructureFieldAttributes(DDMStructure structure, JSONArray scriptJSONArray) throws Exception {
-	for (int i = 0; i < scriptJSONArray.length(); i++) {
-		JSONObject jsonObject = scriptJSONArray.getJSONObject(i);
-
-		String fieldName = jsonObject.getString("name");
-
-		try {
-			jsonObject.put("readOnlyAttributes", _getFieldReadOnlyAttributes(structure, fieldName));
-		}
-		catch (StructureFieldException sfe) {
-		}
-	}
-
-	return scriptJSONArray;
-}
-
-public JSONArray _getFieldReadOnlyAttributes(DDMStructure structure, String fieldName) throws Exception {
-	JSONArray readOnlyAttributesJSONArray = JSONFactoryUtil.createJSONArray();
-
-	try {
-		if (DDMStorageLinkLocalServiceUtil.getStructureStorageLinksCount(structure.getStructureId()) > 0) {
-			readOnlyAttributesJSONArray.put("name");
-		}
-	}
-	catch (Exception e) {
-	}
-
-	return readOnlyAttributesJSONArray;
-}
-%>

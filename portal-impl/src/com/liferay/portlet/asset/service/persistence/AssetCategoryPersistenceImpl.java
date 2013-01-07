@@ -46,7 +46,6 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.asset.NoSuchCategoryException;
@@ -7227,20 +7226,107 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 	}
 
+	protected void cacheUniqueFindersCache(AssetCategory assetCategory) {
+		if (assetCategory.isNew()) {
+			Object[] args = new Object[] {
+					assetCategory.getUuid(),
+					Long.valueOf(assetCategory.getGroupId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+				assetCategory);
+
+			args = new Object[] {
+					Long.valueOf(assetCategory.getParentCategoryId()),
+					
+					assetCategory.getName(),
+					Long.valueOf(assetCategory.getVocabularyId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_P_N_V, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_N_V, args,
+				assetCategory);
+		}
+		else {
+			AssetCategoryModelImpl assetCategoryModelImpl = (AssetCategoryModelImpl)assetCategory;
+
+			if ((assetCategoryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						assetCategory.getUuid(),
+						Long.valueOf(assetCategory.getGroupId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+					assetCategory);
+			}
+
+			if ((assetCategoryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_P_N_V.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(assetCategory.getParentCategoryId()),
+						
+						assetCategory.getName(),
+						Long.valueOf(assetCategory.getVocabularyId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_P_N_V, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_N_V, args,
+					assetCategory);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(AssetCategory assetCategory) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
+		AssetCategoryModelImpl assetCategoryModelImpl = (AssetCategoryModelImpl)assetCategory;
+
+		Object[] args = new Object[] {
 				assetCategory.getUuid(),
 				Long.valueOf(assetCategory.getGroupId())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_N_V,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+
+		if ((assetCategoryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					assetCategoryModelImpl.getOriginalUuid(),
+					Long.valueOf(assetCategoryModelImpl.getOriginalGroupId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(assetCategory.getParentCategoryId()),
 				
-			assetCategory.getName(),
+				assetCategory.getName(),
 				Long.valueOf(assetCategory.getVocabularyId())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_P_N_V, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_N_V, args);
+
+		if ((assetCategoryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_P_N_V.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(assetCategoryModelImpl.getOriginalParentCategoryId()),
+					
+					assetCategoryModelImpl.getOriginalName(),
+					Long.valueOf(assetCategoryModelImpl.getOriginalVocabularyId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_P_N_V, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_N_V, args);
+		}
 	}
 
 	/**
@@ -7634,62 +7720,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			AssetCategoryImpl.class, assetCategory.getPrimaryKey(),
 			assetCategory);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-				new Object[] {
-					assetCategory.getUuid(),
-					Long.valueOf(assetCategory.getGroupId())
-				}, assetCategory);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_N_V,
-				new Object[] {
-					Long.valueOf(assetCategory.getParentCategoryId()),
-					
-				assetCategory.getName(),
-					Long.valueOf(assetCategory.getVocabularyId())
-				}, assetCategory);
-		}
-		else {
-			if ((assetCategoryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						assetCategoryModelImpl.getOriginalUuid(),
-						Long.valueOf(assetCategoryModelImpl.getOriginalGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-					new Object[] {
-						assetCategory.getUuid(),
-						Long.valueOf(assetCategory.getGroupId())
-					}, assetCategory);
-			}
-
-			if ((assetCategoryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_P_N_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(assetCategoryModelImpl.getOriginalParentCategoryId()),
-						
-						assetCategoryModelImpl.getOriginalName(),
-						Long.valueOf(assetCategoryModelImpl.getOriginalVocabularyId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_P_N_V, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_N_V, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_P_N_V,
-					new Object[] {
-						Long.valueOf(assetCategory.getParentCategoryId()),
-						
-					assetCategory.getName(),
-						Long.valueOf(assetCategory.getVocabularyId())
-					}, assetCategory);
-			}
-		}
+		clearUniqueFindersCache(assetCategory);
+		cacheUniqueFindersCache(assetCategory);
 
 		return assetCategory;
 	}
@@ -8823,24 +8855,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AssetCategoryPersistence.class)
-	protected AssetCategoryPersistence assetCategoryPersistence;
-	@BeanReference(type = AssetCategoryPropertyPersistence.class)
-	protected AssetCategoryPropertyPersistence assetCategoryPropertyPersistence;
 	@BeanReference(type = AssetEntryPersistence.class)
 	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
-	@BeanReference(type = AssetTagPersistence.class)
-	protected AssetTagPersistence assetTagPersistence;
-	@BeanReference(type = AssetTagPropertyPersistence.class)
-	protected AssetTagPropertyPersistence assetTagPropertyPersistence;
-	@BeanReference(type = AssetTagStatsPersistence.class)
-	protected AssetTagStatsPersistence assetTagStatsPersistence;
-	@BeanReference(type = AssetVocabularyPersistence.class)
-	protected AssetVocabularyPersistence assetVocabularyPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	protected ContainsAssetEntry containsAssetEntry;
 	protected AddAssetEntry addAssetEntry;
 	protected ClearAssetEntries clearAssetEntries;

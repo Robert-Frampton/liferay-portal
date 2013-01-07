@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.template.URLTemplateResource;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -39,12 +40,19 @@ import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStorageLinkLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.storage.Field;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
+import com.liferay.util.PwdGenerator;
 import com.liferay.util.freemarker.FreeMarkerTaglibFactoryUtil;
 
 import freemarker.ext.servlet.HttpRequestHashModel;
@@ -76,6 +84,7 @@ import javax.servlet.jsp.PageContext;
  * @author Bruno Basto
  * @author Eduardo Lundgren
  * @author Brian Wing Shun Chan
+ * @author Marcellus Tavares
  */
 public class DDMXSDImpl implements DDMXSD {
 
@@ -93,6 +102,106 @@ public class DDMXSDImpl implements DDMXSD {
 
 		_defaultReadOnlyTemplateResource = new URLTemplateResource(
 			defaultReadOnlyTemplateId, defaultReadOnlyTemplateURL);
+	}
+
+	public String getFieldHTML(
+			PageContext pageContext, Element element, Fields fields,
+			String namespace, String mode, boolean readOnly, Locale locale)
+		throws Exception {
+
+		HttpServletRequest request =
+			(HttpServletRequest)pageContext.getRequest();
+
+		String portletId = PortalUtil.getPortletId(request);
+
+		String portletNamespace = PortalUtil.getPortletNamespace(portletId);
+
+		Map<String, Object> freeMarkerContext = getFreeMarkerContext(
+			element, locale);
+
+		freeMarkerContext.put("portletNamespace", portletNamespace);
+		freeMarkerContext.put("namespace", namespace);
+
+		Map<String, Object> fieldStructure =
+			(Map<String, Object>)freeMarkerContext.get("fieldStructure");
+
+		int fieldRepetition = 1;
+
+		FieldsCounter fieldsCounter = getFieldsCounter(
+			pageContext, fields, portletNamespace, namespace);
+
+		if (fields != null) {
+			freeMarkerContext.put("fields", fields);
+
+			Field fieldsDisplayField = fields.get(DDMImpl.FIELDS_DISPLAY_NAME);
+
+			if (fieldsDisplayField != null) {
+				String[] fieldsDisplayValues = StringUtil.split(
+					(String)fieldsDisplayField.getValue());
+
+				Map<String, Object> parentFieldStructure =
+					(Map<String, Object>)freeMarkerContext.get(
+						"parentFieldStructure");
+
+				String parentFieldName = (String)parentFieldStructure.get(
+					"name");
+
+				int offset = fieldsCounter.get(DDMImpl.FIELDS_DISPLAY_NAME);
+
+				fieldRepetition = countFieldRepetition(
+					fieldsDisplayValues, parentFieldName, offset);
+			}
+		}
+
+		String name = element.attributeValue("name");
+
+		StringBundler sb = new StringBundler(fieldRepetition);
+
+		while (fieldRepetition > 0) {
+			fieldStructure.put("fieldNamespace", PwdGenerator.getPassword(4));
+			fieldStructure.put("valueIndex", fieldsCounter.get(name));
+
+			fieldsCounter.incrementKey(name);
+			fieldsCounter.incrementKey(DDMImpl.FIELDS_DISPLAY_NAME);
+
+			String childrenHTML = getHTML(
+				pageContext, element, fields, namespace, mode, readOnly,
+				locale);
+
+			fieldStructure.put("children", childrenHTML);
+
+			sb.append(
+				processFTL(
+					pageContext, element, mode, readOnly, freeMarkerContext));
+
+			fieldRepetition--;
+		}
+
+		return sb.toString();
+	}
+
+	public String getFieldHTMLByName(
+			PageContext pageContext, long classNameId, long classPK,
+			String fieldName, Fields fields, String namespace, String mode,
+			boolean readOnly, Locale locale)
+		throws Exception {
+
+		String xsd = getXSD(classNameId, classPK);
+
+		Document document = SAXReaderUtil.read(xsd);
+
+		String xPathExpression =
+			"//dynamic-element[@name=".concat(
+				HtmlUtil.escapeXPathAttribute(fieldName)).concat("]");
+
+		XPath xPathSelector = SAXReaderUtil.createXPath(xPathExpression);
+
+		Node node = xPathSelector.selectSingleNode(document.getRootElement());
+
+		Element element = (Element)node.asXPathResult(node.getParent());
+
+		return getFieldHTML(
+			pageContext, element, fields, namespace, mode, readOnly, locale);
 	}
 
 	public String getHTML(
@@ -130,92 +239,16 @@ public class DDMXSDImpl implements DDMXSD {
 			String namespace, String mode, boolean readOnly, Locale locale)
 		throws Exception {
 
-		StringBundler sb = new StringBundler();
-
-		HttpServletRequest request =
-			(HttpServletRequest)pageContext.getRequest();
-
-		String portletId = PortalUtil.getPortletId(request);
-
-		String portletNamespace = PortalUtil.getPortletNamespace(portletId);
-
 		List<Element> dynamicElementElements = element.elements(
 			"dynamic-element");
 
+		StringBundler sb = new StringBundler(dynamicElementElements.size());
+
 		for (Element dynamicElementElement : dynamicElementElements) {
-			Map<String, Object> freeMarkerContext = getFreeMarkerContext(
-				dynamicElementElement, locale);
-
-			freeMarkerContext.put("portletNamespace", portletNamespace);
-			freeMarkerContext.put("namespace", namespace);
-
-			if (fields != null) {
-				freeMarkerContext.put("fields", fields);
-			}
-
-			Map<String, Object> field =
-				(Map<String, Object>)freeMarkerContext.get("fieldStructure");
-
-			String childrenHTML = getHTML(
-				pageContext, dynamicElementElement, fields, namespace, mode,
-				readOnly, locale);
-
-			field.put("children", childrenHTML);
-
-			String fieldNamespace = dynamicElementElement.attributeValue(
-				"fieldNamespace", _DEFAULT_NAMESPACE);
-
-			TemplateResource templateResource = _defaultTemplateResource;
-
-			boolean fieldReadOnly = GetterUtil.getBoolean(
-				field.get("readOnly"));
-
-			if ((fieldReadOnly && Validator.isNotNull(mode) &&
-				 mode.equalsIgnoreCase(
-					DDMTemplateConstants.TEMPLATE_MODE_EDIT)) || readOnly) {
-
-				fieldNamespace = _DEFAULT_READ_ONLY_NAMESPACE;
-
-				templateResource = _defaultReadOnlyTemplateResource;
-			}
-
-			String type = dynamicElementElement.attributeValue("type");
-
-			String templateName = StringUtil.replaceFirst(
-				type, fieldNamespace.concat(StringPool.DASH), StringPool.BLANK);
-
-			StringBundler resourcePath = new StringBundler(5);
-
-			resourcePath.append(_TPL_PATH);
-			resourcePath.append(fieldNamespace.toLowerCase());
-			resourcePath.append(CharPool.SLASH);
-			resourcePath.append(templateName);
-			resourcePath.append(_TPL_EXT);
-
-			String resource = resourcePath.toString();
-
-			URL url = getResource(resource);
-
-			if (url != null) {
-				templateResource = new URLTemplateResource(resource, url);
-			}
-
-			if (templateResource == null) {
-				throw new Exception(
-					"Unable to load template resource " + resource);
-			}
-
-			Template template = TemplateManagerUtil.getTemplate(
-				TemplateManager.FREEMARKER, templateResource,
-				TemplateContextType.STANDARD);
-
-			for (Map.Entry<String, Object> entry :
-					freeMarkerContext.entrySet()) {
-
-				template.put(entry.getKey(), entry.getValue());
-			}
-
-			sb.append(processFTL(pageContext, template));
+			sb.append(
+				getFieldHTML(
+					pageContext, dynamicElementElement, fields, namespace, mode,
+					readOnly, locale));
 		}
 
 		return sb.toString();
@@ -270,6 +303,23 @@ public class DDMXSDImpl implements DDMXSD {
 		return getHTML(pageContext, xml, null, locale);
 	}
 
+	public JSONArray getJSONArray(DDMStructure structure, String xsd)
+		throws PortalException, SystemException {
+
+		JSONArray jsonArray = null;
+
+		if (Validator.isNull(xsd)) {
+			jsonArray = getJSONArray(structure.getDocument());
+		}
+		else {
+			jsonArray = getJSONArray(xsd);
+		}
+
+		addStructureFieldAttributes(structure, jsonArray);
+
+		return jsonArray;
+	}
+
 	public JSONArray getJSONArray(Document document) throws PortalException {
 		return getJSONArray(document.getRootElement());
 	}
@@ -315,7 +365,7 @@ public class DDMXSDImpl implements DDMXSD {
 
 					String attributeName = metadataEntryElement.attributeValue(
 						"name");
-					String attributeValue = metadataEntryElement.getText();
+					String attributeValue = metadataEntryElement.getTextTrim();
 
 					putMetadataValue(
 						localeMap, attributeName, attributeValue, type);
@@ -373,6 +423,74 @@ public class DDMXSDImpl implements DDMXSD {
 		}
 	}
 
+	public String getXSD(long classNameId, long classPK)
+		throws PortalException, SystemException {
+
+		if ((classNameId <= 0) || (classPK <= 0)) {
+			return null;
+		}
+
+		long ddmStructureClassNameId = PortalUtil.getClassNameId(
+			DDMStructure.class);
+
+		long ddmTemplateClassNameId = PortalUtil.getClassNameId(
+			DDMTemplate.class);
+
+		if (classNameId == ddmStructureClassNameId) {
+			DDMStructure structure = DDMStructureServiceUtil.getStructure(
+				classPK);
+
+			return structure.getCompleteXsd();
+		}
+		else if (classNameId == ddmTemplateClassNameId) {
+			DDMTemplate template = DDMTemplateServiceUtil.getTemplate(classPK);
+
+			return template.getScript();
+		}
+
+		return null;
+	}
+
+	protected JSONArray addStructureFieldAttributes(
+		DDMStructure structure, JSONArray jsonArray) {
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+			String fieldName = jsonObject.getString("name");
+
+			jsonObject.put(
+				"readOnlyAttributes",
+				getStructureFieldReadOnlyAttributes(structure, fieldName));
+		}
+
+		return jsonArray;
+	}
+
+	protected int countFieldRepetition(
+		String[] fieldsDisplayValues, String parentFieldName, int offset) {
+
+		int total = 0;
+
+		String fieldName = StringUtil.extractFirst(
+			fieldsDisplayValues[offset], DDMImpl.INSTANCE_SEPARATOR);
+
+		for (; offset < fieldsDisplayValues.length; offset++) {
+			String fieldNameValue = StringUtil.extractFirst(
+				fieldsDisplayValues[offset], DDMImpl.INSTANCE_SEPARATOR);
+
+			if (fieldNameValue.equals(fieldName)) {
+				total++;
+			}
+
+			if (fieldNameValue.equals(parentFieldName)) {
+				break;
+			}
+		}
+
+		return total;
+	}
+
 	protected Map<String, Object> getFieldContext(
 		Element dynamicElementElement, Locale locale) {
 
@@ -411,6 +529,24 @@ public class DDMXSDImpl implements DDMXSD {
 		return field;
 	}
 
+	protected FieldsCounter getFieldsCounter(
+		PageContext pageContext, Fields fields, String portletNamespace,
+		String namespace) {
+
+		String fieldsCounterKey = portletNamespace + namespace + "fieldsCount";
+
+		FieldsCounter fieldsCounter = (FieldsCounter)pageContext.getAttribute(
+			fieldsCounterKey);
+
+		if (fieldsCounter == null) {
+			fieldsCounter = new FieldsCounter();
+
+			pageContext.setAttribute(fieldsCounterKey, fieldsCounter);
+		}
+
+		return fieldsCounter;
+	}
+
 	protected Map<String, Object> getFreeMarkerContext(
 		Element dynamicElementElement, Locale locale) {
 
@@ -429,6 +565,7 @@ public class DDMXSDImpl implements DDMXSD {
 
 		freeMarkerContext.put("fieldStructure", fieldContext);
 		freeMarkerContext.put("parentFieldStructure", parentFieldContext);
+		freeMarkerContext.put("requestedLocale", locale);
 
 		return freeMarkerContext;
 	}
@@ -439,6 +576,85 @@ public class DDMXSDImpl implements DDMXSD {
 		ClassLoader classLoader = clazz.getClassLoader();
 
 		return classLoader.getResource(name);
+	}
+
+	protected JSONArray getStructureFieldReadOnlyAttributes(
+		DDMStructure structure, String fieldName) {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		try {
+			if (DDMStorageLinkLocalServiceUtil.getStructureStorageLinksCount(
+					structure.getStructureId()) > 0) {
+
+				jsonArray.put("name");
+			}
+		}
+		catch (Exception e) {
+		}
+
+		return jsonArray;
+	}
+
+	protected String processFTL(
+			PageContext pageContext, Element element, String mode,
+			boolean readOnly, Map<String, Object> freeMarkerContext)
+		throws Exception {
+
+		String fieldNamespace = element.attributeValue(
+			"fieldNamespace", _DEFAULT_NAMESPACE);
+
+		TemplateResource templateResource = _defaultTemplateResource;
+
+		Map<String, Object> fieldStructure =
+			(Map<String, Object>)freeMarkerContext.get("fieldStructure");
+
+		boolean fieldReadOnly = GetterUtil.getBoolean(
+			fieldStructure.get("readOnly"));
+
+		if ((fieldReadOnly && Validator.isNotNull(mode) &&
+			 mode.equalsIgnoreCase(
+				DDMTemplateConstants.TEMPLATE_MODE_EDIT)) || readOnly) {
+
+			fieldNamespace = _DEFAULT_READ_ONLY_NAMESPACE;
+
+			templateResource = _defaultReadOnlyTemplateResource;
+		}
+
+		String type = element.attributeValue("type");
+
+		String templateName = StringUtil.replaceFirst(
+			type, fieldNamespace.concat(StringPool.DASH), StringPool.BLANK);
+
+		StringBundler resourcePath = new StringBundler(5);
+
+		resourcePath.append(_TPL_PATH);
+		resourcePath.append(fieldNamespace.toLowerCase());
+		resourcePath.append(CharPool.SLASH);
+		resourcePath.append(templateName);
+		resourcePath.append(_TPL_EXT);
+
+		String resource = resourcePath.toString();
+
+		URL url = getResource(resource);
+
+		if (url != null) {
+			templateResource = new URLTemplateResource(resource, url);
+		}
+
+		if (templateResource == null) {
+			throw new Exception("Unable to load template resource " + resource);
+		}
+
+		Template template = TemplateManagerUtil.getTemplate(
+			TemplateManager.FREEMARKER, templateResource,
+			TemplateContextType.STANDARD);
+
+		for (Map.Entry<String, Object> entry : freeMarkerContext.entrySet()) {
+			template.put(entry.getKey(), entry.getValue());
+		}
+
+		return processFTL(pageContext, template);
 	}
 
 	/**
@@ -547,5 +763,26 @@ public class DDMXSDImpl implements DDMXSD {
 
 	private TemplateResource _defaultReadOnlyTemplateResource;
 	private TemplateResource _defaultTemplateResource;
+
+	private class FieldsCounter extends HashMap<Object, Integer> {
+
+		@Override
+		public Integer get(Object key) {
+			if (!containsKey(key)) {
+				put(key, 0);
+			}
+
+			return super.get(key);
+		}
+
+		public int incrementKey(Object key) {
+			int value = get(key);
+
+			put(key, value++);
+
+			return value;
+		}
+
+	}
 
 }

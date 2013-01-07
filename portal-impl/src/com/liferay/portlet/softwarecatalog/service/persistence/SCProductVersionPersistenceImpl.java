@@ -44,7 +44,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.softwarecatalog.NoSuchProductVersionException;
@@ -919,9 +918,53 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 		}
 	}
 
+	protected void cacheUniqueFindersCache(SCProductVersion scProductVersion) {
+		if (scProductVersion.isNew()) {
+			Object[] args = new Object[] { scProductVersion.getDirectDownloadURL() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+				args, Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
+				args, scProductVersion);
+		}
+		else {
+			SCProductVersionModelImpl scProductVersionModelImpl = (SCProductVersionModelImpl)scProductVersion;
+
+			if ((scProductVersionModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						scProductVersion.getDirectDownloadURL()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
+					args, scProductVersion);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(SCProductVersion scProductVersion) {
+		SCProductVersionModelImpl scProductVersionModelImpl = (SCProductVersionModelImpl)scProductVersion;
+
+		Object[] args = new Object[] { scProductVersion.getDirectDownloadURL() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+			args);
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-			new Object[] { scProductVersion.getDirectDownloadURL() });
+			args);
+
+		if ((scProductVersionModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					scProductVersionModelImpl.getOriginalDirectDownloadURL()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
+				args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
+				args);
+		}
 	}
 
 	/**
@@ -1100,29 +1143,8 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			SCProductVersionImpl.class, scProductVersion.getPrimaryKey(),
 			scProductVersion);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-				new Object[] { scProductVersion.getDirectDownloadURL() },
-				scProductVersion);
-		}
-		else {
-			if ((scProductVersionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						scProductVersionModelImpl.getOriginalDirectDownloadURL()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_DIRECTDOWNLOADURL,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-					new Object[] { scProductVersion.getDirectDownloadURL() },
-					scProductVersion);
-			}
-		}
+		clearUniqueFindersCache(scProductVersion);
+		cacheUniqueFindersCache(scProductVersion);
 
 		return scProductVersion;
 	}
@@ -1970,16 +1992,6 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 
 	@BeanReference(type = SCFrameworkVersionPersistence.class)
 	protected SCFrameworkVersionPersistence scFrameworkVersionPersistence;
-	@BeanReference(type = SCLicensePersistence.class)
-	protected SCLicensePersistence scLicensePersistence;
-	@BeanReference(type = SCProductEntryPersistence.class)
-	protected SCProductEntryPersistence scProductEntryPersistence;
-	@BeanReference(type = SCProductScreenshotPersistence.class)
-	protected SCProductScreenshotPersistence scProductScreenshotPersistence;
-	@BeanReference(type = SCProductVersionPersistence.class)
-	protected SCProductVersionPersistence scProductVersionPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	protected ContainsSCFrameworkVersion containsSCFrameworkVersion;
 	protected AddSCFrameworkVersion addSCFrameworkVersion;
 	protected ClearSCFrameworkVersions clearSCFrameworkVersions;

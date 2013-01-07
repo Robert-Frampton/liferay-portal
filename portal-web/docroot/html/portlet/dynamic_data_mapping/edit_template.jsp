@@ -179,15 +179,6 @@ if (Validator.isNotNull(structureAvailableFields)) {
 							<aui:option label="create" />
 							<aui:option label="edit" />
 						</aui:select>
-
-						<aui:script use="aui-base,event-valuechange">
-							A.one('#<portlet:namespace />mode').on(
-								'valueChange',
-								function(event) {
-									<portlet:namespace />toggleMode(event.newVal);
-								}
-							);
-						</aui:script>
 					</c:when>
 					<c:otherwise>
 						<div id="<portlet:namespace />smallImageContainer">
@@ -249,6 +240,31 @@ if (Validator.isNotNull(structureAvailableFields)) {
 		<aui:script>
 			Liferay.provide(
 				window,
+				'<portlet:namespace />attachValueChange',
+				function(mode) {
+					var A = AUI();
+
+					A.one('#<portlet:namespace />mode').on(
+						'valueChange',
+						function(event) {
+							<portlet:namespace />toggleMode(event.newVal);
+						}
+					);
+				},
+				['event-valuechange']
+			);
+
+			Liferay.on(
+				'<portlet:namespace />formBuilderLoaded',
+				function(event) {
+					<portlet:namespace />attachValueChange();
+
+					<portlet:namespace />toggleMode('<%= HtmlUtil.escape(mode) %>');
+				}
+			);
+
+			Liferay.provide(
+				window,
 				'<portlet:namespace />setFieldsHiddenAttributes',
 				function(item, index, collection, mode) {
 					var A = AUI();
@@ -264,7 +280,7 @@ if (Validator.isNotNull(structureAvailableFields)) {
 
 					item.set('hiddenAttributes', hiddenAttributes);
 				},
-				['liferay-portlet-dynamic-data-mapping']
+				['aui-base']
 			);
 
 			Liferay.provide(
@@ -281,10 +297,8 @@ if (Validator.isNotNull(structureAvailableFields)) {
 
 					A.Array.each(window.<portlet:namespace />formBuilder.get('availableFields'), A.rbind(<portlet:namespace />setFieldsHiddenAttributes, this, mode));
 				},
-				['liferay-portlet-dynamic-data-mapping']
+				['aui-base']
 			);
-
-			<portlet:namespace />toggleMode('<%= HtmlUtil.escape(mode) %>');
 		</aui:script>
 	</c:when>
 	<c:otherwise>
@@ -352,7 +366,20 @@ if (Validator.isNotNull(structureAvailableFields)) {
 </c:choose>
 
 <aui:button-row>
-	<aui:button onClick='<%= renderResponse.getNamespace() + "saveTemplate();" %>' value='<%= LanguageUtil.get(pageContext, "save") %>' />
+	<aui:script>
+		Liferay.after(
+			'<portlet:namespace />saveTemplate',
+			function(){
+				submitForm(document.<portlet:namespace />fm);
+			}
+		);
+	</aui:script>
+
+	<%
+	String taglibOnClick = "Liferay.fire('" + liferayPortletResponse.getNamespace() + "saveTemplate');";
+	%>
+
+	<aui:button onClick="<%= taglibOnClick %>" value='<%= LanguageUtil.get(pageContext, "save") %>' />
 
 	<aui:button href="<%= redirect %>" type="cancel" />
 </aui:button-row>

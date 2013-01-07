@@ -44,6 +44,7 @@ import com.liferay.portal.UserPortraitTypeException;
 import com.liferay.portal.UserReminderQueryException;
 import com.liferay.portal.UserScreenNameException;
 import com.liferay.portal.UserSmsException;
+import com.liferay.portal.kernel.concurrent.PortalCallable;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.image.ImageBag;
@@ -686,7 +687,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		Company company = companyPersistence.findByPrimaryKey(companyId);
 		screenName = getScreenName(screenName);
-		emailAddress = emailAddress.trim().toLowerCase();
 		openId = openId.trim();
 		Date now = new Date();
 
@@ -703,8 +703,13 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		EmailAddressGenerator emailAddressGenerator =
 			EmailAddressGeneratorFactory.getInstance();
 
-		if (emailAddressGenerator.isGenerated(emailAddress)) {
+		if ((emailAddress == null) ||
+			emailAddressGenerator.isGenerated(emailAddress)) {
+
 			emailAddress = StringPool.BLANK;
+		}
+		else {
+			emailAddress = emailAddress.trim().toLowerCase();
 		}
 
 		if (!PropsValues.USERS_EMAIL_ADDRESS_REQUIRED &&
@@ -774,14 +779,20 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		PasswordPolicy passwordPolicy = defaultUser.getPasswordPolicy();
 
-		if ((passwordPolicy != null) && passwordPolicy.isChangeable() &&
-			passwordPolicy.isChangeRequired()) {
+		boolean passwordReset = false;
 
-			user.setPasswordReset(true);
+		if (passwordPolicy != null) {
+			if (passwordPolicy.isChangeable() &&
+				passwordPolicy.isChangeRequired()) {
+
+				passwordReset = true;
+			}
+
+			addPasswordPolicyUsers(
+				passwordPolicy.getPasswordPolicyId(), new long[] {userId});
 		}
-		else {
-			user.setPasswordReset(false);
-		}
+
+		user.setPasswordReset(passwordReset);
 
 		user.setDigest(StringPool.BLANK);
 		user.setScreenName(screenName);
@@ -5460,9 +5471,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		final Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			User.class);
 
-		Callable<Void> callable = new Callable<Void>() {
+		Callable<Void> callable = new PortalCallable<Void>(
+			user.getCompanyId()) {
 
-			public Void call() throws Exception {
+			@Override
+			protected Void doCall() throws Exception {
 				indexer.reindex(user);
 
 				return null;
@@ -6080,7 +6093,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 	private static Log _log = LogFactoryUtil.getLog(UserLocalServiceImpl.class);
 
-	private static Map<Long, User> _defaultUsers =
-		new ConcurrentHashMap<Long, User>();
+	private Map<Long, User> _defaultUsers = new ConcurrentHashMap<Long, User>();
 
 }

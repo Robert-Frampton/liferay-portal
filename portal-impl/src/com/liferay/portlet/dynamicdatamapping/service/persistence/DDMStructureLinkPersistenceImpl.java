@@ -15,7 +15,6 @@
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,7 +35,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.dynamicdatamapping.NoSuchStructureLinkException;
@@ -1343,9 +1341,51 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 		}
 	}
 
+	protected void cacheUniqueFindersCache(DDMStructureLink ddmStructureLink) {
+		if (ddmStructureLink.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(ddmStructureLink.getClassPK())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CLASSPK, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK, args,
+				ddmStructureLink);
+		}
+		else {
+			DDMStructureLinkModelImpl ddmStructureLinkModelImpl = (DDMStructureLinkModelImpl)ddmStructureLink;
+
+			if ((ddmStructureLinkModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_CLASSPK.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(ddmStructureLink.getClassPK())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CLASSPK, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK, args,
+					ddmStructureLink);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(DDMStructureLink ddmStructureLink) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK,
-			new Object[] { Long.valueOf(ddmStructureLink.getClassPK()) });
+		DDMStructureLinkModelImpl ddmStructureLinkModelImpl = (DDMStructureLinkModelImpl)ddmStructureLink;
+
+		Object[] args = new Object[] { Long.valueOf(ddmStructureLink.getClassPK()) };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSPK, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK, args);
+
+		if ((ddmStructureLinkModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CLASSPK.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(ddmStructureLinkModelImpl.getOriginalClassPK())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSPK, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK, args);
+		}
 	}
 
 	/**
@@ -1535,27 +1575,8 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			DDMStructureLinkImpl.class, ddmStructureLink.getPrimaryKey(),
 			ddmStructureLink);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK,
-				new Object[] { Long.valueOf(ddmStructureLink.getClassPK()) },
-				ddmStructureLink);
-		}
-		else {
-			if ((ddmStructureLinkModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_CLASSPK.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(ddmStructureLinkModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CLASSPK, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CLASSPK,
-					new Object[] { Long.valueOf(ddmStructureLink.getClassPK()) },
-					ddmStructureLink);
-			}
-		}
+		clearUniqueFindersCache(ddmStructureLink);
+		cacheUniqueFindersCache(ddmStructureLink);
 
 		return ddmStructureLink;
 	}
@@ -1878,18 +1899,6 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = DDMContentPersistence.class)
-	protected DDMContentPersistence ddmContentPersistence;
-	@BeanReference(type = DDMStorageLinkPersistence.class)
-	protected DDMStorageLinkPersistence ddmStorageLinkPersistence;
-	@BeanReference(type = DDMStructurePersistence.class)
-	protected DDMStructurePersistence ddmStructurePersistence;
-	@BeanReference(type = DDMStructureLinkPersistence.class)
-	protected DDMStructureLinkPersistence ddmStructureLinkPersistence;
-	@BeanReference(type = DDMTemplatePersistence.class)
-	protected DDMTemplatePersistence ddmTemplatePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_DDMSTRUCTURELINK = "SELECT ddmStructureLink FROM DDMStructureLink ddmStructureLink";
 	private static final String _SQL_SELECT_DDMSTRUCTURELINK_WHERE = "SELECT ddmStructureLink FROM DDMStructureLink ddmStructureLink WHERE ";
 	private static final String _SQL_COUNT_DDMSTRUCTURELINK = "SELECT COUNT(ddmStructureLink) FROM DDMStructureLink ddmStructureLink";

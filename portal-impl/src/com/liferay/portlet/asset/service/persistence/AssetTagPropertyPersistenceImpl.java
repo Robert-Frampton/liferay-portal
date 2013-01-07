@@ -15,7 +15,6 @@
 package com.liferay.portlet.asset.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -37,7 +36,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.asset.NoSuchTagPropertyException;
@@ -1941,13 +1939,61 @@ public class AssetTagPropertyPersistenceImpl extends BasePersistenceImpl<AssetTa
 		}
 	}
 
+	protected void cacheUniqueFindersCache(AssetTagProperty assetTagProperty) {
+		if (assetTagProperty.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(assetTagProperty.getTagId()),
+					
+					assetTagProperty.getKey()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_K, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_K, args,
+				assetTagProperty);
+		}
+		else {
+			AssetTagPropertyModelImpl assetTagPropertyModelImpl = (AssetTagPropertyModelImpl)assetTagProperty;
+
+			if ((assetTagPropertyModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_T_K.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(assetTagProperty.getTagId()),
+						
+						assetTagProperty.getKey()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_K, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_K, args,
+					assetTagProperty);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(AssetTagProperty assetTagProperty) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_K,
-			new Object[] {
+		AssetTagPropertyModelImpl assetTagPropertyModelImpl = (AssetTagPropertyModelImpl)assetTagProperty;
+
+		Object[] args = new Object[] {
 				Long.valueOf(assetTagProperty.getTagId()),
 				
-			assetTagProperty.getKey()
-			});
+				assetTagProperty.getKey()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_K, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_K, args);
+
+		if ((assetTagPropertyModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_T_K.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(assetTagPropertyModelImpl.getOriginalTagId()),
+					
+					assetTagPropertyModelImpl.getOriginalKey()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_K, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_K, args);
+		}
 	}
 
 	/**
@@ -2158,35 +2204,8 @@ public class AssetTagPropertyPersistenceImpl extends BasePersistenceImpl<AssetTa
 			AssetTagPropertyImpl.class, assetTagProperty.getPrimaryKey(),
 			assetTagProperty);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_K,
-				new Object[] {
-					Long.valueOf(assetTagProperty.getTagId()),
-					
-				assetTagProperty.getKey()
-				}, assetTagProperty);
-		}
-		else {
-			if ((assetTagPropertyModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_T_K.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(assetTagPropertyModelImpl.getOriginalTagId()),
-						
-						assetTagPropertyModelImpl.getOriginalKey()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_K, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_K, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_K,
-					new Object[] {
-						Long.valueOf(assetTagProperty.getTagId()),
-						
-					assetTagProperty.getKey()
-					}, assetTagProperty);
-			}
-		}
+		clearUniqueFindersCache(assetTagProperty);
+		cacheUniqueFindersCache(assetTagProperty);
 
 		return assetTagProperty;
 	}
@@ -2514,24 +2533,6 @@ public class AssetTagPropertyPersistenceImpl extends BasePersistenceImpl<AssetTa
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = AssetCategoryPersistence.class)
-	protected AssetCategoryPersistence assetCategoryPersistence;
-	@BeanReference(type = AssetCategoryPropertyPersistence.class)
-	protected AssetCategoryPropertyPersistence assetCategoryPropertyPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
-	@BeanReference(type = AssetTagPersistence.class)
-	protected AssetTagPersistence assetTagPersistence;
-	@BeanReference(type = AssetTagPropertyPersistence.class)
-	protected AssetTagPropertyPersistence assetTagPropertyPersistence;
-	@BeanReference(type = AssetTagStatsPersistence.class)
-	protected AssetTagStatsPersistence assetTagStatsPersistence;
-	@BeanReference(type = AssetVocabularyPersistence.class)
-	protected AssetVocabularyPersistence assetVocabularyPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_ASSETTAGPROPERTY = "SELECT assetTagProperty FROM AssetTagProperty assetTagProperty";
 	private static final String _SQL_SELECT_ASSETTAGPROPERTY_WHERE = "SELECT assetTagProperty FROM AssetTagProperty assetTagProperty WHERE ";
 	private static final String _SQL_COUNT_ASSETTAGPROPERTY = "SELECT COUNT(assetTagProperty) FROM AssetTagProperty assetTagProperty";

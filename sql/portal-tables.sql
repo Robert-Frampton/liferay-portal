@@ -668,7 +668,7 @@ create table DLFolder (
 	description STRING null,
 	lastPostDate DATE null,
 	defaultFileEntryTypeId LONG,
-	hidden_ BOOLEAN,
+	hidden BOOLEAN,
 	overrideFileEntryTypes BOOLEAN,
 	status INTEGER,
 	statusByUserId LONG,
@@ -780,7 +780,6 @@ create table Groups_UserGroups (
 create table Image (
 	imageId LONG not null primary key,
 	modifiedDate DATE null,
-	text_ TEXT null,
 	type_ VARCHAR(75) null,
 	height INTEGER,
 	width INTEGER,
@@ -945,7 +944,7 @@ create table Layout (
 	robots STRING null,
 	type_ VARCHAR(75) null,
 	typeSettings TEXT null,
-	hidden_ BOOLEAN,
+	hidden BOOLEAN,
 	friendlyURL VARCHAR(255) null,
 	iconImage BOOLEAN,
 	iconImageId LONG,
@@ -1119,7 +1118,11 @@ create table MBCategory (
 	displayStyle VARCHAR(75) null,
 	threadCount INTEGER,
 	messageCount INTEGER,
-	lastPostDate DATE null
+	lastPostDate DATE null,
+	status INTEGER,
+	statusByUserId LONG,
+	statusByUserName VARCHAR(75) null,
+	statusDate DATE null
 );
 
 create table MBDiscussion (
@@ -1176,7 +1179,6 @@ create table MBMessage (
 	subject VARCHAR(75) null,
 	body TEXT null,
 	format VARCHAR(75) null,
-	attachments BOOLEAN,
 	anonymous BOOLEAN,
 	priority DOUBLE,
 	allowPingbacks BOOLEAN,

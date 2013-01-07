@@ -54,6 +54,11 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public String getContainerModelName() {
+		return "folder";
+	}
+
+	@Override
 	public List<ContainerModel> getContainerModels(
 			long classPK, long parentContainerModelId, int start, int end)
 		throws PortalException, SystemException {
@@ -84,12 +89,18 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
-	public List<ContainerModel> getParentContainerModels(long containerModelId)
+	public List<ContainerModel> getParentContainerModels(long classPK)
 		throws PortalException, SystemException {
 
 		List<ContainerModel> containerModels = new ArrayList<ContainerModel>();
 
-		ContainerModel containerModel = getContainerModel(containerModelId);
+		ContainerModel containerModel = getParentContainerModel(classPK);
+
+		if (containerModel == null) {
+			return containerModels;
+		}
+
+		containerModels.add(containerModel);
 
 		while (containerModel.getParentContainerModelId() > 0) {
 			containerModel = getContainerModel(
@@ -130,13 +141,13 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 			long classPK, int start, int end)
 		throws PortalException, SystemException {
 
+		List<TrashRenderer> trashRenderers = new ArrayList<TrashRenderer>();
+
 		Repository repository = getRepository(classPK);
 
 		List<Object> fileEntriesAndFileShortcuts =
 			repository.getFileEntriesAndFileShortcuts(
 				classPK, WorkflowConstants.STATUS_ANY, start, end);
-
-		List<TrashRenderer> trashRenderers = new ArrayList<TrashRenderer>();
 
 		for (Object fileEntryOrFileShortcut : fileEntriesAndFileShortcuts) {
 			String curClassName = StringPool.BLANK;
@@ -190,12 +201,12 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 			long classPK, int start, int end)
 		throws PortalException, SystemException {
 
+		List<TrashRenderer> trashRenderers = new ArrayList<TrashRenderer>();
+
 		Repository repository = getRepository(classPK);
 
 		List<Folder> folders = repository.getFolders(
 			classPK, false, start, end, null);
-
-		List<TrashRenderer> trashRenderers = new ArrayList<TrashRenderer>();
 
 		for (Folder folder : folders) {
 			TrashHandler trashHandler =

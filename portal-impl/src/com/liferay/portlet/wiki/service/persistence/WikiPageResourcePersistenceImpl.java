@@ -15,7 +15,6 @@
 package com.liferay.portlet.wiki.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -38,7 +37,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.wiki.NoSuchPageResourceException;
@@ -945,13 +943,61 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		}
 	}
 
+	protected void cacheUniqueFindersCache(WikiPageResource wikiPageResource) {
+		if (wikiPageResource.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(wikiPageResource.getNodeId()),
+					
+					wikiPageResource.getTitle()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_N_T, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T, args,
+				wikiPageResource);
+		}
+		else {
+			WikiPageResourceModelImpl wikiPageResourceModelImpl = (WikiPageResourceModelImpl)wikiPageResource;
+
+			if ((wikiPageResourceModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_N_T.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(wikiPageResource.getNodeId()),
+						
+						wikiPageResource.getTitle()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_N_T, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T, args,
+					wikiPageResource);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(WikiPageResource wikiPageResource) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T,
-			new Object[] {
+		WikiPageResourceModelImpl wikiPageResourceModelImpl = (WikiPageResourceModelImpl)wikiPageResource;
+
+		Object[] args = new Object[] {
 				Long.valueOf(wikiPageResource.getNodeId()),
 				
-			wikiPageResource.getTitle()
-			});
+				wikiPageResource.getTitle()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T, args);
+
+		if ((wikiPageResourceModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_N_T.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(wikiPageResourceModelImpl.getOriginalNodeId()),
+					
+					wikiPageResourceModelImpl.getOriginalTitle()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T, args);
+		}
 	}
 
 	/**
@@ -1126,35 +1172,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			WikiPageResourceImpl.class, wikiPageResource.getPrimaryKey(),
 			wikiPageResource);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T,
-				new Object[] {
-					Long.valueOf(wikiPageResource.getNodeId()),
-					
-				wikiPageResource.getTitle()
-				}, wikiPageResource);
-		}
-		else {
-			if ((wikiPageResourceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_N_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(wikiPageResourceModelImpl.getOriginalNodeId()),
-						
-						wikiPageResourceModelImpl.getOriginalTitle()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_N_T, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_T, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_N_T,
-					new Object[] {
-						Long.valueOf(wikiPageResource.getNodeId()),
-						
-					wikiPageResource.getTitle()
-					}, wikiPageResource);
-			}
-		}
+		clearUniqueFindersCache(wikiPageResource);
+		cacheUniqueFindersCache(wikiPageResource);
 
 		return wikiPageResource;
 	}
@@ -1477,14 +1496,6 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = WikiNodePersistence.class)
-	protected WikiNodePersistence wikiNodePersistence;
-	@BeanReference(type = WikiPagePersistence.class)
-	protected WikiPagePersistence wikiPagePersistence;
-	@BeanReference(type = WikiPageResourcePersistence.class)
-	protected WikiPageResourcePersistence wikiPageResourcePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_WIKIPAGERESOURCE = "SELECT wikiPageResource FROM WikiPageResource wikiPageResource";
 	private static final String _SQL_SELECT_WIKIPAGERESOURCE_WHERE = "SELECT wikiPageResource FROM WikiPageResource wikiPageResource WHERE ";
 	private static final String _SQL_COUNT_WIKIPAGERESOURCE = "SELECT COUNT(wikiPageResource) FROM WikiPageResource wikiPageResource";

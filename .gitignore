@@ -1,9 +1,11 @@
 *~
-*.ant-*
 *.bak
 *.iml
+*.ipr
+*.iws
 *.swp
 .ant_targets
+.ant-targets-build.xml
 .sass-cache/
 .sass_cache_*.css
 _sass_cache_*.css
@@ -38,7 +40,13 @@ _sass_cache_*.css
 
 /classes/Test.class
 
+/intellij
+
+/lib/development/db2jcc.jar
+/lib/development/db2jcc_license_cu.jar
 /lib/development/ojdbc14.jar
+/lib/development/ojdbc5.jar
+/lib/development/ojdbc6.jar
 
 /nbproject/private
 

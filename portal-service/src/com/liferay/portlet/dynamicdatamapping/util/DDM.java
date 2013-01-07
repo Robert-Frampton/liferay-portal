@@ -56,17 +56,19 @@ public interface DDM {
 	public OrderByComparator getTemplateOrderByComparator(
 		String orderByCol, String orderByType);
 
+	public Fields mergeFields(Fields newFields, Fields existingFields);
+
 	public void sendFieldFile(
 			HttpServletRequest request, HttpServletResponse response,
-			Field field)
+			Field field, int valueIndex)
 		throws Exception;
 
-	public String uploadFieldFile(
+	public void uploadFieldFile(
 			long structureId, long storageId, BaseModel<?> baseModel,
 			String fieldName, ServiceContext serviceContext)
 		throws Exception;
 
-	public String uploadFieldFile(
+	public void uploadFieldFile(
 			long structureId, long storageId, BaseModel<?> baseModel,
 			String fieldName, String fieldNamespace,
 			ServiceContext serviceContext)

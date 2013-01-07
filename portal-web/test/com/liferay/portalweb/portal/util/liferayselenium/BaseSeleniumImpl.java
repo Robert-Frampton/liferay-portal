@@ -174,6 +174,14 @@ public abstract class BaseSeleniumImpl
 			"getFirstNumberIncrement", new String[] {locator,});
 	}
 
+	public String getNumberDecrement(String value) {
+		return LiferaySeleniumHelper.getNumberDecrement(value);
+	}
+
+	public String getNumberIncrement(String value) {
+		return LiferaySeleniumHelper.getNumberIncrement(value);
+	}
+
 	public void goBackAndWait() {
 		super.goBack();
 		super.waitForPageToLoad("30000");
@@ -188,6 +196,10 @@ public abstract class BaseSeleniumImpl
 
 		return _commandProcessor.getBoolean(
 			"isPartialText", new String[] {locator, value,});
+	}
+
+	public boolean isText(String locator, String value) {
+		return LiferaySeleniumHelper.isText(this, locator, value);
 	}
 
 	public void keyDownAndWait(String locator, String keySequence) {

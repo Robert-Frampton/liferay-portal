@@ -34,32 +34,21 @@ if (Validator.isNotNull(portletResourceNamespace)) {
 %>
 
 <aui:input name="language" type="hidden" value="xsd" />
-<aui:input name="script" type="hidden" />
+<aui:input name="scriptContent" type="hidden" />
 
 <aui:script>
-	Liferay.provide(
-		window,
-		'<portlet:namespace />saveTemplate',
-		function() {
-			document.<portlet:namespace />fm.<portlet:namespace />script.value = window.<portlet:namespace />formBuilder.getXSD();
+	window.<portlet:namespace />getAvailableFields = function(A, FormBuilder) {
+		var availableFields = <%= scriptJSONArray.toString() %>;
 
-			submitForm(document.<portlet:namespace />fm);
-		},
-		['aui-base']
-	);
-</aui:script>
+		A.Array.each(
+			availableFields,
+			function(item, index, collection) {
+				item.iconClass = FormBuilder.DEFAULT_ICON_CLASS;
+			}
+		);
 
-<aui:script use="liferay-portlet-dynamic-data-mapping">
-	var availableFields = A.Array(<%= scriptJSONArray.toString() %>);
-
-	A.Array.each(
-		availableFields,
-		function(item, index, collection) {
-			item.iconClass = Liferay.FormBuilder.DEFAULT_ICON_CLASS;
-		}
-	);
-
-	window.<%= HtmlUtil.escapeJS(namespace) %>structureAvailableFields = availableFields.concat(Liferay.FormBuilder.AVAILABLE_FIELDS.DDM_TEMPLATE);
+		return availableFields.concat(FormBuilder.AVAILABLE_FIELDS.DDM_TEMPLATE);
+	};
 </aui:script>
 
 <%!

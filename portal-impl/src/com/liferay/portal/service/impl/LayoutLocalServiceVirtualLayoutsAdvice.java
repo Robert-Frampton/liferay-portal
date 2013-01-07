@@ -88,13 +88,13 @@ public class LayoutLocalServiceVirtualLayoutsAdvice
 				MergeLayoutPrototypesThreadLocal.setInProgress(true);
 				WorkflowThreadLocal.setEnabled(false);
 
-				SitesUtil.mergeLayoutProtypeLayout(group, layout);
+				SitesUtil.mergeLayoutPrototypeLayout(group, layout);
 
 				if (Validator.isNotNull(
 						layout.getSourcePrototypeLayoutUuid())) {
 
 					if (!SitesUtil.isLayoutModifiedSinceLastMerge(layout)) {
-						SitesUtil.mergeLayoutSetProtypeLayouts(
+						SitesUtil.mergeLayoutSetPrototypeLayouts(
 							group, layoutSet);
 					}
 				}
@@ -126,23 +126,26 @@ public class LayoutLocalServiceVirtualLayoutsAdvice
 						groupId, privateLayout);
 
 					if (layouts.isEmpty()) {
-						SitesUtil.mergeLayoutSetProtypeLayouts(
+						SitesUtil.mergeLayoutSetPrototypeLayouts(
 							group, layoutSet);
 					}
+					else {
+						boolean modified = false;
 
-					boolean modified = false;
+						for (Layout layout : layouts) {
+							if (SitesUtil.isLayoutModifiedSinceLastMerge(
+									layout)) {
 
-					for (Layout layout : layouts) {
-						if (SitesUtil.isLayoutModifiedSinceLastMerge(layout)) {
-							modified = true;
+								modified = true;
 
-							break;
+								break;
+							}
 						}
-					}
 
-					if (!modified) {
-						SitesUtil.mergeLayoutSetProtypeLayouts(
-							group, layoutSet);
+						if (!modified) {
+							SitesUtil.mergeLayoutSetPrototypeLayouts(
+								group, layoutSet);
+						}
 					}
 				}
 				finally {

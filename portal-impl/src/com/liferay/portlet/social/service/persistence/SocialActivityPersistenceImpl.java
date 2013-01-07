@@ -15,7 +15,6 @@
 package com.liferay.portlet.social.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,12 +35,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.LayoutPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
 import com.liferay.portlet.social.NoSuchActivityException;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.impl.SocialActivityImpl;
@@ -4913,12 +4908,90 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 		}
 	}
 
-	protected void clearUniqueFindersCache(SocialActivity socialActivity) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
-			new Object[] { Long.valueOf(socialActivity.getMirrorActivityId()) });
+	protected void cacheUniqueFindersCache(SocialActivity socialActivity) {
+		if (socialActivity.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(socialActivity.getMirrorActivityId())
+				};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
-			new Object[] {
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_MIRRORACTIVITYID,
+				args, Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
+				args, socialActivity);
+
+			args = new Object[] {
+					Long.valueOf(socialActivity.getGroupId()),
+					Long.valueOf(socialActivity.getUserId()),
+					Long.valueOf(socialActivity.getCreateDate()),
+					Long.valueOf(socialActivity.getClassNameId()),
+					Long.valueOf(socialActivity.getClassPK()),
+					Integer.valueOf(socialActivity.getType()),
+					Long.valueOf(socialActivity.getReceiverUserId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_U_CD_C_C_T_R,
+				args, Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
+				args, socialActivity);
+		}
+		else {
+			SocialActivityModelImpl socialActivityModelImpl = (SocialActivityModelImpl)socialActivity;
+
+			if ((socialActivityModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_MIRRORACTIVITYID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(socialActivity.getMirrorActivityId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_MIRRORACTIVITYID,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
+					args, socialActivity);
+			}
+
+			if ((socialActivityModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(socialActivity.getGroupId()),
+						Long.valueOf(socialActivity.getUserId()),
+						Long.valueOf(socialActivity.getCreateDate()),
+						Long.valueOf(socialActivity.getClassNameId()),
+						Long.valueOf(socialActivity.getClassPK()),
+						Integer.valueOf(socialActivity.getType()),
+						Long.valueOf(socialActivity.getReceiverUserId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_U_CD_C_C_T_R,
+					args, Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
+					args, socialActivity);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(SocialActivity socialActivity) {
+		SocialActivityModelImpl socialActivityModelImpl = (SocialActivityModelImpl)socialActivity;
+
+		Object[] args = new Object[] {
+				Long.valueOf(socialActivity.getMirrorActivityId())
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MIRRORACTIVITYID, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID, args);
+
+		if ((socialActivityModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_MIRRORACTIVITYID.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(socialActivityModelImpl.getOriginalMirrorActivityId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MIRRORACTIVITYID,
+				args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
+				args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(socialActivity.getGroupId()),
 				Long.valueOf(socialActivity.getUserId()),
 				Long.valueOf(socialActivity.getCreateDate()),
@@ -4926,7 +4999,28 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 				Long.valueOf(socialActivity.getClassPK()),
 				Integer.valueOf(socialActivity.getType()),
 				Long.valueOf(socialActivity.getReceiverUserId())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_CD_C_C_T_R, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R, args);
+
+		if ((socialActivityModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(socialActivityModelImpl.getOriginalGroupId()),
+					Long.valueOf(socialActivityModelImpl.getOriginalUserId()),
+					Long.valueOf(socialActivityModelImpl.getOriginalCreateDate()),
+					Long.valueOf(socialActivityModelImpl.getOriginalClassNameId()),
+					Long.valueOf(socialActivityModelImpl.getOriginalClassPK()),
+					Integer.valueOf(socialActivityModelImpl.getOriginalType()),
+					Long.valueOf(socialActivityModelImpl.getOriginalReceiverUserId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_CD_C_C_T_R,
+				args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
+				args);
+		}
 	}
 
 	/**
@@ -5250,71 +5344,8 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 			SocialActivityImpl.class, socialActivity.getPrimaryKey(),
 			socialActivity);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
-				new Object[] { Long.valueOf(
-						socialActivity.getMirrorActivityId()) }, socialActivity);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
-				new Object[] {
-					Long.valueOf(socialActivity.getGroupId()),
-					Long.valueOf(socialActivity.getUserId()),
-					Long.valueOf(socialActivity.getCreateDate()),
-					Long.valueOf(socialActivity.getClassNameId()),
-					Long.valueOf(socialActivity.getClassPK()),
-					Integer.valueOf(socialActivity.getType()),
-					Long.valueOf(socialActivity.getReceiverUserId())
-				}, socialActivity);
-		}
-		else {
-			if ((socialActivityModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_MIRRORACTIVITYID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(socialActivityModelImpl.getOriginalMirrorActivityId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MIRRORACTIVITYID,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
-					new Object[] {
-						Long.valueOf(socialActivity.getMirrorActivityId())
-					}, socialActivity);
-			}
-
-			if ((socialActivityModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(socialActivityModelImpl.getOriginalGroupId()),
-						Long.valueOf(socialActivityModelImpl.getOriginalUserId()),
-						Long.valueOf(socialActivityModelImpl.getOriginalCreateDate()),
-						Long.valueOf(socialActivityModelImpl.getOriginalClassNameId()),
-						Long.valueOf(socialActivityModelImpl.getOriginalClassPK()),
-						Integer.valueOf(socialActivityModelImpl.getOriginalType()),
-						Long.valueOf(socialActivityModelImpl.getOriginalReceiverUserId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U_CD_C_C_T_R,
-					args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
-					args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
-					new Object[] {
-						Long.valueOf(socialActivity.getGroupId()),
-						Long.valueOf(socialActivity.getUserId()),
-						Long.valueOf(socialActivity.getCreateDate()),
-						Long.valueOf(socialActivity.getClassNameId()),
-						Long.valueOf(socialActivity.getClassPK()),
-						Integer.valueOf(socialActivity.getType()),
-						Long.valueOf(socialActivity.getReceiverUserId())
-					}, socialActivity);
-			}
-		}
+		clearUniqueFindersCache(socialActivity);
+		cacheUniqueFindersCache(socialActivity);
 
 		return socialActivity;
 	}
@@ -5643,28 +5674,6 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = SocialActivityPersistence.class)
-	protected SocialActivityPersistence socialActivityPersistence;
-	@BeanReference(type = SocialActivityAchievementPersistence.class)
-	protected SocialActivityAchievementPersistence socialActivityAchievementPersistence;
-	@BeanReference(type = SocialActivityCounterPersistence.class)
-	protected SocialActivityCounterPersistence socialActivityCounterPersistence;
-	@BeanReference(type = SocialActivityLimitPersistence.class)
-	protected SocialActivityLimitPersistence socialActivityLimitPersistence;
-	@BeanReference(type = SocialActivitySettingPersistence.class)
-	protected SocialActivitySettingPersistence socialActivitySettingPersistence;
-	@BeanReference(type = SocialRelationPersistence.class)
-	protected SocialRelationPersistence socialRelationPersistence;
-	@BeanReference(type = SocialRequestPersistence.class)
-	protected SocialRequestPersistence socialRequestPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = LayoutPersistence.class)
-	protected LayoutPersistence layoutPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
 	private static final String _SQL_SELECT_SOCIALACTIVITY = "SELECT socialActivity FROM SocialActivity socialActivity";
 	private static final String _SQL_SELECT_SOCIALACTIVITY_WHERE = "SELECT socialActivity FROM SocialActivity socialActivity WHERE ";
 	private static final String _SQL_COUNT_SOCIALACTIVITY = "SELECT COUNT(socialActivity) FROM SocialActivity socialActivity";

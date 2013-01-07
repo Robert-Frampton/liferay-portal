@@ -42,8 +42,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.trash.NoSuchEntryException;
@@ -1881,12 +1879,56 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		}
 	}
 
+	protected void cacheUniqueFindersCache(TrashEntry trashEntry) {
+		if (trashEntry.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(trashEntry.getClassNameId()),
+					Long.valueOf(trashEntry.getClassPK())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C, args, trashEntry);
+		}
+		else {
+			TrashEntryModelImpl trashEntryModelImpl = (TrashEntryModelImpl)trashEntry;
+
+			if ((trashEntryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(trashEntry.getClassNameId()),
+						Long.valueOf(trashEntry.getClassPK())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C, args,
+					trashEntry);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(TrashEntry trashEntry) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
+		TrashEntryModelImpl trashEntryModelImpl = (TrashEntryModelImpl)trashEntry;
+
+		Object[] args = new Object[] {
 				Long.valueOf(trashEntry.getClassNameId()),
 				Long.valueOf(trashEntry.getClassPK())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+
+		if ((trashEntryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(trashEntryModelImpl.getOriginalClassNameId()),
+					Long.valueOf(trashEntryModelImpl.getOriginalClassPK())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		}
 	}
 
 	/**
@@ -2073,32 +2115,8 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		EntityCacheUtil.putResult(TrashEntryModelImpl.ENTITY_CACHE_ENABLED,
 			TrashEntryImpl.class, trashEntry.getPrimaryKey(), trashEntry);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-				new Object[] {
-					Long.valueOf(trashEntry.getClassNameId()),
-					Long.valueOf(trashEntry.getClassPK())
-				}, trashEntry);
-		}
-		else {
-			if ((trashEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(trashEntryModelImpl.getOriginalClassNameId()),
-						Long.valueOf(trashEntryModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,
-					new Object[] {
-						Long.valueOf(trashEntry.getClassNameId()),
-						Long.valueOf(trashEntry.getClassPK())
-					}, trashEntry);
-			}
-		}
+		clearUniqueFindersCache(trashEntry);
+		cacheUniqueFindersCache(trashEntry);
 
 		return trashEntry;
 	}
@@ -2677,14 +2695,8 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = TrashEntryPersistence.class)
-	protected TrashEntryPersistence trashEntryPersistence;
 	@BeanReference(type = TrashVersionPersistence.class)
 	protected TrashVersionPersistence trashVersionPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	protected ContainsTrashVersion containsTrashVersion;
 
 	protected class ContainsTrashVersion {

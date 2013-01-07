@@ -7,7 +7,7 @@
 
 	<#if (layouts?size > 0)>
 		<#if (level == 0)>
-			<optgroup label="<#if (privateLayout)>${languageUtil.get(locale, "private-pages")}<#else>${languageUtil.get(locale, "public-pages")}</#if>">
+			<optgroup label="<#if (privateLayout)>${languageUtil.get(requestedLocale, "private-pages")}<#else>${languageUtil.get(requestedLocale, "public-pages")}</#if>">
 		</#if>
 
 		<#list layouts as curLayout>
@@ -24,7 +24,7 @@
 					&ndash;&nbsp;
 				</#list>
 
-				${curLayout.getName(locale)}
+				${curLayout.getName(requestedLocale)}
 			</@>
 
 			<@getLayoutsOptions groupId=scopeGroupId privateLayout=false parentLayoutId=curLayout.getLayoutId() selectedPlid=selectedPlid level=level+1></@>
@@ -38,7 +38,7 @@
 
 </#macro>
 
-<@aui["field-wrapper"] helpMessage=escape(fieldStructure.tip) label=escape(label) required=required>
+<@aui["field-wrapper"] data=data helpMessage=escape(fieldStructure.tip) label=escape(label) required=required>
 	<#assign selectedPlid = 0>
 
 	<#if (fieldRawValue?? && fieldRawValue != "")>

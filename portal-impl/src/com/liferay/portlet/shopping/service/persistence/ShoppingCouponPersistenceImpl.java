@@ -15,7 +15,6 @@
 package com.liferay.portlet.shopping.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -37,7 +36,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.shopping.NoSuchCouponException;
@@ -883,9 +881,45 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 		}
 	}
 
+	protected void cacheUniqueFindersCache(ShoppingCoupon shoppingCoupon) {
+		if (shoppingCoupon.isNew()) {
+			Object[] args = new Object[] { shoppingCoupon.getCode() };
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CODE, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CODE, args,
+				shoppingCoupon);
+		}
+		else {
+			ShoppingCouponModelImpl shoppingCouponModelImpl = (ShoppingCouponModelImpl)shoppingCoupon;
+
+			if ((shoppingCouponModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_CODE.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { shoppingCoupon.getCode() };
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_CODE, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CODE, args,
+					shoppingCoupon);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(ShoppingCoupon shoppingCoupon) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CODE,
-			new Object[] { shoppingCoupon.getCode() });
+		ShoppingCouponModelImpl shoppingCouponModelImpl = (ShoppingCouponModelImpl)shoppingCoupon;
+
+		Object[] args = new Object[] { shoppingCoupon.getCode() };
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CODE, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CODE, args);
+
+		if ((shoppingCouponModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CODE.getColumnBitmask()) != 0) {
+			args = new Object[] { shoppingCouponModelImpl.getOriginalCode() };
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CODE, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CODE, args);
+		}
 	}
 
 	/**
@@ -1052,25 +1086,8 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 			ShoppingCouponImpl.class, shoppingCoupon.getPrimaryKey(),
 			shoppingCoupon);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CODE,
-				new Object[] { shoppingCoupon.getCode() }, shoppingCoupon);
-		}
-		else {
-			if ((shoppingCouponModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_CODE.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						shoppingCouponModelImpl.getOriginalCode()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CODE, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CODE, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_CODE,
-					new Object[] { shoppingCoupon.getCode() }, shoppingCoupon);
-			}
-		}
+		clearUniqueFindersCache(shoppingCoupon);
+		cacheUniqueFindersCache(shoppingCoupon);
 
 		return shoppingCoupon;
 	}
@@ -1405,24 +1422,6 @@ public class ShoppingCouponPersistenceImpl extends BasePersistenceImpl<ShoppingC
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = ShoppingCartPersistence.class)
-	protected ShoppingCartPersistence shoppingCartPersistence;
-	@BeanReference(type = ShoppingCategoryPersistence.class)
-	protected ShoppingCategoryPersistence shoppingCategoryPersistence;
-	@BeanReference(type = ShoppingCouponPersistence.class)
-	protected ShoppingCouponPersistence shoppingCouponPersistence;
-	@BeanReference(type = ShoppingItemPersistence.class)
-	protected ShoppingItemPersistence shoppingItemPersistence;
-	@BeanReference(type = ShoppingItemFieldPersistence.class)
-	protected ShoppingItemFieldPersistence shoppingItemFieldPersistence;
-	@BeanReference(type = ShoppingItemPricePersistence.class)
-	protected ShoppingItemPricePersistence shoppingItemPricePersistence;
-	@BeanReference(type = ShoppingOrderPersistence.class)
-	protected ShoppingOrderPersistence shoppingOrderPersistence;
-	@BeanReference(type = ShoppingOrderItemPersistence.class)
-	protected ShoppingOrderItemPersistence shoppingOrderItemPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_SHOPPINGCOUPON = "SELECT shoppingCoupon FROM ShoppingCoupon shoppingCoupon";
 	private static final String _SQL_SELECT_SHOPPINGCOUPON_WHERE = "SELECT shoppingCoupon FROM ShoppingCoupon shoppingCoupon WHERE ";
 	private static final String _SQL_COUNT_SHOPPINGCOUPON = "SELECT COUNT(shoppingCoupon) FROM ShoppingCoupon shoppingCoupon";

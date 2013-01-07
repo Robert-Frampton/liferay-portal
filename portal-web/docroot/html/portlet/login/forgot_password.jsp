@@ -31,11 +31,12 @@ if (reminderAttempts == null) {
 %>
 
 <portlet:actionURL var="forgotPasswordURL">
-	<portlet:param name="saveLastPath" value="0" />
 	<portlet:param name="struts_action" value="/login/forgot_password" />
 </portlet:actionURL>
 
 <aui:form action="<%= forgotPasswordURL %>" method="post" name="fm">
+	<aui:input name="saveLastPath" type="hidden" value="<%= false %>" />
+
 	<portlet:renderURL var="redirectURL" />
 
 	<aui:input name="redirect" type="hidden" value="<%= redirectURL %>" />
@@ -116,7 +117,7 @@ if (reminderAttempts == null) {
 						<%= LanguageUtil.format(pageContext, "a-new-password-will-be-sent-to-x-if-you-can-correctly-answer-the-following-question", login) %>
 					</div>
 
-					<aui:input label="<%= user2.getReminderQueryQuestion() %>" name="answer" type="text" />
+					<aui:input label="<%= HtmlUtil.escape(user2.getReminderQueryQuestion()) %>" name="answer" type="text" />
 				</c:if>
 
 				<c:choose>

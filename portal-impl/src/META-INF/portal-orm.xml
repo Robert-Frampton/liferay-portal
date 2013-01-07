@@ -264,9 +264,6 @@
 			<basic name="modifiedDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
-			<basic name="text">
-				<column name="TEXT_" />
-			</basic>
 			<basic name="type">
 				<column name="TYPE_" />
 			</basic>
@@ -306,9 +303,7 @@
 				<column name="TYPE_" />
 			</basic>
 			<basic name="typeSettings" />
-			<basic name="hidden">
-				<column name="HIDDEN_" />
-			</basic>
+			<basic name="hidden" />
 			<basic name="friendlyURL" />
 			<basic name="iconImage" />
 			<basic name="iconImageId" />
@@ -2035,9 +2030,7 @@
 				<temporal>TIMESTAMP</temporal>
 			</basic>
 			<basic name="defaultFileEntryTypeId" />
-			<basic name="hidden">
-				<column name="HIDDEN_" />
-			</basic>
+			<basic name="hidden" />
 			<basic name="overrideFileEntryTypes" />
 			<basic name="status" />
 			<basic name="statusByUserId" />
@@ -2661,9 +2654,18 @@
 			<basic name="lastPostDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="status" />
+			<basic name="statusByUserId" />
+			<basic name="statusByUserName" />
+			<basic name="statusDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<transient name="containerModelId" />
 			<transient name="modelAttributes" />
+			<transient name="parentContainerModelId" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
+			<transient name="statusByUserUuid" />
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
@@ -2746,7 +2748,6 @@
 			<basic name="subject" />
 			<basic name="body" />
 			<basic name="format" />
-			<basic name="attachments" />
 			<basic name="anonymous" />
 			<basic name="priority" />
 			<basic name="allowPingbacks" />
@@ -3616,7 +3617,9 @@
 			<basic name="statusDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<transient name="containerModelId" />
 			<transient name="modelAttributes" />
+			<transient name="parentContainerModelId" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
 			<transient name="statusByUserUuid" />
@@ -4232,6 +4235,8 @@
 			<transient name="shortArray" />
 			<transient name="string" />
 			<transient name="stringArray" />
+			<transient name="stringArrayMap" />
+			<transient name="stringMap" />
 		</attributes>
 	</entity>
 	<entity class="com.liferay.portlet.journal.model.impl.JournalArticleImpl" name="JournalArticle">

@@ -215,6 +215,11 @@
 				<outputType>java.lang.String</outputType>
 			</attribute>
 			<attribute>
+				<name>data</name>
+				<inputType>java.lang.Object</inputType>
+				<outputType>java.util.Map</outputType>
+			</attribute>
+			<attribute>
 				<name>first</name>
 				<inputType>boolean</inputType>
 				<outputType>boolean</outputType>
@@ -335,6 +340,11 @@
 	</component>
 	<component name="Input">
 		<attributes>
+			<attribute>
+				<name>autoSize</name>
+				<inputType>boolean</inputType>
+				<outputType>boolean</outputType>
+			</attribute>
 			<attribute>
 				<name>bean</name>
 				<inputType>java.lang.Object</inputType>
@@ -769,6 +779,41 @@
 				<name>id</name>
 				<inputType>java.lang.String</inputType>
 				<outputType>java.lang.String</outputType>
+			</attribute>
+		</attributes>
+	</component>
+	<component name="TranslationManager" dynamicAttributes="false">
+		<attributes>
+			<attribute>
+				<name>availableLocales</name>
+				<inputType>java.util.Locale[]</inputType>
+				<outputType>java.util.Locale[]</outputType>
+			</attribute>
+			<attribute>
+				<name>defaultLanguageId</name>
+				<inputType>java.lang.String</inputType>
+				<outputType>java.lang.String</outputType>
+			</attribute>
+			<attribute>
+				<name>editingLanguageId</name>
+				<inputType>java.lang.String</inputType>
+				<outputType>java.lang.String</outputType>
+			</attribute>
+			<attribute>
+				<name>id</name>
+				<inputType>java.lang.String</inputType>
+				<outputType>java.lang.String</outputType>
+			</attribute>
+			<attribute>
+				<name>initialize</name>
+				<inputType>boolean</inputType>
+				<outputType>boolean</outputType>
+				<defaultValue>true</defaultValue>
+			</attribute>
+			<attribute>
+				<name>readOnly</name>
+				<inputType>boolean</inputType>
+				<outputType>boolean</outputType>
 			</attribute>
 		</attributes>
 	</component>

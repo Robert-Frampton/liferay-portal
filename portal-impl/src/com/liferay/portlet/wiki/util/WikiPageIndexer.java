@@ -36,11 +36,15 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.wiki.asset.WikiPageAssetRendererFactory;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.WikiNodeServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
+import com.liferay.portlet.wiki.service.permission.WikiPagePermission;
 import com.liferay.portlet.wiki.service.persistence.WikiNodeActionableDynamicQuery;
 import com.liferay.portlet.wiki.service.persistence.WikiPageActionableDynamicQuery;
 
@@ -63,6 +67,7 @@ public class WikiPageIndexer extends BaseIndexer {
 	public static final String PORTLET_ID = PortletKeys.WIKI;
 
 	public WikiPageIndexer() {
+		setFilterSearch(true);
 		setPermissionAware(true);
 	}
 
@@ -72,6 +77,18 @@ public class WikiPageIndexer extends BaseIndexer {
 
 	public String getPortletId() {
 		return PORTLET_ID;
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, String entryClassName,
+			long entryClassPK, String actionId)
+		throws Exception {
+
+		WikiPage page = WikiPageLocalServiceUtil.getPage(entryClassPK);
+
+		return WikiPagePermission.contains(
+			permissionChecker, page, ActionKeys.VIEW);
 	}
 
 	@Override
@@ -179,6 +196,18 @@ public class WikiPageIndexer extends BaseIndexer {
 
 		document.addKeyword(Field.NODE_ID, page.getNodeId());
 		document.addText(Field.TITLE, page.getTitle());
+
+		if (!page.isInTrash() && page.isInTrashContainer()) {
+			addTrashFields(
+				document, WikiNode.class.getName(), page.getNodeId(), null,
+				null, WikiPageAssetRendererFactory.TYPE);
+
+			document.addKeyword(
+				Field.ROOT_ENTRY_CLASS_NAME, WikiNode.class.getName());
+			document.addKeyword(Field.ROOT_ENTRY_CLASS_PK, page.getNodeId());
+			document.addKeyword(
+				Field.STATUS, WorkflowConstants.STATUS_IN_TRASH);
+		}
 
 		return document;
 	}

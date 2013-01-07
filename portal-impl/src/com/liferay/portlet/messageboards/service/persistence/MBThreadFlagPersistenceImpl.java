@@ -15,7 +15,6 @@
 package com.liferay.portlet.messageboards.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -36,7 +35,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.messageboards.NoSuchThreadFlagException;
@@ -1348,12 +1346,57 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		}
 	}
 
+	protected void cacheUniqueFindersCache(MBThreadFlag mbThreadFlag) {
+		if (mbThreadFlag.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(mbThreadFlag.getUserId()),
+					Long.valueOf(mbThreadFlag.getThreadId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T, args,
+				mbThreadFlag);
+		}
+		else {
+			MBThreadFlagModelImpl mbThreadFlagModelImpl = (MBThreadFlagModelImpl)mbThreadFlag;
+
+			if ((mbThreadFlagModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(mbThreadFlag.getUserId()),
+						Long.valueOf(mbThreadFlag.getThreadId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_T, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T, args,
+					mbThreadFlag);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(MBThreadFlag mbThreadFlag) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
+		MBThreadFlagModelImpl mbThreadFlagModelImpl = (MBThreadFlagModelImpl)mbThreadFlag;
+
+		Object[] args = new Object[] {
 				Long.valueOf(mbThreadFlag.getUserId()),
 				Long.valueOf(mbThreadFlag.getThreadId())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+
+		if ((mbThreadFlagModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(mbThreadFlagModelImpl.getOriginalUserId()),
+					Long.valueOf(mbThreadFlagModelImpl.getOriginalThreadId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+		}
 	}
 
 	/**
@@ -1538,32 +1581,8 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		EntityCacheUtil.putResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
 			MBThreadFlagImpl.class, mbThreadFlag.getPrimaryKey(), mbThreadFlag);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T,
-				new Object[] {
-					Long.valueOf(mbThreadFlag.getUserId()),
-					Long.valueOf(mbThreadFlag.getThreadId())
-				}, mbThreadFlag);
-		}
-		else {
-			if ((mbThreadFlagModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(mbThreadFlagModelImpl.getOriginalUserId()),
-						Long.valueOf(mbThreadFlagModelImpl.getOriginalThreadId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_T,
-					new Object[] {
-						Long.valueOf(mbThreadFlag.getUserId()),
-						Long.valueOf(mbThreadFlag.getThreadId())
-					}, mbThreadFlag);
-			}
-		}
+		clearUniqueFindersCache(mbThreadFlag);
+		cacheUniqueFindersCache(mbThreadFlag);
 
 		return mbThreadFlag;
 	}
@@ -1884,24 +1903,6 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = MBBanPersistence.class)
-	protected MBBanPersistence mbBanPersistence;
-	@BeanReference(type = MBCategoryPersistence.class)
-	protected MBCategoryPersistence mbCategoryPersistence;
-	@BeanReference(type = MBDiscussionPersistence.class)
-	protected MBDiscussionPersistence mbDiscussionPersistence;
-	@BeanReference(type = MBMailingListPersistence.class)
-	protected MBMailingListPersistence mbMailingListPersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = MBStatsUserPersistence.class)
-	protected MBStatsUserPersistence mbStatsUserPersistence;
-	@BeanReference(type = MBThreadPersistence.class)
-	protected MBThreadPersistence mbThreadPersistence;
-	@BeanReference(type = MBThreadFlagPersistence.class)
-	protected MBThreadFlagPersistence mbThreadFlagPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_MBTHREADFLAG = "SELECT mbThreadFlag FROM MBThreadFlag mbThreadFlag";
 	private static final String _SQL_SELECT_MBTHREADFLAG_WHERE = "SELECT mbThreadFlag FROM MBThreadFlag mbThreadFlag WHERE ";
 	private static final String _SQL_COUNT_MBTHREADFLAG = "SELECT COUNT(mbThreadFlag) FROM MBThreadFlag mbThreadFlag";

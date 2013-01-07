@@ -49,6 +49,7 @@ import com.liferay.portal.search.lucene.cluster.LuceneClusterUtil;
 import com.liferay.portal.search.lucene.highlight.QueryTermExtractor;
 import com.liferay.portal.security.auth.TransientTokenUtil;
 import com.liferay.portal.util.PortalInstances;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.util.lucene.KeywordsUtil;
 
@@ -206,6 +207,8 @@ public class LuceneHelperImpl implements LuceneHelper {
 		try {
 			QueryParser queryParser = new QueryParser(
 				getVersion(), field, analyzer);
+
+			queryParser.setAllowLeadingWildcard(true);
 
 			Query query = null;
 
@@ -443,7 +446,8 @@ public class LuceneHelperImpl implements LuceneHelper {
 				tokenStream, s, maxNumFragments, fragmentSuffix);
 
 			if (Validator.isNotNull(snippet) &&
-				!StringUtil.endsWith(snippet, fragmentSuffix)) {
+				!StringUtil.endsWith(snippet, fragmentSuffix) &&
+				!s.equals(snippet)) {
 
 				snippet = snippet.concat(fragmentSuffix);
 			}
@@ -636,9 +640,17 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 			InetAddress inetAddress = clusterNode.getInetAddress();
 
+			String fileName = PortalUtil.getPathContext();
+
+			if (!fileName.endsWith(StringPool.SLASH)) {
+				fileName = fileName.concat(StringPool.SLASH);
+			}
+
+			fileName = fileName.concat("lucene/dump");
+
 			URL url = new URL(
 				"http", inetAddress.getHostAddress(), clusterNode.getPort(),
-				"/lucene/dump");
+				fileName);
 
 			return new ObjectValuePair<String, URL>(transientToken, url);
 		}

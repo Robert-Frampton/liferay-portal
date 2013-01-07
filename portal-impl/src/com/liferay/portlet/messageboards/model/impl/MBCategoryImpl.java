@@ -67,13 +67,51 @@ public class MBCategoryImpl extends MBCategoryBaseImpl {
 	public MBCategory getParentCategory()
 		throws PortalException, SystemException {
 
-		if (getParentCategoryId() ==
-				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
+		long parentCategoryId = getParentCategoryId();
+
+		if ((parentCategoryId ==
+				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) ||
+			(parentCategoryId == MBCategoryConstants.DISCUSSION_CATEGORY_ID)) {
 
 			return null;
 		}
 
 		return MBCategoryLocalServiceUtil.getCategory(getParentCategoryId());
+	}
+
+	public MBCategory getTrashContainer() {
+		MBCategory category = null;
+
+		try {
+			category = getParentCategory();
+		}
+		catch (Exception e) {
+			return null;
+		}
+
+		while (category != null) {
+			if (category.isInTrash()) {
+				return category;
+			}
+
+			try {
+				category = category.getParentCategory();
+			}
+			catch (Exception e) {
+				return null;
+			}
+		}
+
+		return null;
+	}
+
+	public boolean isInTrashContainer() {
+		if (getTrashContainer() != null) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public boolean isRoot() {

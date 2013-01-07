@@ -17,6 +17,8 @@
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
 <%
+String redirect = ParamUtil.getString(request, "redirect");
+
 String className = ParamUtil.getString(request, "className");
 long classPK = ParamUtil.getLong(request, "classPK");
 
@@ -35,19 +37,21 @@ if (containerModel != null) {
 PortletURL containerURL = renderResponse.createRenderURL();
 
 containerURL.setParameter("struts_action", "/trash/view_container_model");
+containerURL.setParameter("redirect", currentURL);
 containerURL.setParameter("className", className);
 containerURL.setParameter("classPK", String.valueOf(classPK));
 containerURL.setParameter("containerModelClassName", trashHandler.getContainerModelClassName());
 
-TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler, containerModel, containerURL);
+TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerModelClassName(), containerModelId, containerURL);
 %>
 
 <div class="portlet-msg-alert">
-	<liferay-ui:message arguments="<%= trashRenderer.getTitle(locale) %>" key="the-original-folder-does-not-exist-anymore" />
+	<liferay-ui:message arguments="<%= new Object[] {trashHandler.getContainerModelName(), trashRenderer.getTitle(locale)} %>" key="the-original-x-does-not-exist-anymore" />
 </div>
 
 <aui:form method="post" name="fm">
 	<liferay-ui:header
+		showBackURL="<%= containerModel != null %>"
 		title='<%= LanguageUtil.format(pageContext, "select-x", trashHandler.getContainerModelName(), true) %>'
 	/>
 
@@ -105,10 +109,12 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler, containerMod
 			/>
 
 			<%
-			StringBundler sb = new StringBundler(8);
+			StringBundler sb = new StringBundler(10);
 
 			sb.append(renderResponse.getNamespace());
 			sb.append("selectContainer('");
+			sb.append(redirect);
+			sb.append("', '");
 			sb.append(className);
 			sb.append("', ");
 			sb.append(classPK);
@@ -127,7 +133,7 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler, containerMod
 		<aui:button-row>
 
 			<%
-			String taglibSelectOnClick = renderResponse.getNamespace() + "selectContainer('"+ className + "', " + classPK + ", " + containerModelId + ");";
+			String taglibSelectOnClick = renderResponse.getNamespace() + "selectContainer('" + redirect + "', '" + className + "', " + classPK + ", " + containerModelId + ");";
 			%>
 
 			<aui:button
@@ -143,9 +149,9 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler, containerMod
 </aui:form>
 
 <aui:script>
-	function <portlet:namespace />selectContainer(className, classPK, containerModelId) {
+	function <portlet:namespace />selectContainer(redirect, className, classPK, containerModelId) {
 		var topWindow = Liferay.Util.getTop();
 
-		topWindow.<portlet:namespace />submitForm(className, classPK, containerModelId);
+		topWindow.<portlet:namespace />submitForm(redirect, className, classPK, containerModelId);
 	}
 </aui:script>

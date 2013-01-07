@@ -55,7 +55,6 @@ portletURL.setParameter("tabs1", tabs1);
 
 <liferay-portlet:renderURL varImpl="searchURL">
 	<portlet:param name="struts_action" value="/trash/view" />
-	<portlet:param name="redirect" value="<%= redirect %>" />
 </liferay-portlet:renderURL>
 
 <liferay-ui:search-container
@@ -202,14 +201,29 @@ portletURL.setParameter("tabs1", tabs1);
 		/>
 
 		<c:choose>
-			<c:when test="<%= entry.getRootEntry() == null || Validator.isNotNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
+			<c:when test="<%= Validator.isNotNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
 				<liferay-ui:search-container-column-jsp
 					align="right"
-					path='<%= entry.getRootEntry() == null ? "/html/portlet/trash/entry_action.jsp" : trashRenderer.renderActions(renderRequest, renderResponse) %>'
+					path="<%= trashRenderer.renderActions(renderRequest, renderResponse) %>"
+				/>
+			</c:when>
+			<c:when test="<%= entry.getRootEntry() == null %>">
+				<liferay-ui:search-container-column-jsp
+					align="right"
+					path="/html/portlet/trash/entry_action.jsp"
 				/>
 			</c:when>
 			<c:otherwise>
-				<liferay-ui:search-container-column-text> </liferay-ui:search-container-column-text>
+				<liferay-ui:search-container-column-text align="right">
+
+					<%
+					request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+
+					request.setAttribute(WebKeys.TRASH_RENDERER, trashRenderer);
+					%>
+
+					<liferay-util:include page="/html/portlet/trash/view_content_action.jsp" />
+				</liferay-ui:search-container-column-text>
 			</c:otherwise>
 		</c:choose>
 	</liferay-ui:search-container-row>
@@ -223,7 +237,7 @@ portletURL.setParameter("tabs1", tabs1);
 	<aui:form action="<%= searchURL.toString() %>" method="get" name="fm">
 		<liferay-portlet:renderURLParams varImpl="searchURL" />
 		<aui:input name="<%= Constants.CMD %>" type="hidden" value="" />
-		<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
+		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="deleteTrashEntryIds" type="hidden" />
 		<aui:input name="restoreTrashEntryIds" type="hidden" />
 

@@ -266,6 +266,20 @@ public class DDMTemplateLocalServiceWrapper implements DDMTemplateLocalService,
 
 	public com.liferay.portlet.dynamicdatamapping.model.DDMTemplate addTemplate(
 		long userId, long groupId, long classNameId, long classPK,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.lang.String type, java.lang.String mode,
+		java.lang.String language, java.lang.String script,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _ddmTemplateLocalService.addTemplate(userId, groupId,
+			classNameId, classPK, nameMap, descriptionMap, type, mode,
+			language, script, serviceContext);
+	}
+
+	public com.liferay.portlet.dynamicdatamapping.model.DDMTemplate addTemplate(
+		long userId, long groupId, long classNameId, long classPK,
 		java.lang.String templateKey,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
@@ -298,6 +312,17 @@ public class DDMTemplateLocalServiceWrapper implements DDMTemplateLocalService,
 			com.liferay.portal.kernel.exception.SystemException {
 		_ddmTemplateLocalService.addTemplateResources(template,
 			groupPermissions, guestPermissions);
+	}
+
+	public com.liferay.portlet.dynamicdatamapping.model.DDMTemplate copyTemplate(
+		long userId, long templateId,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _ddmTemplateLocalService.copyTemplate(userId, templateId,
+			nameMap, descriptionMap, serviceContext);
 	}
 
 	public java.util.List<com.liferay.portlet.dynamicdatamapping.model.DDMTemplate> copyTemplates(

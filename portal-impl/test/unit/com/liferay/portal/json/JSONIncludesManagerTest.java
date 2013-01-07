@@ -16,6 +16,8 @@ package com.liferay.portal.json;
 
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 
+import java.util.Arrays;
+
 import junit.framework.TestCase;
 
 /**
@@ -27,7 +29,9 @@ public class JSONIncludesManagerTest extends TestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 
-		new JSONFactoryUtil().setJSONFactory(new JSONFactoryImpl());
+		JSONFactoryUtil jsonFactoryUtil = new JSONFactoryUtil();
+
+		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 	}
 
 	public void testExtendsOne() {
@@ -60,6 +64,30 @@ public class JSONIncludesManagerTest extends TestCase {
 
 		assertEquals(1, includes.length);
 		assertEquals("ftwo", includes[0]);
+	}
+
+	public void testFour() {
+		JSONIncludesManager jsonIncludesManager = new JSONIncludesManager();
+
+		String[] excludes = jsonIncludesManager.lookupExcludes(Four.class);
+
+		assertEquals(1, excludes.length);
+		assertEquals("*", excludes[0]);
+
+		String[] includes = jsonIncludesManager.lookupIncludes(Four.class);
+
+		Arrays.sort(includes);
+
+		assertEquals(2, includes.length);
+		assertEquals("number", includes[0]);
+		assertEquals("value", includes[1]);
+
+		Four four = new Four();
+
+		String json = JSONFactoryUtil.looseSerialize(four);
+
+		assertTrue(json.contains("number"));
+		assertTrue(json.contains("value"));
 	}
 
 	public void testOne() {

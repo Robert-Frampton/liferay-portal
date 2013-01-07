@@ -15,7 +15,6 @@
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -40,9 +39,6 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.ImagePersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
@@ -7694,18 +7690,102 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 	}
 
-	protected void clearUniqueFindersCache(DDMTemplate ddmTemplate) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				ddmTemplate.getUuid(), Long.valueOf(ddmTemplate.getGroupId())
-			});
+	protected void cacheUniqueFindersCache(DDMTemplate ddmTemplate) {
+		if (ddmTemplate.isNew()) {
+			Object[] args = new Object[] {
+					ddmTemplate.getUuid(),
+					Long.valueOf(ddmTemplate.getGroupId())
+				};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_T,
-			new Object[] {
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+				ddmTemplate);
+
+			args = new Object[] {
+					Long.valueOf(ddmTemplate.getGroupId()),
+					
+					ddmTemplate.getTemplateKey()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_T, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_T, args,
+				ddmTemplate);
+		}
+		else {
+			DDMTemplateModelImpl ddmTemplateModelImpl = (DDMTemplateModelImpl)ddmTemplate;
+
+			if ((ddmTemplateModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						ddmTemplate.getUuid(),
+						Long.valueOf(ddmTemplate.getGroupId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+					ddmTemplate);
+			}
+
+			if ((ddmTemplateModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_T.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(ddmTemplate.getGroupId()),
+						
+						ddmTemplate.getTemplateKey()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_T, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_T, args,
+					ddmTemplate);
+			}
+		}
+	}
+
+	protected void clearUniqueFindersCache(DDMTemplate ddmTemplate) {
+		DDMTemplateModelImpl ddmTemplateModelImpl = (DDMTemplateModelImpl)ddmTemplate;
+
+		Object[] args = new Object[] {
+				ddmTemplate.getUuid(), Long.valueOf(ddmTemplate.getGroupId())
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+
+		if ((ddmTemplateModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					ddmTemplateModelImpl.getOriginalUuid(),
+					Long.valueOf(ddmTemplateModelImpl.getOriginalGroupId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(ddmTemplate.getGroupId()),
 				
-			ddmTemplate.getTemplateKey()
-			});
+				ddmTemplate.getTemplateKey()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_T, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_T, args);
+
+		if ((ddmTemplateModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_T.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(ddmTemplateModelImpl.getOriginalGroupId()),
+					
+					ddmTemplateModelImpl.getOriginalTemplateKey()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_T, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_T, args);
+		}
 	}
 
 	/**
@@ -8089,59 +8169,8 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		EntityCacheUtil.putResult(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
 			DDMTemplateImpl.class, ddmTemplate.getPrimaryKey(), ddmTemplate);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-				new Object[] {
-					ddmTemplate.getUuid(),
-					Long.valueOf(ddmTemplate.getGroupId())
-				}, ddmTemplate);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_T,
-				new Object[] {
-					Long.valueOf(ddmTemplate.getGroupId()),
-					
-				ddmTemplate.getTemplateKey()
-				}, ddmTemplate);
-		}
-		else {
-			if ((ddmTemplateModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						ddmTemplateModelImpl.getOriginalUuid(),
-						Long.valueOf(ddmTemplateModelImpl.getOriginalGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-					new Object[] {
-						ddmTemplate.getUuid(),
-						Long.valueOf(ddmTemplate.getGroupId())
-					}, ddmTemplate);
-			}
-
-			if ((ddmTemplateModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(ddmTemplateModelImpl.getOriginalGroupId()),
-						
-						ddmTemplateModelImpl.getOriginalTemplateKey()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_T, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_T, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_T,
-					new Object[] {
-						Long.valueOf(ddmTemplate.getGroupId()),
-						
-					ddmTemplate.getTemplateKey()
-					}, ddmTemplate);
-			}
-		}
+		clearUniqueFindersCache(ddmTemplate);
+		cacheUniqueFindersCache(ddmTemplate);
 
 		return ddmTemplate;
 	}
@@ -8479,22 +8508,6 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = DDMContentPersistence.class)
-	protected DDMContentPersistence ddmContentPersistence;
-	@BeanReference(type = DDMStorageLinkPersistence.class)
-	protected DDMStorageLinkPersistence ddmStorageLinkPersistence;
-	@BeanReference(type = DDMStructurePersistence.class)
-	protected DDMStructurePersistence ddmStructurePersistence;
-	@BeanReference(type = DDMStructureLinkPersistence.class)
-	protected DDMStructureLinkPersistence ddmStructureLinkPersistence;
-	@BeanReference(type = DDMTemplatePersistence.class)
-	protected DDMTemplatePersistence ddmTemplatePersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_DDMTEMPLATE = "SELECT ddmTemplate FROM DDMTemplate ddmTemplate";
 	private static final String _SQL_SELECT_DDMTEMPLATE_WHERE = "SELECT ddmTemplate FROM DDMTemplate ddmTemplate WHERE ";
 	private static final String _SQL_COUNT_DDMTEMPLATE = "SELECT COUNT(ddmTemplate) FROM DDMTemplate ddmTemplate";

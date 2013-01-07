@@ -15,7 +15,6 @@
 package com.liferay.portlet.expando.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -37,7 +36,6 @@ import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.expando.NoSuchValueException;
@@ -4737,19 +4735,103 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 		}
 	}
 
+	protected void cacheUniqueFindersCache(ExpandoValue expandoValue) {
+		if (expandoValue.isNew()) {
+			Object[] args = new Object[] {
+					Long.valueOf(expandoValue.getColumnId()),
+					Long.valueOf(expandoValue.getRowId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_R, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_R, args,
+				expandoValue);
+
+			args = new Object[] {
+					Long.valueOf(expandoValue.getTableId()),
+					Long.valueOf(expandoValue.getColumnId()),
+					Long.valueOf(expandoValue.getClassPK())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_C_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_C_C, args,
+				expandoValue);
+		}
+		else {
+			ExpandoValueModelImpl expandoValueModelImpl = (ExpandoValueModelImpl)expandoValue;
+
+			if ((expandoValueModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_C_R.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(expandoValue.getColumnId()),
+						Long.valueOf(expandoValue.getRowId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_R, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_R, args,
+					expandoValue);
+			}
+
+			if ((expandoValueModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_T_C_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(expandoValue.getTableId()),
+						Long.valueOf(expandoValue.getColumnId()),
+						Long.valueOf(expandoValue.getClassPK())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_T_C_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_C_C, args,
+					expandoValue);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(ExpandoValue expandoValue) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_R,
-			new Object[] {
+		ExpandoValueModelImpl expandoValueModelImpl = (ExpandoValueModelImpl)expandoValue;
+
+		Object[] args = new Object[] {
 				Long.valueOf(expandoValue.getColumnId()),
 				Long.valueOf(expandoValue.getRowId())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_C_C,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_R, args);
+
+		if ((expandoValueModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_C_R.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(expandoValueModelImpl.getOriginalColumnId()),
+					Long.valueOf(expandoValueModelImpl.getOriginalRowId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_R, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(expandoValue.getTableId()),
 				Long.valueOf(expandoValue.getColumnId()),
 				Long.valueOf(expandoValue.getClassPK())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_C_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_C_C, args);
+
+		if ((expandoValueModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_T_C_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(expandoValueModelImpl.getOriginalTableId()),
+					Long.valueOf(expandoValueModelImpl.getOriginalColumnId()),
+					Long.valueOf(expandoValueModelImpl.getOriginalClassPK())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_C_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_C_C, args);
+		}
 	}
 
 	/**
@@ -5062,59 +5144,8 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 		EntityCacheUtil.putResult(ExpandoValueModelImpl.ENTITY_CACHE_ENABLED,
 			ExpandoValueImpl.class, expandoValue.getPrimaryKey(), expandoValue);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_R,
-				new Object[] {
-					Long.valueOf(expandoValue.getColumnId()),
-					Long.valueOf(expandoValue.getRowId())
-				}, expandoValue);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_C_C,
-				new Object[] {
-					Long.valueOf(expandoValue.getTableId()),
-					Long.valueOf(expandoValue.getColumnId()),
-					Long.valueOf(expandoValue.getClassPK())
-				}, expandoValue);
-		}
-		else {
-			if ((expandoValueModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_R.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(expandoValueModelImpl.getOriginalColumnId()),
-						Long.valueOf(expandoValueModelImpl.getOriginalRowId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_R, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_R,
-					new Object[] {
-						Long.valueOf(expandoValue.getColumnId()),
-						Long.valueOf(expandoValue.getRowId())
-					}, expandoValue);
-			}
-
-			if ((expandoValueModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_T_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(expandoValueModelImpl.getOriginalTableId()),
-						Long.valueOf(expandoValueModelImpl.getOriginalColumnId()),
-						Long.valueOf(expandoValueModelImpl.getOriginalClassPK())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_T_C_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_C_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_C_C,
-					new Object[] {
-						Long.valueOf(expandoValue.getTableId()),
-						Long.valueOf(expandoValue.getColumnId()),
-						Long.valueOf(expandoValue.getClassPK())
-					}, expandoValue);
-			}
-		}
+		clearUniqueFindersCache(expandoValue);
+		cacheUniqueFindersCache(expandoValue);
 
 		return expandoValue;
 	}
@@ -5439,16 +5470,6 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = ExpandoColumnPersistence.class)
-	protected ExpandoColumnPersistence expandoColumnPersistence;
-	@BeanReference(type = ExpandoRowPersistence.class)
-	protected ExpandoRowPersistence expandoRowPersistence;
-	@BeanReference(type = ExpandoTablePersistence.class)
-	protected ExpandoTablePersistence expandoTablePersistence;
-	@BeanReference(type = ExpandoValuePersistence.class)
-	protected ExpandoValuePersistence expandoValuePersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_EXPANDOVALUE = "SELECT expandoValue FROM ExpandoValue expandoValue";
 	private static final String _SQL_SELECT_EXPANDOVALUE_WHERE = "SELECT expandoValue FROM ExpandoValue expandoValue WHERE ";
 	private static final String _SQL_COUNT_EXPANDOVALUE = "SELECT COUNT(expandoValue) FROM ExpandoValue expandoValue";

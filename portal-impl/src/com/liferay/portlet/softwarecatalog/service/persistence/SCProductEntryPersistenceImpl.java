@@ -45,14 +45,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
-import com.liferay.portal.service.persistence.GroupPersistence;
-import com.liferay.portal.service.persistence.ImagePersistence;
-import com.liferay.portal.service.persistence.SubscriptionPersistence;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
-import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistence;
-import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
 import com.liferay.portlet.softwarecatalog.NoSuchProductEntryException;
 import com.liferay.portlet.softwarecatalog.model.SCProductEntry;
 import com.liferay.portlet.softwarecatalog.model.impl.SCProductEntryImpl;
@@ -2697,13 +2691,61 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		}
 	}
 
+	protected void cacheUniqueFindersCache(SCProductEntry scProductEntry) {
+		if (scProductEntry.isNew()) {
+			Object[] args = new Object[] {
+					scProductEntry.getRepoGroupId(),
+					
+					scProductEntry.getRepoArtifactId()
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_RG_RA, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_RG_RA, args,
+				scProductEntry);
+		}
+		else {
+			SCProductEntryModelImpl scProductEntryModelImpl = (SCProductEntryModelImpl)scProductEntry;
+
+			if ((scProductEntryModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_RG_RA.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						scProductEntry.getRepoGroupId(),
+						
+						scProductEntry.getRepoArtifactId()
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_RG_RA, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_RG_RA, args,
+					scProductEntry);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(SCProductEntry scProductEntry) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_RG_RA,
-			new Object[] {
+		SCProductEntryModelImpl scProductEntryModelImpl = (SCProductEntryModelImpl)scProductEntry;
+
+		Object[] args = new Object[] {
 				scProductEntry.getRepoGroupId(),
 				
-			scProductEntry.getRepoArtifactId()
-			});
+				scProductEntry.getRepoArtifactId()
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RG_RA, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_RG_RA, args);
+
+		if ((scProductEntryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_RG_RA.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					scProductEntryModelImpl.getOriginalRepoGroupId(),
+					
+					scProductEntryModelImpl.getOriginalRepoArtifactId()
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RG_RA, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_RG_RA, args);
+		}
 	}
 
 	/**
@@ -2922,35 +2964,8 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			SCProductEntryImpl.class, scProductEntry.getPrimaryKey(),
 			scProductEntry);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_RG_RA,
-				new Object[] {
-					scProductEntry.getRepoGroupId(),
-					
-				scProductEntry.getRepoArtifactId()
-				}, scProductEntry);
-		}
-		else {
-			if ((scProductEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_RG_RA.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						scProductEntryModelImpl.getOriginalRepoGroupId(),
-						
-						scProductEntryModelImpl.getOriginalRepoArtifactId()
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RG_RA, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_RG_RA, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_RG_RA,
-					new Object[] {
-						scProductEntry.getRepoGroupId(),
-						
-					scProductEntry.getRepoArtifactId()
-					}, scProductEntry);
-			}
-		}
+		clearUniqueFindersCache(scProductEntry);
+		cacheUniqueFindersCache(scProductEntry);
 
 		return scProductEntry;
 	}
@@ -3793,28 +3808,8 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = SCFrameworkVersionPersistence.class)
-	protected SCFrameworkVersionPersistence scFrameworkVersionPersistence;
 	@BeanReference(type = SCLicensePersistence.class)
 	protected SCLicensePersistence scLicensePersistence;
-	@BeanReference(type = SCProductEntryPersistence.class)
-	protected SCProductEntryPersistence scProductEntryPersistence;
-	@BeanReference(type = SCProductScreenshotPersistence.class)
-	protected SCProductScreenshotPersistence scProductScreenshotPersistence;
-	@BeanReference(type = SCProductVersionPersistence.class)
-	protected SCProductVersionPersistence scProductVersionPersistence;
-	@BeanReference(type = GroupPersistence.class)
-	protected GroupPersistence groupPersistence;
-	@BeanReference(type = ImagePersistence.class)
-	protected ImagePersistence imagePersistence;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = RatingsStatsPersistence.class)
-	protected RatingsStatsPersistence ratingsStatsPersistence;
 	protected ContainsSCLicense containsSCLicense;
 	protected AddSCLicense addSCLicense;
 	protected ClearSCLicenses clearSCLicenses;

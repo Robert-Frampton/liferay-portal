@@ -16,6 +16,7 @@ package com.liferay.portlet.expando.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.expando.ColumnNameException;
@@ -33,6 +34,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Raymond Augé
@@ -417,7 +420,9 @@ public class ExpandoColumnLocalServiceImpl
 			(type != ExpandoColumnConstants.SHORT) &&
 			(type != ExpandoColumnConstants.SHORT_ARRAY) &&
 			(type != ExpandoColumnConstants.STRING) &&
-			(type != ExpandoColumnConstants.STRING_ARRAY)) {
+			(type != ExpandoColumnConstants.STRING_ARRAY) &&
+			(type != ExpandoColumnConstants.STRING_ARRAY_LOCALIZED) &&
+			(type != ExpandoColumnConstants.STRING_LOCALIZED)) {
 
 			throw new ColumnTypeException();
 		}
@@ -480,6 +485,15 @@ public class ExpandoColumnLocalServiceImpl
 			}
 			else if (type == ExpandoColumnConstants.STRING_ARRAY) {
 				value.setStringArray((String[])defaultData);
+			}
+			else if (type == ExpandoColumnConstants.STRING_ARRAY_LOCALIZED) {
+				value.setStringArrayMap(
+					(Map<Locale, String[]>)defaultData,
+					LocaleUtil.getDefault());
+			}
+			else if (type == ExpandoColumnConstants.STRING_LOCALIZED) {
+				value.setStringMap(
+					(Map<Locale, String>)defaultData, LocaleUtil.getDefault());
 			}
 		}
 

@@ -15,7 +15,6 @@
 package com.liferay.portlet.messageboards.service.persistence;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
@@ -38,7 +37,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.messageboards.NoSuchMailingListException;
@@ -2205,18 +2203,99 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		}
 	}
 
+	protected void cacheUniqueFindersCache(MBMailingList mbMailingList) {
+		if (mbMailingList.isNew()) {
+			Object[] args = new Object[] {
+					mbMailingList.getUuid(),
+					Long.valueOf(mbMailingList.getGroupId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+				mbMailingList);
+
+			args = new Object[] {
+					Long.valueOf(mbMailingList.getGroupId()),
+					Long.valueOf(mbMailingList.getCategoryId())
+				};
+
+			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C, args,
+				Long.valueOf(1));
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C, args,
+				mbMailingList);
+		}
+		else {
+			MBMailingListModelImpl mbMailingListModelImpl = (MBMailingListModelImpl)mbMailingList;
+
+			if ((mbMailingListModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						mbMailingList.getUuid(),
+						Long.valueOf(mbMailingList.getGroupId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+					mbMailingList);
+			}
+
+			if ((mbMailingListModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_G_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(mbMailingList.getGroupId()),
+						Long.valueOf(mbMailingList.getCategoryId())
+					};
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_G_C, args,
+					Long.valueOf(1));
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C, args,
+					mbMailingList);
+			}
+		}
+	}
+
 	protected void clearUniqueFindersCache(MBMailingList mbMailingList) {
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
+		MBMailingListModelImpl mbMailingListModelImpl = (MBMailingListModelImpl)mbMailingList;
+
+		Object[] args = new Object[] {
 				mbMailingList.getUuid(),
 				Long.valueOf(mbMailingList.getGroupId())
-			});
+			};
 
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C,
-			new Object[] {
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+
+		if ((mbMailingListModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					mbMailingListModelImpl.getOriginalUuid(),
+					Long.valueOf(mbMailingListModelImpl.getOriginalGroupId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		args = new Object[] {
 				Long.valueOf(mbMailingList.getGroupId()),
 				Long.valueOf(mbMailingList.getCategoryId())
-			});
+			};
+
+		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C, args);
+
+		if ((mbMailingListModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_C.getColumnBitmask()) != 0) {
+			args = new Object[] {
+					Long.valueOf(mbMailingListModelImpl.getOriginalGroupId()),
+					Long.valueOf(mbMailingListModelImpl.getOriginalCategoryId())
+				};
+
+			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C, args);
+		}
 	}
 
 	/**
@@ -2431,56 +2510,8 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			MBMailingListImpl.class, mbMailingList.getPrimaryKey(),
 			mbMailingList);
 
-		if (isNew) {
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-				new Object[] {
-					mbMailingList.getUuid(),
-					Long.valueOf(mbMailingList.getGroupId())
-				}, mbMailingList);
-
-			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C,
-				new Object[] {
-					Long.valueOf(mbMailingList.getGroupId()),
-					Long.valueOf(mbMailingList.getCategoryId())
-				}, mbMailingList);
-		}
-		else {
-			if ((mbMailingListModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						mbMailingListModelImpl.getOriginalUuid(),
-						Long.valueOf(mbMailingListModelImpl.getOriginalGroupId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
-					new Object[] {
-						mbMailingList.getUuid(),
-						Long.valueOf(mbMailingList.getGroupId())
-					}, mbMailingList);
-			}
-
-			if ((mbMailingListModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(mbMailingListModelImpl.getOriginalGroupId()),
-						Long.valueOf(mbMailingListModelImpl.getOriginalCategoryId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C, args);
-
-				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C, args);
-
-				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C,
-					new Object[] {
-						Long.valueOf(mbMailingList.getGroupId()),
-						Long.valueOf(mbMailingList.getCategoryId())
-					}, mbMailingList);
-			}
-		}
+		clearUniqueFindersCache(mbMailingList);
+		cacheUniqueFindersCache(mbMailingList);
 
 		return mbMailingList;
 	}
@@ -2824,24 +2855,6 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	@BeanReference(type = MBBanPersistence.class)
-	protected MBBanPersistence mbBanPersistence;
-	@BeanReference(type = MBCategoryPersistence.class)
-	protected MBCategoryPersistence mbCategoryPersistence;
-	@BeanReference(type = MBDiscussionPersistence.class)
-	protected MBDiscussionPersistence mbDiscussionPersistence;
-	@BeanReference(type = MBMailingListPersistence.class)
-	protected MBMailingListPersistence mbMailingListPersistence;
-	@BeanReference(type = MBMessagePersistence.class)
-	protected MBMessagePersistence mbMessagePersistence;
-	@BeanReference(type = MBStatsUserPersistence.class)
-	protected MBStatsUserPersistence mbStatsUserPersistence;
-	@BeanReference(type = MBThreadPersistence.class)
-	protected MBThreadPersistence mbThreadPersistence;
-	@BeanReference(type = MBThreadFlagPersistence.class)
-	protected MBThreadFlagPersistence mbThreadFlagPersistence;
-	@BeanReference(type = UserPersistence.class)
-	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_MBMAILINGLIST = "SELECT mbMailingList FROM MBMailingList mbMailingList";
 	private static final String _SQL_SELECT_MBMAILINGLIST_WHERE = "SELECT mbMailingList FROM MBMailingList mbMailingList WHERE ";
 	private static final String _SQL_COUNT_MBMAILINGLIST = "SELECT COUNT(mbMailingList) FROM MBMailingList mbMailingList";
