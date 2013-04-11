@@ -148,7 +148,7 @@ public class BufferCacheServletResponseTest {
 
 			@Override
 			public void flush() throws IOException {
-				throw new IOException("Failed to flush");
+				throw new IOException("Forced IOException");
 			}
 
 		};
@@ -172,7 +172,7 @@ public class BufferCacheServletResponseTest {
 			Throwable throwable = re.getCause();
 
 			Assert.assertTrue(throwable instanceof IOException);
-			Assert.assertEquals("Failed to flush", throwable.getMessage());
+			Assert.assertEquals("Forced IOException", throwable.getMessage());
 		}
 	}
 

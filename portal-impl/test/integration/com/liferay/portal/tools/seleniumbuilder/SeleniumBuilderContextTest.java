@@ -14,6 +14,8 @@
 
 package com.liferay.portal.tools.seleniumbuilder;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 
 import org.junit.Assert;
@@ -26,6 +28,16 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class SeleniumBuilderContextTest {
 
+	public SeleniumBuilderContextTest() {
+		try {
+			_seleniumBuilderContext = new SeleniumBuilderContext(
+				"./portal-web/test/functional/");
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+	}
+
 	@Test
 	public void testAction() throws Exception {
 		test("Action.action");
@@ -35,8 +47,16 @@ public class SeleniumBuilderContextTest {
 	public void testActionCommandElement1009() throws Exception {
 		test(
 			"ActionCommandElement1009.action",
-			"Error 1009: Duplicate command name name at " +
-				_DIR_NAME + "/ActionCommandElement1009.action:8");
+			"Error 1009: Duplicate command name click at " + _DIR_NAME +
+				"/ActionCommandElement1009.action:8");
+	}
+
+	@Test
+	public void testActionCommandElement2001() throws Exception {
+		test(
+			"ActionCommandElement2001.action",
+			"Error 2001: Action command nameFail does not match a function " +
+				"name at " + _DIR_NAME + "/ActionCommandElement2001.action:2");
 	}
 
 	@Test
@@ -53,6 +73,14 @@ public class SeleniumBuilderContextTest {
 	}
 
 	@Test
+	public void testFunctionCommandElement1009() throws Exception {
+		test(
+			"FunctionCommandElement1009.function",
+			"Error 1009: Duplicate command name name at " + _DIR_NAME +
+				"/FunctionCommandElement1009.function:6");
+	}
+
+	@Test
 	public void testFunctionFileName1008() throws Exception {
 		test(
 			"Click.function",
@@ -66,6 +94,14 @@ public class SeleniumBuilderContextTest {
 	}
 
 	@Test
+	public void testMacroCommandElement1009() throws Exception {
+		test(
+			"MacroCommandElement1009.macro",
+			"Error 1009: Duplicate command name name at " + _DIR_NAME +
+				"/MacroCommandElement1009.macro:6");
+	}
+
+	@Test
 	public void testMacroFileName1008() throws Exception {
 		test(
 			"BlogsEntry.macro",
@@ -76,6 +112,14 @@ public class SeleniumBuilderContextTest {
 	@Test
 	public void testTestCase() throws Exception {
 		test("TestCase.testcase");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1009() throws Exception {
+		test(
+			"TestCaseCommandElement1009.testcase",
+			"Error 1009: Duplicate command name name at " + _DIR_NAME +
+				"/TestCaseCommandElement1009.testcase:6");
 	}
 
 	@Test
@@ -117,12 +161,10 @@ public class SeleniumBuilderContextTest {
 		String actualErrorMessage = null;
 
 		try {
-			SeleniumBuilderContext seleniumBuilderContext =
-				new SeleniumBuilderContext(_BASE_DIR);
+			_seleniumBuilderContext.addFile(_DIR_NAME + "/" + fileName);
 
-			seleniumBuilderContext.addFile(_DIR_NAME + "/" + fileName);
-
-			seleniumBuilderContext.validateElements(_DIR_NAME + "/" + fileName);
+			_seleniumBuilderContext.validateElements(
+				_DIR_NAME + "/" + fileName);
 		}
 		catch (IllegalArgumentException iae) {
 			actualErrorMessage = iae.getMessage();
@@ -137,10 +179,13 @@ public class SeleniumBuilderContextTest {
 		}
 	}
 
-	private static final String _BASE_DIR = "./portal-web/test/functional/";
-
 	private static final String _DIR_NAME =
 		"/../../../portal-impl/test/integration/com/liferay/portal/tools/" +
 			"seleniumbuilder/dependencies";
+
+	private static Log _log = LogFactoryUtil.getLog(
+		SeleniumBuilderContextTest.class);
+
+	private SeleniumBuilderContext _seleniumBuilderContext;
 
 }

@@ -70,14 +70,14 @@ public class SelectorIntraBand extends BaseIntraBand {
 			throw new NullPointerException("Channel is null");
 		}
 
-		if (!(channel instanceof ScatteringByteChannel)) {
-			throw new IllegalArgumentException(
-				"Channel is not of type ScatteringByteChannel");
-		}
-
 		if (!(channel instanceof GatheringByteChannel)) {
 			throw new IllegalArgumentException(
 				"Channel is not of type GatheringByteChannel");
+		}
+
+		if (!(channel instanceof ScatteringByteChannel)) {
+			throw new IllegalArgumentException(
+				"Channel is not of type ScatteringByteChannel");
 		}
 
 		if (!(channel instanceof SelectableChannel)) {

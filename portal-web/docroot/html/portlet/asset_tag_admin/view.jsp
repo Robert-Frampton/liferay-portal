@@ -74,8 +74,18 @@
 	<div class="tags-admin-content-wrapper">
 		<aui:layout cssClass="tags-admin-content">
 			<aui:column columnWidth="35" cssClass="tags-admin-list-container">
+				<div class="selected-tags-wrapper aui-helper-hidden">
+					<div class="results-header">
+						<liferay-ui:message key="selected" />
+					</div>
+
+					<div class="tag-staging-area">
+						<ul></ul>
+					</div>
+				</div>
+
 				<div class="results-header">
-					<liferay-ui:message key="tags" />
+					<liferay-ui:message key="available" />
 				</div>
 
 				<div class="tags-admin-list lfr-component"></div>

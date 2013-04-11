@@ -112,6 +112,8 @@ AUI.add(
 
 						instance._container = A.one('.tags-admin-container');
 						instance._tagViewContainer = A.one('.tag-view-container');
+						instance._stagedTagsWrapper = A.one('.selected-tags-wrapper');
+						instance._stagedTagsList = instance._stagedTagsWrapper.one('.tag-staging-area ul');
 						instance._tagsList = A.one('.tags-admin-list');
 
 						instance._tagsMessageContainer = Node.create(TPL_TAGS_MESSAGES);
@@ -129,6 +131,8 @@ AUI.add(
 						var portletMessageContainer = instance._portletMessageContainer;
 
 						instance._hideMessageTask = A.debounce('hide', 7000, portletMessageContainer);
+
+						instance._stagedTagsList.on(EVENT_CLICK, instance._onStagedTagsListClick, instance);
 
 						instance._tagsList.on(EVENT_CLICK, instance._onTagsListClick, instance);
 						instance._tagsList.on('key', instance._onTagsListSelect, 'up:13', instance);
@@ -173,6 +177,9 @@ AUI.add(
 						instance.after('drag:enter', instance._afterDragEnter);
 						instance.after('drag:exit', instance._afterDragExit);
 						instance.after('drag:start', instance._afterDragStart);
+
+						// Test
+						A.delegate('onvaluechange', instance._stageTagItem, 'input.tags-selected-item, .checkAll, .paginator');
 					},
 
 					_afterDrag: function(event) {
@@ -245,9 +252,37 @@ AUI.add(
 					},
 
 					_checkAllTags: function(event) {
+						var instance = this;
+
 						var currentCheckedStatus = event.currentTarget.attr('checked');
 
-						A.all('.tag-item-check').attr('checked', currentCheckedStatus);
+						currentCheckedStatus.attr('checked', currentCheckedStatus);
+					},
+
+					_checkStagedTags: function() {
+						var instance = this;
+
+						var selectedTags = instance._getStagedTags();
+
+						selectedTags.each(
+							function(item, index, collection) {
+								instance._checkTags(item, true);
+							}
+						);
+					},
+
+					_checkTags: function(node, checked) {
+						var instance = this;
+
+						var tagId = instance._getTagId(node);
+
+						var tagCheck = instance._getTagCheck(tagId);
+
+						if (tagCheck) {
+							tagCheck.attr('checked', checked);
+
+							Liferay.Util.checkAllBox(instance._tagsList, 'tag-item-check', '#' + instance._prefixedPortletId + 'checkAllTagsCheckbox');
+						}
 					},
 
 					_createTagPanelAdd: function() {
@@ -407,7 +442,7 @@ AUI.add(
 					_deleteSelectedTags: function(event) {
 						var instance = this;
 
-						var tagsNodes = A.all('.tag-item-check:checked');
+						var tagsNodes = instance._getStagedTags();
 
 						if (tagsNodes.size() > 0) {
 							if (confirm(Liferay.Language.get('are-you-sure-you-want-to-delete-the-selected-tags'))) {
@@ -427,10 +462,17 @@ AUI.add(
 						else {
 							alert(Liferay.Language.get('there-are-no-selected-tags'));
 						}
+
+						instance._hideStagedTagsList();
 					},
 
 					_deleteTag: function(tagId, callback) {
 						var instance = this;
+
+						var deletedTag = instance._getTagCheck(tagId);
+						var deletedTagChecked = deletedTag.attr('checked');
+
+						instance._stageTagItem(false, deletedTag, deletedTagChecked);
 
 						Liferay.Service(
 							'/assettag/delete-tag',
@@ -470,6 +512,8 @@ AUI.add(
 								loadingMask.hide();
 
 								instance._prepareTags(result.tags, callback);
+
+								instance._checkStagedTags();
 							}
 						);
 					},
@@ -599,10 +643,28 @@ AUI.add(
 						return ioTagDetails;
 					},
 
+					_getStagedTag: function(tagId) {
+						var instance = this;
+
+						return instance._stagedTagsList.one('li[data-tagId="' + tagId + '"]');
+					},
+
+					_getStagedTags: function() {
+						var instance = this;
+
+						return instance._stagedTagsList.all('li');
+					},
+
 					_getTag: function(tagId) {
 						var instance = this;
 
 						return instance._tagsList.one('li[data-tagId="' + tagId + '"]');
+					},
+
+					_getTagCheck: function(tagId) {
+						var instance = this;
+
+						return instance._tagsList.one('.tag-item-check[data-tagId="' + tagId + '"]');
 					},
 
 					_getTagId: function(expr) {
@@ -838,6 +900,15 @@ AUI.add(
 						);
 					},
 
+					_hideStagedTagsList: function () {
+						var instance = this;
+
+						instance._stagedTagsList.empty(); // not sure ?
+
+						instance._stagedTagsWrapper.hide(true); // or instance._stagedTagsWrapper.toggle(false);
+						// (true) adds a cool transition. Play around with it, see if it looks nice
+					},
+
 					_initializeTagPanelAdd: function(callback) {
 						var instance = this;
 
@@ -999,11 +1070,11 @@ AUI.add(
 					_mergeSelectedTags: function(event) {
 						var instance = this;
 
-						var selectedTagsNodes = A.all('.tag-item-check:checked');
+						var selectedTagsNodes = instance._getStagedTags();
 
 						if (selectedTagsNodes.size() > 1) {
 							var checkedItemsIds = selectedTagsNodes.attr('data-tagId');
-							var checkedItemsName = selectedTagsNodes.attr('data-tagName');
+							var checkedItemsName = selectedTagsNodes.attr('data-tag');
 
 							var tagPanelMerge = instance._getTagPanelMerge();
 
@@ -1053,6 +1124,8 @@ AUI.add(
 					},
 
 					_mergeTags: function(fromIds, toId, overrideProperties, callback) {
+						var instance = this;
+
 						Liferay.Service(
 							'/assettag/merge-tags',
 							{
@@ -1062,9 +1135,13 @@ AUI.add(
 							},
 							callback
 						);
+
+						instance._hideStagedTagsList();
 					},
 
 					_mergeTag: function(fromId, toId, callback) {
+						var instance = this;
+
 						Liferay.Service(
 							'/assettag/merge-tags',
 							{
@@ -1074,6 +1151,11 @@ AUI.add(
 							},
 							callback
 						);
+
+						var fromTag = instance._getTagCheck(fromId);
+						var formTagChecked = fromTag.attr('checked');
+
+						instance._stageTagItem(false, fromTag, formTagChecked);
 					},
 
 					_onDeleteTag: function(event) {
@@ -1099,6 +1181,20 @@ AUI.add(
 						instance._hidePanels();
 
 						instance._showTagPanel(action);
+					},
+
+					_onStagedTagsListClick: function(event) {
+						var instance = this;
+
+						var target = event.target;
+
+						if (target.hasClass('tag-item-close')) {
+							var tagItem = target.ancestor('li');
+
+							instance._stageTagItem(false, tagItem, true);
+
+							instance._checkTags(tagItem, false);
+						}
 					},
 
 					_onStateChange: function(event) {
@@ -1170,6 +1266,10 @@ AUI.add(
 
 						if (target.hasClass('tag-item-check')) {
 							Liferay.Util.checkAllBox(event.currentTarget, 'tag-item-check', '#' + instance._prefixedPortletId + 'checkAllTagsCheckbox');
+
+							var stage = target.get('checked');
+
+							instance._stageTagItem(stage, target, true);
 						}
 						else if (target.hasClass('tag-item-actions-trigger')) {
 							instance._onShowTagPanel(event, ACTION_EDIT);
@@ -1360,7 +1460,7 @@ AUI.add(
 							A.each(
 								tags,
 								function(item, index, collection) {
-									if (index == 0) {
+									if (index === 0) {	// JSHINT
 										item.cssClassSelected = 'selected';
 									}
 									else {
@@ -1584,6 +1684,56 @@ AUI.add(
 						if (forceStart) {
 							tagPanelEdit.io.start();
 						}
+					},
+
+					_stageTagItem: function(tagItem, stage) {
+						var instance = this;
+
+						// stage == true || false
+
+						if (event.target == 'someName') {
+
+							// special case
+						}
+
+						var selectedTag;
+						var tagId;
+
+						if (stage) {
+							tagId = instance._getTagId(tagItem);
+							var tagName = instance._getTagName(tagItem.ancestor('li'));
+
+							var tagHTML = '<li data-tagId="' + tagId +'" data-tag="' + tagName + '">' +
+								'<span>' + tagName + '</span>' +
+								'<span class="aui-icon aui-icon-close aui-textboxlistentry-close tag-item-close"></span>' +
+							'</li>';
+
+							selectedTag = A.Node.create(tagHTML);
+
+							instance._stagedTagsList.append(selectedTag);
+						}
+						else if (unstage) {
+							tagId = instance._getTagId(tagItem);
+
+							selectedTag = instance._getStagedTag(tagId);
+
+							selectedTag.remove();
+						}
+
+						var force = null;
+
+						if (myConditionsAreMet) {
+
+							force = tags.size() || instance._someOtherCondition();
+						}
+
+						instance._toggleSelectedTagsWrapper(force);
+					},
+
+					_toggleSelectedTagsWrapper: function(force) {
+						var instance = this;
+
+						instance._stagedTagsWrapper.toggle(force);
 					},
 
 					_updateMergeItemsTarget: function() {

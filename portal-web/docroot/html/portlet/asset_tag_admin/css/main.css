@@ -1,3 +1,5 @@
+@import "compass";
+
 .portlet-asset-tag-admin {
 	.tags-admin-actions {
 		clear: none;
@@ -7,6 +9,7 @@
 
 	.tags-admin-container .results-header {
 		background: #F0F5F7;
+		clear: both;
 		font-weight: bold;
 		padding: 5px 10px;
 		position: relative;
@@ -156,6 +159,32 @@
 			content: "";
 			display: block;
 			height: 0;
+		}
+	}
+
+	.tag-staging-area {
+		color: #5C85AD;
+
+		ul {
+			margin: 10px;
+
+			li {
+				background-color: #DEE7F8;
+				border: 1px solid #CAD8F3;
+				display: inline;
+				float: left;
+				margin: 0 5px 4px 0;
+				padding: 2px 25px 2px 11px;
+				position: relative;
+
+				.tag-item-close {
+					top: 2px;
+
+					&:hover {
+						background-color: #CAD8F3;
+					}
+				}
+			}
 		}
 	}
 
@@ -310,5 +339,13 @@
 			font-weight: normal;
 			font-size: 120%;
 		}
+	}
+}
+
+/* ---------- Extras ---------- */
+
+.portlet-asset-tag-admin .tag-staging-area {
+	li, .tag-item-close {
+		@include border-radius(12px);
 	}
 }
