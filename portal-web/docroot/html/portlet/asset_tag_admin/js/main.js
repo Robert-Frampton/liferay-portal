@@ -113,7 +113,7 @@ AUI.add(
 						instance._container = A.one('.tags-admin-container');
 						instance._tagViewContainer = A.one('.tag-view-container');
 						instance._stagedTagsWrapper = A.one('.selected-tags-wrapper');
-						instance._stagedTagsList = A.one('.tag-staging-area ul');
+						instance._stagedTagsList = instance._stagedTagsWrapper.one('.tag-staging-area ul');
 						instance._tagsList = A.one('.tags-admin-list');
 
 						instance._tagsMessageContainer = Node.create(TPL_TAGS_MESSAGES);
@@ -177,6 +177,9 @@ AUI.add(
 						instance.after('drag:enter', instance._afterDragEnter);
 						instance.after('drag:exit', instance._afterDragExit);
 						instance.after('drag:start', instance._afterDragStart);
+
+						// Test
+						A.delegate('onvaluechange', instance._stageTagItem, 'input.tags-selected-item, .checkAll, .paginator');
 					},
 
 					_afterDrag: function(event) {
@@ -253,17 +256,7 @@ AUI.add(
 
 						var currentCheckedStatus = event.currentTarget.attr('checked');
 
-						var tagItemChecks = instance._tagsList.all('.tag-item-check');
-
-						tagItemChecks.each(
-							function(node) {
-								var checked = node.attr('checked');
-
-								instance._stageTagItem(!checked, node, !currentCheckedStatus);
-							}
-						);
-
-						tagItemChecks.attr('checked', currentCheckedStatus);
+						currentCheckedStatus.attr('checked', currentCheckedStatus);
 					},
 
 					_checkStagedTags: function() {
@@ -272,13 +265,13 @@ AUI.add(
 						var selectedTags = instance._getStagedTags();
 
 						selectedTags.each(
-							function(node) {
-								instance._checkTags(node, true);
+							function(item, index, collection) {
+								instance._checkTags(item, true);
 							}
 						);
 					},
 
-					_checkTags: function(node, check) {
+					_checkTags: function(node, checked) {
 						var instance = this;
 
 						var tagId = instance._getTagId(node);
@@ -286,7 +279,8 @@ AUI.add(
 						var tagCheck = instance._getTagCheck(tagId);
 
 						if (tagCheck) {
-							tagCheck.attr('checked', check);
+							tagCheck.attr('checked', checked);
+
 							Liferay.Util.checkAllBox(instance._tagsList, 'tag-item-check', '#' + instance._prefixedPortletId + 'checkAllTagsCheckbox');
 						}
 					},
@@ -909,9 +903,10 @@ AUI.add(
 					_hideStagedTagsList: function () {
 						var instance = this;
 
-						instance._stagedTagsList.empty();
+						instance._stagedTagsList.empty(); // not sure ?
 
-						instance._stagedTagsWrapper.addClass('aui-helper-hidden');
+						instance._stagedTagsWrapper.hide(true); // or instance._stagedTagsWrapper.toggle(false);
+						// (true) adds a cool transition. Play around with it, see if it looks nice
 					},
 
 					_initializeTagPanelAdd: function(callback) {
@@ -1272,7 +1267,6 @@ AUI.add(
 						if (target.hasClass('tag-item-check')) {
 							Liferay.Util.checkAllBox(event.currentTarget, 'tag-item-check', '#' + instance._prefixedPortletId + 'checkAllTagsCheckbox');
 
-							var target = event.target;
 							var stage = target.get('checked');
 
 							instance._stageTagItem(stage, target, true);
@@ -1466,7 +1460,7 @@ AUI.add(
 							A.each(
 								tags,
 								function(item, index, collection) {
-									if (index == 0) {
+									if (index === 0) {	// JSHINT
 										item.cssClassSelected = 'selected';
 									}
 									else {
@@ -1692,11 +1686,21 @@ AUI.add(
 						}
 					},
 
-					_stageTagItem: function(stage, tagItem, unstage) {
+					_stageTagItem: function(tagItem, stage) {
 						var instance = this;
 
+						// stage == true || false
+
+						if (event.target == 'someName') {
+
+							// special case
+						}
+
+						var selectedTag;
+						var tagId;
+
 						if (stage) {
-							var tagId = instance._getTagId(tagItem);
+							tagId = instance._getTagId(tagItem);
 							var tagName = instance._getTagName(tagItem.ancestor('li'));
 
 							var tagHTML = '<li data-tagId="' + tagId +'" data-tag="' + tagName + '">' +
@@ -1704,30 +1708,32 @@ AUI.add(
 								'<span class="aui-icon aui-icon-close aui-textboxlistentry-close tag-item-close"></span>' +
 							'</li>';
 
-							var selectedTag = A.Node.create(tagHTML);
+							selectedTag = A.Node.create(tagHTML);
 
 							instance._stagedTagsList.append(selectedTag);
 						}
 						else if (unstage) {
-							var tagId = instance._getTagId(tagItem);
+							tagId = instance._getTagId(tagItem);
 
-							var selectedTag = instance._getStagedTag(tagId);
+							selectedTag = instance._getStagedTag(tagId);
 
 							selectedTag.remove();
 						}
 
-						instance._toggleSelectedTagsWrapper();
+						var force = null;
+
+						if (myConditionsAreMet) {
+
+							force = tags.size() || instance._someOtherCondition();
+						}
+
+						instance._toggleSelectedTagsWrapper(force);
 					},
 
-					_toggleSelectedTagsWrapper: function() {
+					_toggleSelectedTagsWrapper: function(force) {
 						var instance = this;
 
-						var selectedTagsLength = instance._getStagedTags().size();
-						var selectedTagsHidden = instance._stagedTagsWrapper.hasClass('aui-helper-hidden');
-
-						if ((selectedTagsLength > 0 && selectedTagsHidden) || (selectedTagsLength === 0 && !selectedTagsHidden)) {
-							instance._stagedTagsWrapper.toggleClass('aui-helper-hidden');
-						}
+						instance._stagedTagsWrapper.toggle(force);
 					},
 
 					_updateMergeItemsTarget: function() {
