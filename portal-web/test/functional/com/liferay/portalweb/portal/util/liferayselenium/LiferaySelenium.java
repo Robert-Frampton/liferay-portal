@@ -93,6 +93,8 @@ public interface LiferaySelenium extends Selenium {
 
 	public String getNumberIncrement(String value);
 
+	public String getPrimaryTestSuiteName();
+
 	public String getProjectDir();
 
 	public void goBackAndWait();
@@ -146,6 +148,8 @@ public interface LiferaySelenium extends Selenium {
 	public void setDefaultTimeout();
 
 	public void setDefaultTimeoutImplicit();
+
+	public void setPrimaryTestSuiteName(String primaryTestSuiteName);
 
 	public void setTimeoutImplicit(String timeout);
 

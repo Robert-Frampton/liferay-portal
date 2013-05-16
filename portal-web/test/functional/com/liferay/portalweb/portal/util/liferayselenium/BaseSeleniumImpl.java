@@ -192,6 +192,10 @@ public abstract class BaseSeleniumImpl
 		return LiferaySeleniumHelper.getNumberIncrement(value);
 	}
 
+	public String getPrimaryTestSuiteName() {
+		return _primaryTestSuiteName;
+	}
+
 	public String getProjectDir() {
 		return _projectDir;
 	}
@@ -341,6 +345,10 @@ public abstract class BaseSeleniumImpl
 	}
 
 	public void setDefaultTimeoutImplicit() {
+	}
+
+	public void setPrimaryTestSuiteName(String primaryTestSuiteName) {
+		_primaryTestSuiteName = primaryTestSuiteName;
 	}
 
 	@Override
@@ -533,6 +541,7 @@ public abstract class BaseSeleniumImpl
 
 	private String _clipBoard = "";
 	private CommandProcessor _commandProcessor;
+	private String _primaryTestSuiteName;
 	private String _projectDir;
 	private String _timeout = "90000";
 

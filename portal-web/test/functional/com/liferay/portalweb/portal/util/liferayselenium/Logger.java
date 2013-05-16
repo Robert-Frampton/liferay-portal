@@ -32,9 +32,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  */
 public class Logger {
 
-	public Logger(String projectDir) {
-		_projectDir = projectDir;
-
+	public Logger(LiferaySelenium liferaySelenium) {
 		WebDriver.Options options = _webDriver.manage();
 
 		WebDriver.Window window = options.window();
@@ -127,7 +125,7 @@ public class Logger {
 		_loggerStarted = true;
 
 		_webDriver.get(
-			"file:///" + _projectDir +
+			"file:///" + _liferaySelenium.getProjectDir() +
 				"portal-web/test/functional/com/liferay/portalweb/portal/" +
 					"util/liferayselenium/dependencies/Logger.html");
 	}
@@ -158,8 +156,8 @@ public class Logger {
 		javascriptExecutor.executeScript(sb.toString());
 	}
 
-	private boolean _loggerStarted = false;
-	private String _projectDir;
+	private LiferaySelenium _liferaySelenium;
+	private boolean _loggerStarted;
 	private WebDriver _webDriver = new FirefoxDriver();
 
 }

@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -81,12 +82,29 @@ public class PluginsEnvironmentBuilder {
 		for (String fileName : directoryScanner.getIncludedFiles()) {
 			String content = _fileUtil.read(dirName + "/" + fileName);
 
-			if (content.contains(
-					"<import file=\"../../build-common-osgi-plugin.xml\" />") ||
-				content.contains(
-					"<import file=\"../build-common-shared.xml\" />")) {
+			boolean osgiProject = content.contains(
+				"<import file=\"../../build-common-osgi-plugin.xml\" />");
+			boolean sharedProject = content.contains(
+				"<import file=\"../build-common-shared.xml\" />");
 
-				setupJarProject(dirName, fileName);
+			List<String> dependencyJars = Collections.emptyList();
+
+			if (osgiProject) {
+				int x = content.indexOf("osgi.plugin.portal.lib.jars");
+
+				if (x != -1) {
+					x = content.indexOf("value=\"", x);
+					x = content.indexOf("\"", x);
+
+					int y = content.indexOf("\"", x + 1);
+
+					dependencyJars = Arrays.asList(
+						StringUtil.split(content.substring(x + 1, y)));
+				}
+			}
+
+			if (osgiProject || sharedProject) {
+				setupJarProject(dirName, fileName, dependencyJars);
 			}
 		}
 	}
@@ -210,7 +228,8 @@ public class PluginsEnvironmentBuilder {
 		return jars;
 	}
 
-	protected void setupJarProject(String dirName, String fileName)
+	protected void setupJarProject(
+			String dirName, String fileName, List<String> dependencyJars)
 		throws Exception {
 
 		File buildFile = new File(dirName + "/" + fileName);
@@ -218,8 +237,6 @@ public class PluginsEnvironmentBuilder {
 		File projectDir = new File(buildFile.getParent());
 
 		File libDir = new File(projectDir, "lib");
-
-		List<String> dependencyJars = Collections.emptyList();
 
 		writeEclipseFiles(libDir, projectDir, dependencyJars);
 

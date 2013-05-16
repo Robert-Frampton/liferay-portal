@@ -56,8 +56,21 @@ public class LegacyAlgorithmAwarePasswordEncryptor
 							" is blank");
 			}
 
-			return _parentPasswordEncryptor.encrypt(
-				algorithm, plainTextPassword, encryptedPassword);
+			try {
+				return _parentPasswordEncryptor.encrypt(
+					algorithm, plainTextPassword, encryptedPassword);
+			}
+			catch (Exception e) {
+				StringBundler sb = new StringBundler(5);
+
+				sb.append("Password upgrade was not successfully configured. ");
+				sb.append("Please set the property ");
+				sb.append("\"passwords.encryption.algorithm.legacy\" with the");
+				sb.append("previous password encryption algorithm and ");
+				sb.append("restart.");
+
+				throw new PwdEncryptorException(sb.toString(), e);
+			}
 		}
 
 		if (_log.isDebugEnabled()) {

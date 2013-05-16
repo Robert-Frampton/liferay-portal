@@ -35,11 +35,11 @@ public class SelectExistingDMFolderImageAPActionsTest extends BaseTestCase {
 		selenium.clickAt("//span[@title='Options']/ul/li/strong/a",
 			RuntimeVariables.replace("Options"));
 		selenium.waitForVisible(
-			"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Configuration')]");
+			"//div[@class='lfr-menu-list unstyled']/ul/li/a[contains(.,'Configuration')]");
 		assertEquals(RuntimeVariables.replace("Configuration"),
 			selenium.getText(
-				"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Configuration')]"));
-		selenium.clickAt("//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Configuration')]",
+				"//div[@class='lfr-menu-list unstyled']/ul/li/a[contains(.,'Configuration')]"));
+		selenium.clickAt("//div[@class='lfr-menu-list unstyled']/ul/li/a[contains(.,'Configuration')]",
 			RuntimeVariables.replace("Configuration"));
 		selenium.waitForElementPresent(
 			"//iframe[contains(@id,'configurationIframeDialog')]");
@@ -55,18 +55,13 @@ public class SelectExistingDMFolderImageAPActionsTest extends BaseTestCase {
 		selenium.clickAt("xPath=(//span[@title='Select']/ul/li/strong/a/span)[2]",
 			RuntimeVariables.replace("Select"));
 		selenium.waitForVisible(
-			"//div[@class='lfr-component lfr-menu-list']/ul/li[8]/a[contains(.,'Document')]");
-		assertEquals(RuntimeVariables.replace("Document"),
+			"//div[@class='lfr-menu-list unstyled']/ul/li/a[contains(.,'Documents and Media Document')]");
+		assertEquals(RuntimeVariables.replace("Documents and Media Document"),
 			selenium.getText(
-				"//div[@class='lfr-component lfr-menu-list']/ul/li[8]/a[contains(.,'Document')]"));
+				"//div[@class='lfr-menu-list unstyled']/ul/li/a[contains(.,'Documents and Media Document')]"));
 		selenium.click(RuntimeVariables.replace(
-				"//div[@class='lfr-component lfr-menu-list']/ul/li[8]/a[contains(.,'Document')]"));
+				"//div[@class='lfr-menu-list unstyled']/ul/li/a[contains(.,'Documents and Media Document')]"));
 		selenium.waitForPageToLoad("30000");
-		selenium.selectFrame("relative=top");
-		selenium.waitForElementPresent("//iframe[contains(@id,'selectAsset')]");
-		selenium.selectFrame("//iframe[contains(@id,'selectAsset')]");
-		selenium.waitForVisible(
-			"//tr[contains(.,'DM Folder Image Title')]/td[1]/a");
 		assertEquals(RuntimeVariables.replace("DM Folder Image Title"),
 			selenium.getText(
 				"//tr[contains(.,'DM Folder Image Title')]/td[1]/a"));

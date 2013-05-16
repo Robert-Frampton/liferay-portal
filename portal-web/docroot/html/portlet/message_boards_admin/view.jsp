@@ -41,7 +41,7 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 
 <liferay-ui:trash-undo portletURL="<%= undoTrashURL %>" />
 
-<liferay-util:include page="/html/portlet/message_boards_admin/top_links.jsp" />
+<liferay-util:include page="/html/portlet/message_boards/top_links.jsp" />
 
 <c:choose>
 	<c:when test='<%= tabs1.equals("message-boards-home") %>'>
