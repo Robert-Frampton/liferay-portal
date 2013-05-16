@@ -229,6 +229,10 @@ public abstract class BaseWebDriverImpl
 		return LiferaySeleniumHelper.getNumberIncrement(value);
 	}
 
+	public String getPrimaryTestSuiteName() {
+		return _primaryTestSuiteName;
+	}
+
 	public String getProjectDir() {
 		return _projectDir;
 	}
@@ -369,6 +373,10 @@ public abstract class BaseWebDriverImpl
 	public void setDefaultTimeout() {
 	}
 
+	public void setPrimaryTestSuiteName(String primaryTestSuiteName) {
+		_primaryTestSuiteName = primaryTestSuiteName;
+	}
+
 	public void startLogger() {
 	}
 
@@ -490,6 +498,7 @@ public abstract class BaseWebDriverImpl
 	}
 
 	private String _clipBoard = "";
+	private String _primaryTestSuiteName;
 	private String _projectDir;
 
 }

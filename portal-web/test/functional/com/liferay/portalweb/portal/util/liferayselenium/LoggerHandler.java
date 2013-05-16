@@ -26,7 +26,7 @@ public class LoggerHandler implements InvocationHandler {
 	public LoggerHandler(LiferaySelenium liferaySelenium) {
 		_liferaySelenium = liferaySelenium;
 
-		_logger = new Logger(liferaySelenium.getProjectDir());
+		_logger = new Logger(liferaySelenium);
 	}
 
 	public Object invoke(Object proxy, Method method, Object[] arguments)

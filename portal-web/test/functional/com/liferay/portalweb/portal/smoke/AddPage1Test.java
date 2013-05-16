@@ -25,17 +25,19 @@ public class AddPage1Test extends BaseTestCase {
 		selenium.selectWindow("null");
 		selenium.selectFrame("relative=top");
 		selenium.open("/web/guest/home/");
-		selenium.clickAt("//div[@id='dockbar']",
+		selenium.clickAt("//div[@id='_145_dockbar']",
 			RuntimeVariables.replace("Dockbar"));
 		selenium.waitForElementPresent(
-			"//script[contains(@src,'/aui/aui-editable/aui-editable-min.js')]");
+			"//script[contains(@src,'/aui/aui-editable-deprecated/aui-editable-deprecated-min.js')]");
 		assertEquals(RuntimeVariables.replace("Add"),
-			selenium.getText("//li[@id='_145_addContent']/a/span"));
-		selenium.mouseOver("//li[@id='_145_addContent']/a/span");
-		selenium.waitForVisible("//a[@id='addPage']");
+			selenium.getText("//li[@id='_145_addContent']/a"));
+		selenium.clickAt("//li[@id='_145_addContent']/a",
+			RuntimeVariables.replace("Add"));
+		selenium.waitForVisible("//a[@id='_145_addPage']");
 		assertEquals(RuntimeVariables.replace("Page"),
-			selenium.getText("//a[@id='addPage']"));
-		selenium.clickAt("//a[@id='addPage']", RuntimeVariables.replace("Page"));
+			selenium.getText("//a[@id='_145_addPage']"));
+		selenium.clickAt("//a[@id='_145_addPage']",
+			RuntimeVariables.replace("Page"));
 		selenium.waitForVisible("//input[@type='text']");
 		selenium.type("//input[@type='text']",
 			RuntimeVariables.replace("Test Page1"));
