@@ -72,7 +72,7 @@ boolean preview = ParamUtil.getBoolean(request, "preview");
 	</c:if>
 
 	<aui:fieldset>
-		<aui:input name="title" />
+		<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="title" />
 
 		<aui:input name="displayDate" />
 
@@ -153,7 +153,7 @@ boolean preview = ParamUtil.getBoolean(request, "preview");
 				String[] imageExtensions = PrefsPropsUtil.getStringArray(PropsKeys.BLOGS_IMAGE_EXTENSIONS, StringPool.COMMA);
 				%>
 
-				<liferay-ui:message key="image-names-must-end-with-one-of-the-following-extensions" /><aui:spacer /><%= StringUtil.merge(imageExtensions, ", ") %>.
+				<liferay-ui:message key="image-names-must-end-with-one-of-the-following-extensions" /> <%= StringUtil.merge(imageExtensions, ", ") %>.
 			</liferay-ui:error>
 
 			<liferay-ui:error exception="<%= EntrySmallImageSizeException.class %>">
@@ -444,10 +444,6 @@ boolean preview = ParamUtil.getBoolean(request, "preview");
 		},
 		['aui-io']
 	);
-
-	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-		Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />title);
-	</c:if>
 </aui:script>
 
 <aui:script use="aui-base">

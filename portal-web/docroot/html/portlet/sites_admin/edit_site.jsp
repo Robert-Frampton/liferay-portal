@@ -119,6 +119,17 @@ String[][] categorySections = {mainSections, seoSections, advancedSections, misc
 %>
 
 <c:if test="<%= !portletName.equals(PortletKeys.SITE_SETTINGS) %>">
+
+	<%
+	if (group != null) {
+		PortalUtil.addPortletBreadcrumbEntry(request, group.getDescriptiveName(locale), null);
+		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "edit"), currentURL);
+	}
+	else {
+		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "add-site"), currentURL);
+	}
+	%>
+
 	<liferay-util:include page="/html/portlet/sites_admin/toolbar.jsp">
 		<liferay-util:param name="toolbarItem" value='<%= (group == null) ? "add" : "browse" %>' />
 	</liferay-util:include>
@@ -226,10 +237,6 @@ String[][] categorySections = {mainSections, seoSections, advancedSections, misc
 			submitForm(document.<portlet:namespace />fm);
 		}
 	}
-
-	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-		Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />name);
-	</c:if>
 </aui:script>
 
 <aui:script use="aui-base">
@@ -262,16 +269,6 @@ String[][] categorySections = {mainSections, seoSections, advancedSections, misc
 		toggleCompatibleSiteTemplates();
 	}
 </aui:script>
-
-<%
-if (group != null) {
-	PortalUtil.addPortletBreadcrumbEntry(request, group.getDescriptiveName(locale), null);
-	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "edit"), currentURL);
-}
-else {
-	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "add-site"), currentURL);
-}
-%>
 
 <%!
 private static final String[] _CATEGORY_NAMES = {"basic-information", "search-engine-optimization", "advanced", "miscellaneous"};

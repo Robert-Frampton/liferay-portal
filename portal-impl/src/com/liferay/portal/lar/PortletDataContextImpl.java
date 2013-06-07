@@ -280,7 +280,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 		Class<?> clazz = classedModel.getModelClass();
 		long classPK = getClassPK(classedModel);
 
+		addAssetCategories(clazz, classPK);
 		addAssetLinks(clazz, classPK);
+		addAssetTags(clazz, classPK);
 		addExpando(element, path, classedModel);
 		addLocks(clazz, String.valueOf(classPK));
 		addPermissions(clazz, classPK);
@@ -288,20 +290,18 @@ public class PortletDataContextImpl implements PortletDataContext {
 		boolean portletDataAll = MapUtil.getBoolean(
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 
-		if (portletDataAll || getBooleanParameter(namespace, "categories")) {
-			addAssetCategories(clazz, classPK);
-		}
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.COMMENTS)) {
 
-		if (portletDataAll || getBooleanParameter(namespace, "comments")) {
 			addComments(clazz, classPK);
 		}
 
-		if (portletDataAll || getBooleanParameter(namespace, "ratings")) {
-			addRatingsEntries(clazz, classPK);
-		}
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.RATINGS)) {
 
-		if (portletDataAll || getBooleanParameter(namespace, "tags")) {
-			addAssetTags(clazz, classPK);
+			addRatingsEntries(clazz, classPK);
 		}
 
 		addZipEntry(path, classedModel);
@@ -365,6 +365,14 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		dynamicQuery.add(modifiedDateProperty.ge(_startDate));
 		dynamicQuery.add(modifiedDateProperty.lt(_endDate));
+	}
+
+	@Override
+	public void addDeletionEventClassNames(String... deletionEventClassNames) {
+		for (String deletionEventClassName : deletionEventClassNames) {
+			_deletionEventClassNameIds.add(
+				PortalUtil.getClassNameId(deletionEventClassName));
+		}
 	}
 
 	@Override
@@ -837,6 +845,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	@Override
+	public Set<Long> getDeletionEventClassNameIds() {
+		return _deletionEventClassNameIds;
+	}
+
 	public Date getEndDate() {
 		return _endDate;
 	}
@@ -1325,11 +1337,17 @@ public class PortletDataContextImpl implements PortletDataContext {
 		boolean portletDataAll = MapUtil.getBoolean(
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 
-		if (portletDataAll || getBooleanParameter(namespace, "comments")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.COMMENTS)) {
+
 			importComments(clazz, classPK, newClassPK, getScopeGroupId());
 		}
 
-		if (portletDataAll || getBooleanParameter(namespace, "ratings")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.RATINGS)) {
+
 			importRatingsEntries(clazz, classPK, newClassPK);
 		}
 	}
@@ -1851,23 +1869,14 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		// Asset
 
-		boolean portletDataAll = MapUtil.getBoolean(
-			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
-
 		if (isResourceMain(classedModel)) {
-			if (portletDataAll ||
-				getBooleanParameter(namespace, "categories")) {
+			long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
 
-				long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
+			serviceContext.setAssetCategoryIds(assetCategoryIds);
 
-				serviceContext.setAssetCategoryIds(assetCategoryIds);
-			}
+			String[] assetTagNames = getAssetTagNames(clazz, classPK);
 
-			if (portletDataAll || getBooleanParameter(namespace, "tags")) {
-				String[] assetTagNames = getAssetTagNames(clazz, classPK);
-
-				serviceContext.setAssetTagNames(assetTagNames);
-			}
+			serviceContext.setAssetTagNames(assetTagNames);
 		}
 
 		// Expando
@@ -1967,6 +1976,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 			StagedModel stagedModel = (StagedModel)classedModel;
 
 			referenceElement.addAttribute("uuid", stagedModel.getUuid());
+			referenceElement.addAttribute(
+				"company-id", String.valueOf(stagedModel.getCompanyId()));
 		}
 
 		return referenceElement;
@@ -2251,6 +2262,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private long _companyGroupId;
 	private long _companyId;
 	private String _dataStrategy;
+	private Set<Long> _deletionEventClassNameIds = new HashSet<Long>();
 	private Date _endDate;
 	private Map<String, List<ExpandoColumn>> _expandoColumnsMap =
 		new HashMap<String, List<ExpandoColumn>>();

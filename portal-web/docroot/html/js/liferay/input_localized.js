@@ -82,6 +82,14 @@ AUI.add(
 						inputPlaceholder.on('input', A.debounce('_onInputValueChange', 100, instance));
 					},
 
+					activateFlags: function() {
+						var instance = this;
+
+						instance._initializeTooltip();
+
+						instance._syncTranslatedLanguagesUI();
+					},
+
 					getSelectedLanguageId: function() {
 						var instance = this;
 
@@ -91,28 +99,10 @@ AUI.add(
 						return items[selected];
 					},
 
-					hideFlags: function() {
-						var instance = this;
-
-						instance._flags.hide();
-					},
-
-					showFlags: function() {
-						var instance = this;
-
-						instance._initializeTooltip();
-
-						instance._flags.show();
-
-						instance._syncTranslatedLanguagesUI();
-					},
-
 					_afterRenderUI: function() {
 						var instance = this;
 
 						instance._flags = instance.get('boundingBox').one('.palette-container');
-
-						instance.hideFlags();
 					},
 
 					_animate: function(input) {
@@ -211,7 +201,8 @@ AUI.add(
 									},
 									position: 'bottom',
 									trigger: '.palette-item',
-									visible: false
+									visible: false,
+									zIndex: Liferay.zIndex.WINDOW + 2
 								}
 							);
 						}
@@ -222,12 +213,7 @@ AUI.add(
 					_onFocusedChange: function(event) {
 						var instance = this;
 
-						if (event.newVal) {
-							instance.showFlags();
-						}
-						else {
-							instance.hideFlags();
-						}
+						instance.activateFlags();
 					},
 
 					_onInputValueChange: function(event) {
@@ -238,7 +224,7 @@ AUI.add(
 						var inputLanguage = instance._getInputLanguage(selectedLanguageId);
 						var defaultInputLanguage = instance._getInputLanguage(defaultLanguageId);
 
-						instance.showFlags();
+						instance.activateFlags();
 
 						var currentValue = event.currentTarget.val();
 

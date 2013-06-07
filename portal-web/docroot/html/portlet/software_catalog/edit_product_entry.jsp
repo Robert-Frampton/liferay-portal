@@ -72,7 +72,7 @@ int screenshotsCount = ParamUtil.getInteger(request, "screenshotsCount", product
 		<liferay-ui:message key="name" />
 	</td>
 	<td>
-		<liferay-ui:input-field bean="<%= productEntry %>" field="name" model="<%= SCProductEntry.class %>" />
+		<liferay-ui:input-field autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" bean="<%= productEntry %>" field="name" model="<%= SCProductEntry.class %>" />
 	</td>
 </tr>
 <tr>
@@ -248,7 +248,7 @@ int screenshotsCount = ParamUtil.getInteger(request, "screenshotsCount", product
 							</tr>
 							<tr>
 								<td colspan="2">
-									<liferay-ui:message key="use-existing-images" /><aui:spacer /><liferay-ui:input-checkbox param='<%= "preserveScreenshot" + i %>' defaultValue="<%= true %>" />
+									<liferay-ui:message key="use-existing-images" /> <liferay-ui:input-checkbox param='<%= "preserveScreenshot" + i %>' defaultValue="<%= true %>" />
 								</td>
 							</tr>
 						</table>
@@ -305,10 +305,6 @@ int screenshotsCount = ParamUtil.getInteger(request, "screenshotsCount", product
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (productEntry == null) ? Constants.ADD : Constants.UPDATE %>";
 		submitForm(document.<portlet:namespace />fm);
 	}
-
-	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-		Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />name);
-	</c:if>
 </aui:script>
 
 <%

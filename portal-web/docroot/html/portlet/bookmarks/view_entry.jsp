@@ -107,7 +107,7 @@ BookmarksUtil.addPortletBreadcrumbEntries(entry, request, renderResponse);
 			</div>
 
 			<div class="lfr-asset-icon lfr-asset-downloads last">
-				<%= entry.getVisits() %><aui:spacer /><liferay-ui:message key="visits" />
+				<%= entry.getVisits() %> <liferay-ui:message key="visits" />
 			</div>
 		</div>
 

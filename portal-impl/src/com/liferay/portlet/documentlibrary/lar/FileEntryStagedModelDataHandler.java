@@ -267,22 +267,10 @@ public class FileEntryStagedModelDataHandler
 		long folderId = MapUtil.getLong(
 			folderIds, fileEntry.getFolderId(), fileEntry.getFolderId());
 
-		long[] assetCategoryIds = null;
-		String[] assetTagNames = null;
-
-		if (portletDataContext.getBooleanParameter(
-				DLPortletDataHandler.NAMESPACE, "categories")) {
-
-			assetCategoryIds = portletDataContext.getAssetCategoryIds(
-				DLFileEntry.class, fileEntry.getFileEntryId());
-		}
-
-		if (portletDataContext.getBooleanParameter(
-				DLPortletDataHandler.NAMESPACE, "tags")) {
-
-			assetTagNames = portletDataContext.getAssetTagNames(
-				DLFileEntry.class, fileEntry.getFileEntryId());
-		}
+		long[] assetCategoryIds = portletDataContext.getAssetCategoryIds(
+			DLFileEntry.class, fileEntry.getFileEntryId());
+		String[] assetTagNames = portletDataContext.getAssetTagNames(
+			DLFileEntry.class, fileEntry.getFileEntryId());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			fileEntry, DLPortletDataHandler.NAMESPACE);
@@ -612,7 +600,9 @@ public class FileEntryStagedModelDataHandler
 	}
 
 	@Override
-	protected boolean validateMissingReference(String uuid, long groupId) {
+	protected boolean validateMissingReference(
+		String uuid, long companyId, long groupId) {
+
 		try {
 			DLFileEntry dlFileEntry = DLFileEntryUtil.fetchByUUID_G(
 				uuid, groupId);

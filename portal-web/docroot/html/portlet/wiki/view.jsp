@@ -331,10 +331,10 @@ long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayT
 
 					<c:choose>
 						<c:when test="<%= assetEntry.getViewCount() == 1 %>">
-							<%= assetEntry.getViewCount() %><aui:spacer /><liferay-ui:message key="view" />
+							<%= assetEntry.getViewCount() %> <liferay-ui:message key="view" />
 						</c:when>
 						<c:when test="<%= assetEntry.getViewCount() > 1 %>">
-							<%= assetEntry.getViewCount() %><aui:spacer /><liferay-ui:message key="views" />
+							<%= assetEntry.getViewCount() %> <liferay-ui:message key="views" />
 						</c:when>
 					</c:choose>
 				</div>
@@ -396,12 +396,6 @@ long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayT
 		);
 	}
 </aui:script>
-
-<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-	<aui:script>
-		Liferay.Util.focusFormField(document.<portlet:namespace />searchFm.<portlet:namespace />keywords);
-	</aui:script>
-</c:if>
 
 <%
 if ((wikiPage != null) && !wikiPage.getTitle().equals(WikiPageConstants.FRONT_PAGE)) {

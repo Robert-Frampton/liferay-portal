@@ -21,6 +21,8 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 ShoppingCoupon coupon = (ShoppingCoupon)request.getAttribute(WebKeys.SHOPPING_COUPON);
 
+boolean windowMaximized = windowState.equals(WindowState.MAXIMIZED);
+
 long couponId = BeanParamUtil.getLong(coupon, request, "couponId");
 
 String code = BeanParamUtil.getString(coupon, request, "code");
@@ -69,7 +71,7 @@ String discountType = BeanParamUtil.getString(coupon, request, "discountType");
 	<aui:fieldset>
 		<c:choose>
 			<c:when test="<%= coupon == null %>">
-				<aui:input name="code" />
+				<aui:input autoFocus="<%= windowMaximized %>" name="code" />
 
 				<aui:input label="autogenerate-code" name="autoCode" type="checkbox" />
 			</c:when>
@@ -80,7 +82,7 @@ String discountType = BeanParamUtil.getString(coupon, request, "discountType");
 			</c:otherwise>
 		</c:choose>
 
-		<aui:input name="name" />
+		<aui:input autoFocus="<%= windowMaximized && Validator.isNotNull(coupon) %>" name="name" />
 
 		<aui:input name="description" />
 
@@ -143,7 +145,7 @@ String discountType = BeanParamUtil.getString(coupon, request, "discountType");
 				List categoryIds = (List)errorException;
 				%>
 
-				<liferay-ui:message key="the-following-are-invalid-category-ids" /><aui:spacer /><%= StringUtil.merge((String[])categoryIds.toArray(new String[0])) %>
+				<liferay-ui:message key="the-following-are-invalid-category-ids" /> <%= StringUtil.merge((String[])categoryIds.toArray(new String[0])) %>
 			</liferay-ui:error>
 
 			<liferay-ui:error exception="<%= CouponLimitSKUsException.class %>">
@@ -152,7 +154,7 @@ String discountType = BeanParamUtil.getString(coupon, request, "discountType");
 				List skus = (List)errorException;
 				%>
 
-				<liferay-ui:message key="the-following-are-invalid-item-skus" /><aui:spacer /><%= StringUtil.merge((String[])skus.toArray(new String[0])) %>
+				<liferay-ui:message key="the-following-are-invalid-item-skus" /> <%= StringUtil.merge((String[])skus.toArray(new String[0])) %>
 			</liferay-ui:error>
 
 			<aui:fieldset>
@@ -190,8 +192,4 @@ String discountType = BeanParamUtil.getString(coupon, request, "discountType");
 	);
 
 	Liferay.Util.disableToggleBoxes('<portlet:namespace />autoCodeCheckbox', '<portlet:namespace />code', true);
-
-	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-		Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace /><%= (coupon == null) ? "code" : "name" %>);
-	</c:if>
 </aui:script>

@@ -161,7 +161,7 @@ Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.g
 		var navigation = A.one('#banner .nav');
 
 		if (navigation) {
-			var TPL_TAB_LINK = '<li class="lfr-nav-item lfr-nav-deletable lfr-nav-sortable lfr-nav-updateable yui3-dd-drop" aria-selected="true"><aui:spacer /><a class="" href="{url}" tabindex="-1"><span> {pageTitle} </span><aui:spacer /></a><aui:spacer /></li>';
+			var TPL_TAB_LINK = '<li class="lfr-nav-item lfr-nav-deletable lfr-nav-sortable lfr-nav-updateable yui3-dd-drop" aria-selected="true"><a class="" href="{url}" tabindex="-1"><span>{pageTitle}</span></a></li>';
 
 			var tabHtml = A.Lang.sub(
 				TPL_TAB_LINK,

@@ -98,6 +98,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.time.StopWatch;
 
@@ -285,8 +286,6 @@ public class PortletExporter {
 			Map<String, String[]> parameterMap, Date startDate, Date endDate)
 		throws Exception {
 
-		boolean exportCategories = MapUtil.getBoolean(
-			parameterMap, PortletDataHandlerKeys.CATEGORIES);
 		boolean exportPermissions = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PERMISSIONS);
 		boolean exportPortletArchivedSetups = MapUtil.getBoolean(
@@ -316,7 +315,6 @@ public class PortletExporter {
 			parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Export categories " + exportCategories);
 			_log.debug("Export permissions " + exportPermissions);
 			_log.debug(
 				"Export portlet archived setups " +
@@ -445,10 +443,7 @@ public class PortletExporter {
 			exportPortletData, exportPortletSetup,
 			exportPortletUserPreferences);
 
-		if (exportCategories) {
-			exportAssetCategories(portletDataContext);
-		}
-
+		exportAssetCategories(portletDataContext);
 		exportAssetLinks(portletDataContext);
 		exportAssetTags(portletDataContext);
 		exportComments(portletDataContext);
@@ -838,6 +833,22 @@ public class PortletExporter {
 		portletDataContext.addZipEntry(
 			ExportImportPathUtil.getRootPath(portletDataContext) +
 				"/comments.xml",
+			document.formattedString());
+	}
+
+	protected void exportDeletions(PortletDataContext portletDataContext)
+		throws Exception {
+
+		Document document = SAXReaderUtil.createDocument();
+
+		Element rootElement = document.addElement("deletions");
+
+		Set<Long> deletionEventClassNameIds =
+			portletDataContext.getDeletionEventClassNameIds();
+
+		portletDataContext.addZipEntry(
+			ExportImportPathUtil.getRootPath(portletDataContext) +
+				"/deletions.xml",
 			document.formattedString());
 	}
 
