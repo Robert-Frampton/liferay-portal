@@ -80,15 +80,19 @@ long parentFolderId = BeanParamUtil.getLong(folder, request, "parentFolderId", D
 				<portlet:param name="folderId" value="<%= String.valueOf(parentFolderId) %>" />
 			</portlet:renderURL>
 
-			<aui:a href="<%= viewFolderURL %>" id="parentFolderName"><%= parentFolderName %></aui:a>
+			<div class="input-append">
+				<span class="uneditable-input">
+					<aui:a href="<%= viewFolderURL %>" id="parentFolderName"><%= parentFolderName %></aui:a>
+				</span>
 
-			<aui:button name="selectFolderButton" value="select" />
+				<aui:button name="selectFolderButton" value="select" />
 
-			<%
-			String taglibRemoveFolder = "Liferay.Util.removeFolderSelection('parentFolderId', 'parentFolderName', '" + renderResponse.getNamespace() + "');";
-			%>
+				<%
+				String taglibRemoveFolder = "Liferay.Util.removeFolderSelection('parentFolderId', 'parentFolderName', '" + renderResponse.getNamespace() + "');";
+				%>
 
-			<aui:button name="removeFolderButton" onClick="<%= taglibRemoveFolder %>" value="remove" />
+				<aui:button name="removeFolderButton" onClick="<%= taglibRemoveFolder %>" value="remove" />
+			</div>
 		</aui:field-wrapper>
 		<aui:button-row>
 			<aui:button type="submit" value="move" />

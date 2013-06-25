@@ -319,9 +319,13 @@ for (DLFileShortcut curFileShortcut : fileShortcuts) {
 		</portlet:renderURL>
 
 		<aui:field-wrapper label="new-folder">
-			<aui:a href="<%= viewFolderURL %>" id="folderName"><%= folderName %></aui:a>
+			<div class="input-append">
+				<span class="uneditable-input">
+					<aui:a href="<%= viewFolderURL %>" id="folderName"><%= folderName %></aui:a>
+				</span>
 
-			<aui:button name="selectFolderButton" value="select" />
+				<aui:button name="selectFolderButton" value="select" />
+			</div>
 		</aui:field-wrapper>
 
 		<aui:button-row>

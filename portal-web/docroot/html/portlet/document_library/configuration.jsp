@@ -105,15 +105,19 @@ String emailBody = PrefsParamUtil.getString(portletPreferences, request, emailBo
 								<portlet:param name="folderId" value="<%= String.valueOf(rootFolderId) %>" />
 							</portlet:renderURL>
 
-							<aui:a href="<%= viewFolderURL %>" id="rootFolderName"><%= rootFolderName %></aui:a>
+							<div class="input-append">
+								<span class="uneditable-input">
+									<aui:a href="<%= viewFolderURL %>" id="rootFolderName"><%= rootFolderName %></aui:a>
+								</span>
 
-							<aui:button name="selectFolderButton" value="select" />
+								<aui:button name="selectFolderButton" value="select" />
 
-							<%
-							String taglibRemoveFolder = "Liferay.Util.removeFolderSelection('rootFolderId', 'rootFolderName', '" + renderResponse.getNamespace() + "');";
-							%>
+								<%
+								String taglibRemoveFolder = "Liferay.Util.removeFolderSelection('rootFolderId', 'rootFolderName', '" + renderResponse.getNamespace() + "');";
+								%>
 
-							<aui:button disabled="<%= rootFolderId <= 0 %>" name="removeFolderButton" onClick="<%= taglibRemoveFolder %>" value="remove" />
+								<aui:button disabled="<%= rootFolderId <= 0 %>" name="removeFolderButton" onClick="<%= taglibRemoveFolder %>" value="remove" />
+							</div>
 						</aui:field-wrapper>
 
 						<aui:input label="show-search" name="preferences--showFoldersSearch--" type="checkbox" value="<%= showFoldersSearch %>" />

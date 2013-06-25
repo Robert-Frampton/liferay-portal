@@ -125,7 +125,9 @@ else {
 						<portlet:param name="mbCategoryId" value="<%= String.valueOf(parentCategoryId) %>" />
 					</portlet:renderURL>
 
-					<aui:a href="<%= viewCategoryURL %>" id="parentCategoryName"><%= HtmlUtil.escape(parentCategoryName) %></aui:a>
+					<span class="uneditable-input">
+						<aui:a href="<%= viewCategoryURL %>" id="parentCategoryName"><%= HtmlUtil.escape(parentCategoryName) %></aui:a>
+					</span>
 				</aui:field-wrapper>
 			</c:if>
 		</c:if>

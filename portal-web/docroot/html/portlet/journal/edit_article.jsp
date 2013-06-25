@@ -287,6 +287,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 							<aui:button disabled="<%= languageId.equals(defaultLanguageId) || !ArrayUtil.contains(translations, languageId) %>" name="removeArticleLocaleButton" onClick='<%= renderResponse.getNamespace() + "removeArticleLocale();" %>' value="remove-translation" />
 						</c:otherwise>
 					</c:choose>
+
 					<aui:button href="<%= redirect %>" type="cancel" />
 				</aui:button-row>
 			</liferay-util:buffer>

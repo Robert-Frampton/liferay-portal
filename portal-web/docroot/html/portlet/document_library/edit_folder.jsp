@@ -97,7 +97,9 @@ if (workflowEnabled) {
 						<portlet:param name="folderId" value="<%= String.valueOf(parentFolderId) %>" />
 					</portlet:renderURL>
 
-					<aui:a href="<%= viewFolderURL %>" id="parentFolderName"><%= parentFolderName %></aui:a>
+					<span class="uneditable-input">
+						<aui:a href="<%= viewFolderURL %>" id="parentFolderName"><%= parentFolderName %></aui:a>
+					</span>
 				</aui:field-wrapper>
 			</c:if>
 

@@ -89,17 +89,19 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 					}
 					%>
 
-					<div id="<portlet:namespace />structure">
-						<%= ddmStructureName %>
+					<div class="input-append">
+						<span class="uneditable-input" id="<portlet:namespace />structure">
+							<%= ddmStructureName %>
 
-						<c:if test="<%= Validator.isNotNull (ddmStructureDescription) %>">
-							<em>(<%= ddmStructureDescription %>)</em>
-						</c:if>
+							<c:if test="<%= Validator.isNotNull (ddmStructureDescription) %>">
+								<em>(<%= ddmStructureDescription %>)</em>
+							</c:if>
+						</span>
+
+						<aui:button onClick='<%= renderResponse.getNamespace() + "openStructureSelector();" %>' value="select" />
+
+						<aui:button name="removeStructureButton" onClick='<%= renderResponse.getNamespace() + "removeStructure();" %>' value="remove" />
 					</div>
-
-					<aui:button onClick='<%= renderResponse.getNamespace() + "openStructureSelector();" %>' value="select" />
-
-					<aui:button name="removeStructureButton" onClick='<%= renderResponse.getNamespace() + "removeStructure();" %>' value="remove" />
 				</aui:field-wrapper>
 			</aui:fieldset>
 		</liferay-ui:panel>

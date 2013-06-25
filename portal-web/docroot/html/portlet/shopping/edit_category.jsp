@@ -72,20 +72,24 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 					<portlet:param name="categoryId" value="<%= String.valueOf(parentCategoryId) %>" />
 				</portlet:renderURL>
 
-				<aui:a href="<%= viewCategoryURL %>" id="parentCategoryName" label="<%= HtmlUtil.escape(parentCategoryName) %>" />
+				<div class="input-append">
+					<span class="uneditable-input">
+						<aui:a href="<%= viewCategoryURL %>" id="parentCategoryName" label="<%= HtmlUtil.escape(parentCategoryName) %>" />
+					</span>
 
-				<portlet:renderURL var="selectCategoryURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-					<portlet:param name="struts_action" value="/shopping/select_category" />
-					<portlet:param name="categoryId" value="<%= String.valueOf(parentCategoryId) %>" />
-				</portlet:renderURL>
+					<portlet:renderURL var="selectCategoryURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+						<portlet:param name="struts_action" value="/shopping/select_category" />
+						<portlet:param name="categoryId" value="<%= String.valueOf(parentCategoryId) %>" />
+					</portlet:renderURL>
 
-				<%
-				String taglibOpenCategoryWindow = "var categoryWindow = window.open('" + selectCategoryURL + "', 'category', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680'); void('');categoryWindow.focus();";
-				%>
+					<%
+					String taglibOpenCategoryWindow = "var categoryWindow = window.open('" + selectCategoryURL + "', 'category', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680'); void('');categoryWindow.focus();";
+					%>
 
-				<aui:button onClick="<%= taglibOpenCategoryWindow %>" value="select" />
+					<aui:button onClick="<%= taglibOpenCategoryWindow %>" value="select" />
 
-				<aui:button onClick='<%= renderResponse.getNamespace() + "removeCategory();" %>' value="remove" />
+					<aui:button onClick='<%= renderResponse.getNamespace() + "removeCategory();" %>' value="remove" />
+				</div>
 
 				<div id="<portlet:namespace />merge-with-parent-checkbox-div"
 					<c:if test="<%= category.getParentCategoryId() == ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>">

@@ -134,11 +134,15 @@ if (Validator.isNotNull(structureAvailableFields)) {
 			<liferay-ui:panel collapsible="<%= true %>" defaultState="closed" extended="<%= false %>" id="templateDetailsSectionPanel" persistState="<%= true %>" title="details">
 				<c:if test="<%= ddmDisplay.isShowStructureSelector() %>">
 					<aui:field-wrapper helpMessage="structure-help" label="structure">
-						<span class="uneditable-input">
-							<c:if test="<%= structure != null %>">
+						<c:choose>
+							<c:when test="<%= structure != null %>">
 								<liferay-ui:input-resource url="<%= HtmlUtil.escape(structure.getName(locale)) %>" />
-							</c:if>
-						</span>
+							</c:when>
+							<c:otherwise>
+								<liferay-ui:input-resource url="" />
+							</c:otherwise>
+						</c:choose>
+						
 
 						<c:if test="<%= ((template == null) || (template.getClassPK() == 0)) %>">
 							<liferay-ui:icon
