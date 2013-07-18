@@ -178,8 +178,8 @@ $dockbarOpenGradientStart: #0EA6F9;
 	}
 
 	.input-localized .input-localized-content {
-		margin-left: 6px;
-		margin-top: 0;
+		margin-left: 0;
+		margin-top: 5px;
 	}
 
 	/* ---------- Dockbar ---------- */
@@ -589,6 +589,10 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 	}
 
+	.navbar-search {
+		margin-top: 9px;
+	}
+
 	/* ---------- Vocabularies select box in sites categories ---------- */
 
 	.portlet-asset-category-admin {
@@ -727,5 +731,9 @@ $dockbarOpenGradientStart: #0EA6F9;
 			@include border-radius(0);
 			@include box-shadow(-3px 0px 2px -2px #F5F5F5);
 		}
+	}
+
+	.display-style-buttons-container {
+		margin-top: 4px;
 	}
 }

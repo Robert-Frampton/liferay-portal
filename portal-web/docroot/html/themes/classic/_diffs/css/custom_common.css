@@ -59,7 +59,7 @@
 		border: 1px solid #DDD;
 		color: #8D8D8D;
 		font-weight: lighter;
-		margin-bottom: 7px;
+		margin-bottom: 0;
 
 		&:focus {
 			border-color: rgba(0, 172, 255, 0.8);
@@ -121,6 +121,7 @@
 	}
 
 	.input-append {
+		margin-top: 4px;
 		padding-right: 12px;
 	}
 
@@ -574,5 +575,14 @@
 
 	body.yui3-skin-sam .yui3-widget-mask {
 		@include opacity(0.8);
+	}
+
+	.input-localized .input-localized-content {
+		margin-left: 0;
+		margin-top: 5px;
+	}
+
+	.lfr-table tr td, .lfr-table tr th {
+		padding: 5px;
 	}
 }

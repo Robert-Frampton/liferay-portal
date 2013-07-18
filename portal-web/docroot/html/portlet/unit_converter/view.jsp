@@ -206,7 +206,7 @@ Conversion conversion = ConverterUtil.getConversion(type, fromId, toId, fromValu
 
 <br />
 
-<input type="submit" value="<liferay-ui:message key="convert" />" />
+<aui:button type="submit" value="convert" />
 
 </form>
 

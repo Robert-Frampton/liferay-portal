@@ -275,18 +275,20 @@ int screenshotsCount = ParamUtil.getInteger(request, "screenshotsCount", product
 
 			</table>
 
-			<input onClick="<portlet:namespace />addScreenShot();" type="button" value="<liferay-ui:message key="add-screenshot" />" />
+
+
+			<aui:button onClick='<%= renderResponse.getNamespace() + "addScreenShot();" %>' value="add-screenshot" />
 
 			<c:if test="<%= screenshotsCount > 0 %>">
-				<input onClick="<portlet:namespace />removeScreenShot();" type="button" value="<liferay-ui:message key="remove-screenshot" />" />
+				<aui:button onClick='<%= renderResponse.getNamespace() + "removeScreenShot();" %>' value="remove-screenshot" />
 			</c:if>
 		</liferay-ui:panel>
 	</liferay-ui:panel-container>
 </div>
 
-<input type="submit" value="<liferay-ui:message key="save" />" />
+<aui:button type="submit" value="save" />
 
-<input onClick="location.href = '<%= HtmlUtil.escape(PortalUtil.escapeRedirect(redirect)) %>';" type="button" value="<liferay-ui:message key="cancel" />" />
+<aui:button onClick="<%= HtmlUtil.escape(PortalUtil.escapeRedirect(redirect)) %>" value="cancel" />
 
 </form>
 
