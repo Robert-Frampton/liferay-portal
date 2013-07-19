@@ -186,7 +186,11 @@ Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.g
 </c:if>
 
 <aui:script use="liferay-dockbar-add-page">
-	new Liferay.Dockbar.AddPage(
+	var Dockbar = Liferay.Dockbar;
+
+	Liferay.InputLocalized._instances[Dockbar._namespace + 'name'] = null;
+
+	new Dockbar.AddPage(
 		{
 			createPageMessage: '<%= LanguageUtil.get(pageContext, "loading") %>',
 			focusItem: A.one('#<portlet:namespace />name'),
