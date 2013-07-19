@@ -103,7 +103,7 @@ catch (Exception e) {
 
 <br /><br />
 
-<input type="submit" value="<liferay-ui:message key="generate" />" />
+<aui:button type="submit" value="generate" />
 
 </form>
 

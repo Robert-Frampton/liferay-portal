@@ -261,7 +261,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 			</select>
 
-			<input type="submit" value="<liferay-ui:message key="search" />" />
+			<aui:button type="submit" value="search" />
 		</div>
 
 		<br />
@@ -269,7 +269,7 @@ portletURL.setParameter("tabs1", tabs1);
 		<c:if test="<%= showAddProductEntryButton && showPermissionsButton %>">
 			<div>
 				<c:if test="<%= showAddProductEntryButton %>">
-					<input onClick="<portlet:namespace />addProduct();" type="button" value="<liferay-ui:message key="add-product" />" />
+					<aui:button onClick='<%= renderResponse.getNamespace() + "addProduct();" %>' value="add-product" />
 				</c:if>
 
 				<c:if test="<%= showPermissionsButton %>">
@@ -280,7 +280,7 @@ portletURL.setParameter("tabs1", tabs1);
 						var="permissionsURL"
 					/>
 
-					<input onClick="location.href = '<%= permissionsURL %>';" type="button" value="<liferay-ui:message key="permissions" />" />
+					<aui:button href="<%= permissionsURL %>" value="permissions" />
 				</c:if>
 			</div>
 
@@ -445,7 +445,12 @@ portletURL.setParameter("tabs1", tabs1);
 
 		<c:if test="<%= showAddProductEntryButton %>">
 			<div>
-				<input onClick="location.href = '<portlet:renderURL><portlet:param name="struts_action" value="/software_catalog/edit_product_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>';" type="button" value="<liferay-ui:message key="add-product" />" />
+				<portlet:renderURL var="addProductURL">
+					<portlet:param name="struts_action" value="/software_catalog/edit_product_entry" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+				</portlet:renderURL>
+
+				<aui:button onClick="<%= addProductURL %>" value="add-product" />
 			</div>
 
 			<br />
@@ -529,7 +534,13 @@ portletURL.setParameter("tabs1", tabs1);
 		<c:if test="<%= showAddFrameworkVersionButton || showPermissionsButton %>">
 			<div>
 				<c:if test="<%= showAddFrameworkVersionButton %>">
-					<input onClick="location.href = '<portlet:renderURL><portlet:param name="struts_action" value="/software_catalog/edit_framework_version" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>';" type="button" value="<liferay-ui:message key="add-framework-version" />" />
+					<portlet:renderURL var="addFrameworkVersionURL">
+					<portlet:param name="struts_action" value="/software_catalog/edit_framework_version" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+					</portlet:renderURL>
+
+					<aui:button onClick="<%= addFrameworkVersionURL %>" value="add-framework-version" />
+
 				</c:if>
 
 				<c:if test="<%= showPermissionsButton %>">
@@ -540,7 +551,7 @@ portletURL.setParameter("tabs1", tabs1);
 						var="permissionsURL"
 					/>
 
-					<input onClick="location.href = '<%= permissionsURL %>';" type="button" value="<liferay-ui:message key="permissions" />" />
+					<aui:button onClick="<%= permissionsURL %>" value="permissions" />
 				</c:if>
 			</div>
 
@@ -637,7 +648,12 @@ portletURL.setParameter("tabs1", tabs1);
 
 		<c:if test="<%= hasAddLicensePermission %>">
 			<div>
-				<input onClick="location.href = '<portlet:renderURL><portlet:param name="struts_action" value="/software_catalog/edit_license" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>';" type="button" value="<liferay-ui:message key="add-license" />" />
+				<portlet:renderURL var="addLicenseURL">
+					<portlet:param name="struts_action" value="/software_catalog/edit_license" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+				</portlet:renderURL>
+
+				<aui:button onClick="<%= addLicenseURL %>" value="add-license" />
 			</div>
 
 			<br />

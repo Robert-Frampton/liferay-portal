@@ -172,10 +172,9 @@ editProductEntryURL.setParameter("productEntryId", String.valueOf(productEntryId
 
 <br />
 
-<input type="submit" value="<liferay-ui:message key="save" />" />
+<aui:button type="submit" value="save" />
 
-<input onClick="location.href = '<%= HtmlUtil.escape(PortalUtil.escapeRedirect(redirect)) %>';" type="button" value="<liferay-ui:message key="cancel" />" />
-
+<aui:button onClick="<%= HtmlUtil.escape(PortalUtil.escapeRedirect(redirect)) %>" value="cancel" />
 </form>
 
 <aui:script>

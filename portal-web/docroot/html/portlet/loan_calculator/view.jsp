@@ -93,7 +93,7 @@ integerFormat.setMinimumFractionDigits(0);
 
 <br />
 
-<input type="submit" value="<liferay-ui:message key="calculate" />" />
+<aui:button type="submit" value="calculate" />
 
 </form>
 

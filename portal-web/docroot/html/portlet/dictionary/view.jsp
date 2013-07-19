@@ -25,6 +25,6 @@
 	<option value="http://thesaurus.reference.com/search?q="><liferay-ui:message key="thesaurus" /></option>
 </select>
 
-<input type="submit" value="<liferay-ui:message key="find" />" />
+<aui:button type="submit" value="find" />
 
 </form>
