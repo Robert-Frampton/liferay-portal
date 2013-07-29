@@ -66,100 +66,82 @@ userTracker = userTracker.toEscapedModel();
 
 			<liferay-ui:panel-container extended="<%= true %>" id="monitoringSessionHistoryPanelContainer" persistState="<%= true %>">
 				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="monitoringSessionPanel" persistState="<%= false %>" title="session">
-					<table class="table table-bordered table-hover table-striped">
-					<tr>
-						<th>
+					<dl>
+						<dt>
 							<liferay-ui:message key="session-id" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= HtmlUtil.escape(sessionId) %>
-						</td>
-					</tr>
-					<tr>
-						<th>
+						</dd>
+						<dt>
 							<liferay-ui:message key="user-id" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= userTracker.getUserId() %>
-						</td>
-					</tr>
-					<tr>
-						<th>
+						</dd>
+						<dt>
 							<liferay-ui:message key="name" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= (user2 != null) ? HtmlUtil.escape(user2.getFullName()) : LanguageUtil.get(pageContext, "not-available") %>
-						</td>
-					</tr>
-					<tr>
-						<th>
+						</dd>
+						<dt>
 							<liferay-ui:message key="email-address" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= (user2 != null) ? user2.getEmailAddress() : LanguageUtil.get(pageContext, "not-available") %>
-						</td>
-					</tr>
-					<tr>
-						<th>
+						</dd>
+						<dt>
 							<liferay-ui:message key="last-request" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= dateFormatDateTime.format(userTracker.getModifiedDate()) %>
-						</td>
-					</tr>
-					<tr>
-						<th>
+						</dd>
+						<dt>
 							<liferay-ui:message key="num-of-hits" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= numHits %>
-						</td>
-					</tr>
-					<tr>
-						<th>
+						</dd>
+						<dt>
 							<liferay-ui:message key="browser-os-type" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= userTracker.getUserAgent() %>
-						</td>
-					</tr>
-					<tr>
-						<th>
+						</dd>
+						<dt>
 							<liferay-ui:message key="remote-host-ip" />
-						</th>
-						<td>
+						</dt>
+						<dd>
 							<%= userTracker.getRemoteAddr() %> / <%= userTracker.getRemoteHost() %>
-						</td>
-					</tr>
-					</table>
+						</dd>
+					</dl>
 				</liferay-ui:panel>
 
 				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="sessionAccessedURLsPanels" persistState="<%= true %>" title="accessed-urls">
-					<table class="table table-bordered table-hover table-striped">
+					<dl>
 
 						<%
 						for (int i = 0; i < paths.size(); i++) {
 							UserTrackerPath userTrackerPath = paths.get(i);
 						%>
 
-							<tr>
-								<td class="table-cell">
-									<%= StringUtil.replace(userTrackerPath.getPath(), "&", "& ") %>
-								</td>
-								<td class="table-cell lfr-top" nowrap="nowrap">
-									<%= dateFormatDateTime.format(userTrackerPath.getPathDate()) %>
-								</td>
-							</tr>
+						<dt>
+							<%= StringUtil.replace(userTrackerPath.getPath(), "&", "& ") %>
+						</dt>
+						<dd>
+							<%= dateFormatDateTime.format(userTrackerPath.getPathDate()) %>
+						</dd>
 
 						<%
 						}
 						%>
 
-					</table>
+					</dl>
 				</liferay-ui:panel>
 
 				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="monitoringSessionAttributesPanel" persistState="<%= true %>" title="session-attributes">
-					<table class="table table-bordered table-hover table-striped">
+					<dl>
 
 						<%
 						userSessionAlive = true;
@@ -181,12 +163,10 @@ userTracker = userTracker.toEscapedModel();
 								for (String attrName : sortedAttrNames) {
 						%>
 
-									<tr>
-										<td class="table-cell">
-											<%= attrName %>
-										</td>
-									</tr>
-
+									<dt>
+										<%= attrName %>
+									</dt>
+								
 						<%
 								}
 							}
@@ -198,7 +178,7 @@ userTracker = userTracker.toEscapedModel();
 						}
 						%>
 
-						</table>
+					</dl>
 				</liferay-ui:panel>
 			</liferay-ui:panel-container>
 

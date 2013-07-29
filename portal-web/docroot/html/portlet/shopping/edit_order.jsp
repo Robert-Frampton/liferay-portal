@@ -55,214 +55,163 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 	</c:choose>
 
 	<div class="well">
-		<table class="lfr-table">
-		<tr>
-			<th class="text-left">
-				<liferay-ui:message key="order" /> #:
-			</th>
-			<td>
-				<strong><%= order.getNumber() %></strong>
-			</td>
-		</tr>
-		<tr>
-			<th class="text-left">
-				<liferay-ui:message key="order-date" />:
-			</th>
-			<td>
+		<h4><liferay-ui:message key="order" /> Information</h4>
+		<dl>
+			<dt>
+				<liferay-ui:message key="order" /> #
+			</dt>
+			<dd>
+				<%= order.getNumber() %>
+			</dd>
+			<dt>
+				<liferay-ui:message key="order-date" />
+			</dt>
+			<dd>
 				<%= dateFormatDateTime.format(order.getCreateDate()) %>
-			</td>
-		</tr>
-		<tr>
-			<th class="text-left">
-				<liferay-ui:message key="last-modified" />:
-			</th>
-			<td>
+			</dd>
+			<dt>
+				<liferay-ui:message key="last-modified" />
+			</dt>
+			<dd>
 				<%= dateFormatDateTime.format(order.getModifiedDate()) %>
-			</td>
-		</tr>
-		</table>
+			</dd>
+		</dl>
 	</div>
 
 	<div class="row-fluid">
 		<div class="span6">
 			<div class="well">
-				<strong><liferay-ui:message key="billing-address" /></strong>
-
-				<br /><br />
-
-				<table class="lfr-table">
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="first-name" />:
-					</th>
-					<td>
+				<h4><liferay-ui:message key="billing-address" /></h4>
+				<dl>
+					<dt>
+						<liferay-ui:message key="first-name" />
+					</dt>
+					<dd>
 						<%= order.getBillingFirstName() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="last-name" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="last-name" />
+					</dt>
+					<dd>
 						<%= order.getBillingLastName() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="email-address" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="email-address" />
+					</dt>
+					<dd>
 						<%= order.getBillingEmailAddress() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="company" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="company" />
+					</dt>
+					<dd>
 						<%= order.getBillingCompany() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="street" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="street" />
+					</dt>
+					<dd>
 						<%= order.getBillingStreet() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
+					</dd>
+					<dt>
 						<liferay-ui:message key="city" />
-					</th>
-					<td>
-						<%= order.getBillingCity() %>:
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="state" />:
-					</th>
-					<td>
+					</dt>
+					<dd>
+						<%= order.getBillingCity() %>
+					</dd>
+					<dt>
+						<liferay-ui:message key="state" />
+					</dt>
+					<dd>
 						<%= order.getBillingState() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="postal-code" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="postal-code" />
+					</dt>
+					<dd>
 						<%= order.getBillingZip() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="country" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="country" />
+					</dt>
+					<dd>
 						<%= order.getBillingCountry() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="phone" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="phone" />
+					</dt>
+					<dd>
 						<%= order.getBillingPhone() %>
-					</td>
-				</tr>
-				</table>
+					</dd>
+				</dl>
 			</div>
 		</div>
 
 		<div class="span6">
 			<div class="well">
-				<strong><liferay-ui:message key="shipping-address" /></strong>
-
-				<br /><br />
-
-				<table class="lfr-table">
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="first-name" />:
-					</th>
-					<td>
+				<h4><liferay-ui:message key="shipping-address" /></h4>
+				<dl>
+					<dt>
+						<liferay-ui:message key="first-name" />
+					</dt>
+					<dd>
 						<%= order.getShippingFirstName() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="last-name" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="last-name" />
+					</dt>
+					<dd>
 						<%= order.getShippingLastName() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="email-address" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="email-address" />
+					</dt>
+					<dd>
 						<%= order.getShippingEmailAddress() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="company" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="company" />
+					</dt>
+					<dd>
 						<%= order.getShippingCompany() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="street" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="street" />
+					</dt>
+					<dd>
 						<%= order.getShippingStreet() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
+					</dd>
+					<dt>
 						<liferay-ui:message key="city" />
-					</th>
-					<td>
-						<%= order.getShippingCity() %>:
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="state" />:
-					</th>
-					<td>
+					</dt>
+					<dd>
+						<%= order.getShippingCity() %>
+					</dd>
+					<dt>
+						<liferay-ui:message key="state" />
+					</dt>
+					<dd>
 						<%= order.getShippingState() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="postal-code" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="postal-code" />
+					</dt>
+					<dd>
 						<%= order.getShippingZip() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="country" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="country" />
+					</dt>
+					<dd>
 						<%= order.getShippingCountry() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="phone" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="phone" />
+					</dt>
+					<dd>
 						<%= order.getShippingPhone() %>
-					</td>
-				</tr>
-				</table>
+					</dd>
+				</dl>
 			</div>
 		</div>
 	</div>
@@ -309,56 +258,41 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 				</aui:fieldset>
 			</c:when>
 			<c:otherwise>
-				<strong><liferay-ui:message key="credit-card" /></strong>
-
-				<br /><br />
-
-				<table class="lfr-table">
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="full-name" />:
-					</th>
-					<td>
+				<h4><liferay-ui:message key="credit-card" /></h4>
+				<dl>
+					<dt>
+						<liferay-ui:message key="full-name" />
+					</dt>
+					<dd>
 						<%= order.getCcName() %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="type" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="type" />
+					</dt>
+					<dd>
 						<liferay-ui:message key='<%= "cc_" + order.getCcType() %>' />
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="number" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="number" />
+					</dt>
+					<dd>
 						<%= CreditCard.hide(order.getCcNumber()) %>
-					</td>
-				</tr>
-				<tr>
-					<th class="text-left">
-						<liferay-ui:message key="expiration-date" />:
-					</th>
-					<td>
+					</dd>
+					<dt>
+						<liferay-ui:message key="expiration-date" />
+					</dt>
+					<dd>
 						<%= CalendarUtil.getMonths(locale)[order.getCcExpMonth()] %>, <%= order.getCcExpYear() %>
-					</td>
-				</tr>
-
-				<c:if test="<%= Validator.isNotNull(order.getCcVerNumber()) %>">
-					<tr>
-						<th class="text-left">
-							<liferay-ui:message key="verification-number" />:
-						</th>
-						<td>
+					</dd>
+					<c:if test="<%= Validator.isNotNull(order.getCcVerNumber()) %>">
+						<dt>
+							<liferay-ui:message key="verification-number" />
+						</dt>
+						<dd>
 							<%= order.getCcVerNumber() %>
-						</td>
-					</tr>
-				</c:if>
-
-				</table>
+						</dd>
+					</c:if>
+				</dl>
 			</c:otherwise>
 		</c:choose>
 	</div>
@@ -463,49 +397,38 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 	<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
 
 	<div class="well">
-		<table class="lfr-table">
-		<tr>
-			<th class="text-left">
-				<liferay-ui:message key="subtotal" />:
-			</th>
-			<td>
+		<dl>
+			<dt>
+				<liferay-ui:message key="subtotal" />
+			</dt>
+			<dd>
 				<%= currencyFormat.format(ShoppingUtil.calculateActualSubtotal(results)) %>
-			</td>
-		</tr>
-		<tr>
-			<th class="text-left">
-				<liferay-ui:message key="tax" />:
-			</th>
-			<td>
+			</dd>
+			<dt>
+				<liferay-ui:message key="tax" />
+			</dt>
+			<dd>
 				<%= currencyFormat.format(order.getTax()) %>
-			</td>
-		</tr>
-		<tr>
-			<th class="text-left">
+			</dd>
+			<dt>
 				<liferay-ui:message key="shipping" /> <%= Validator.isNotNull(order.getAltShipping()) ? "(" + order.getAltShipping() + ")" : StringPool.BLANK %>
-			</th>
-			<td>
+			</dt>
+			<dd>
 				<%= currencyFormat.format(order.getShipping()) %>
-			</td>
-		</tr>
-
-		<c:if test="<%= order.isInsure() %>">
-			<tr>
-				<th class="text-left">
-					<liferay-ui:message key="insurance" />:
-				</th>
-				<td>
+			</dd>
+			<c:if test="<%= order.isInsure() %>">
+				<dt>
+					<liferay-ui:message key="insurance" />
+				</dt>
+				<dd>
 					<%= currencyFormat.format(order.getInsurance()) %>
-				</td>
-			</tr>
-		</c:if>
-
-		<c:if test="<%= Validator.isNotNull(order.getCouponCodes()) %>">
-			<tr>
-				<th class="text-left">
-					<liferay-ui:message key="coupon-discount" />:
-				</th>
-				<td>
+				</dd>
+			</c:if>
+			<c:if test="<%= Validator.isNotNull(order.getCouponCodes()) %>">
+				<dt>
+					<liferay-ui:message key="coupon-discount" />
+				</dt>
+				<dd>
 					<%= currencyFormat.format(order.getCouponDiscount()) %>
 
 					<portlet:renderURL var="viewCouponURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
@@ -518,19 +441,15 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 					%>
 
 					<aui:a href='<%= "javascript:" + taglibOpenCouponWindow %>' label='<%= "(" + LanguageUtil.get(pageContext, order.getCouponCodes()) + ")" %>' />
-				</td>
-			</tr>
-		</c:if>
-
-		<tr>
-			<th class="text-left">
-				<liferay-ui:message key="total" />:
-			</th>
-			<td>
+				</dd>
+			</c:if>
+			<dt>
+				<liferay-ui:message key="total" />
+			</dt>
+			<dd>
 				<%= currencyFormat.format(ShoppingUtil.calculateTotal(order)) %>
-			</td>
-		</tr>
-		</table>
+			</dd>
+		</dl>
 	</div>
 
 	<c:if test="<%= !windowState.equals(LiferayWindowState.POP_UP) %>">
