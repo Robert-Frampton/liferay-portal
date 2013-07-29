@@ -616,6 +616,12 @@ $dockbarOpenGradientStart: #0EA6F9;
 		margin-left: 0;
 	}
 
+	/* ---------- Site Pages Export Menu ---------- */
+
+	.modal-footer:after {
+		height: 20px;
+	}
+
 	/* ---------- My Account Popup ---------- */
 
 	button {
