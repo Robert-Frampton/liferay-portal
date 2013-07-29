@@ -244,9 +244,7 @@ catch (NoSuchArticleException nsae) {
 
 	<aui:fieldset>
 		<aui:field-wrapper label="portlet-id">
-			<span class="uneditable-input">
-				<%= HtmlUtil.escape(portletResource) %>
-			</span>
+			<liferay-ui:input-resource url="<%= HtmlUtil.escape(portletResource) %>" />
 		</aui:field-wrapper>
 	</aui:fieldset>
 

@@ -59,17 +59,13 @@ portletURL.setParameter("struts_action", "/workflow_definitions/view");
 	<aui:fieldset>
 		<c:if test="<%= workflowDefinition != null %>">
 			<aui:field-wrapper helpMessage="the-definition-name-is-defined-in-the-workflow-definition-file" label="name">
-				<span class="uneditable-input">
-					<%= name %>
-				</span>
+				<liferay-ui:input-resource url="<%= name %>" />
 			</aui:field-wrapper>
 		</c:if>
 
-		<span>
-			<liferay-ui:message key="title" />
-		</span>
-
-		<liferay-ui:input-localized name="title" xml='<%= BeanPropertiesUtil.getString(workflowDefinition, "title") %>' />
+		<aui:field-wrapper label="title">
+			<liferay-ui:input-localized name="title" xml='<%= BeanPropertiesUtil.getString(workflowDefinition, "title") %>' />
+		</aui:field-wrapper>
 
 		<aui:input name="file" type="file" />
 

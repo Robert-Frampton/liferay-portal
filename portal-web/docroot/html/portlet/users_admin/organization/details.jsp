@@ -95,9 +95,7 @@ User selUser = (User)request.getAttribute("user.selUser");
 		</c:when>
 		<c:otherwise>
 			<aui:field-wrapper label="type">
-				<span class="uneditable-input">
-					<liferay-ui:message key="<%= organization.getType() %>" />
-				</span>
+				<liferay-ui:input-resource url="<%= LanguageUtil.get(pageContext, organization.getType()) %>" />
 			</aui:field-wrapper>
 
 			<aui:input name="type" type="hidden" value="<%= organization.getType() %>" />
@@ -114,9 +112,7 @@ User selUser = (User)request.getAttribute("user.selUser");
 
 	<c:if test="<%= organization != null %>">
 		<aui:field-wrapper label="site-id">
-			<span class="uneditable-input">
-				<%= groupId %>
-			</span>
+			<liferay-ui:input-resource url="<%= String.valueOf(groupId) %>" />
 		</aui:field-wrapper>
 	</c:if>
 </aui:fieldset>

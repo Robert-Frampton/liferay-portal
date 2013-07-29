@@ -136,7 +136,7 @@ if (Validator.isNotNull(structureAvailableFields)) {
 					<aui:field-wrapper helpMessage="structure-help" label="structure">
 						<span class="uneditable-input">
 							<c:if test="<%= structure != null %>">
-								<%= HtmlUtil.escape(structure.getName(locale)) %>
+								<liferay-ui:input-resource url="<%= HtmlUtil.escape(structure.getName(locale)) %>" />
 							</c:if>
 						</span>
 

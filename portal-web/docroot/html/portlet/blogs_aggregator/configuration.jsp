@@ -46,9 +46,7 @@ if (organizationId > 0) {
 		<div id="<portlet:namespace />usersSelectionOptions">
 			<aui:field-wrapper label="organization">
 				<div class="input-append">
-					<span id="<portlet:namespace />organizationName" class="uneditable-input">
-						<%= HtmlUtil.escape(organizationName) %>
-					</span>
+					<liferay-ui:input-resource id="organizationName" url="<%= HtmlUtil.escape(organizationName) %>" />
 
 					<aui:button name="selectOrganizationButton" value="select" />
 
@@ -110,7 +108,7 @@ if (organizationId > 0) {
 
 		var nameEl = document.getElementById("<portlet:namespace />organizationName");
 
-		nameEl.innerHTML = "";
+		nameEl.value = "";
 
 		document.getElementById("<portlet:namespace />removeOrganizationButton").disabled = true;
 	}
@@ -135,7 +133,7 @@ if (organizationId > 0) {
 
 					var nameEl = document.getElementById('<portlet:namespace />organizationName');
 
-					nameEl.innerHTML = event.name + '&nbsp;';
+					nameEl.value = event.name;
 
 					document.getElementById('<portlet:namespace />removeOrganizationButton').disabled = false;
 				}

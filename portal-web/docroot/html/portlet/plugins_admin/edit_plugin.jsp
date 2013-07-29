@@ -58,15 +58,11 @@ if (pluginType.equals(Plugin.TYPE_PORTLET)) {
 
 	<aui:fieldset>
 		<aui:field-wrapper label="module-id">
-			<span class="uneditable-input">
-				<%= HtmlUtil.escape(moduleId) %>
-			</span>
+			<liferay-ui:input-resource url="<%= HtmlUtil.escape(moduleId) %>" />
 		</aui:field-wrapper>
 
 		<aui:field-wrapper label="plugin-id">
-			<span class="uneditable-input">
-				<%= HtmlUtil.escape(pluginId) %>
-			</span>
+			<liferay-ui:input-resource url="<%= HtmlUtil.escape(pluginId) %>" />
 		</aui:field-wrapper>
 
 		<aui:input name="active" type="checkbox" value="<%= active %>" />

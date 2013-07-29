@@ -159,15 +159,18 @@ configurationRenderURL.setParameter("portletResource", portletResource);
 
 						<aui:field-wrapper label="header-web-content">
 							<div class="input-append">
-								<span class="uneditable-input">
-									<c:if test="<%= Validator.isNotNull(headerArticleId) %>">
+								<c:choose>
+									<c:when test="<%= Validator.isNotNull(headerArticleId) %>">
 										<%
 										JournalArticle headerArticle = JournalArticleLocalServiceUtil.getArticle(headerArticleGroupId, headerArticleId);
 										%>
 
-										<%= HtmlUtil.escape(headerArticle.getTitle(locale)) %>
-									</c:if>
-								</span>
+										<liferay-ui:input-resource url="<%= HtmlUtil.escape(headerArticle.getTitle(locale)) %>" />
+									</c:when>
+									<c:otherwise>
+										<liferay-ui:input-resource url="" />
+									</c:otherwise>
+								</c:choose>
 
 								<aui:button name="selectButton" onClick='<%= renderResponse.getNamespace() + "selectionForHeader();" %>' value="select" />
 
@@ -177,15 +180,18 @@ configurationRenderURL.setParameter("portletResource", portletResource);
 
 						<aui:field-wrapper label="footer-web-content">
 							<div class="input-append">
-								<span class="uneditable-input">
-									<c:if test="<%= Validator.isNotNull(footerArticleId) %>">
+								<c:choose>
+									<c:when test="<%= Validator.isNotNull(footerArticleId) %>">
 										<%
 										JournalArticle footerArticle = JournalArticleLocalServiceUtil.getArticle(footerArticleGroupId, footerArticleId);
 										%>
 
-										<%= HtmlUtil.escape(footerArticle.getTitle(locale)) %>
-									</c:if>
-								</span>
+										<liferay-ui:input-resource url="<%= HtmlUtil.escape(footerArticle.getTitle(locale)) %>" />
+									</c:when>
+									<c:otherwise>
+										<liferay-ui:input-resource url="" />
+									</c:otherwise>
+								</c:choose>
 
 								<aui:button name="selectButton" onClick='<%= renderResponse.getNamespace() + "selectionForFooter();" %>' value="select" />
 

@@ -82,9 +82,8 @@ if (ddmStructureId > 0) {
 		<aui:input name="description" />
 
 		<aui:field-wrapper label="data-definition" required="<%= true %>">
-			<span class="uneditable-input" id="<portlet:namespace />ddmStructureNameDisplay">
-				<%= ddmStructureName %>
-			</span>
+			<liferay-ui:input-resource id="ddmStructureNameDisplay" url="<%= ddmStructureName %>" />
+
 
 			<liferay-ui:icon
 				image="add"
@@ -163,7 +162,7 @@ if (ddmStructureId > 0) {
 
 				A.one('#<portlet:namespace />ddmStructureId').val(event.ddmstructureid);
 
-				A.one('#<portlet:namespace />ddmStructureNameDisplay').setContent(event.name);
+				A.one('#<portlet:namespace />ddmStructureNameDisplay').val(event.name);
 			}
 		);
 	}

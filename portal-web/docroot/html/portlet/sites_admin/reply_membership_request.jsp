@@ -86,9 +86,7 @@ MembershipRequest membershipRequest = (MembershipRequest)request.getAttribute(We
 
 	<aui:fieldset>
 		<aui:field-wrapper label="user-name">
-			<span class="uneditable-input">
-				<%= HtmlUtil.escape(PortalUtil.getUserName(membershipRequest.getUserId(), StringPool.BLANK)) %>
-			</span>
+			<liferay-ui:input-resource url="<%= HtmlUtil.escape(PortalUtil.getUserName(membershipRequest.getUserId(), StringPool.BLANK)) %>" />
 		</aui:field-wrapper>
 
 		<aui:input name="userComments" readonly="<%= true %>" type="textarea" value="<%= HtmlUtil.escape(membershipRequest.getComments()) %>" />

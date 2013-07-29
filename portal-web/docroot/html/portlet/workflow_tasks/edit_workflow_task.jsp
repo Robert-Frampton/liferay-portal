@@ -104,9 +104,7 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 					<aui:field-wrapper label="assigned-to">
 						<c:choose>
 							<c:when test="<%= workflowTask.isAssignedToSingleUser() %>">
-								<span class="uneditable-input">
-									<%= HtmlUtil.escape(PortalUtil.getUserName(workflowTask.getAssigneeUserId(), StringPool.BLANK)) %>
-								</span>
+								<liferay-ui:input-resource url="<%= HtmlUtil.escape(PortalUtil.getUserName(workflowTask.getAssigneeUserId(), StringPool.BLANK)) %>" />
 							</c:when>
 							<c:otherwise>
 								<liferay-ui:message key="nobody" />
@@ -150,9 +148,7 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 
 				<div class="lfr-asset-status">
 					<aui:field-wrapper label="state">
-						<span class="uneditable-input">
-							<%= LanguageUtil.get(pageContext, WorkflowInstanceLinkLocalServiceUtil.getState(companyId, groupId, className, classPK)) %>
-						</span>
+						<liferay-ui:input-resource url="<%= LanguageUtil.get(pageContext, WorkflowInstanceLinkLocalServiceUtil.getState(companyId, groupId, className, classPK)) %>" />
 					</aui:field-wrapper>
 				</div>
 			</aui:col>
@@ -160,18 +156,14 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 			<aui:col>
 				<div class="lfr-asset-date">
 					<aui:field-wrapper label="create-date">
-						<span class="uneditable-input">
-							<%= dateFormatDateTime.format(workflowTask.getCreateDate()) %>
-						</span>
+						<liferay-ui:input-resource url="<%= dateFormatDateTime.format(workflowTask.getCreateDate()) %>" />
 					</aui:field-wrapper>
 				</div>
 
 				<div class="lfr-asset-due-date">
 					<aui:field-wrapper label="due-date">
-						<span class="uneditable-input">
-							<%= (workflowTask.getDueDate() == null) ? LanguageUtil.get(pageContext, "never") : dateFormatDateTime.format(workflowTask.getDueDate()) %>
-						</span>
-
+						<liferay-ui:input-resource url="<%= (workflowTask.getDueDate() == null) ? LanguageUtil.get(pageContext, "never") : dateFormatDateTime.format(workflowTask.getDueDate()) %>" />
+						
 						<c:if test="<%= !workflowTask.isCompleted() %>">
 							<portlet:actionURL var="updateDueDateURL">
 								<portlet:param name="struts_action" value="/workflow_tasks/edit_workflow_task" />

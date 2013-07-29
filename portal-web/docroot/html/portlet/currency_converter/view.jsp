@@ -34,7 +34,7 @@ decimalFormat.setMinimumFractionDigits(2);
 
 <form action="<portlet:renderURL windowState="<%= WindowState.MAXIMIZED.toString() %>"><portlet:param name="struts_action" value="/currency_converter/view" /></portlet:renderURL>" method="post" name="<portlet:namespace />fm" onSubmit="submitForm(this); return false;">
 
-<input type="submit" value="<liferay-ui:message key="convert" />" />
+<aui:button type="submit" value="convert" />
 
 <input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="<portlet:namespace />number" size="3" type="text" value="<%= number %>" />
 

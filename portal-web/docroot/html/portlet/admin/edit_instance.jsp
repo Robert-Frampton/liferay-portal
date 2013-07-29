@@ -58,15 +58,11 @@ catch (Exception e) {
 		<c:choose>
 			<c:when test="<%= selCompany != null %>">
 				<aui:field-wrapper label="id">
-					<span class="input-medium uneditable-input">
-						<%= companyId %>
-					</span>
+					<liferay-ui:input-resource url="<%= companyId %>"  />
 				</aui:field-wrapper>
 
 				<aui:field-wrapper label="web-id">
-					<span class="input-medium uneditable-input">
-						<%= HtmlUtil.escape(selCompany.getWebId()) %>
-					</span>
+					<liferay-ui:input-resource url="<%= HtmlUtil.escape(selCompany.getWebId()) %>"  />
 				</aui:field-wrapper>
 			</c:when>
 			<c:otherwise>

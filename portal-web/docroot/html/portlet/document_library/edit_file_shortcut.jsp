@@ -101,9 +101,7 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 			%>
 
 			<div class="input-append">
-				<span id="<portlet:namespace />toGroupName" class="uneditable-input">
-					<%= toGroupName %>
-				</span>
+				<liferay-ui:input-resource id="toGroupName" url="<%= toGroupName %>" />
 
 				<aui:button name="selectGroupButton" value="select" />
 			</div>
@@ -115,9 +113,7 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 			%>
 
 			<div class="input-append">
-				<span id="<portlet:namespace />toFileEntryTitle" class="uneditable-input">
-					<%= toFileEntryTitle %>
-				</span>
+				<liferay-ui:input-resource id="toFileEntryTitle" url="<%= toFileEntryTitle %>" />
 
 				<aui:button disabled="<%= (toGroup == null) %>" name="selectToFileEntryButton" value="select" />
 			</div>
@@ -176,7 +172,7 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 
 					var nameEl = document.getElementById("<portlet:namespace />toGroupName");
 
-					nameEl.innerHTML = A.Escape.html(event.groupname) + "&nbsp;";
+					nameEl.value = A.Escape.html(event.groupname);
 
 					Liferay.Util.toggleDisabled(selectToFileEntryButton, false);
 				}
@@ -229,11 +225,7 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 
 		var titleEl = document.getElementById("<portlet:namespace />toFileEntryTitle");
 
-		if (title != "") {
-			title += "&nbsp;";
-		}
-
-		titleEl.innerHTML = title;
+		titleEl.value = title;
 	}
 </aui:script>
 

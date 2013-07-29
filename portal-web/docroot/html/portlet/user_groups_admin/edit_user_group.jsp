@@ -64,9 +64,7 @@ long userGroupId = BeanParamUtil.getLong(userGroup, request, "userGroupId");
 	<aui:fieldset>
 		<c:if test="<%= userGroup != null %>">
 			<aui:field-wrapper label="old-name">
-				<span class="uneditable-input">
-					<%= HtmlUtil.escape(userGroup.getName()) %>
-				</span>
+				<liferay-ui:input-resource url="<%= HtmlUtil.escape(userGroup.getName()) %>" />
 			</aui:field-wrapper>
 		</c:if>
 

@@ -131,9 +131,7 @@ if (selContact != null) {
 		<liferay-ui:error exception="<%= UserIdException.class %>" message="please-enter-a-valid-user-id" />
 
 		<aui:field-wrapper name="userId">
-			<span class="uneditable-input">
-				<%= selUser.getUserId() %>
-			</span>
+			<liferay-ui:input-resource url="<%= String.valueOf(selUser.getUserId()) %>" />
 
 			<aui:input name="userId" type="hidden" value="<%= selUser.getUserId() %>" />
 		</aui:field-wrapper>

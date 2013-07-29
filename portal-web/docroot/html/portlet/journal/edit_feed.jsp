@@ -146,9 +146,7 @@ if (feed != null) {
 			</c:when>
 			<c:otherwise>
 				<aui:field-wrapper label="id">
-					<span class="uneditable-input">
-						<%= HtmlUtil.escape(feedId) %>
-					</span>
+					<liferay-ui:input-resource url="<%= HtmlUtil.escape(feedId) %>" />
 				</aui:field-wrapper>
 			</c:otherwise>
 		</c:choose>
