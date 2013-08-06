@@ -17,11 +17,11 @@
 <%@ include file="/html/taglib/ui/social_bookmark/init.jsp" %>
 
 <%
-	String strUrlTwitter = "https://twitter.com/intent/tweet?text=" + HtmlUtil.escapeURL(title) + "&tw_p=tweetbutton&url=" + url;
+String strUrlTwitter = "https://twitter.com/intent/tweet?text=" + HtmlUtil.escapeURL(title) + "&tw_p=tweetbutton&url=" + url;
 %>
 
 <liferay-ui:icon
-	cssClass="social-bookmark"
+	cssClass="<%= cssClass %>"
 	message="<%= type %>"
 	src="/html/themes/classic/images/common/logo-twitter.png"
 	url="<%= strUrlTwitter %>"

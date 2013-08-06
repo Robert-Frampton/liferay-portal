@@ -1,12 +1,18 @@
 AUI.add(
 	'liferay-social-bookmarks',
 	function(A) {
+		var BODY = A.getBody();
+
 		var NAME = 'social-bookmarks';
 
 		var SHARE_WINDOW_HEIGHT = 436;
+
 		var SHARE_WINDOW_WIDTH = 626;
 
-		var BODY = A.getBody();
+		var STR_DATA_URL = 'data-url';
+
+		var STR_HREF = 'href';
+
 		var WIN = A.getWin();
 
 		BODY.delegate(
@@ -21,7 +27,9 @@ AUI.add(
 					'width=' + SHARE_WINDOW_WIDTH
 				];
 
-				window.open(event.currentTarget.attr('data-url'), null, shareWindowFeatures.join(',')).focus();
+				var url = event.currentTarget.attr(STR_DATA_URL);
+
+				window.open(url, null, shareWindowFeatures.join(',')).focus();
 
 				void('');
 			},
@@ -36,18 +44,22 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
-						A.one('#' + config.trigger + ' .btn-group').once('mouseover', instance._onTriggerMouseover, instance);
+						var trigger = A.one('#' + config.trigger + ' .btn-group');
+
+						trigger.once('mouseover', instance._onTriggerMouseover, instance, config.items);
 					},
 
-					_onTriggerMouseover: function(event) {
+					_onTriggerMouseover: function(event, items) {
 						var instance = this;
 
-						BODY.all('.social-bookmark .taglib-icon').each(
-							function(item, index, collection) {
-								if (!item.attr('data-url')) {
-									item.attr('data-url', item.attr('href'));
+						var itemsSelector = '.' + items + ' .taglib-icon';
 
-									item.attr('href', 'javascript:void(0);');
+						BODY.all(itemsSelector).each(
+							function(item, index, collection) {
+								if (!item.attr(STR_DATA_URL)) {
+									item.attr(STR_DATA_URL, item.attr(STR_HREF));
+
+									item.attr(STR_HREF, 'javascript:void(0);');
 								}
 							}
 						);

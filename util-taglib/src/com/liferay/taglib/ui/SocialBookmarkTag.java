@@ -38,6 +38,10 @@ public class SocialBookmarkTag extends IncludeTag {
 		_contentId = contentId;
 	}
 
+	public void setCssClass(String cssClass) {
+		_cssClass = cssClass;
+	}
+
 	public void setTarget(String target) {
 		_target = target;
 	}
@@ -57,6 +61,7 @@ public class SocialBookmarkTag extends IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_contentId = null;
+		_cssClass = null;
 		_target = null;
 		_title = null;
 		_type = null;
@@ -113,6 +118,8 @@ public class SocialBookmarkTag extends IncludeTag {
 
 		request.setAttribute(
 			"liferay-ui:social-bookmark:contentId", _contentId);
+		request.setAttribute(
+			"liferay-ui:social-bookmark:cssClass", _cssClass);
 		request.setAttribute("liferay-ui:social-bookmark:target", _target);
 		request.setAttribute("liferay-ui:social-bookmark:title", _title);
 		request.setAttribute("liferay-ui:social-bookmark:type", _type);
@@ -126,6 +133,7 @@ public class SocialBookmarkTag extends IncludeTag {
 		new HashMap<String, String>();
 
 	private String _contentId;
+	private String _cssClass;
 	private String _jspPath;
 	private String _target;
 	private String _title;
