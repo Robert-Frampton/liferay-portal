@@ -612,6 +612,12 @@ $dockbarOpenGradientStart: #0EA6F9;
 			}
 		}
 
+		.fieldset {
+			.button-holder {
+				padding-bottom: 10px;
+			}
+		}
+
 		.form-navigator.well {
 			background: #FCFCFC;
 			border: 1px solid #D1D1D1;
