@@ -48,6 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * The base model implementation for the JournalArticle service. Represents a row in the &quot;JournalArticle&quot; database table, with each column mapped to a property of this class.
@@ -126,18 +128,20 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	public static long CLASSNAMEID_COLUMN_BITMASK = 2L;
 	public static long CLASSPK_COLUMN_BITMASK = 4L;
 	public static long COMPANYID_COLUMN_BITMASK = 8L;
-	public static long FOLDERID_COLUMN_BITMASK = 16L;
-	public static long GROUPID_COLUMN_BITMASK = 32L;
-	public static long LAYOUTUUID_COLUMN_BITMASK = 64L;
-	public static long RESOURCEPRIMKEY_COLUMN_BITMASK = 128L;
-	public static long SMALLIMAGEID_COLUMN_BITMASK = 256L;
-	public static long STATUS_COLUMN_BITMASK = 512L;
-	public static long STRUCTUREID_COLUMN_BITMASK = 1024L;
-	public static long TEMPLATEID_COLUMN_BITMASK = 2048L;
-	public static long URLTITLE_COLUMN_BITMASK = 4096L;
-	public static long USERID_COLUMN_BITMASK = 8192L;
-	public static long UUID_COLUMN_BITMASK = 16384L;
-	public static long VERSION_COLUMN_BITMASK = 32768L;
+	public static long DISPLAYDATE_COLUMN_BITMASK = 16L;
+	public static long FOLDERID_COLUMN_BITMASK = 32L;
+	public static long GROUPID_COLUMN_BITMASK = 64L;
+	public static long INDEXABLE_COLUMN_BITMASK = 128L;
+	public static long LAYOUTUUID_COLUMN_BITMASK = 256L;
+	public static long RESOURCEPRIMKEY_COLUMN_BITMASK = 512L;
+	public static long SMALLIMAGEID_COLUMN_BITMASK = 1024L;
+	public static long STATUS_COLUMN_BITMASK = 2048L;
+	public static long STRUCTUREID_COLUMN_BITMASK = 4096L;
+	public static long TEMPLATEID_COLUMN_BITMASK = 8192L;
+	public static long URLTITLE_COLUMN_BITMASK = 16384L;
+	public static long USERID_COLUMN_BITMASK = 32768L;
+	public static long UUID_COLUMN_BITMASK = 65536L;
+	public static long VERSION_COLUMN_BITMASK = 131072L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -1151,7 +1155,17 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setDisplayDate(Date displayDate) {
+		_columnBitmask |= DISPLAYDATE_COLUMN_BITMASK;
+
+		if (_originalDisplayDate == null) {
+			_originalDisplayDate = _displayDate;
+		}
+
 		_displayDate = displayDate;
+	}
+
+	public Date getOriginalDisplayDate() {
+		return _originalDisplayDate;
 	}
 
 	@JSON
@@ -1189,7 +1203,19 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setIndexable(boolean indexable) {
+		_columnBitmask |= INDEXABLE_COLUMN_BITMASK;
+
+		if (!_setOriginalIndexable) {
+			_setOriginalIndexable = true;
+
+			_originalIndexable = _indexable;
+		}
+
 		_indexable = indexable;
+	}
+
+	public boolean getOriginalIndexable() {
+		return _originalIndexable;
 	}
 
 	@JSON
@@ -1441,13 +1467,76 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	}
 
 	@Override
+	public String[] getAvailableLanguageIds() {
+		Set<String> availableLanguageIds = new TreeSet<String>();
+
+		Map<Locale, String> titleMap = getTitleMap();
+
+		for (Map.Entry<Locale, String> entry : titleMap.entrySet()) {
+			Locale locale = entry.getKey();
+			String value = entry.getValue();
+
+			if (Validator.isNotNull(value)) {
+				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
+			}
+		}
+
+		Map<Locale, String> descriptionMap = getDescriptionMap();
+
+		for (Map.Entry<Locale, String> entry : descriptionMap.entrySet()) {
+			Locale locale = entry.getKey();
+			String value = entry.getValue();
+
+			if (Validator.isNotNull(value)) {
+				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
+			}
+		}
+
+		return availableLanguageIds.toArray(new String[availableLanguageIds.size()]);
+	}
+
+	@Override
+	public String getDefaultLanguageId() {
+		String xml = getTitle();
+
+		if (xml == null) {
+			return StringPool.BLANK;
+		}
+
+		return LocalizationUtil.getDefaultLanguageId(xml);
+	}
+
+	@Override
+	public void prepareLocalizedFieldsForImport() throws LocaleException {
+		prepareLocalizedFieldsForImport(null);
+	}
+
+	@Override
 	@SuppressWarnings("unused")
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
 		throws LocaleException {
-		setTitle(getTitle(defaultImportLocale), defaultImportLocale,
-			defaultImportLocale);
-		setDescription(getDescription(defaultImportLocale),
-			defaultImportLocale, defaultImportLocale);
+		Locale defaultLocale = LocaleUtil.getDefault();
+
+		String modelDefaultLanguageId = getDefaultLanguageId();
+
+		String title = getTitle(defaultLocale);
+
+		if (Validator.isNull(title)) {
+			setTitle(getTitle(modelDefaultLanguageId), defaultLocale);
+		}
+		else {
+			setTitle(getTitle(defaultLocale), defaultLocale, defaultLocale);
+		}
+
+		String description = getDescription(defaultLocale);
+
+		if (Validator.isNull(description)) {
+			setDescription(getDescription(modelDefaultLanguageId), defaultLocale);
+		}
+		else {
+			setDescription(getDescription(defaultLocale), defaultLocale,
+				defaultLocale);
+		}
 	}
 
 	@Override
@@ -1606,6 +1695,12 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 		journalArticleModelImpl._originalTemplateId = journalArticleModelImpl._templateId;
 
 		journalArticleModelImpl._originalLayoutUuid = journalArticleModelImpl._layoutUuid;
+
+		journalArticleModelImpl._originalDisplayDate = journalArticleModelImpl._displayDate;
+
+		journalArticleModelImpl._originalIndexable = journalArticleModelImpl._indexable;
+
+		journalArticleModelImpl._setOriginalIndexable = false;
 
 		journalArticleModelImpl._originalSmallImageId = journalArticleModelImpl._smallImageId;
 
@@ -2084,9 +2179,12 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	private String _layoutUuid;
 	private String _originalLayoutUuid;
 	private Date _displayDate;
+	private Date _originalDisplayDate;
 	private Date _expirationDate;
 	private Date _reviewDate;
 	private boolean _indexable;
+	private boolean _originalIndexable;
+	private boolean _setOriginalIndexable;
 	private boolean _smallImage;
 	private long _smallImageId;
 	private long _originalSmallImageId;

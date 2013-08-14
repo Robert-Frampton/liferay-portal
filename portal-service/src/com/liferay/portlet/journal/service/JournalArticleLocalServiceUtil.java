@@ -891,6 +891,18 @@ public class JournalArticleLocalServiceUtil {
 				   .fetchLatestArticle(resourcePrimKey, status, preferApproved);
 	}
 
+	public static com.liferay.portlet.journal.model.JournalArticle fetchLatestArticle(
+		long groupId, java.lang.String articleId, int status)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchLatestArticle(groupId, articleId, status);
+	}
+
+	public static com.liferay.portlet.journal.model.JournalArticle fetchLatestIndexableArticle(
+		long resourcePrimKey)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchLatestIndexableArticle(resourcePrimKey);
+	}
+
 	/**
 	* Returns the web content article with the ID.
 	*
@@ -1539,6 +1551,12 @@ public class JournalArticleLocalServiceUtil {
 		long groupId, java.lang.String articleId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getArticles(groupId, articleId);
+	}
+
+	public static java.util.List<com.liferay.portlet.journal.model.JournalArticle> getArticlesByResourcePrimKey(
+		long resourcePrimKey)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getArticlesByResourcePrimKey(resourcePrimKey);
 	}
 
 	/**
