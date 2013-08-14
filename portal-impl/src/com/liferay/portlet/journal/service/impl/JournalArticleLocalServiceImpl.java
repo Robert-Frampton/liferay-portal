@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntryThreadLoca
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -737,6 +738,26 @@ public class JournalArticleLocalServiceImpl
 				new ServiceContext());
 		}
 
+		articles = journalArticlePersistence.findByLtD_S(
+			now, WorkflowConstants.STATUS_SCHEDULED);
+
+		for (JournalArticle article : articles) {
+			ServiceContext serviceContext = new ServiceContext();
+
+			serviceContext.setCommand(Constants.UPDATE);
+
+			String layoutFullURL = PortalUtil.getLayoutFullURL(
+				article.getGroupId(), PortletKeys.JOURNAL);
+
+			serviceContext.setLayoutFullURL(layoutFullURL);
+
+			serviceContext.setScopeGroupId(article.getGroupId());
+
+			updateStatus(
+				article.getUserId(), article, WorkflowConstants.STATUS_APPROVED,
+				null, new HashMap<String, Serializable>(), serviceContext);
+		}
+
 		_previousCheckDate = now;
 	}
 
@@ -1158,10 +1179,12 @@ public class JournalArticleLocalServiceImpl
 			SystemEventHierarchyEntryThreadLocal.pop();
 		}
 
-		systemEventLocalService.addSystemEvent(
-			0, groupId, JournalArticle.class.getName(),
-			articleResource.getResourcePrimKey(), articleResource.getUuid(),
-			null, SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
+		if (articleResource != null) {
+			systemEventLocalService.addSystemEvent(
+				0, groupId, JournalArticle.class.getName(),
+				articleResource.getResourcePrimKey(), articleResource.getUuid(),
+				null, SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
+		}
 	}
 
 	/**
@@ -1431,6 +1454,43 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		return article;
+	}
+
+	@Override
+	public JournalArticle fetchLatestArticle(
+			long groupId, String articleId, int status)
+		throws SystemException {
+
+		OrderByComparator orderByComparator = new ArticleVersionComparator();
+
+		if (status == WorkflowConstants.STATUS_ANY) {
+			return journalArticlePersistence.fetchByG_A_First(
+				groupId, articleId, orderByComparator);
+		}
+
+		return journalArticlePersistence.fetchByG_A_ST_First(
+			groupId, articleId, status, orderByComparator);
+	}
+
+	@Override
+	public JournalArticle fetchLatestIndexableArticle(long resourcePrimKey)
+		throws SystemException {
+
+		OrderByComparator orderByComparator = new ArticleVersionComparator();
+
+		int[] statuses = new int[] {
+			WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_IN_TRASH
+		};
+
+		List<JournalArticle> articles =
+			journalArticlePersistence.findByR_I_S(
+				resourcePrimKey, true, statuses, 0, 1, orderByComparator);
+
+		if (articles.isEmpty()) {
+			return null;
+		}
+
+		return articles.get(0);
 	}
 
 	/**
@@ -2370,6 +2430,14 @@ public class JournalArticleLocalServiceImpl
 		throws SystemException {
 
 		return journalArticlePersistence.findByG_A(groupId, articleId);
+	}
+
+	@Override
+	public List<JournalArticle> getArticlesByResourcePrimKey(
+			long resourcePrimKey)
+		throws SystemException {
+
+		return journalArticlePersistence.findByResourcePrimKey(resourcePrimKey);
 	}
 
 	/**
@@ -4567,7 +4635,9 @@ public class JournalArticleLocalServiceImpl
 			serviceContext.validateModifiedDate(
 				latestArticle, ArticleVersionException.class);
 
-			if (latestArticle.isApproved() || latestArticle.isExpired()) {
+			if (latestArticle.isApproved() || latestArticle.isExpired() ||
+				latestArticle.isScheduled()) {
+
 				addNewVersion = true;
 
 				version = MathUtil.format(latestVersion + 0.1, 1, 1);
@@ -5079,6 +5149,15 @@ public class JournalArticleLocalServiceImpl
 
 		User user = userPersistence.findByPrimaryKey(userId);
 		Date now = new Date();
+
+		if ((status == WorkflowConstants.STATUS_APPROVED) &&
+			(article.getClassNameId() ==
+				JournalArticleConstants.CLASSNAME_ID_DEFAULT) &&
+			(article.getDisplayDate() != null) &&
+			now.before(article.getDisplayDate())) {
+
+			status = WorkflowConstants.STATUS_SCHEDULED;
+		}
 
 		int oldStatus = article.getStatus();
 
