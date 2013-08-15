@@ -189,7 +189,6 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 				</c:if>
 			</liferay-ui:panel>
 
-			<div class="separator"><!-- --></div>
 		</c:when>
 		<c:when test='<%= !tabs1.equals("summary") %>'>
 			<c:if test="<%= total > userGroupSearch.getDelta() %>">
