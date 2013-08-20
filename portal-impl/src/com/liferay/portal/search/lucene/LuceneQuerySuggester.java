@@ -14,12 +14,11 @@
 
 package com.liferay.portal.search.lucene;
 
-import com.liferay.portal.kernel.search.CollatorUtil;
+import com.liferay.portal.kernel.search.BaseQuerySuggester;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.NGramHolder;
 import com.liferay.portal.kernel.search.NGramHolderBuilderUtil;
-import com.liferay.portal.kernel.search.QuerySuggester;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.TokenizerUtil;
@@ -57,7 +56,7 @@ import org.apache.lucene.util.ReaderUtil;
 /**
  * @author Michael C. Han
  */
-public class LuceneQuerySuggester implements QuerySuggester {
+public class LuceneQuerySuggester extends BaseQuerySuggester {
 
 	public void setBoostEnd(float boostEnd) {
 		_boostEnd = boostEnd;
@@ -75,24 +74,6 @@ public class LuceneQuerySuggester implements QuerySuggester {
 		Comparator<SuggestWord> suggestWordComparator) {
 
 		_suggestWordComparator = suggestWordComparator;
-	}
-
-	@Override
-	public String spellCheckKeywords(SearchContext searchContext)
-		throws SearchException {
-
-		String languageId = searchContext.getLanguageId();
-
-		String localizedFieldName = DocumentImpl.getLocalizedName(
-			languageId, Field.SPELL_CHECK_WORD);
-
-		List<String> keywords = TokenizerUtil.tokenize(
-			localizedFieldName, searchContext.getKeywords(), languageId);
-
-		Map<String, List<String>> suggestions = spellCheckKeywords(
-			keywords, localizedFieldName, searchContext, languageId, 1);
-
-		return CollatorUtil.collate(suggestions, keywords);
 	}
 
 	@Override

@@ -330,7 +330,7 @@ public class PortalImpl implements Portal {
 		String[] customSystemGroups = PropsUtil.getArray(
 			PropsKeys.SYSTEM_GROUPS);
 
-		if ((customSystemGroups == null) || (customSystemGroups.length == 0)) {
+		if (ArrayUtil.isEmpty(customSystemGroups)) {
 			_allSystemGroups = GroupConstants.SYSTEM_GROUPS;
 		}
 		else {
@@ -350,7 +350,7 @@ public class PortalImpl implements Portal {
 
 		String[] customSystemRoles = PropsUtil.getArray(PropsKeys.SYSTEM_ROLES);
 
-		if ((customSystemRoles == null) || (customSystemRoles.length == 0)) {
+		if (ArrayUtil.isEmpty(customSystemRoles)) {
 			_allSystemRoles = RoleConstants.SYSTEM_ROLES;
 		}
 		else {
@@ -3355,8 +3355,8 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public Locale getLocale(RenderRequest renderRequest) {
-		return getLocale(getHttpServletRequest(renderRequest));
+	public Locale getLocale(PortletRequest portletRequest) {
+		return getLocale(getHttpServletRequest(portletRequest));
 	}
 
 	@Override
@@ -7305,7 +7305,7 @@ public class PortalImpl implements Portal {
 
 			String[] parameterValues = entry.getValue();
 
-			if ((parameterValues == null) || (parameterValues.length == 0) ||
+			if (ArrayUtil.isEmpty(parameterValues) ||
 				Validator.isNull(parameterValues[0])) {
 
 				continue;
