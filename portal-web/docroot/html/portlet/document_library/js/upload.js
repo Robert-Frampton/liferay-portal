@@ -67,9 +67,11 @@ AUI.add(
 
 		var SELECTOR_SEARCH_CONTAINER = '.searchcontainer';
 
-		var SELECTOR_ENTRY_DISPLAY_STYLE = '.' + CSS_ENTRY_DISPLAY_STYLE;
+		var STR_DOT = '.';
 
-		var SELECTOR_TAGLIB_ICON = '.' + CSS_TAGLIB_ICON;
+		var SELECTOR_ENTRY_DISPLAY_STYLE = STR_DOT + CSS_ENTRY_DISPLAY_STYLE;
+
+		var SELECTOR_TAGLIB_ICON = STR_DOT + CSS_TAGLIB_ICON;
 
 		var SIZE_DENOMINATOR = 1024;
 
@@ -210,6 +212,10 @@ AUI.add(
 					500
 				);
 
+				var dd = instance._appViewMove._ddHandler.dd;
+
+				dd.addInvalid(STR_DOT + CSS_UPLOAD_ERROR);
+
 				docElement.on(
 					'dragover',
 					function(event) {
@@ -217,7 +223,9 @@ AUI.add(
 
 						var dataTransfer = originalEvent.dataTransfer;
 
-						if (dataTransfer && AArray.indexOf(dataTransfer.types, 'Files') > -1) {
+						var validType = (AArray.indexOf(dataTransfer.types, 'Files') > -1) && (AArray.indexOf(dataTransfer.types, 'text/html') < 0);
+
+						if (dataTransfer && validType) {
 							event.halt();
 
 							docElement.addClass('upload-drop-intent');
@@ -261,9 +269,15 @@ AUI.add(
 				entriesContainer.delegate(
 					['dragleave', 'dragover'],
 					function(event) {
-						var parentElement = event.target.ancestor(SELECTOR_ENTRY_DISPLAY_STYLE);
+						var dataTransfer = event._event.dataTransfer;
 
-						parentElement.toggleClass(CSS_ACTIVE_AREA, event.type == 'dragover');
+						var validType = (AArray.indexOf(dataTransfer.types, 'Files') > -1) && (AArray.indexOf(dataTransfer.types, 'text/html') < 0);
+
+						if (validType) {
+							var parentElement = event.target.ancestor(SELECTOR_ENTRY_DISPLAY_STYLE);
+
+							parentElement.toggleClass(CSS_ACTIVE_AREA, event.type == 'dragover');
+						}
 					},
 					SELECTOR_DATA_FOLDER
 				);
