@@ -214,30 +214,34 @@ AUI.add(
 
 				var dd = instance._appViewMove._ddHandler.dd;
 
+				window.appViewMove = instance._appViewMove;
+
+				window.instance = instance;
+
 				dd.addInvalid(STR_DOT + CSS_UPLOAD_ERROR);
 
 				docElement.on(
 					'dragover',
 					function(event) {
-						var originalEvent = event._event;
+						var dataTransfer = event._event.dataTransfer;
 
-						var dataTransfer = originalEvent.dataTransfer;
+						if (dataTransfer && dataTransfer.types) {
+							var dataTransferTypes = dataTransfer.types || [];
 
-						var validType = (AArray.indexOf(dataTransfer.types, 'Files') > -1) && (AArray.indexOf(dataTransfer.types, 'text/html') < 0);
+							if (AArray.indexOf(dataTransferTypes, 'Files') > -1) && (AArray.indexOf(dataTransferTypes, 'text/html') < 0) {
+								event.halt();
 
-						if (dataTransfer && validType) {
-							event.halt();
+								dataTransfer.dropEffect = 'copy';
 
-							docElement.addClass('upload-drop-intent');
+								docElement.addClass('upload-drop-intent');
 
-							var target = event.target;
+								var target = event.target;
 
-							docElement.toggleClass('upload-drop-active', (target.compareTo(entriesContainer) || entriesContainer.contains(target)));
+								docElement.toggleClass('upload-drop-active', (target.compareTo(entriesContainer) || entriesContainer.contains(target)));
 
-							dataTransfer.dropEffect = 'copy';
+								removeCssClassTask();
+							}
 						}
-
-						removeCssClassTask();
 					}
 				);
 
@@ -246,21 +250,25 @@ AUI.add(
 					function(event) {
 						var dataTransfer = event._event.dataTransfer;
 
-						var dragDropFiles = dataTransfer && AArray(dataTransfer.files);
+						if (dataTransfer) {
+							var dataTransferTypes = dataTransfer.types || [];
 
-						if (AArray.indexOf(dataTransfer.types, 'Files') > -1) {
-							event.halt();
+							if (AArray.indexOf(dataTransferTypes, 'Files') > -1) && (AArray.indexOf(dataTransferTypes, 'text/html') < 0) {
+								event.halt();
 
-							event.fileList = AArray.map(
-								dragDropFiles,
-								function(item, index, collection) {
-									return new A.FileHTML5(item);
-								}
-							);
+								var dragDropFiles = AArray(dataTransfer.files);
 
-							var uploader = instance._getUploader();
+								event.fileList = AArray.map(
+									dragDropFiles,
+									function(item, index, collection) {
+										return new A.FileHTML5(item);
+									}
+								);
 
-							uploader.fire('fileselect', event);
+								var uploader = instance._getUploader();
+
+								uploader.fire('fileselect', event);
+							}
 						}
 					},
 					'body, .document-container, .overlaymask, .progressbar, [data-folder="true"]'
