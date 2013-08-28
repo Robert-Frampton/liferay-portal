@@ -53,7 +53,7 @@ portletURL.setParameter("struts_action", "/journal/view_feeds");
 
 	<aui:button disabled="<%= true %>" name="delete" onClick='<%= renderResponse.getNamespace() + "deleteFeeds();" %>' value="delete" />
 
-	<br /><br />
+	<div class="separator"><!-- --></div>
 
 	<%
 	List resultRows = searchContainer.getResultRows();

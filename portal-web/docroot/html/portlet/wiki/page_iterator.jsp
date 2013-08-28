@@ -409,6 +409,8 @@ for (int i = 0; i < results.size(); i++) {
 		</liferay-portlet:actionURL>
 
 		<aui:button href="<%= addPageURL %>" name="addPageButton" value="add-page" />
+
+		<div class="separator"><!-- --></div>
 	</aui:button-row>
 </c:if>
 
