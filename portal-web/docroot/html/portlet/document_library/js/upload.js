@@ -228,7 +228,7 @@ AUI.add(
 						if (dataTransfer && dataTransfer.types) {
 							var dataTransferTypes = dataTransfer.types || [];
 
-							if (AArray.indexOf(dataTransferTypes, 'Files') > -1) && (AArray.indexOf(dataTransferTypes, 'text/html') < 0) {
+							if ((AArray.indexOf(dataTransferTypes, 'Files') > -1) && (AArray.indexOf(dataTransferTypes, 'text/html') < 0)) {
 								event.halt();
 
 								dataTransfer.dropEffect = 'copy';
@@ -253,7 +253,7 @@ AUI.add(
 						if (dataTransfer) {
 							var dataTransferTypes = dataTransfer.types || [];
 
-							if (AArray.indexOf(dataTransferTypes, 'Files') > -1) && (AArray.indexOf(dataTransferTypes, 'text/html') < 0) {
+							if ((AArray.indexOf(dataTransferTypes, 'Files') > -1) && (AArray.indexOf(dataTransferTypes, 'text/html') < 0)) {
 								event.halt();
 
 								var dragDropFiles = AArray(dataTransfer.files);
