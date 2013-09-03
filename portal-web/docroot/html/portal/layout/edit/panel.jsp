@@ -123,17 +123,15 @@ if (selLayout != null) {
 
 		var portletList = <%= portletsJSON %>.serializable.list.list[0];
 
-		var rootNode = new A.TreeNodeTask(
-			{
-				alwaysShowHitArea: true,
-				children: TreeUtil.formatJSONResults(portletList),
-				draggable: false,
-				expanded: true,
-				id: '<portlet:namespace />selectPortletsRootNode',
-				label: portletList.name,
-				leaf: false
-			}
-		);
+		var rootNode = {
+			alwaysShowHitArea: true,
+			children: TreeUtil.formatJSONResults(portletList),
+			draggable: false,
+			id: '<portlet:namespace />selectPortletsRootNode',
+			label: portletList.name,
+			leaf: false,
+			type: 'task'
+		};
 
 		var treeview = new A.TreeView(
 			{
