@@ -152,6 +152,15 @@ refererURL.setParameter("updateLayout", "true");
 		</liferay-ui:panel-container>
 
 		<c:if test="<%= layout.isTypePortlet() %>">
+			<ul class="lfr-add-apps-legend nav-list unstyled">
+				<li>
+					<aui:icon image="stop" label="can-be-added-once" />
+				</li>
+				<li>
+					<aui:icon image="th-large" label="can-be-added-several-times" />
+				</li>
+			</ul>
+
 			<div class="alert alert-info">
 				<liferay-ui:message key="to-add-a-portlet-to-the-page-just-drag-it" />
 			</div>
@@ -166,7 +175,7 @@ refererURL.setParameter("updateLayout", "true");
 			%>
 
 			<p class="lfr-install-more">
-				<aui:a href='<%= HttpUtil.removeParameter(marketplaceURL.toString(), "controlPanelCategory") %>' label="install-more-applications" />
+				<aui:a cssClass="btn btn-primary" href='<%= HttpUtil.removeParameter(marketplaceURL.toString(), "controlPanelCategory") %>' label="install-more-applications" />
 			</p>
 		</c:if>
 	</div>

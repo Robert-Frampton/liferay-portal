@@ -208,8 +208,9 @@
 	</target>
 
 	<target name="build-dist-tcat">
-		<property name="tcat.dir" value="${app.server.parent.dir}/tcat-7.0.2" />
-		<property name="tcat.zip.name" value="TcatServer-7.0.2.zip" />
+		<property name="tcat.version" value="7.0.2" />
+		<property name="tcat.dir" value="${app.server.parent.dir}/tcat-${tcat.version}" />
+		<property name="tcat.zip.name" value="TcatServer-${tcat.version}.zip" />
 		<property name="tcat.zip.url" value="http://files.liferay.com/public/bundles/trunk/${tcat.zip.name}" />
 
 		<echo file="app.server.${user.name}.properties">
@@ -2470,7 +2471,7 @@ plugins.includes=</echo>
 	</target>
 
 	<target name="zip-tcat">
-		<property name="tcat.dir" value="${app.server.parent.dir}/tcat-6.4.5" />
+		<property name="tcat.dir" value="${app.server.parent.dir}/tcat-${tcat.version}" />
 
 		<antcall target="zip-executable">
 			<param name="zip.executable.file" value="liferay-portal-tcat-admin" />
