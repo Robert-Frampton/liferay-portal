@@ -127,6 +127,7 @@ if (selLayout != null) {
 			alwaysShowHitArea: true,
 			children: TreeUtil.formatJSONResults(portletList),
 			draggable: false,
+			expanded: true,
 			id: '<portlet:namespace />selectPortletsRootNode',
 			label: portletList.name,
 			leaf: false,
