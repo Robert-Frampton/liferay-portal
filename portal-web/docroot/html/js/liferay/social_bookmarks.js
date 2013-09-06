@@ -46,7 +46,9 @@ AUI.add(
 
 						var trigger = A.one('#' + config.trigger + ' .btn-group');
 
-						trigger.once('mouseover', instance._onTriggerMouseover, instance, config.items);
+						if (trigger) {
+							trigger.once('mouseover', instance._onTriggerMouseover, instance, config.items);
+						}
 					},
 
 					_onTriggerMouseover: function(event, items) {

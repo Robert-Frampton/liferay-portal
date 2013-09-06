@@ -16,13 +16,9 @@
 
 <%@ include file="/html/taglib/ui/social_bookmark/init.jsp" %>
 
-<%
-String strUrlFacebook = "http://www.facebook.com/sharer.php?u=" + url;
-%>
-
 <liferay-ui:icon
 	cssClass="<%= cssClass %>"
 	message="<%= type %>"
 	src="/html/themes/classic/images/common/logo-facebook.png"
-	url="<%= strUrlFacebook %>"
+	url='<%= "http://www.facebook.com/sharer.php?u=" +  url %>'
 />
