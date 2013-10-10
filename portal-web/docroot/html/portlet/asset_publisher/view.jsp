@@ -90,7 +90,11 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 	%>
 
 		<div class="lfr-meta-actions add-asset-selector">
-			<%@ include file="/html/portlet/asset_publisher/add_asset.jspf" %>
+			<aui:nav-bar>
+				<aui:nav>
+					<%@ include file="/html/portlet/asset_publisher/add_asset.jspf" %>
+				</aui:nav>
+			</aui:nav-bar>
 		</div>
 
 	<%

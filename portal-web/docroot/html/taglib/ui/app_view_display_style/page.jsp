@@ -53,15 +53,17 @@ Map<String, String> requestParams = (Map<String, String>)request.getAttribute("l
 			var config = {};
 
 			<%
-			Set<String> requestParamNames = requestParams.keySet();
+			if (requestParams != null) {
+				Set<String> requestParamNames = requestParams.keySet();
 
-			for (String requestParamName : requestParamNames) {
-				String requestParamValue = requestParams.get(requestParamName);
+				for (String requestParamName : requestParamNames) {
+					String requestParamValue = requestParams.get(requestParamName);
 			%>
 
-				config['<portlet:namespace /><%= requestParamName %>'] = '<%= HtmlUtil.escapeJS(requestParamValue) %>';
+					config['<portlet:namespace /><%= requestParamName %>'] = '<%= HtmlUtil.escapeJS(requestParamValue) %>';
 
 			<%
+				}
 			}
 			%>
 
@@ -83,7 +85,21 @@ Map<String, String> requestParams = (Map<String, String>)request.getAttribute("l
 			function(event) {
 				var displayStyleItem = A.one(event.currentTarget);
 
-				changeDisplayStyle(displayStyleItem.attr('data-displayStyle'));
+				var displayStyle = displayStyleItem.attr('data-displayStyle');
+
+				if (<%= requestParams != null %>) {
+					changeDisplayStyle(displayStyle);
+				}
+				else {
+					Liferay.fire('AddContent:changeDisplayStyle',
+						{
+							data: {
+								displayStyle: displayStyle,
+								icon: '<%= _getIcon(displayStyle) %>'
+							}
+						}
+					);
+				}
 			},
 			['aui-node']
 		);

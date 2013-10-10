@@ -20,6 +20,12 @@
 int deltaDefault = GetterUtil.getInteger(SessionClicks.get(request, "liferay_addpanel_numitems", "10"));
 
 int delta = ParamUtil.getInteger(request, "delta", deltaDefault);
+
+String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
+
+String displayStyle = ParamUtil.getString(request, "displayStyle", displayStyleDefault);
+
+String[] displayViews = {"icon", "descriptive", "list"};
 %>
 
 <portlet:resourceURL var="updateContentListURL">
@@ -30,22 +36,6 @@ int delta = ParamUtil.getInteger(request, "delta", deltaDefault);
 <aui:form action="<%= updateContentListURL %>" name="addContentForm" onSubmit="event.preventDefault();">
 	<div class="row-fluid">
 		<div class="btn-toolbar">
-			<aui:input cssClass="input-small search-query" inlineField="<%= true %>" label="" name="searchContent" type="text" />
-
-			<%
-			String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
-
-			String displayStyle = ParamUtil.getString(request, "displayStyle", displayStyleDefault);
-			%>
-
-			<div class="btn-group" id="<portlet:namespace />styleButtons">
-				<aui:button cssClass='<%= displayStyle.equals("icon") ? "active" : StringPool.BLANK %>' data-style="icon" icon="icon-th-large" />
-
-				<aui:button cssClass='<%= displayStyle.equals("descriptive") ? "active" : StringPool.BLANK %>' data-style="descriptive" icon="icon-th-list" />
-
-				<aui:button cssClass='<%= displayStyle.equals("list") ? "active" : StringPool.BLANK %>' data-style="list" icon="icon-list" />
-			</div>
-
 			<aui:select cssClass="input-mini" inlineField="<%= true %>" label="" name="numItems">
 
 				<%
@@ -64,24 +54,40 @@ int delta = ParamUtil.getInteger(request, "delta", deltaDefault);
 			</aui:select>
 		</div>
 
-		<span class="add-content-button">
+		<span class="add-content-toolbar app-view-taglib">
+			<aui:nav-bar>
+				<aui:nav collapsible="<%= false %>" cssClass="nav-display-style-buttons pull-right">
+					<aui:nav-item cssClass="display-style-buttons-container">
+						<liferay-ui:app-view-display-style
+							displayStyle="<%= displayStyle %>"
+							displayStyles="<%= displayViews %>"
+						/>
+					</aui:nav-item>
+				</aui:nav>
 
-			<%
-			long groupId = scopeGroupId;
+				<%
+				long groupId = scopeGroupId;
 
-			long[] groupIds = new long[] {scopeGroupId};
+				long[] groupIds = new long[] {scopeGroupId};
 
-			boolean defaultAssetPublisher = false;
+				boolean defaultAssetPublisher = false;
 
-			PortletURL redirectURL = liferayPortletResponse.createLiferayPortletURL(themeDisplay.getPlid(), portletDisplay.getId(), PortletRequest.RENDER_PHASE, false);
+				PortletURL redirectURL = liferayPortletResponse.createLiferayPortletURL(themeDisplay.getPlid(), portletDisplay.getId(), PortletRequest.RENDER_PHASE, false);
 
-			redirectURL.setParameter("struts_action", "/dockbar/add_content_redirect");
-			redirectURL.setWindowState(LiferayWindowState.POP_UP);
+				redirectURL.setParameter("struts_action", "/dockbar/add_content_redirect");
+				redirectURL.setWindowState(LiferayWindowState.POP_UP);
 
-			Map<String, PortletURL> addPortletURLs = AssetUtil.getAddPortletURLs(liferayPortletRequest, liferayPortletResponse, AssetRendererFactoryRegistryUtil.getClassNameIds(company.getCompanyId()), new long[0], new long[0], new String[0], redirectURL.toString());
-			%>
+				Map<String, PortletURL> addPortletURLs = AssetUtil.getAddPortletURLs(liferayPortletRequest, liferayPortletResponse, AssetRendererFactoryRegistryUtil.getClassNameIds(company.getCompanyId()), new long[0], new long[0], new String[0], redirectURL.toString());
+				%>
 
-			<%@ include file="/html/portlet/asset_publisher/add_asset.jspf" %>
+				<aui:nav>
+					<%@ include file="/html/portlet/asset_publisher/add_asset.jspf" %>
+				</aui:nav>
+
+				<aui:nav-bar-search cssClass="pull-right">
+					<aui:input cssClass="search-query" label="" name="searchContent" type="text" />
+				</aui:nav-bar-search>
+			</aui:nav-bar>
 		</span>
 
 		<div id="<portlet:namespace />entriesContainer">
@@ -95,6 +101,7 @@ int delta = ParamUtil.getInteger(request, "delta", deltaDefault);
 
 	var addContent = new Liferay.Dockbar.AddContent(
 		{
+			displayStyle: '<%= displayStyle %>',
 			focusItem: searchContent,
 			inputNode: searchContent,
 			namespace: '<portlet:namespace />',

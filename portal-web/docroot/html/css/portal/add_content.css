@@ -280,6 +280,26 @@
 
 .lfr-add-panel {
 	.add-content-menu {
+		.add-content-toolbar {
+			.nav-display-style-buttons {
+				margin-left: 6px
+			}
+
+			.navbar-search .control-group {
+				margin-bottom: 0;
+
+				.search-query {
+					width: 82px;
+
+					@include respond-to(phone, tablet) {
+						width: 100%;
+
+						@include box-sizing(border-box);
+					}
+				}
+			}
+		}
+
 		.lfr-add-apps-legend {
 			color: #999;
 		}
