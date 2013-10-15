@@ -17,11 +17,11 @@
 <%@ include file="/html/taglib/ui/search/init.jsp" %>
 
 <%
-long groupId = ParamUtil.getLong(request, namespace + "groupId");
+long groupId = ParamUtil.getLong(request, "groupId");
 
 Group group = themeDisplay.getScopeGroup();
 
-String keywords = ParamUtil.getString(request, namespace + "keywords");
+String keywords = ParamUtil.getString(request, "keywords");
 
 PortletURL portletURL = null;
 
@@ -45,14 +45,18 @@ pageContext.setAttribute("portletURL", portletURL);
 <form action="<%= portletURL.toString() %>" method="get" name="<%= randomNamespace %><%= namespace %>fm" onSubmit="<%= randomNamespace %><%= namespace %>search(); return false;">
 <liferay-portlet:renderURLParams varImpl="portletURL" />
 
-<input name="<%= namespace %>keywords" size="30" title="<liferay-ui:message key="search" />" type="text" value="<%= HtmlUtil.escapeAttribute(keywords) %>" />
+<aui:nav-bar cssClass="search-toolbar">
+	<aui:nav-bar-search cssClass="pull-right">
+		<div class="form-search">
+			<aui:select cssClass="search-scope" inlineField="<%= true %>" label="" name="groupId" title="scope">
+				<aui:option label="everything" selected="<%= groupId == 0 %>" value="0" />
+				<aui:option label='<%= "this-" + (group.isOrganization() ? "organization" : "site") %>' selected="<%= groupId != 0 %>" value="<%= group.getGroupId() %>" />
+			</aui:select>
 
-<select name="<%= namespace %>groupId" title="<liferay-ui:message key="scope" /> ">
-	<option value="0" <%= (groupId == 0) ? "selected" : "" %>><liferay-ui:message key="everything" /></option>
-	<option value="<%= group.getGroupId() %>" <%= (groupId != 0) ? "selected" : "" %>><liferay-ui:message key='<%= "this-" + (group.isOrganization() ? "organization" : "site") %>' /></option>
-</select>
-
-<input align="absmiddle" border="0" src="<%= themeDisplay.getPathThemeImages() %>/common/search.png" title="<liferay-ui:message key="search" />" type="image" />
+			<liferay-ui:input-search cssClass="input-append search-keywords" name="keywords" title="search" />
+		</div>
+	</aui:nav-bar-search>
+</aui:nav-bar>
 
 <aui:script>
 	function <%= randomNamespace %><%= namespace %>search() {

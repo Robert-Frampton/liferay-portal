@@ -18,17 +18,9 @@
 
 <c:choose>
 	<c:when test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-		<style type="text/css">
-			.portlet-journal-content-search .search-results {
-				margin-top: 1em;
-			}
-		</style>
 
 		<%
-		String defaultKeywords = LanguageUtil.get(pageContext, "search") + StringPool.TRIPLE_PERIOD;
-		String unicodeDefaultKeywords = UnicodeFormatter.toString(defaultKeywords);
-
-		String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
+		String keywords = ParamUtil.getString(request, "keywords");
 		%>
 
 		<portlet:renderURL var="searchURL">
@@ -121,14 +113,13 @@
 				}
 			%>
 
-			<%
-			String taglibOnBlur = "if (this.value == '') { this.value = '" + unicodeDefaultKeywords + "'; }";
-			String taglibOnFocus = "if (this.value == '" + unicodeDefaultKeywords + "') { this.value = ''; }";
-			%>
-
-			<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="lfr-search-keywords" inlineField="<%= true %>" label="" name="keywords" onBlur="<%= taglibOnBlur %>" onFocus="<%= taglibOnFocus %>" size="30" title="search-web-content" type="text" value="<%= HtmlUtil.escape(keywords) %>" />
-
-			<aui:input align="absmiddle" alt='<%= LanguageUtil.get(pageContext, "search") %>' border="0" cssClass="lfr-search-button" inlineField="<%= true %>" label="" name="search" src='<%= themeDisplay.getPathThemeImages() + "/common/search.png" %>' title="search" type="image" />
+			<aui:nav-bar>
+				<aui:nav-bar-search cssClass="pull-right">
+					<div class="form-search">
+						<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="keywords" title="search-web-content" />
+					</div>
+				</aui:nav-bar-search>
+			</aui:nav-bar>
 
 			<div class="search-results">
 				<liferay-ui:search-speed hits="<%= hits %>" searchContainer="<%= searchContainer %>" />

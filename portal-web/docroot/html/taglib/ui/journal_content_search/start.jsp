@@ -21,10 +21,7 @@ boolean showListed = GetterUtil.getBoolean((String)request.getAttribute("liferay
 String targetPortletId = (String)request.getAttribute("liferay-ui:journal-content-search:targetPortletId");
 String type = (String)request.getAttribute("liferay-ui:journal-content-search:type");
 
-String defaultKeywords = LanguageUtil.get(pageContext, "search") + StringPool.TRIPLE_PERIOD;
-String unicodeDefaultKeywords = UnicodeFormatter.toString(defaultKeywords);
-
-String keywords = ParamUtil.getString(request, namespace + "keywords", defaultKeywords);
+String keywords = ParamUtil.getString(request, "keywords");
 
 PortletURL portletURL = null;
 
@@ -54,11 +51,10 @@ portletURL.setWindowState(WindowState.MAXIMIZED);
 
 <form action="<%= HtmlUtil.escape(portletURL.toString()) %>" class="form" method="post" name="<%= namespace %>fm" onSubmit="submitForm(this); return false;">
 
-<%
-String taglibOnBlur = "if (this.value == '') { this.value = '" + unicodeDefaultKeywords + "'; }";
-String taglibOnFocus = "if (this.value == '" + unicodeDefaultKeywords + "') { this.value = ''; }";
-%>
-
-<aui:input cssClass="lfr-search-keywords" inlineField="<%= true %>" label="" name="keywords" onBlur="<%= taglibOnBlur %>" onFocus="<%= taglibOnFocus %>" size="30" title="search-web-content" type="text" value="<%= HtmlUtil.escape(keywords) %>" />
-
-<aui:input alt="search" cssClass="lfr-search-button" inlineField="<%= true %>" label="" name="search" src='<%= themeDisplay.getPathThemeImages() + "/common/search.png" %>' type="image" />
+<aui:nav-bar>
+	<aui:nav-bar-search cssClass="pull-right">
+		<div class="form-search">
+			<liferay-ui:input-search name="keywords" title="search-web-content" />
+		</div>
+	</aui:nav-bar-search>
+</aui:nav-bar>

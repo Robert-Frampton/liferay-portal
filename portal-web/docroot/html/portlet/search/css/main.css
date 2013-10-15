@@ -1,4 +1,18 @@
 .portlet-search {
+	.search-toolbar .navbar-search .form-search {
+		.search-scope {
+			width: auto;
+		}
+
+		.search-keywords {
+			display: inline-block;
+		}
+
+		.refresh .taglib-icon {
+			color: #000;
+		}
+	}
+
 	.entry-tags {
 		margin: 3px 0 0;
 	}

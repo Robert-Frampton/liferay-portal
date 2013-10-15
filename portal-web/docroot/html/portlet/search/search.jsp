@@ -55,18 +55,20 @@ request.setAttribute("search.jsp-returnToFullPageURL", portletDisplay.getURLBack
 	<portlet:param name="struts_action" value="/search/search" />
 </liferay-portlet:renderURL>
 
-<aui:form action="<%= searchURL %>" method="get" name="fm" onSubmit="event.preventDefault();">
+<aui:form action="<%= searchURL %>" method="get" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "search();" %>'>
 	<liferay-portlet:renderURLParams varImpl="searchURL" />
 	<aui:input name="<%= SearchContainer.DEFAULT_CUR_PARAM %>" type="hidden" value="<%= ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR) %>" />
 	<aui:input name="format" type="hidden" value="<%= format %>" />
 
-	<aui:fieldset id="searchContainer">
-		<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" inlineField="<%= true %>" label="" name="keywords" size="30" value="<%= HtmlUtil.escape(keywords) %>" />
+	<aui:nav-bar cssClass="search-toolbar">
+		<aui:nav-bar-search cssClass="pull-right">
+			<div class="form-search">
+				<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="input-append search-keywords" name="keywords" />
 
-		<aui:input inlineField="<%= true %>" label="" name="search" src='<%= themeDisplay.getPathThemeImages() + "/common/search.png" %>' title="search" type="image" />
-
-		<aui:input inlineField="<%= true %>" label="" name="clearSearch" src='<%= themeDisplay.getPathThemeImages() + "/common/close.png" %>' title="clear-search" type="image" />
-	</aui:fieldset>
+				<liferay-ui:icon cssClass="refresh" id="clearSearch" message="clear-search" image="../aui/remove" label="<%= false %>" url="javascript:;" />
+			</div>
+		</aui:nav-bar-search>
+	</aui:nav-bar>
 
 	<div class="lfr-token-list" id="<portlet:namespace />searchTokens">
 		<div class="lfr-token-list-content" id="<portlet:namespace />searchTokensContent"></div>
@@ -119,23 +121,15 @@ request.setAttribute("search.jsp-returnToFullPageURL", portletDisplay.getURLBack
 </aui:form>
 
 <aui:script use="aui-base">
-	A.on(
+	A.one('#<portlet:namespace />clearSearch').on(
 		'click',
 		function(event) {
-			var targetId = event.target.get('id');
+			<portlet:renderURL copyCurrentRenderParameters="<%= false %>" var="clearSearchURL">
+				<portlet:param name="groupId" value="0" />
+			</portlet:renderURL>
 
-			if (targetId === '<portlet:namespace />search') {
-				<portlet:namespace />search();
-			}
-			else if (targetId === '<portlet:namespace />clearSearch') {
-				<portlet:renderURL copyCurrentRenderParameters="<%= false %>" var="clearSearchURL">
-					<portlet:param name="groupId" value="0" />
-				</portlet:renderURL>
-
-				window.location.href = '<%= clearSearchURL %>';
-			}
-		},
-		'#<portlet:namespace />searchContainer'
+			window.location.href = '<%= clearSearchURL %>';
+		}
 	);
 
 	var searchContainer = A.one('.portlet-search .result .lfr-search-container');
