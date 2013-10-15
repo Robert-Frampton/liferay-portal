@@ -72,7 +72,7 @@ boolean hasAddDocumentPermission = DLFolderPermission.contains(permissionChecker
 		<aui:nav-item href="<%= addRepositoryURL %>" iconClass="icon-hdd" label="repository" />
 	</c:if>
 
-	<c:if test="<%= ((folder == null) || folder.isSupportsMultipleUpload()) && hasAddDocumentPermission && !fileEntryTypes.isEmpty() %>">
+	<c:if test="<%= ((folder == null) || folder.isSupportsMultipleUpload()) && hasAddDocumentPermission && !fileEntryTypes.isEmpty() && (BrowserSnifferUtil.isChrome(request) || BrowserSnifferUtil.isSafari(request) && BrowserSnifferUtil.getMajorVersion(request) >= 6) %>">
 		<portlet:renderURL var="editFileEntryURL">
 			<portlet:param name="struts_action" value="/document_library/upload_multiple_file_entries" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
