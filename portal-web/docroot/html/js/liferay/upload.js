@@ -219,6 +219,8 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
+						var Browser = Liferay.Browser;
+
 						var strings = instance.get(STRINGS);
 
 						var fallback = instance.get('fallback');
@@ -227,7 +229,8 @@ AUI.add(
 
 						if (useFallback ||
 							UPLOADER_TYPE == 'none' ||
-							(UPLOADER_TYPE == 'flash' && !A.SWFDetect.isFlashVersionAtLeast(10, 1))) {
+							(UPLOADER_TYPE == 'flash' && !A.SWFDetect.isFlashVersionAtLeast(10, 1)) ||
+							(Browser.isSafari() && !Browser.isChrome() && Browser.getMajorVersion() < 6)) {
 
 							if (fallback) {
 								fallback.show();
