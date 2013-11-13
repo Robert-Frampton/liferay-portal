@@ -545,7 +545,7 @@
 		},
 
 		_handleLink: function(element, listTagsIn, listTagsOut) {
-			var hrefAttribute = element.getAttribute('href');
+			var hrefAttribute = element.getAttribute('href') || '';
 
 			var decodedLink = decodeURIComponent(hrefAttribute);
 
