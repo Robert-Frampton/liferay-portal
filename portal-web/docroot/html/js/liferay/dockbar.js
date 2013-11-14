@@ -308,11 +308,11 @@ AUI.add(
 					dockBar.delegate(
 						EVENT_CLICK,
 						function(event) {
-							var isSiteNav = event.currentTarget.attr('data-navid') === (namespace + 'navSiteNavigation');
+							var currentTarget = event.currentTarget;
 
 							var open = btnNavigation.hasClass(STR_OPEN);
 
-							if (isSiteNav || open) {
+							if (open || (currentTarget === btnNavigation)) {
 								btnNavigation.toggleClass(STR_OPEN);
 								navigation.toggleClass(STR_OPEN);
 							}
@@ -397,7 +397,7 @@ AUI.add(
 					if (navAccountControlsAncestor) {
 						navLink = navAccountControlsAncestor.one('li a');
 					}
-
+					console.log(navLink);
 					navLink.blur();
 					navLink.focus();
 				}
