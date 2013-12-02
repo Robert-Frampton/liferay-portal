@@ -69,7 +69,7 @@ try {
 	}
 
 	if (!assetEntry.isVisible() &&
-		(assetRenderer.getAssetRendererType() == AssetRendererFactory.TYPE_LATEST_APPROVED)) {
+		(assetRenderer.getAssetRendererType() == AssetRendererFactory.TYPE_LATEST)) {
 
 		throw new NoSuchModelException();
 	}
