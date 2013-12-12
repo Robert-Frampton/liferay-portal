@@ -64,10 +64,6 @@ else {
 
 <h3><liferay-ui:message key="websites" /></h3>
 
-<div class="alert alert-info">
-	<liferay-ui:message key="url-and-type-are-required-fields.-websites-must-start-with-http-or-https" />
-</div>
-
 <liferay-ui:error key="<%= NoSuchListTypeException.class.getName() + className + ListTypeConstants.WEBSITE %>" message="please-select-a-type" />
 <liferay-ui:error exception="<%= WebsiteURLException.class %>" message="please-enter-a-valid-url" />
 
@@ -86,7 +82,7 @@ else {
 			<div class="row-fields">
 				<aui:input name='<%= "websiteId" + websitesIndex %>' type="hidden" value="<%= website.getWebsiteId() %>" />
 
-				<aui:input cssClass="url-field" fieldParam='<%= "websiteUrl" + websitesIndex %>' id='<%= "websiteUrl" + websitesIndex %>' inlineField="<%= true %>" name="url" />
+				<aui:input cssClass="url-field" fieldParam='<%= "websiteUrl" + websitesIndex %>' helpMessage="url-must-start-with-http-or-https" id='<%= "websiteUrl" + websitesIndex %>' inlineField="<%= true %>" name="url" required="<%= true %>" />
 
 				<aui:select inlineField="<%= true %>" label="type" listType="<%= className + ListTypeConstants.WEBSITE %>" name='<%= "websiteTypeId" + websitesIndex %>' />
 
