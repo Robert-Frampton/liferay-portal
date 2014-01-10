@@ -17,7 +17,7 @@
 
 		.btn {
 			&.selector-button {
-				min-width: 70px;
+				min-width: 100%;
 			}
 
 			padding: 11px 19px;
@@ -59,7 +59,7 @@
 			border-bottom-width: 5px;
 		}
 
-		button.close, button.btn.close {
+		button.close, button.btn.close, button.btn.selector-button {
 			width: auto;
 		}
 	}
