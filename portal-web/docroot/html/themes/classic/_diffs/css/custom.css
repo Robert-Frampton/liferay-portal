@@ -248,10 +248,22 @@ $dockbarOpenGradientStart: #0EA6F9;
 			}
 
 			.staging-bar {
-				margin: 6px 0;
-
 				> li {
-					background: transparent;
+					background: #2596E6;
+					line-height: 17px;
+					margin-right: 5px;
+					overflow: hidden;
+
+					> a {
+						color: #FFF;
+						margin: 0;
+						padding-left: 15px;
+						padding-right: 15px;
+					}
+
+					&.active {
+					background: #2AAAE6;
+					}
 				}
 			}
 		}
@@ -505,6 +517,10 @@ $dockbarOpenGradientStart: #0EA6F9;
 				}
 			}
 		}
+
+		> ul.staging-bar {
+			margin: 7px 0;
+		}
 	}
 
 	/* ---------- Footer ---------- */
@@ -635,7 +651,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 		@include border-radius(3px 3px 0 0);
 	}
 
-	.dockbar .staging-bar .staging-toggle > a {
+	.dockbar .staging-bar > li {
 		@include border-radius(3px);
 	}
 
