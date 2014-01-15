@@ -64,10 +64,6 @@ else {
 
 <h3><liferay-ui:message key="websites" /></h3>
 
-<div class="alert alert-info">
-	<liferay-ui:message key="url-must-start-with-http-or-https" />
-</div>
-
 <liferay-ui:error key="<%= NoSuchListTypeException.class.getName() + className + ListTypeConstants.WEBSITE %>" message="please-select-a-type" />
 <liferay-ui:error exception="<%= WebsiteURLException.class %>" message="please-enter-a-valid-url" />
 
@@ -84,17 +80,13 @@ else {
 
 		<div class="lfr-form-row lfr-form-row-inline">
 			<div class="row-fields">
-				<aui:col width="<%= 50 %>">
-					<aui:input name='<%= "websiteId" + websitesIndex %>' type="hidden" value="<%= website.getWebsiteId() %>" />
+				<aui:input name='<%= "websiteId" + websitesIndex %>' type="hidden" value="<%= website.getWebsiteId() %>" />
 
-					<aui:input cssClass="url-field" fieldParam='<%= "websiteUrl" + websitesIndex %>' id='<%= "websiteUrl" + websitesIndex %>' inlineField="<%= true %>" name="url" required="<%= true %>" />
-				</aui:col>
+				<aui:input cssClass="url-field" fieldParam='<%= "websiteUrl" + websitesIndex %>' helpMessage="url-must-start-with-http-or-https" id='<%= "websiteUrl" + websitesIndex %>' inlineField="<%= true %>" name="url" required="<%= true %>" />
 
-				<aui:col width="<%= 50 %>">
-					<aui:select inlineField="<%= true %>" label="type" listType="<%= className + ListTypeConstants.WEBSITE %>" name='<%= "websiteTypeId" + websitesIndex %>' required="<%= true %>" />
+				<aui:select inlineField="<%= true %>" label="type" listType="<%= className + ListTypeConstants.WEBSITE %>" name='<%= "websiteTypeId" + websitesIndex %>' />
 
-					<aui:input checked="<%= website.isPrimary() %>" cssClass="primary-ctrl" id='<%= "websitePrimary" + websitesIndex %>' inlineField="<%= true %>" label="primary" name="websitePrimary" type="radio" value="<%= websitesIndex %>" />
-				</aui:col>
+				<aui:input checked="<%= website.isPrimary() %>" cssClass="primary-ctrl" id='<%= "websitePrimary" + websitesIndex %>' inlineField="<%= true %>" label="primary" name="websitePrimary" type="radio" value="<%= websitesIndex %>" />
 			</div>
 		</div>
 

@@ -64,10 +64,6 @@ else {
 
 <h3><liferay-ui:message key="addresses" /></h3>
 
-<div class="alert alert-info">
-	<liferay-ui:message key="postal-code-could-be-required-in-some-countries" />
-</div>
-
 <liferay-ui:error exception="<%= AddressCityException.class %>" message="please-enter-a-valid-city" />
 <liferay-ui:error exception="<%= AddressStreetException.class %>" message="please-enter-a-valid-street" />
 <liferay-ui:error exception="<%= AddressZipException.class %>" message="please-enter-a-valid-postal-code" />
