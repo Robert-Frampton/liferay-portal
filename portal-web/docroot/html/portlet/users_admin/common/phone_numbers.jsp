@@ -65,10 +65,6 @@ else {
 
 <h3><liferay-ui:message key="phone-numbers" /></h3>
 
-<div class="alert alert-info">
-	<liferay-ui:message key="phone-number-and-type-are-required-fields.-extension-must-be-numeric" />
-</div>
-
 <liferay-ui:error key="<%= NoSuchListTypeException.class.getName() + className + ListTypeConstants.PHONE %>" message="please-select-a-type" />
 <liferay-ui:error exception="<%= PhoneNumberException.class %>" message="please-enter-a-valid-phone-number" />
 
@@ -87,9 +83,9 @@ else {
 			<div class="row-fields">
 				<aui:input name='<%= "phoneId" + phonesIndex %>' type="hidden" value="<%= phone.getPhoneId() %>" />
 
-				<aui:input fieldParam='<%= "phoneNumber" + phonesIndex %>' id='<%= "phoneNumber" + phonesIndex %>' inlineField="<%= true %>" name="number" />
+				<aui:input fieldParam='<%= "phoneNumber" + phonesIndex %>' id='<%= "phoneNumber" + phonesIndex %>' inlineField="<%= true %>" name="number" required="<%= true %>" />
 
-				<aui:input fieldParam='<%= "phoneExtension" + phonesIndex %>' id='<%= "phoneExtension" + phonesIndex %>' inlineField="<%= true %>" name="extension" />
+				<aui:input fieldParam='<%= "phoneExtension" + phonesIndex %>' helpMessage="extension-must-be-numeric" id='<%= "phoneExtension" + phonesIndex %>' inlineField="<%= true %>" name="extension" />
 
 				<aui:select inlineField="<%= true %>" label="type" listType="<%= className + ListTypeConstants.PHONE %>" name='<%= "phoneTypeId" + phonesIndex %>' />
 
