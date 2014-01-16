@@ -168,6 +168,22 @@
 	#blogsCommentsPanelContainer {
 		border-width: 0;
 	}
+
+	#blogsEntryAbstractPanel .control-group {
+		textarea.input-xxlarge {
+			width: 95%;
+		}
+
+		&.control-group-inline {
+			display: inline;
+
+			input {
+				height: auto;
+				white-space: pre-wrap;
+				width: 100%;
+			}
+		}
+	}
 }
 
 .social-boomarks-options {
