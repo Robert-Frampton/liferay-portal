@@ -36,6 +36,10 @@
 		}
 	}
 
+	.portlet-header-tabs {
+		margin-top: -36px;
+	}
+
 	#header-bottom {
 		background-color: #F6F8FB;
 		height: 34px;

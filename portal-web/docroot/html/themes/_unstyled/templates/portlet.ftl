@@ -19,6 +19,8 @@
 		</menu>
 	</header>
 
+	<div class="clearfix">&nbsp;</div>
+
 	<div class="portlet-content">
 		${portlet_display.writeContent(writer)}
 	</div>

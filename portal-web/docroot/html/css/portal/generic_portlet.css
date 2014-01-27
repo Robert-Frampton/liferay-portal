@@ -15,10 +15,6 @@
 			display: none;
 		}
 	}
-
-	.page-maximized .portlet-topper-toolbar {
-		display: block;
-	}
 }
 
 .configuration-frame, .control-panel-frame {
