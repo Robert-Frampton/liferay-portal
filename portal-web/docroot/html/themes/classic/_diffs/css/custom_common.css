@@ -476,6 +476,11 @@
 
 		.navbar-inner {
 			min-height: 47px;
+
+			.nav .dropdown-toggle .caret {
+				border-bottom-color: #000;
+				border-top-color: #000;
+			}
 		}
 	}
 
