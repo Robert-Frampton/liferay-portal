@@ -478,6 +478,18 @@
 		}
 	}
 
+	.portlet-dictionary .navbar .navbar-search {
+		width: 100%;
+
+		.form-search {
+			float: right;
+		}
+
+		select {
+			float: left;
+		}
+	}
+
 	/* ---------- Nav#Navigation ---------- */
 
 	.modify-pages .delete-tab {
@@ -875,6 +887,22 @@
 	@include respond-to(phone, tablet) {
 		#navigation.open .navbar-inner .nav-collapse li a {
 			@include border-radius(0);
+		}
+
+		.portlet-dictionary .navbar .navbar-search {
+			.form-search, select {
+				display: block;
+				float: none;
+				margin: 0 auto 10px;
+			}
+
+			select {
+				width: 100%;
+			}
+
+			.input-append {
+				padding-left: 0;
+			}
 		}
 	}
 

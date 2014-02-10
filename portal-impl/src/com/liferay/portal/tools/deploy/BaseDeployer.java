@@ -2037,7 +2037,8 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 			String listenerClass = GetterUtil.getString(
 				listenerElement.elementText("listener-class"));
 
-			if (listenerClass.equals(
+			if (listenerClass.equals(PluginContextListener.class.getName()) ||
+				listenerClass.equals(
 					SecurePluginContextListener.class.getName())) {
 
 				continue;
@@ -2326,7 +2327,8 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 			String listenerClass = GetterUtil.getString(
 				listenerElement.elementText("listener-class"));
 
-			if (listenerClass.equals(
+			if (listenerClass.equals(PluginContextListener.class.getName()) ||
+				listenerClass.equals(
 					SerializableSessionAttributeListener.class.getName()) ||
 				listenerClass.equals(
 					SecurePluginContextListener.class.getName())) {

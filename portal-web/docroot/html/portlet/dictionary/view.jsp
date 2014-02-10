@@ -16,15 +16,25 @@
 
 <%@ include file="/html/portlet/dictionary/init.jsp" %>
 
-<form name="<portlet:namespace />fm" onSubmit="window.open(document.<portlet:namespace />fm.<portlet:namespace />type[document.<portlet:namespace />fm.<portlet:namespace />type.selectedIndex].value + encodeURIComponent(document.<portlet:namespace />fm.<portlet:namespace />word.value)); return false;">
+<%
+String lookup = ParamUtil.getString(request, "lookup");
+%>
 
-<input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="<portlet:namespace />word" size="30" type="text" />
+<aui:nav-bar>
+	<form name="<portlet:namespace />fm" onSubmit="window.open(document.<portlet:namespace />fm.<portlet:namespace />type[document.<portlet:namespace />fm.<portlet:namespace />type.selectedIndex].value + encodeURIComponent(document.<portlet:namespace />fm.<portlet:namespace />lookup.value)); return false;">
 
-<select name="<portlet:namespace />type">
-	<option value="http://dictionary.reference.com/search?q="><liferay-ui:message key="dictionary" /></option>
-	<option value="http://thesaurus.reference.com/search?q="><liferay-ui:message key="thesaurus" /></option>
-</select>
+		<aui:nav-bar-search>
 
-<input type="submit" value="<liferay-ui:message key="find" />" />
+			<div class="form-search">
+				<liferay-ui:input-search name="lookup" autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" placeholder='<%= LanguageUtil.get(locale, "lookup") %>' />
+			</div>
 
-</form>
+			<select name="<portlet:namespace />type">
+				<option value="http://dictionary.reference.com/search?q="><liferay-ui:message key="dictionary" /></option>
+				<option value="http://thesaurus.reference.com/search?q="><liferay-ui:message key="thesaurus" /></option>
+			</select>
+
+		</aui:nav-bar-search>
+
+	</form>
+</aui:nav-bar>
