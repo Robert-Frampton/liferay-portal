@@ -1,6 +1,22 @@
 @import "compass";
 @import "mixins";
 
+.aui {
+	.portlet .portlet-content {
+		fieldset, .fieldset {
+			min-width: 0;
+			position: relative;
+			width: 100%;
+		}
+	}
+}
+
+.firefox {
+    fieldset {
+        display: table-cell;
+    }
+}
+
 .control-group-inline {
 	display: inline-block;
 }
