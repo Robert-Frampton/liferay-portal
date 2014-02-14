@@ -125,9 +125,12 @@ portletURL.setParameter("eventName", eventName);
 
 	var openingLiferay = Util.getOpener().Liferay;
 
-	var disabledSelectors = A.all('.selector-button:disabled');
-
-	openingLiferay.fire('<portlet:namespace />enableRemovedRegularRoles', disabledSelectors);
+	openingLiferay.fire(
+		'<portlet:namespace />enableRemovedRegularRoles',
+		{
+			selectors: A.all('.selector-button:disabled')
+		}
+	);
 
 	Util.selectEntityHandler('#<portlet:namespace />selectRegularRoleFm', '<%= HtmlUtil.escapeJS(eventName) %>');
 </aui:script>

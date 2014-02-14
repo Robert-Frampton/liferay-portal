@@ -145,9 +145,8 @@ List<UserGroup> userGroups = (List<UserGroup>)request.getAttribute("user.userGro
 
 	Liferay.on(
 		'<portlet:namespace />enableRemovedUserGroups',
-		function(selectors) {
-			A.each(
-				selectors,
+		function(event) {
+			event.selectors.each(
 				function(item, index, collection) {
 					var modifyLink = searchContainerContentBox.one('.modify-link[data-rowid="' + item.attr('data-usergroupid') + '"]');
 

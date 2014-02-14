@@ -206,9 +206,12 @@ portletURL.setParameter("target", target);
 
 	var openingLiferay = Util.getOpener().Liferay;
 
-	var disabledSelectors = A.all('.selector-button:disabled');
-
-	openingLiferay.fire('<portlet:namespace />enableRemovedSites', disabledSelectors);
+	openingLiferay.fire(
+		'<portlet:namespace />enableRemovedSites',
+		{
+			selectors: A.all('.selector-button:disabled')
+		}
+	);
 
 	Util.selectEntityHandler('#<portlet:namespace />selectGroupFm', '<%= HtmlUtil.escapeJS(eventName) %>', <%= selUser != null %>);
 </aui:script>

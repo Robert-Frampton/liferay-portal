@@ -270,9 +270,12 @@ if (step == 1) {
 
 				var openingLiferay = Util.getOpener().Liferay;
 
-				var selectors = A.all('.selector-button');
-
-				openingLiferay.fire('<portlet:namespace />syncSiteRoles', selectors);
+				openingLiferay.fire(
+					'<portlet:namespace />syncSiteRoles',
+					{
+						selectors: A.all('.selector-button')
+					}
+				);
 
 				Util.selectEntityHandler('#<portlet:namespace />selectSiteRoleFm', '<%= HtmlUtil.escapeJS(eventName) %>');
 			</aui:script>

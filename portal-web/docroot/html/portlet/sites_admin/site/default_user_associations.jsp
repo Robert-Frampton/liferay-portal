@@ -179,9 +179,8 @@ for (long defaultTeamId : defaultTeamIds) {
 
 	Liferay.on(
 		'<portlet:namespace />syncSiteRoles',
-		function(selectors) {
-			A.each(
-				selectors,
+		function(event) {
+			event.selectors.each(
 				function(item, index, collection) {
 					var modifyLink = searchContainerContentBox.one('.modify-link[data-rowid="' + item.attr('data-roleid') + '"]');
 
@@ -226,9 +225,8 @@ for (long defaultTeamId : defaultTeamIds) {
 
 	Liferay.on(
 		'<portlet:namespace />enableRemovedTeams',
-		function(selectors) {
-			A.each(
-				selectors,
+		function(event) {
+			event.selectors.each(
 				function(item, index, collection) {
 					var modifyLink = searchContainerContentBox.one('.modify-link[data-rowid="' + item.attr('data-teamid') + '"]');
 

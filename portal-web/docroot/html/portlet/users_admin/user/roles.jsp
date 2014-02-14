@@ -263,9 +263,8 @@ for (Group group : allGroups) {
 
 		Liferay.on(
 			'<portlet:namespace />syncOrganizationRoles',
-			function(selectors) {
-				A.each(
-					selectors,
+			function(event) {
+				event.selectors.each(
 					function(item, index, collection) {
 						var groupId = item.attr('data-groupid');
 						var roleId = item.attr('data-roleid');
