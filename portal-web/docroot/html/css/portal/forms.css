@@ -146,6 +146,13 @@
 }
 
 .aui {
+	.fieldset .control-group textarea {
+		@include box-sizing(border-box);
+
+		resize: none;
+		width: 100%;
+	}
+
 	input[type=file] {
 		max-width: 220px;
 	}
