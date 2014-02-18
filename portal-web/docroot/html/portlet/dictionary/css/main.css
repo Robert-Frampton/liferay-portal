@@ -1,0 +1,48 @@
+@import "compass";
+@import "mixins";
+
+.portlet-dictionary {
+	.navbar {
+		margin-bottom: 0
+	}
+
+	.navbar .navbar-search {
+		padding-top: 10px;
+		width: 100%;
+
+		.form-search, select {
+			display: inline-block;
+		}
+
+		.input-append {
+			padding: 0 15px 10px 0;
+
+			.search-query {
+				padding-bottom: 0;
+			}
+		}
+
+		select {
+			margin-bottom: 10px;
+			max-width: 100%;
+		}
+
+		@include respond-to(phone, tablet) {
+			padding: 10px 0 0;
+
+			.form-search, select {
+				float: none;
+				margin: 0 auto 10px;
+				width: 100%;
+			}
+
+			.input-append {
+				padding-left: 0;
+
+				.search-query {
+					padding-bottom: 4px;
+				}
+			}
+		}	
+	}
+}
