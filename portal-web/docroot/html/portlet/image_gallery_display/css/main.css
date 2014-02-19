@@ -83,8 +83,9 @@
 	.image-title {
 		clear: both;
 		display: block;
+		overflow: hidden;
 		padding: 0 10px;
-		word-wrap: break-word;
+		text-overflow: ellipsis;
 	}
 }
 
