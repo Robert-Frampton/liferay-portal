@@ -17,16 +17,22 @@
 <%@ include file="/html/portlet/dictionary/init.jsp" %>
 
 <aui:nav-bar>
-	<form name="<portlet:namespace />fm" onSubmit="window.open(document.<portlet:namespace />fm.<portlet:namespace />type[document.<portlet:namespace />fm.<portlet:namespace />type.selectedIndex].value + encodeURIComponent(document.<portlet:namespace />fm.<portlet:namespace />word.value)); return false;">
+	<aui:form method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "getDefinition();" %>'>
 		<aui:nav-bar-search>
 			<div class="form-search">
 				<liferay-ui:input-search name="word" autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" placeholder='<%= LanguageUtil.get(locale, "Word") %>' />
 			</div>
 
-			<select name="<portlet:namespace />type">
-				<option value="http://dictionary.reference.com/search?q="><liferay-ui:message key="dictionary" /></option>
-				<option value="http://thesaurus.reference.com/search?q="><liferay-ui:message key="thesaurus" /></option>
-			</select>
+			<aui:select label="" name="type">
+				<aui:option label="dictionary" value="http://dictionary.reference.com/search?q=" />
+				<aui:option label="thesaurus" value="http://thesaurus.reference.com/search?q=" />
+			</aui:select>
 		</aui:nav-bar-search>
-	</form>
+	</aui:form>
 </aui:nav-bar>
+	
+<aui:script>
+	function <portlet:namespace />getDefinition() {
+		window.open(document.<portlet:namespace />fm.<portlet:namespace />type[document.<portlet:namespace />fm.<portlet:namespace />type.selectedIndex].value + encodeURIComponent(document.<portlet:namespace />fm.<portlet:namespace />word.value)); return false;
+	}
+</aui:script>
