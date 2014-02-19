@@ -417,9 +417,8 @@ for (Group group : allGroups) {
 
 				Liferay.on(
 					'<portlet:namespace />syncSiteRoles',
-					function(selectors) {
-						A.each(
-							selectors,
+					function(event) {
+						event.selectors.each(
 							function(item, index, collection) {
 								var groupId = item.attr('data-groupid');
 								var roleId = item.attr('data-roleid');
@@ -588,9 +587,8 @@ for (Group group : allGroups) {
 
 	Liferay.on(
 		'<portlet:namespace />enableRemovedRegularRoles',
-		function(selectors) {
-			A.each(
-				selectors,
+		function(event) {
+			event.selectors.each(
 				function(item, index, collection) {
 					var modifyLink = searchContainerContentBox.one('.modify-link[data-rowid="' + item.attr('data-roleid') + '"]');
 
