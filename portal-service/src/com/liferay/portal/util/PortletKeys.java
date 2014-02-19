@@ -35,6 +35,8 @@ public class PortletKeys {
 
 	public static final String ASSET_BROWSER = "172";
 
+	public static final String ASSET_CATEGORIES_ADMIN = "147";
+
 	public static final String ASSET_CATEGORIES_NAVIGATION = "122";
 
 	public static final String ASSET_PUBLISHER = "101";
@@ -56,6 +58,8 @@ public class PortletKeys {
 	public static final String CALENDAR = "8";
 
 	public static final String CHAT = "1_WAR_chatportlet";
+
+	public static final String COMMENTS = "196";
 
 	public static final String CONTROL_PANEL_HOME = "190";
 

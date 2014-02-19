@@ -34,18 +34,14 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
 public abstract class BaseModelUserNotificationHandler
 	extends BaseUserNotificationHandler {
 
-	@Override
-	protected String getBody(
-			UserNotificationEvent userNotificationEvent,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-			userNotificationEvent.getPayload());
-
-
+	protected AssetRenderer getAssetRenderer(JSONObject jsonObject) {
 		String className = jsonObject.getString("className");
+		long classPK = jsonObject.getLong("classPK");
 
+		return getAssetRenderer(className, classPK);
+	}
+
+	protected AssetRenderer getAssetRenderer(String className, long classPK) {
 		AssetRendererFactory assetRendererFactory =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				className);
@@ -57,12 +53,24 @@ public abstract class BaseModelUserNotificationHandler
 		AssetRenderer assetRenderer = null;
 
 		try {
-			long classPK = jsonObject.getLong("classPK");
-
 			assetRenderer = assetRendererFactory.getAssetRenderer(classPK);
 		}
 		catch (Exception e) {
 		}
+
+		return assetRenderer;
+	}
+
+	@Override
+	protected String getBody(
+			UserNotificationEvent userNotificationEvent,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+			userNotificationEvent.getPayload());
+
+		AssetRenderer assetRenderer = getAssetRenderer(jsonObject);
 
 		if (assetRenderer == null) {
 			UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(
@@ -71,10 +79,7 @@ public abstract class BaseModelUserNotificationHandler
 			return null;
 		}
 
-		int notificationType = jsonObject.getInt("notificationType");
-
-		String title = getTitle(
-			notificationType, assetRenderer, serviceContext);
+		String title = getTitle(jsonObject, assetRenderer, serviceContext);
 
 		StringBundler sb = new StringBundler(5);
 
@@ -104,7 +109,7 @@ public abstract class BaseModelUserNotificationHandler
 	}
 
 	protected String getTitle(
-		int notificationType, AssetRenderer assetRenderer,
+		JSONObject jsonObject, AssetRenderer assetRenderer,
 		ServiceContext serviceContext) {
 
 		String message = StringPool.BLANK;
@@ -115,6 +120,8 @@ public abstract class BaseModelUserNotificationHandler
 
 		String typeName = assetRendererFactory.getTypeName(
 			serviceContext.getLocale(), true);
+
+		int notificationType = jsonObject.getInt("notificationType");
 
 		if (notificationType ==
 				UserNotificationDefinition.NOTIFICATION_TYPE_ADD_ENTRY) {

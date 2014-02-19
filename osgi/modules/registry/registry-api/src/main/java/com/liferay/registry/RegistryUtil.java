@@ -12,30 +12,32 @@
  * details.
  */
 
-package com.liferay.portal.kernel.increment;
-
-import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
-import com.liferay.portal.kernel.util.AutoResetThreadLocal;
+package com.liferay.registry;
 
 /**
- * @author Daniel Kocsis
+ * @author Raymond Augé
  */
-public class BufferedIncrementThreadLocal {
+public class RegistryUtil {
 
-	public static boolean isEnabled() {
-		if (ExportImportThreadLocal.isImportInProcess()) {
-			return false;
+	public static Registry getRegistry() {
+		if (_registry != null) {
+			return _registry.getRegistry();
 		}
 
-		return _enabled.get();
+		throw new NullPointerException("A registry instance was never set");
 	}
 
-	public static void setEnabled(boolean enabled) {
-		_enabled.set(enabled);
+	public static void setRegistry(Registry registry) {
+		if (_registry != null) {
+			registry = _registry.setRegistry(registry);
+		}
+		else if (registry != null) {
+			registry = registry.setRegistry(registry);
+		}
+
+		_registry = registry;
 	}
 
-	private static ThreadLocal<Boolean> _enabled =
-		new AutoResetThreadLocal<Boolean>(
-			BufferedIncrementThreadLocal.class + "._enabled", true);
+	private static Registry _registry;
 
 }
