@@ -1,15 +1,15 @@
 <head>
 	<script type='text/javascript'>
 		function errorLogSizeCheck() {
-			if (document.getElementById("errorLogSizeButton").checked) {
-				document.getElementById("errorLogSize").innerHTML = "Decrease Error Log Size";
+			if (document.getElementById('errorLogSizeButton').checked) {
+				document.getElementById('errorLogSize').innerHTML = "Decrease Error Log Size";
 
 				actionCommandLog.style.height = "37%";
 				errorLog.style.height = "50%";
 				pageObjectXMLLog.style.height = "37%";
 			}
 			else {
-				document.getElementById("errorLogSize").innerHTML = "&nbsp;Increase Error Log Size";
+				document.getElementById('errorLogSize').innerHTML = "&nbsp;Increase Error Log Size";
 
 				actionCommandLog.style.height = "75%";
 				errorLog.style.height = "12%";
@@ -18,23 +18,23 @@
 		}
 
 		function pauseButtonCheck() {
-			if (document.getElementById("pauseButton").checked) {
-				document.getElementById("pause").innerHTML = "Paused...";
+			if (document.getElementById('pauseButton').checked) {
+				document.getElementById('pause').innerHTML = "Paused...";
 			}
 			else {
-				document.getElementById("pause").innerHTML = "&nbsp;&nbsp;Pause&nbsp;&nbsp;&nbsp;";
+				document.getElementById('pause').innerHTML = "&nbsp;&nbsp;Pause&nbsp;&nbsp;&nbsp;";
 			}
 		}
 
 		function radioCheck () {
-			var actionCommandLogButtonChecked = document.getElementById("actionCommandLogButton").checked;
-			var disableActionScreenShotButtonChecked = document.getElementById("disableActionScreenShotButton").checked;
-			var enableActionScreenShotButtonChecked = document.getElementById("enableActionScreenShotButton").checked;
-			var xmlLogButtonChecked = document.getElementById("xmlLogButton").checked;
+			var actionCommandLogButtonChecked = document.getElementById('actionCommandLogButton').checked;
+			var disableActionScreenShotButtonChecked = document.getElementById('disableActionScreenShotButton').checked;
+			var enableActionScreenShotButtonChecked = document.getElementById('enableActionScreenShotButton').checked;
+			var xmlLogButtonChecked = document.getElementById('xmlLogButton').checked;
 
-			var actionCommandLog = document.getElementById("actionCommandLog");
-			var actionScreenShotLog = document.getElementById("actionScreenShotLog");
-			var pageObjectXMLLog = document.getElementById("pageObjectXMLLog");
+			var actionCommandLog = document.getElementById('actionCommandLog');
+			var actionScreenShotLog = document.getElementById('actionScreenShotLog');
+			var pageObjectXMLLog = document.getElementById('pageObjectXMLLog');
 
 			if ((actionCommandLogButtonChecked) && (disableActionScreenShotButtonChecked)) {
 				actionCommandLog.style.display = "block";
@@ -82,12 +82,12 @@
 				if (node.innerHTML == "-") {
 					node.innerHTML = "+";
 
-					document.getElementById("collapse" + id).style.display = "none";
+					document.getElementById('collapse' + id).style.display = "none";
 				}
 				else if (node.innerHTML == "+") {
 					node.innerHTML = "-";
 
-					document.getElementById("collapse" + id).style.display = "block";
+					document.getElementById('collapse' + id).style.display = "block";
 				}
 			}
 		}
