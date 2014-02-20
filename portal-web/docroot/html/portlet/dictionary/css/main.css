@@ -8,6 +8,8 @@
 		}
 
 		.navbar-search {
+			width: 100%;
+			
 			.input-append {
 				padding: 0 15px 0 0;
 			}
