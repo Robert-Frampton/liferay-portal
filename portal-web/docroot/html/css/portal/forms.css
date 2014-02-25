@@ -183,6 +183,13 @@
 			line-height: normal;
 		}
 
+		.fieldset .control-group .field {
+			@include box-sizing(border-box);
+
+			resize: none;
+			width: 100%;
+		}
+
 		@include respond-to(phone) {
 			input[type=file] {
 				width: 100%;
