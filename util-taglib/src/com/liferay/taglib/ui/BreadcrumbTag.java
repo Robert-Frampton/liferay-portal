@@ -558,7 +558,7 @@ public class BreadcrumbTag extends IncludeTag {
 			String.valueOf(_showPortletBreadcrumb));
 	}
 
-	private static final String _DISPLAY_STYLE = "0";
+	private static final String _DISPLAY_STYLE = PropsUtil.get(PropsKeys.BREADCRUMB_DISPLAY_STYLE_DEFAULT);
 
 	private static final String _PAGE = "/html/taglib/ui/breadcrumb/page.jsp";
 

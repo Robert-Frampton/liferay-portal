@@ -19,11 +19,7 @@
 <%
 String portletResource = ParamUtil.getString(request, "portletResource");
 
-String displayStyle = GetterUtil.getString((String)request.getAttribute("liferay-ui:breadcrumb:displayStyle"), "horizontal");
-
-if (!ArrayUtil.contains(PropsValues.BREADCRUMB_DISPLAY_STYLE_OPTIONS, displayStyle)) {
-	displayStyle = "horizontal";
-}
+String displayStyle = GetterUtil.getString((String)request.getAttribute("liferay-ui:breadcrumb:displayStyle"), PropsValues.BREADCRUMB_DISPLAY_STYLE_OPTIONS);
 
 boolean showCurrentGroup = PrefsParamUtil.getBoolean(portletPreferences, renderRequest, "showCurrentGroup", true);
 boolean showCurrentPortlet = PrefsParamUtil.getBoolean(portletPreferences, renderRequest, "showCurrentPortlet", true);
