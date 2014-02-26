@@ -313,8 +313,6 @@ AUI.add(
 
 				var navigation = A.one(Liferay.Data.NAV_SELECTOR);
 
-				btnNavigation.setData('menuItem', navigation);
-
 				var handle;
 
 				if (btnNavigation && navigation) {
