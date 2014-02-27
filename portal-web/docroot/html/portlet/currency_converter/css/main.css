@@ -1,0 +1,9 @@
+.portlet-currency-converter {
+	.cc-form {
+		overflow: auto;
+
+		input[type="text"] {
+			margin-bottom: 0;
+		}
+	}
+}
