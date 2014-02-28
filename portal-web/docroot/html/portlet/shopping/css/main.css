@@ -1,0 +1,35 @@
+@import "compass";
+@import "mixins";
+
+.portlet-shopping .portlet {
+	fieldset, .fieldset {
+		> div > div {
+			display: block;
+			margin-left: 0;
+			min-width: 100%;
+
+			.control-group {
+				display: inline-block;
+
+				input {
+					max-width: 90%;	
+				}
+
+				select {
+					max-width: 95%;
+				}
+
+				@include respond-to(phone) {
+					display: inline-block;
+					max-width: 100%
+				}
+			}
+		}
+
+		> div .control-group {
+			.form-text, .field {
+				max-width: 88%;
+			}
+		}
+	}
+}
