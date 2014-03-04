@@ -16,6 +16,8 @@
 			.brand {
 				padding: 12px 0 0 0;
 				line-height: 16px;
+				white-space: nowrap;
+				width: 40%;
 
 				.control-panel-back-link {
 					float: left;
@@ -30,9 +32,13 @@
 				h1 {
 					@include respond-to(phone) {
 						height: 51px;
+						left: -33px;
 						margin-top: -5px;
-						max-width: 165px;
+						max-width: 100%;
+						padding-left: 33px;
 						position: relative;
+
+						@include box-sizing(border-box);
 
 						a {
 							display: inline-block;
@@ -48,6 +54,7 @@
 
 						.control-panel-site-selector, .site-administration-title {
 							@include ellipsis;
+							display: block;
 							font-size: 16px;
 						}
 
