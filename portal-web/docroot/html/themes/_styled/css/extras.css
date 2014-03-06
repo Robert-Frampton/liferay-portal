@@ -102,13 +102,9 @@
 
 .dockbar .navbar-inner {
 	.container .nav-collapse > .nav {
-		&.nav-account-controls .info-link-container.open .info-link {
-			@include respond-to(phone, tablet) {
+		@include respond-to(phone, tablet) {
+			&.nav-account-controls .info-link-container .info-link {
 				@include border-radius(3px);
-
-				&:focus, &:hover {
-					@include border-radius(3px);
-				}
 			}
 		}
 
