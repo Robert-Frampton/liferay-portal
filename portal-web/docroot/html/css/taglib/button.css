@@ -45,7 +45,7 @@
 
 			@include respond-to(phone) {
 				margin-top: 0;
-				width: auto;
+				width: 25%;
 			}
 		}
 
