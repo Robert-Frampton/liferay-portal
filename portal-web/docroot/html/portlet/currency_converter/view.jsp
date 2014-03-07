@@ -32,13 +32,17 @@ decimalFormat.setMaximumFractionDigits(2);
 decimalFormat.setMinimumFractionDigits(2);
 %>
 
-<form action="<portlet:renderURL windowState="<%= WindowState.MAXIMIZED.toString() %>"><portlet:param name="struts_action" value="/currency_converter/view" /></portlet:renderURL>" method="post" name="<portlet:namespace />fm" onSubmit="submitForm(this); return false;">
+<portlet:renderURL var="converterRenderURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
+	<portlet:param name="struts_action" value="/currency_converter/view" />
+</portlet:renderURL>
 
-<input type="submit" value="<liferay-ui:message key="convert" />" />
+<aui:form action="<%= converterRenderURL %>" cssClass="cc-form form-inline" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + "submitForm();" %>'>
 
-<input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="<portlet:namespace />number" size="3" type="text" value="<%= number %>" />
+<aui:button inlineField="<%= true %>" primary="<%= false %>" type="submit" value="convert" />
 
-<select name="<portlet:namespace />from">
+<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" inlineField="<%= true %>" label="" name="number" size="3" type="text" value="<%= number %>" />
+
+<aui:select inlineField="<%= true %>" label="" name="from">
 
 	<%
 	for (Map.Entry<String, String> entry : allSymbols.entrySet()) {
@@ -46,17 +50,17 @@ decimalFormat.setMinimumFractionDigits(2);
 		String currencyValue = entry.getKey();
 	%>
 
-		<option <%= symbol.equals(from) ? "selected" : "" %> value="<%= symbol %>"><%= currencyValue %></option value>
+		<aui:option selected='<%= symbol.equals(from) %>' value="<%= symbol %>"><%= currencyValue %></aui:option>
 
 	<%
 	}
 	%>
 
-</select>
+</aui:select>
 
 <strong><liferay-ui:message key="to" /></strong>
 
-<select name="<portlet:namespace />to">
+<aui:select inlineField="<%= true%>" label="" name="to">
 
 	<%
 	for (Map.Entry<String, String> entry : allSymbols.entrySet()) {
@@ -64,13 +68,13 @@ decimalFormat.setMinimumFractionDigits(2);
 		String currencyValue = entry.getKey();
 	%>
 
-		<option <%= symbol.equals(to) ? "selected" : "" %> value="<%= symbol %>"><%= currencyValue %></option value>
+		<aui:option selected="<%= symbol.equals(to) %>" value="<%= symbol %>"><%= currencyValue %></aui:option>
 
 	<%
 	}
 	%>
 
-</select>
+</aui:select>
 
 <br /><br />
 
@@ -193,4 +197,13 @@ decimalFormat.setMinimumFractionDigits(2);
 	</c:otherwise>
 </c:choose>
 
-</form>
+</aui:form>
+
+<aui:script>
+	Liferay.on(
+		'submitForm',
+		function() {
+			document.<portlet:namespace />fm.submit();
+		}
+	);
+</aui:script>
