@@ -116,13 +116,33 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 
 		.info-button {
-			top: 9px;
+			margin-right: 5px;
+			right: auto;
+			top: auto;
 
 			a {
-				margin-top: -4px;
+				display: block;
+				font-size: 20px;
+				padding: 12px 15px;
+				position: relative;
 
-				&:hover {
+				&:focus, &:hover {
+					background-color: #2FA4F5;
 					color: #FFF;
+				}
+			}
+
+			.diamond {
+				display: none;
+			}
+		}
+
+		.info-link-container {
+			width: auto;
+
+			&.open .info-button {
+				a {
+					background-color: #0EA6F9;
 				}
 			}
 		}
@@ -160,6 +180,12 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 			@include background-image(linear-gradient($dockbarGradientStart 0%, $dockbarGradientStart 47%, $dockbarGradientEnd 100%));
 
+			.container .nav-collapse > .nav > li.info-link-container {
+				@include respond-to(phone, tablet) {
+					float: right;
+				}
+			}
+
 			.nav {
 				> li {
 					background-color: $dockbarGradientStart;
@@ -170,13 +196,66 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 					@include background-image(linear-gradient($dockbarGradientStart 0%, $dockbarGradientStart 47%, $dockbarGradientEnd 100%));
 				}
+
+				@include respond-to(phone, tablet) {
+					&.nav-account-controls .info-link-container {
+						&.open {
+							.info-link {
+								background-color: #3EA9DB;
+							}
+						}
+
+						.info-link {
+							color: #FFF;
+							font-size: 26px;
+							margin-left: 0;
+							padding: 11px 18px 12px;
+
+							&:focus, &:hover {
+								background-color: #5BBAE8;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
 
 	.dockbar-split .dockbar {
 		.info-button {
+			margin-right: 0;
+			right: 12px;
 			top: 9px;
+
+			a {
+				display: inline;
+				font-size: 14px;
+				margin-top: -4px;
+				padding: 2px 10px;
+				position: absolute;
+
+				&:focus, &:hover {
+					background-color: transparent;
+				}
+			}
+
+			.diamond {
+				display: block;
+
+				@include respond-to(phone, tablet) {
+					display: none;
+				}
+			}
+		}
+
+		.info-link-container {
+			width: 0;
+
+			&.open .info-button {
+				a {
+					background-color: transparent;
+				}
+			}
 		}
 
 		.navbar-inner {
@@ -242,10 +321,6 @@ $dockbarOpenGradientStart: #0EA6F9;
 				background-color: #6DA4E4;
 				background-color: rgba(109, 168, 228, 0.9);
 				line-height: 20px;
-			}
-
-			.page-customization-bar-text {
-				height: 43px;
 			}
 
 			.staging-bar {

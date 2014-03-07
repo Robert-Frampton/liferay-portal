@@ -100,19 +100,35 @@
 	}
 }
 
-.dockbar .navbar-inner .nav-add-controls > li > ul.dropdown-menu {
-	@include box-shadow(none);
-}
+.dockbar .navbar-inner {
+	.container .nav-collapse > .nav {
+		&.nav-account-controls .info-link-container.open .info-link {
+			@include respond-to(phone, tablet) {
+				@include border-radius(3px);
 
-.dockbar-split .dockbar .navbar-inner .container .nav-collapse > .nav {
-	> li > a {
-		@include text-shadow(none);
+				&:focus, &:hover {
+					@include border-radius(3px);
+				}
+			}
+		}
 
-		@include respond-to(phone) {
-			@include border-radius(4px);
+		> li {
+			> a, .info-button > a {
+				@include text-shadow(none);
+
+				@include respond-to(phone) {
+					@include border-radius(4px);
+				}
+			}
 		}
 	}
 
+	.nav-add-controls > li > ul.dropdown-menu {
+		@include box-shadow(none);
+	}
+}
+
+.dockbar-split .dockbar .navbar-inner .container .nav-collapse > .nav {
 	&.nav-add-controls {
 		> li {
 			a {
