@@ -335,8 +335,8 @@ List addresses = AddressServiceUtil.getAddresses(Contact.class.getName(), contac
 		%>
 
 			if ('<%= address.getAddressId() %>' == addressId) {
-				document.getElementById('<portlet:namespace />' + type + "Street").value = '<%= HtmlUtil.escapeJS(address.getStreet1()) %>';
-				document.getElementById('<portlet:namespace />' + type + "City").value = '<%= HtmlUtil.escapeJS(address.getCity()) %>';
+				document.getElementById('<portlet:namespace />' + type + 'Street').value = '<%= HtmlUtil.escapeJS(address.getStreet1()) %>';
+				document.getElementById('<portlet:namespace />' + type + 'City').value = '<%= HtmlUtil.escapeJS(address.getCity()) %>';
 
 				var stateSel = document.getElementById('<portlet:namespace />' + type + 'StateSel');
 				var stateSelValue = '<%= HtmlUtil.escapeJS(region.getRegionCode()) %>';

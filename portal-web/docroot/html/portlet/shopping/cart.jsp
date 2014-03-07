@@ -59,9 +59,9 @@ boolean minQuantityMultiple = PrefsPropsUtil.getBoolean(company.getCompanyId(), 
 	}
 
 	function <portlet:namespace />updateCart() {
+		var itemIds = '';
 		var count = 0;
 		var invalidSKUs = '';
-		var itemIds = '';
 
 		<%
 		int itemsCount= 0;
@@ -78,7 +78,7 @@ boolean minQuantityMultiple = PrefsPropsUtil.getBoolean(company.getCompanyId(), 
 
 			if ((count == '') || isNaN(count) || (count < 0) || ((count > <%= maxQuantity %>) && (<%= maxQuantity %> > 0))) {
 				if (invalidSKUs != '') {
-					invalidSKUs += ", ";
+					invalidSKUs += ', ';
 				}
 
 				invalidSKUs += '<%= HtmlUtil.escapeJS(item.getSku()) %>';
