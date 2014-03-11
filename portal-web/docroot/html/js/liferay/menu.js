@@ -626,7 +626,15 @@ AUI.add(
 						handles.push(
 							A.getWin().on('resize', A.debounce(instance._positionActiveMenu, 200, instance)),
 							A.getDoc().on(EVENT_CLICK, instance._closeActiveMenu, instance),
-							listContainer.on('touchendoutside', instance._closeActiveMenu, instance)
+							listContainer.on(
+								'touchendoutside',
+								function(e) {
+									e.preventDefault();
+
+									instance._closeActiveMenu();
+								}, 
+								instance
+							)
 						);
 
 						var DDM = A.DD && A.DD.DDM;
