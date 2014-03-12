@@ -623,6 +623,8 @@ AUI.add(
 					if (!handles.length) {
 						var listContainer = trigger.getData('menuListContainer');
 
+						A.Event.defineOutside('touchend');
+
 						handles.push(
 							A.getWin().on('resize', A.debounce(instance._positionActiveMenu, 200, instance)),
 							A.getDoc().on(EVENT_CLICK, instance._closeActiveMenu, instance),
