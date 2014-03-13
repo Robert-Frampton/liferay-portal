@@ -23,6 +23,7 @@ import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceRegistration;
 import com.liferay.registry.ServiceTracker;
 import com.liferay.registry.ServiceTrackerCustomizer;
+import com.liferay.registry.collections.StringServiceRegistrationMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -177,8 +178,8 @@ public class IndexerRegistryUtil {
 
 	private Map<String, Indexer> _indexers =
 		new ConcurrentHashMap<String, Indexer>();
-	private Map<String, ServiceRegistration<Indexer>> _serviceRegistrations =
-		new ConcurrentHashMap<String, ServiceRegistration<Indexer>>();
+	private StringServiceRegistrationMap<Indexer> _serviceRegistrations =
+		new StringServiceRegistrationMap<Indexer>();
 	private ServiceTracker<Indexer, Indexer> _serviceTracker;
 
 	private class IndexerServiceTrackerCustomizer

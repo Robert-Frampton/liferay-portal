@@ -24,6 +24,7 @@ import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceRegistration;
 import com.liferay.registry.ServiceTracker;
 import com.liferay.registry.ServiceTrackerCustomizer;
+import com.liferay.registry.collections.StringServiceRegistrationMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,10 +95,9 @@ public class PollerProcessorUtil {
 
 	private Map<String, PollerProcessor> _pollerPorcessors =
 		new ConcurrentHashMap<String, PollerProcessor>();
-	private Map<String, ServiceRegistration<PollerProcessor>>
+	private StringServiceRegistrationMap<PollerProcessor>
 		_serviceRegistrations =
-			new ConcurrentHashMap
-				<String, ServiceRegistration<PollerProcessor>>();
+			new StringServiceRegistrationMap<PollerProcessor>();
 	private ServiceTracker<PollerProcessor, PollerProcessor> _serviceTracker;
 
 	private class PollerProcessorServiceTrackerCustomizer

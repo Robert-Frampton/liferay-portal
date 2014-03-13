@@ -23,6 +23,7 @@ import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceRegistration;
 import com.liferay.registry.ServiceTracker;
 import com.liferay.registry.ServiceTrackerCustomizer;
+import com.liferay.registry.collections.ServiceRegistrationMap;
 
 import java.util.Collection;
 import java.util.List;
@@ -147,13 +148,9 @@ public class StagedModelDataHandlerRegistryUtil {
 	private static StagedModelDataHandlerRegistryUtil _instance =
 		new StagedModelDataHandlerRegistryUtil();
 
-	private Map
-		<StagedModelDataHandler<?>,
-			ServiceRegistration<StagedModelDataHandler<?>>>
-				_serviceRegistrations = new ConcurrentHashMap
-					<StagedModelDataHandler<?>,
-						ServiceRegistration<StagedModelDataHandler<?>>>();
-
+	private ServiceRegistrationMap<StagedModelDataHandler<?>>
+		_serviceRegistrations =
+			new ServiceRegistrationMap<StagedModelDataHandler<?>>();
 	private ServiceTracker<StagedModelDataHandler<?>, StagedModelDataHandler<?>>
 		_serviceTracker;
 	private Map<String, StagedModelDataHandler<?>> _stagedModelDataHandlers =

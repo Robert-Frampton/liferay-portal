@@ -70,7 +70,7 @@ public class PortletBagImpl implements PortletBag {
 		List<TemplateHandler> templateHandlerInstances,
 		List<PortletLayoutListener> portletLayoutListenerInstances,
 		List<PollerProcessor> pollerProcessorInstances,
-		MessageListener popMessageListenerInstance,
+		List<MessageListener> popMessageListenerInstances,
 		List<SocialActivityInterpreter> socialActivityInterpreterInstances,
 		SocialRequestInterpreter socialRequestInterpreterInstance,
 		List<UserNotificationHandler> userNotificationHandlerInstances,
@@ -98,7 +98,7 @@ public class PortletBagImpl implements PortletBag {
 		_templateHandlerInstances = templateHandlerInstances;
 		_portletLayoutListenerInstances = portletLayoutListenerInstances;
 		_pollerProcessorInstances = pollerProcessorInstances;
-		_popMessageListenerInstance = popMessageListenerInstance;
+		_popMessageListenerInstances = popMessageListenerInstances;
 		_socialActivityInterpreterInstances =
 			socialActivityInterpreterInstances;
 		_socialRequestInterpreterInstance = socialRequestInterpreterInstance;
@@ -125,7 +125,7 @@ public class PortletBagImpl implements PortletBag {
 			getURLEncoderInstances(), getPortletDataHandlerInstances(),
 			getStagedModelDataHandlerInstances(), getTemplateHandlerInstances(),
 			getPortletLayoutListenerInstances(), getPollerProcessorInstances(),
-			getPopMessageListenerInstance(),
+			getPopMessageListenerInstances(),
 			getSocialActivityInterpreterInstances(),
 			getSocialRequestInterpreterInstance(),
 			getUserNotificationHandlerInstances(), getWebDAVStorageInstance(),
@@ -145,8 +145,10 @@ public class PortletBagImpl implements PortletBag {
 		close(_indexerInstances);
 		close(_openSearchInstances);
 		close(_pollerProcessorInstances);
+		close(_popMessageListenerInstances);
 		close(_portletDataHandlerInstances);
 		close(_portletLayoutListenerInstances);
+		close(_socialActivityInterpreterInstances);
 		close(_templateHandlerInstances);
 		close(_urlEncoderInstances);
 	}
@@ -202,8 +204,8 @@ public class PortletBagImpl implements PortletBag {
 	}
 
 	@Override
-	public MessageListener getPopMessageListenerInstance() {
-		return _popMessageListenerInstance;
+	public List<MessageListener> getPopMessageListenerInstances() {
+		return _popMessageListenerInstances;
 	}
 
 	@Override
@@ -346,7 +348,7 @@ public class PortletBagImpl implements PortletBag {
 	private List<OpenSearch> _openSearchInstances;
 	private PermissionPropagator _permissionPropagatorInstance;
 	private List<PollerProcessor> _pollerProcessorInstances;
-	private MessageListener _popMessageListenerInstance;
+	private List<MessageListener> _popMessageListenerInstances;
 	private List<PortletDataHandler> _portletDataHandlerInstances;
 	private Portlet _portletInstance;
 	private List<PortletLayoutListener> _portletLayoutListenerInstances;
