@@ -54,6 +54,7 @@
 		%>
 
 		<liferay-ui:input-move-boxes
+			orientLanguageDirection="true"
 			leftBoxName="currentLanguageIds"
 			leftList="<%= leftList %>"
 			leftReorder="true"

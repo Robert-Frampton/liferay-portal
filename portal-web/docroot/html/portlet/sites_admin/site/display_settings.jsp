@@ -107,9 +107,17 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 			Locale siteDefaultLocale = PortalUtil.getSiteDefaultLocale(liveGroup.getGroupId());
 
 			for (Locale siteAvailableLocale : siteAvailableLocales) {
+				String directionStyle = "direction: ";
+
+				if(Validator.equals(locale.getLanguage(), siteAvailableLocale.getLanguage())){
+					directionStyle += LanguageUtil.get(siteAvailableLocale, "lang.dir") + ";";
+				}
+				else {
+					directionStyle += "ltr;";
+				}
 			%>
 
-				<aui:option label="<%= siteAvailableLocale.getDisplayName(locale) %>" lang="<%= LocaleUtil.toW3cLanguageId(siteAvailableLocale) %>" selected="<%= (siteDefaultLocale.getLanguage().equals(siteAvailableLocale.getLanguage()) && siteDefaultLocale.getCountry().equals(siteAvailableLocale.getCountry())) %>" value="<%= LocaleUtil.toLanguageId(siteAvailableLocale) %>" />
+				<aui:option label="<%= siteAvailableLocale.getDisplayName(locale) %>" lang="<%= LocaleUtil.toW3cLanguageId(siteAvailableLocale) %>" selected="<%= (siteDefaultLocale.getLanguage().equals(siteAvailableLocale.getLanguage()) && siteDefaultLocale.getCountry().equals(siteAvailableLocale.getCountry())) %>" style="<%= directionStyle %>" value="<%= LocaleUtil.toLanguageId(siteAvailableLocale) %>" />
 
 			<%
 			}
@@ -145,6 +153,7 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 		%>
 
 		<liferay-ui:input-move-boxes
+			orientLanguageDirection="true"
 			leftBoxName="currentLanguageIds"
 			leftList="<%= leftList %>"
 			leftReorder="true"

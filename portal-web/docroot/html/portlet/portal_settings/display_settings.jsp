@@ -44,9 +44,17 @@
 		Locale companyLocale = LocaleUtil.fromLanguageId(languageId);
 
 		for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
+			String directionStyle = "direction: ";
+
+			if(Validator.equals(locale.getLanguage(), availableLocale.getLanguage())){
+				directionStyle += LanguageUtil.get(availableLocale, "lang.dir") + ";";
+			}
+			else {
+				directionStyle += "ltr;";
+			}
 		%>
 
-			<aui:option label="<%= availableLocale.getDisplayName(locale) %>" lang="<%= LocaleUtil.toW3cLanguageId(availableLocale) %>" selected="<%= Validator.equals(companyLocale.getLanguage(), availableLocale.getLanguage()) && Validator.equals(companyLocale.getCountry(), availableLocale.getCountry()) %>" value="<%= LocaleUtil.toLanguageId(availableLocale) %>" />
+			<aui:option label="<%= availableLocale.getDisplayName(locale) %>" lang="<%= LocaleUtil.toW3cLanguageId(availableLocale) %>" selected="<%= Validator.equals(companyLocale.getLanguage(), availableLocale.getLanguage()) && Validator.equals(companyLocale.getCountry(), availableLocale.getCountry()) %>" style="<%= directionStyle %>" value="<%= LocaleUtil.toLanguageId(availableLocale) %>" />
 
 		<%
 		}
@@ -88,6 +96,7 @@
 		%>
 
 		<liferay-ui:input-move-boxes
+			orientLanguageDirection="true"
 			leftBoxName="currentLanguageIds"
 			leftList="<%= leftList %>"
 			leftReorder="true"

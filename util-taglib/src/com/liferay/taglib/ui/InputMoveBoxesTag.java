@@ -50,6 +50,10 @@ public class InputMoveBoxesTag extends IncludeTag {
 		_leftTitle = leftTitle;
 	}
 
+	public void setOrientLanguageDirection(String orientLanguageDirection) {
+		_orientLanguageDirection = orientLanguageDirection;
+	}
+
 	public void setRightBoxName(String rightBoxName) {
 		_rightBoxName = rightBoxName;
 	}
@@ -73,6 +77,7 @@ public class InputMoveBoxesTag extends IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_cssClass = null;
+		_orientLanguageDirection = null;
 		_leftBoxName = null;
 		_leftList = null;
 		_leftOnChange = null;
@@ -93,6 +98,8 @@ public class InputMoveBoxesTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute("liferay-ui:input-move-boxes:cssClass", _cssClass);
+		request.setAttribute(
+			"liferay-ui:input-move-boxes:orientLanguageDirection", _orientLanguageDirection);
 		request.setAttribute(
 			"liferay-ui:input-move-boxes:leftBoxName", _leftBoxName);
 		request.setAttribute("liferay-ui:input-move-boxes:leftList", _leftList);
@@ -118,6 +125,7 @@ public class InputMoveBoxesTag extends IncludeTag {
 		"/html/taglib/ui/input_move_boxes/page.jsp";
 
 	private String _cssClass;
+	private String _orientLanguageDirection;
 	private String _leftBoxName;
 	private List<KeyValuePair> _leftList;
 	private String _leftOnChange;
