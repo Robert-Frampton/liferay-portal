@@ -3,6 +3,8 @@ AUI.add(
 	function(A) {
 		var Lang = A.Lang;
 
+		var DATA_TOGGLER = 'data-toggler';
+
 		var STR_CHILDREN = 'children';
 
 		var STR_CONTAINER = 'container';
@@ -14,8 +16,6 @@ AUI.add(
 		var STR_HOST = 'host';
 
 		var STR_KEYS = 'keys';
-
-		var STR_TOGGLER = 'toggler';
 
 		var NAME = 'togglerinteraction';
 
@@ -105,12 +105,12 @@ AUI.add(
 
 						var header = target.ancestor(instance.get('parents')).one(host.get(STR_HEADER));
 
-						var toggler = header.attr('data-' + STR_TOGGLER);
+						var toggler = header.attr(DATA_TOGGLER);
 
 						if (!toggler) {
 							host.createAll();
 
-							toggler = header.attr('data-' + STR_TOGGLER);
+							toggler = header.attr(DATA_TOGGLER);
 						}
 
 						toggler.collapse();

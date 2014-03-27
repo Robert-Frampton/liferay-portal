@@ -12,6 +12,8 @@ AUI.add(
 
 		var CSS_SITE_NAVIGATION = 'site-navigation';
 
+		var DATA_MENU_ITEM = 'data-menuItem';
+
 		var EVENT_KEY = 'key';
 
 		var NAME = 'liferaydockbarkeyboardinteraction';
@@ -23,8 +25,6 @@ AUI.add(
 		var SELECTOR_DOCKBAR_ITEM_FIRST_LINK = '.dockbar-item:visible > a, a.nav-navigation-btn:visible';
 
 		var SELECTOR_DOCKBAR_ITEM_LINK = '.dockbar-item:visible a, a.nav-navigation-btn:visible';
-
-		var STR_MENU_ITEM = 'menuItem';
 
 		var DockbarKeyboardInteraction = A.Component.create(
 			{
@@ -54,7 +54,7 @@ AUI.add(
 
 						var target = event.currentTarget;
 
-						var menuItem = target.ancestor(SELECTOR_DOCKBAR_ITEM) || target.attr('data-' + STR_MENU_ITEM);
+						var menuItem = target.ancestor(SELECTOR_DOCKBAR_ITEM) || target.attr(DATA_MENU_ITEM);
 
 						AArray.some(
 							MENU_ITEM_CSS_CLASSES,
@@ -159,7 +159,7 @@ AUI.add(
 								if (item === focusedCurrent) {
 									var menuItemLink = A.one('#' + index);
 
-									var menuItem = menuItemLink.ancestor(SELECTOR_DOCKBAR_ITEM) || menuItemLink.attr('data-' + STR_MENU_ITEM);
+									var menuItem = menuItemLink.ancestor(SELECTOR_DOCKBAR_ITEM) || menuItemLink.attr(DATA_MENU_ITEM);
 
 									AArray.some(
 										MENU_ITEM_CSS_CLASSES,
@@ -241,7 +241,7 @@ AUI.add(
 
 						instance._host.all(SELECTOR_DOCKBAR_ITEM).each(
 							function(item, index, collection) {
-								item = item.attr('data-menuItem') || item;
+								item = item.attr(DATA_MENU_ITEM) || item;
 
 								menuItems.push(item);
 							}

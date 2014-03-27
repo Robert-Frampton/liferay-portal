@@ -14,11 +14,11 @@ AUI.add(
 
 		var CSS_SELECTED = 'selected';
 
+		var DATA_DISPLAY_STYLE_BUTTON_GROUP = 'data-displayStyleButtonGroup';
+
 		var DATA_FOLDER_ID = 'data-folder-id';
 
 		var DATA_REPOSITORY_ID = 'data-repository-id';
-
-		var DISPLAY_STYLE_BUTTON_GROUP = 'displayStyleButtonGroup';
 
 		var DISPLAY_STYLE_LIST = 'list';
 
@@ -140,7 +140,7 @@ AUI.add(
 						var length = displayViews.length;
 
 						if (length > 1) {
-							var displayStyleButtonGroup = instance._displayStyleToolbar.attr('data-' + DISPLAY_STYLE_BUTTON_GROUP);
+							var displayStyleButtonGroup = instance._displayStyleToolbar.attr(DATA_DISPLAY_STYLE_BUTTON_GROUP);
 
 							if (displayStyleButtonGroup) {
 								var displayStyle = instance._getDisplayStyle(instance._displayStyle);

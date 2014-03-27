@@ -6,11 +6,11 @@ AUI.add(
 		var Util = Liferay.Util;
 		var Lang = A.Lang;
 
+		var DATA_LAYOUT_ID = 'data-layoutId';
+
 		var STATUS_CODE = Liferay.STATUS_CODE;
 
 		var STR_EMPTY = '';
-
-		var STR_LAYOUT_ID = 'layoutId';
 
 		var TPL_EDITOR = '<div class="add-page-editor"><div class="input-append"></div></div>';
 
@@ -122,7 +122,7 @@ AUI.add(
 									var layoutConfig = layoutIds[index];
 
 									if (layoutConfig) {
-										item.setData(STR_LAYOUT_ID, layoutConfig.id);
+										item.attr(DATA_LAYOUT_ID, layoutConfig.id);
 
 										if (layoutConfig.deletable) {
 											cssClassBuffer.push('lfr-nav-deletable');
@@ -378,7 +378,7 @@ AUI.add(
 
 						var listItem = data.parentLayoutId ? ANode.create('<li>') : ANode.create(TPL_LIST_ITEM);
 
-						listItem.setData(STR_LAYOUT_ID, data.layoutId);
+						listItem.attr(DATA_LAYOUT_ID, data.layoutId);
 
 						listItem.append(newTab);
 
@@ -714,7 +714,7 @@ AUI.add(
 						cmd: 'delete',
 						doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
 						groupId: themeDisplay.getSiteGroupId(),
-						layoutId: tab.attr('data-' + STR_LAYOUT_ID),
+						layoutId: tab.attr(DATA_LAYOUT_ID),
 						layoutSetBranchId: instance.get('layoutSetBranchId'),
 						p_auth: Liferay.authToken,
 						privateLayout: themeDisplay.isPrivateLayout()
@@ -843,7 +843,7 @@ AUI.add(
 				var nextNode = node.next();
 
 				if (nextNode) {
-					nextLayoutId = nextNode.attr('data-' + STR_LAYOUT_ID);
+					nextLayoutId = nextNode.attr(DATA_LAYOUT_ID);
 				}
 
 				var previousLayoutId = -1;
@@ -851,14 +851,14 @@ AUI.add(
 				var previousNode = node.previous();
 
 				if (previousNode) {
-					previousLayoutId = previousNode.attr('data-' + STR_LAYOUT_ID);
+					previousLayoutId = previousNode.attr(DATA_LAYOUT_ID);
 				}
 
 				var data = {
 					cmd: 'priority',
 					doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
 					groupId: themeDisplay.getSiteGroupId(),
-					layoutId: node.attr('data-' + STR_LAYOUT_ID),
+					layoutId: node.attr(DATA_LAYOUT_ID),
 					nextLayoutId: nextLayoutId,
 					p_auth: Liferay.authToken,
 					previousLayoutId: previousLayoutId,

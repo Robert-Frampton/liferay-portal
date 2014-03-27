@@ -10,6 +10,8 @@ AUI.add(
 
 		var CSS_SELECTED = 'selected';
 
+		var DATA_DEVICE = 'data-device';
+
 		var DIALOG_ALIGN_POINTS = [A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC];
 
 		var DIALOG_DEFAULTS = {
@@ -34,8 +36,6 @@ AUI.add(
 		var STR_BOUNDING_BOX = 'boundingBox';
 
 		var STR_CLICK = 'click';
-
-		var STR_DEVICE = 'device';
 
 		var STR_DEVICES = 'devices';
 
@@ -322,7 +322,7 @@ AUI.add(
 
 						var deviceItem = event.currentTarget;
 
-						var deviceId = deviceItem.attr('data-' + STR_DEVICE);
+						var deviceId = deviceItem.attr(DATA_DEVICE);
 
 						var device = deviceList[deviceId];
 
