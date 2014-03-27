@@ -322,7 +322,7 @@ AUI.add(
 
 						var deviceItem = event.currentTarget;
 
-						var deviceId = deviceItem.getData(STR_DEVICE);
+						var deviceId = deviceItem.attr('data-' + STR_DEVICE);
 
 						var device = deviceList[deviceId];
 

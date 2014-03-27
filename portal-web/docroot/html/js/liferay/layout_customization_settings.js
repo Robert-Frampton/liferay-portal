@@ -43,7 +43,7 @@ AUI.add(
 									defaultFn: function(event) {
 										columns.each(
 											function(item, index, collection) {
-												var overlayMask = item.getData('customizationControls');
+												var overlayMask = item.attr('data-customizationControls');
 
 												if (overlayMask) {
 													item.setData('customizationControls', null);
@@ -115,7 +115,7 @@ AUI.add(
 
 						var checkbox = event.currentTarget;
 
-						var overlayMask = checkbox.getData('customizationControls');
+						var overlayMask = checkbox.attr('data-customizationControls');
 
 						var boundingBox = overlayMask.get(BOUNDING_BOX);
 						var column = overlayMask.get('target');
@@ -171,7 +171,7 @@ AUI.add(
 
 						columns.each(
 							function(item, index, collection) {
-								var overlayMask = item.getData('customizationControls');
+								var overlayMask = item.attr('data-customizationControls');
 
 								if (!overlayMask) {
 									overlayMask = instance._createCustomizationMask(item);
@@ -191,7 +191,7 @@ AUI.add(
 
 						columns.each(
 							function(item, index, collection) {
-								var overlayMask = item.getData('customizationControls');
+								var overlayMask = item.attr('data-customizationControls');
 
 								if (overlayMask) {
 									overlayMask.hide();

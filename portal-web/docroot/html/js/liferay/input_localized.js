@@ -350,7 +350,7 @@ AUI.add(
 									container: boundingBox,
 									formatter: function(title) {
 										var flagNode = this.get('trigger');
-										var value = flagNode.getData('value');
+										var value = flagNode.attr('data-value');
 										var formattedValue = availableLanguages[value];
 
 										if (value === defaultLanguageId) {

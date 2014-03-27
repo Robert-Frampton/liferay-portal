@@ -140,7 +140,7 @@ AUI.add(
 						var length = displayViews.length;
 
 						if (length > 1) {
-							var displayStyleButtonGroup = instance._displayStyleToolbar.getData(DISPLAY_STYLE_BUTTON_GROUP);
+							var displayStyleButtonGroup = instance._displayStyleToolbar.attr('data-' + DISPLAY_STYLE_BUTTON_GROUP);
 
 							if (displayStyleButtonGroup) {
 								var displayStyle = instance._getDisplayStyle(instance._displayStyle);
