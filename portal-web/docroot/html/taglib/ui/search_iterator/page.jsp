@@ -72,7 +72,7 @@ List<String> primaryKeys = new ArrayList<String>();
 	</c:if>
 
 	<div id="<%= namespace + id %>SearchContainer">
-		<table class="table table-bordered table-hover table-striped">
+		<table class="table table-bordered table-hover table-striped responsive-table-input-matrix">
 
 		<c:if test="<%= headerNames != null %>">
 			<thead class="table-columns">
