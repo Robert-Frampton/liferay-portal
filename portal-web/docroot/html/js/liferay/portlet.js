@@ -605,7 +605,7 @@
 						}
 					);
 				}
-				else if (!portlet.getData('pendingRefresh')) {
+				else if (!portlet.attr('data-pendingRefresh')) {
 					portlet.setData('pendingRefresh', true);
 
 					var nonAjaxableContentMessage = A.Lang.sub(

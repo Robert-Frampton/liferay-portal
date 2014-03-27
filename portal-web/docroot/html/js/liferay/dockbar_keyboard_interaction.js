@@ -54,7 +54,7 @@ AUI.add(
 
 						var target = event.currentTarget;
 
-						var menuItem = target.ancestor(SELECTOR_DOCKBAR_ITEM) || target.getData(STR_MENU_ITEM);
+						var menuItem = target.ancestor(SELECTOR_DOCKBAR_ITEM) || target.attr('data-' + STR_MENU_ITEM);
 
 						AArray.some(
 							MENU_ITEM_CSS_CLASSES,
@@ -159,7 +159,7 @@ AUI.add(
 								if (item === focusedCurrent) {
 									var menuItemLink = A.one('#' + index);
 
-									var menuItem = menuItemLink.ancestor(SELECTOR_DOCKBAR_ITEM) || menuItemLink.getData(STR_MENU_ITEM);
+									var menuItem = menuItemLink.ancestor(SELECTOR_DOCKBAR_ITEM) || menuItemLink.attr('data-' + STR_MENU_ITEM);
 
 									AArray.some(
 										MENU_ITEM_CSS_CLASSES,
@@ -241,7 +241,7 @@ AUI.add(
 
 						instance._host.all(SELECTOR_DOCKBAR_ITEM).each(
 							function(item, index, collection) {
-								item = item.getData('menuItem') || item;
+								item = item.attr('data-menuItem') || item;
 
 								menuItems.push(item);
 							}

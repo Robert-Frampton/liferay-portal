@@ -714,7 +714,7 @@ AUI.add(
 						cmd: 'delete',
 						doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
 						groupId: themeDisplay.getSiteGroupId(),
-						layoutId: tab.getData(STR_LAYOUT_ID),
+						layoutId: tab.attr('data-' + STR_LAYOUT_ID),
 						layoutSetBranchId: instance.get('layoutSetBranchId'),
 						p_auth: Liferay.authToken,
 						privateLayout: themeDisplay.isPrivateLayout()
@@ -843,7 +843,7 @@ AUI.add(
 				var nextNode = node.next();
 
 				if (nextNode) {
-					nextLayoutId = nextNode.getData(STR_LAYOUT_ID);
+					nextLayoutId = nextNode.attr('data-' + STR_LAYOUT_ID);
 				}
 
 				var previousLayoutId = -1;
@@ -851,14 +851,14 @@ AUI.add(
 				var previousNode = node.previous();
 
 				if (previousNode) {
-					previousLayoutId = previousNode.getData(STR_LAYOUT_ID);
+					previousLayoutId = previousNode.attr('data-' + STR_LAYOUT_ID);
 				}
 
 				var data = {
 					cmd: 'priority',
 					doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
 					groupId: themeDisplay.getSiteGroupId(),
-					layoutId: node.getData(STR_LAYOUT_ID),
+					layoutId: node.attr('data-' + STR_LAYOUT_ID),
 					nextLayoutId: nextLayoutId,
 					p_auth: Liferay.authToken,
 					previousLayoutId: previousLayoutId,

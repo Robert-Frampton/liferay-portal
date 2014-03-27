@@ -245,7 +245,7 @@ AUI.add(
 
 						var configurationNode = instance.byId('configuration_' + portletId);
 
-						var configurationDialog = configurationNode.getData('configurationDialog');
+						var configurationDialog = configurationNode.attr('data-configurationDialog');
 
 						if (!configurationDialog) {
 							configurationNode.show();
@@ -302,7 +302,7 @@ AUI.add(
 
 						var contentNode = instance.byId('content_' + portletId);
 
-						var contentDialog = contentNode.getData('contentDialog');
+						var contentDialog = contentNode.attr('data-contentDialog');
 
 						if (!contentDialog) {
 							contentNode.show();
@@ -920,7 +920,7 @@ AUI.add(
 											var persistId = 0;
 
 											if (!header.hasClass('toggler-header-collapsed')) {
-												persistId = header.getData('persist-id');
+												persistId = header.attr('data-persist-id');
 											}
 
 											Liferay.Store(
@@ -1145,7 +1145,7 @@ AUI.add(
 						if (instance._layoutsExportTreeOutput) {
 							var layoutIdsInput = instance.byId('layoutIds');
 
-							var treeView = instance._layoutsExportTreeOutput.getData('treeInstance');
+							var treeView = instance._layoutsExportTreeOutput.attr('data-treeInstance');
 
 							var rootNode = treeView.item(0);
 
