@@ -140,7 +140,7 @@ AUI.add(
 					insertField: function(fieldNode) {
 						var instance = this;
 
-						var fieldName = fieldNode.getData('fieldName');
+						var fieldName = fieldNode.attr('data-fieldName');
 
 						instance.getField(
 							fieldName,
@@ -163,11 +163,11 @@ AUI.add(
 					renderRepeatableUI: function(fieldNode) {
 						var instance = this;
 
-						var fieldRepeatable = A.DataType.Boolean.parse(fieldNode.getData('repeatable'));
+						var fieldRepeatable = A.DataType.Boolean.parse(fieldNode.attr('data-repeatable'));
 
 						if (instance.get('repeatable') && fieldRepeatable) {
-							if (!fieldNode.getData('rendered-toolbar')) {
-								var fieldName = fieldNode.getData('fieldName');
+							if (!fieldNode.attr('data-rendered-toolbar')) {
+								var fieldName = fieldNode.attr('data-fieldName');
 
 								var parentNode = instance.getFieldParentNode(fieldNode);
 
@@ -205,8 +205,8 @@ AUI.add(
 							function(item, index, collection) {
 								instance.renderRepeatableUI(item);
 
-								var fieldName = item.getData('fieldName');
-								var fieldNamespace = item.getData('fieldNamespace');
+								var fieldName = item.attr('data-fieldName');
+								var fieldNamespace = item.attr('data-fieldNamespace');
 
 								fieldsDisplay.push(fieldName + fieldNamespace);
 							}

@@ -105,12 +105,12 @@ AUI.add(
 
 						var header = target.ancestor(instance.get('parents')).one(host.get(STR_HEADER));
 
-						var toggler = header.getData(STR_TOGGLER);
+						var toggler = header.attr('data-' + STR_TOGGLER);
 
 						if (!toggler) {
 							host.createAll();
 
-							toggler = header.getData(STR_TOGGLER);
+							toggler = header.attr('data-' + STR_TOGGLER);
 						}
 
 						toggler.collapse();

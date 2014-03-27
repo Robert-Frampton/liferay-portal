@@ -204,7 +204,7 @@ if (Validator.isNotNull(historyKey)) {
 				function updateSectionError() {
 					var tabNode = tabview.get('selection').get('boundingBox');
 
-					var sectionId = tabNode.getData('sectionId');
+					var sectionId = tabNode.attr('data-sectionId');
 
 					tabNode.toggleClass(
 						'section-error',
@@ -215,7 +215,7 @@ if (Validator.isNotNull(historyKey)) {
 				function updateSectionStatus() {
 					var tabNode = tabview.get('selection').get('boundingBox');
 
-					var sectionId = tabNode.getData('sectionId');
+					var sectionId = tabNode.attr('data-sectionId');
 
 					var modifiedSectionsNode = A.one('#<portlet:namespace/>modifiedSections');
 
@@ -248,7 +248,7 @@ if (Validator.isNotNull(historyKey)) {
 
 						var boundingBox = tab.get('boundingBox');
 
-						var sectionId = boundingBox.getData('sectionId');
+						var sectionId = boundingBox.attr('data-sectionId');
 
 						history.addValue('<portlet:namespace />tab', sectionId);
 					}

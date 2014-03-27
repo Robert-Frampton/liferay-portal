@@ -572,7 +572,7 @@
 			var config = currentTarget.getData();
 
 			if (!config.uri) {
-				config.uri = currentTarget.getData('href') || currentTarget.attr('href');
+				config.uri = currentTarget.attr('data-href') || currentTarget.attr('href');
 			}
 
 			if (!config.title) {
@@ -882,7 +882,7 @@
 								if (!event.initial) {
 									var title = instance.get('node');
 
-									var portletTitleEditOptions = title.getData('portletTitleEditOptions');
+									var portletTitleEditOptions = title.attr('data-portletTitleEditOptions');
 
 									Util.savePortletTitle(
 										{

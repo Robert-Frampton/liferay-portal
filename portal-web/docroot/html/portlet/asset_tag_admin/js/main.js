@@ -1597,7 +1597,7 @@ AUI.add(
 						var propertiesTrigger = boundingBox.one('#' + instance._prefixedPortletId + 'tagProperties');
 
 						if (propertiesTrigger) {
-							var autoFieldsInstance = propertiesTrigger.getData('autoFieldsInstance');
+							var autoFieldsInstance = propertiesTrigger.attr('data-autoFieldsInstance');
 
 							autoFieldsInstance.reset();
 						}

@@ -661,7 +661,7 @@ AUI.add(
 										instance._vocabularyFormAdd.reset();
 									}
 
-									var autoFields = A.one('#' + instance._prefixedPortletId + 'extraFields').getData(STR_AUTO_FIELDS_INSTANCE);
+									var autoFields = A.one('#' + instance._prefixedPortletId + 'extraFields').attr('data-' + STR_AUTO_FIELDS_INSTANCE);
 
 									if (autoFields) {
 										autoFields.reset();
@@ -1152,7 +1152,7 @@ AUI.add(
 
 						var categoryNode = instance._categoriesContainer.one('#' + STR_CATEGORY_NODE + categoryId);
 
-						var category = categoryNode.getData('tree-node');
+						var category = categoryNode.attr('data-tree-node');
 
 						if (!A.instanceOf(category, A.TreeNode)) {
 							category = categoryNode;
@@ -2082,7 +2082,7 @@ AUI.add(
 						var dragNode = event.drag.get(STR_NODE);
 						var dropNode = event.drop.get(STR_NODE);
 
-						var node = dragNode.getData('tree-node');
+						var node = dragNode.attr('data-tree-node');
 
 						var vocabularyId = dropNode.attr('data-vocabularyid');
 						var fromCategoryId = instance._getCategoryId(node);
@@ -2278,7 +2278,7 @@ AUI.add(
 
 						autoFieldsTriggers.each(
 							function(item, index, collection) {
-								var autoFieldsInstance = item.getData(STR_AUTO_FIELDS_INSTANCE);
+								var autoFieldsInstance = item.attr('data-' + STR_AUTO_FIELDS_INSTANCE);
 
 								callback.call(instance, autoFieldsInstance);
 							}
@@ -2429,7 +2429,7 @@ AUI.add(
 
 						var propertiesTrigger = boundingBox.one('fieldset#' + namespace + 'categoryProperties');
 
-						var autoFieldsInstance = propertiesTrigger.getData(STR_AUTO_FIELDS_INSTANCE);
+						var autoFieldsInstance = propertiesTrigger.attr('data-' + STR_AUTO_FIELDS_INSTANCE);
 
 						autoFieldsInstance.reset();
 					},
@@ -2907,7 +2907,7 @@ AUI.add(
 
 						var dragNode = event.drag.get(STR_NODE).get(STR_PARENT_NODE);
 
-						var dragTreeNode = dragNode.getData(STR_TREE_NODE);
+						var dragTreeNode = dragNode.attr('data-' + STR_TREE_NODE);
 
 						if (dragTreeNode) {
 							var categoryName = dragTreeNode.get(STR_LABEL);
@@ -2920,10 +2920,10 @@ AUI.add(
 								dropNode = dropNode.get('parentNode.parentNode');
 							}
 
-							var dropTreeNode = dropNode.getData(STR_TREE_NODE);
+							var dropTreeNode = dropNode.attr('data-' + STR_TREE_NODE);
 
 							if (!A.instanceOf(dropTreeNode, A.TreeNode)) {
-								dropTreeNode = dropNode.getData(STR_TREE_VIEW);
+								dropTreeNode = dropNode.attr('data-' + STR_TREE_VIEW);
 							}
 
 							if (dropTreeNode) {
@@ -2948,8 +2948,8 @@ AUI.add(
 							var dragNode = event.drag.get(STR_NODE).get(STR_PARENT_NODE);
 							var dropNode = event.drop.get(STR_NODE).get(STR_PARENT_NODE);
 
-							var dropTreeNode = dropNode.getData(STR_TREE_NODE);
-							var dragTreeNode = dragNode.getData(STR_TREE_NODE);
+							var dropTreeNode = dropNode.attr('data-' + STR_TREE_NODE);
+							var dragTreeNode = dragNode.attr('data-' + STR_TREE_NODE);
 
 							var output = instance.getEventOutputMap(instance);
 

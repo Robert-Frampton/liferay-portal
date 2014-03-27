@@ -214,9 +214,9 @@ AUI.add(
 					overlay.set('align.node', trigger);
 				}
 
-				var listContainer = trigger.getData('menuListContainer');
-				var menu = trigger.getData('menu');
-				var menuHeight = trigger.getData('menuHeight');
+				var listContainer = trigger.attr('data-menuListContainer');
+				var menu = trigger.attr('data-menu');
+				var menuHeight = trigger.attr('data-menuHeight');
 
 				var liveSearch = menu && MAP_LIVE_SEARCH[menu.guid()];
 
@@ -309,7 +309,7 @@ AUI.add(
 					var maxDisplayItems = params && parseInt(params[1], 10);
 
 					if (maxDisplayItems && listItems.size() > maxDisplayItems) {
-						instance._getLiveSearch(trigger, trigger.getData('menu'));
+						instance._getLiveSearch(trigger, trigger.attr('data-menu'));
 
 						height = 0;
 
@@ -621,7 +621,7 @@ AUI.add(
 					instance._activeTrigger = trigger;
 
 					if (!handles.length) {
-						var listContainer = trigger.getData('menuListContainer');
+						var listContainer = trigger.attr('data-menuListContainer');
 
 						handles.push(
 							A.getWin().on('resize', A.debounce(instance._positionActiveMenu, 200, instance)),

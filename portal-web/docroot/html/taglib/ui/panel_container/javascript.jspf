@@ -32,7 +32,7 @@
 							'toggler:expandedChange': function(event) {
 								var header = event.target.get('header');
 
-								var persistId = header.getData('persist-id');
+								var persistId = header.attr('data-persist-id');
 
 								if (persistId && !event.silent) {
 									var data = {};
