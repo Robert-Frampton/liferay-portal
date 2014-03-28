@@ -882,7 +882,7 @@
 								if (!event.initial) {
 									var title = instance.get('node');
 
-									var portletTitleEditOptions = title.attr('data-portletTitleEditOptions');
+									var portletTitleEditOptions = title.getData('portletTitleEditOptions');
 
 									Util.savePortletTitle(
 										{
