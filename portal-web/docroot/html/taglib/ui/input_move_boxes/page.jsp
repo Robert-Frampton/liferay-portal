@@ -37,6 +37,28 @@ List leftList = (List)request.getAttribute("liferay-ui:input-move-boxes:leftList
 List rightList = (List)request.getAttribute("liferay-ui:input-move-boxes:rightList");
 
 Map<String, Object> data = new HashMap<String, Object>();
+
+boolean orientLanguageDirection = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-move-boxes:orientLanguageDirection"));
+
+String currentDirection = LanguageUtil.get(locale, "lang.dir");
+String currentLanguageId = LocaleUtil.toLanguageId(locale);
+%>
+
+<%!
+public String getDirectionStyle (String currentDirection, String currentLanguageId, String optionLanguageId) {
+	if (Validator.equals(currentDirection, "rtl")) {
+		Locale optionLocale = LocaleUtil.fromLanguageId(optionLanguageId);
+		String optionDirection = LanguageUtil.get(optionLocale, "lang.dir");
+
+		if (!Validator.equals(currentDirection, optionDirection) && Validator.equals(currentLanguageId, optionLanguageId)) {
+			return "direction: " + optionDirection + ";";
+		}
+		else if (!Validator.equals(currentLanguageId, optionLanguageId)) {
+			return "direction: ltr;";
+		}
+	}
+	return "";
+}
 %>
 
 <div class="taglib-move-boxes <%= cssClass %> <%= leftReorder ? "left-reorder" : StringPool.BLANK %> <%= rightReorder ? "right-reorder" : StringPool.BLANK %>" id="<%= randomNamespace + "input-move-boxes" %>">
@@ -49,9 +71,10 @@ Map<String, Object> data = new HashMap<String, Object>();
 
 				for (int i = 0; i < leftList.size(); i++) {
 					KeyValuePair kvp = (KeyValuePair)leftList.get(i);
+					String directionStyle = orientLanguageDirection ? getDirectionStyle(currentDirection, currentLanguageId, kvp.getKey()) : "";
 				%>
 
-					<aui:option data="<%= data %>" label="<%= kvp.getValue() %>" value="<%= kvp.getKey() %>" />
+					<aui:option data="<%= data %>" label="<%= kvp.getValue() %>" style="<%= directionStyle %>" value="<%= kvp.getKey() %>"/>
 
 				<%
 				}
@@ -70,9 +93,10 @@ Map<String, Object> data = new HashMap<String, Object>();
 
 				for (int i = 0; i < rightList.size(); i++) {
 					KeyValuePair kvp = (KeyValuePair)rightList.get(i);
+					String directionStyle = orientLanguageDirection ? getDirectionStyle(currentDirection, currentLanguageId, kvp.getKey()) : "";
 				%>
 
-					<aui:option data="<%= data %>" label="<%= kvp.getValue() %>" value="<%= kvp.getKey() %>" />
+					<aui:option data="<%= data %>" label="<%= kvp.getValue() %>" style="<%= directionStyle %>" value="<%= kvp.getKey() %>"/>
 
 				<%
 				}
@@ -87,6 +111,7 @@ Map<String, Object> data = new HashMap<String, Object>();
 	new Liferay.InputMoveBoxes(
 		{
 			contentBox: '#<%= randomNamespace + "input-move-boxes" %>',
+			orientLanguageDirection: <%= orientLanguageDirection %>,
 			strings: {
 				LEFT_MOVE_DOWN: '<%= UnicodeLanguageUtil.format(pageContext, "move-selected-item-in-x-one-position-down", leftTitle, false) %>',
 				LEFT_MOVE_UP: '<%= UnicodeLanguageUtil.format(pageContext, "move-selected-item-in-x-one-position-up", leftTitle, false) %>',

@@ -37,6 +37,8 @@ AUI.add(
 		var InputMoveBoxes = A.Component.create(
 			{
 				ATTRS: {
+					orientLanguageDirection: false,
+
 					leftReorder: {
 					},
 
@@ -116,6 +118,10 @@ AUI.add(
 						}
 
 						instance._moveItem(from, to, sort);
+
+						if (instance.get('orientLanguageDirection')) {
+							instance._orientLanguageDirection();
+						}
 					},
 
 					_afterOrderClick: function(event, box) {
@@ -134,6 +140,37 @@ AUI.add(
 						}
 
 						Util.reorder(box, direction);
+					},
+
+					_orientLanguageDirection: function() {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						var themeLanguageId = Liferay.ThemeDisplay.getLanguageId();
+
+						var themeLanguageDirection = Liferay.Language.direction[themeLanguageId];
+
+						if (themeLanguageDirection === 'rtl') {
+							contentBox.all('option').each(
+								function(item, index, collection) {
+									var direction = null;
+									var optionLanguageId = item.get('value');
+									var optionDirection = Liferay.Language.direction[optionLanguageId];
+
+									if ((themeLanguageDirection !== optionDirection) && (themeLanguageId === optionLanguageId)) {
+										direction = optionDirection;
+									}
+									else if (themeLanguageId !== optionLanguageId) {
+										direction = "ltr";
+									}
+
+									if (direction) {
+										item.setStyle('direction', direction);
+									}
+								}
+							);
+						}
 					},
 
 					_moveItem: function(from, to, sort) {

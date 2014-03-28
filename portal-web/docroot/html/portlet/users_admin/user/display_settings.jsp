@@ -41,9 +41,11 @@ String timeZoneId = BeanParamUtil.getString(selUser, request, "timeZoneId", user
 			if (portletName.equals(PortletKeys.MY_ACCOUNT)) {
 				languageLocale = curLocale;
 			}
+
+			String directionStyle = "direction: " + LanguageUtil.get(curLocale, "lang.dir") + ";";
 		%>
 
-			<aui:option label="<%= curLocale.getDisplayName(languageLocale) %>" lang="<%= LocaleUtil.toW3cLanguageId(languageLocale) %>" selected="<%= (selLocale.getLanguage().equals(curLocale.getLanguage()) && selLocale.getCountry().equals(curLocale.getCountry())) %>" value="<%= LocaleUtil.toLanguageId(curLocale) %>" />
+			<aui:option label="<%= curLocale.getDisplayName(languageLocale) %>" lang="<%= LocaleUtil.toW3cLanguageId(languageLocale) %>" selected="<%= (selLocale.getLanguage().equals(curLocale.getLanguage()) && selLocale.getCountry().equals(curLocale.getCountry())) %>" style="<%= directionStyle %>" value="<%= LocaleUtil.toLanguageId(curLocale) %>" />
 
 		<%
 		}

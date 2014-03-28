@@ -37,13 +37,6 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 	}
 
-	#skip-to-content:focus {
-		clip: rect(auto auto auto auto);
-		margin-top: 35px;
-		right: 5px;
-		z-index: 200;
-	}
-
 	#sign-in {
 		background: url(@theme_image_path@/common/key.png) no-repeat 3px 50%;
 		font-weight: bold;
@@ -81,6 +74,27 @@ $dockbarOpenGradientStart: #0EA6F9;
 	}
 
 	/* ---------- Dockbar ---------- */
+
+	.dockbar, .dockbar-split .dockbar {
+		@include respond-to(phone, tablet) {
+			.info-link-container {
+				&.open {
+					.info-button a {
+						background-color: #3EA9DB;
+					}
+				}
+
+				.info-link {
+					color: #FFF;
+					font-size: 26px;
+
+					&:focus, &:hover {
+						background-color: #5BBAE8;
+					}
+				}
+			}
+		}
+	}
 
 	.dockbar {
 		&.navbar {
@@ -120,14 +134,20 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 
 		.info-button {
-			top: 9px;
-
 			a {
-				margin-top: -4px;
+				color: #FFF;
+				padding: 12px 15px;
 
-				&:hover {
+				&:focus, &:hover {
+					background-color: #2FA4F5;
 					color: #FFF;
 				}
+			}
+		}
+
+		.info-link-container {
+			&.open .info-button a {
+				background-color: #2FA4F5;
 			}
 		}
 
@@ -173,6 +193,27 @@ $dockbarOpenGradientStart: #0EA6F9;
 				a {
 					color: #FFF;
 				}
+
+				@include respond-to(phone, tablet) {
+					&.nav-account-controls li.info-link-container {
+						&.open {
+							.info-link {
+								background-color: #3EA9DB;
+							}
+						}
+
+						.info-link {
+							color: #FFF;
+							font-size: 26px;
+							margin-left: 0;
+							padding: 11px 16px 12px;
+
+							&:focus, &:hover {
+								background-color: #5BBAE8;
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -188,7 +229,9 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 	.dockbar-split .dockbar {
 		.info-button {
-			top: 9px;
+			a {
+				margin-top: -4px;
+			}
 		}
 
 		.nav > li.staging-toggle > a {
@@ -262,8 +305,8 @@ $dockbarOpenGradientStart: #0EA6F9;
 				line-height: 20px;
 			}
 
-			.page-customization-bar-text {
-				height: 43px;
+			.page-customization-bar-container {
+				top: -1px;
 			}
 
 			.staging-bar {
