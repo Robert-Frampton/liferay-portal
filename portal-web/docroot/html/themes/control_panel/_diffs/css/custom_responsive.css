@@ -19,14 +19,18 @@
 			.brand {
 				line-height: 16px;
 				padding: 12px 0 0 0;
+				white-space: nowrap;
 
 				.control-panel-back-link {
 					float: left;
 					margin-top: 6px;
+					position: relative;
+					z-index: 2;
 
 					@include respond-to(phone) {
 						margin: 0;
 						padding: 6px 8px;
+						position: absolute;
 					}
 				}
 
@@ -34,7 +38,6 @@
 					@include respond-to(phone) {
 						height: 51px;
 						margin-top: -5px;
-						max-width: 165px;
 						position: relative;
 
 						a {
@@ -51,6 +54,8 @@
 
 						.control-panel-site-selector, .site-administration-title {
 							@include ellipsis;
+
+							display: block;
 							font-size: 16px;
 						}
 
@@ -60,7 +65,7 @@
 							i {
 								bottom: 4px;
 								position: absolute;
-								right: -15px;
+								right: 0;
 							}
 						}
 
