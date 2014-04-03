@@ -1394,3 +1394,51 @@ $editLayoutPanelWidth: 460px;
 		-webkit-transform: none;
 	}
 }
+
+/* flexbox fallback for IE 9 */
+.ie9 {
+	@include respond-to(phone, tablet) {
+		.dockbar .navbar-inner .container {
+			.brand {
+				width: auto;
+				max-width: 45%;
+			}
+
+			.nav-collapse {
+				&#_145_navAccountControlsNavbarCollapse {
+					width: 55%;
+					max-width: 220px;
+
+					.nav-account-controls {
+						white-space: nowrap;
+
+						> li.dropdown {
+							margin: 0;
+							max-width: 55px;
+							padding: 5px;
+							width: 25%;
+
+							@include box-sizing(border-box);
+						}
+
+						li.sign-in a {
+							position: absolute;
+							right: 0;
+						}
+					}
+				}
+
+				&:not(#_145_navAccountControlsNavbarCollapse) {
+					width: 15%;
+					max-width: 55px;
+
+					@include box-sizing(border-box);
+
+					li {
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+}
