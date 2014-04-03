@@ -182,6 +182,12 @@
 			line-height: normal;
 		}
 
+		.fieldset .control-group .field {
+			@include box-sizing(border-box);
+
+			width: 100%;
+		}
+
 		fieldset {
 			width: 100%;
 		}
