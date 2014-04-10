@@ -116,6 +116,8 @@ boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 		'submit',
 		function(event) {
 			event.halt();
+			
+			var exportImportOptions = A.one('#<portlet:namespace />exportImportOptions');
 
 			<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" var="importPagesURL">
 				<portlet:param name="struts_action" value="/layouts_admin/import_layouts" />
@@ -123,8 +125,6 @@ boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 				<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 				<portlet:param name="validate" value="<%= String.valueOf(Boolean.FALSE) %>" />
 			</liferay-portlet:resourceURL>
-
-			var exportImportOptions = A.one('#<portlet:namespace />exportImportOptions');
 
 			exportImportOptions.plug(
 				A.Plugin.IO,
