@@ -104,15 +104,34 @@ $editLayoutPanelWidth: 460px;
 				padding: 0;
 			}
 
-			.brand h1 {
-				display: inline-block;
-				font-size: inherit;
-				line-height: 1;
-				margin-bottom: 0;
-				margin-top: 0;
+			.brand {
+				@include flexbox;
 
-				@include respond-to(phone, tablet) {
-					line-height: 16px;
+				@include respond-to(phone) {
+					width: 40px;
+
+					@include flex-grow(3);
+
+					.control-panel-back-link {
+						@include flex-shrink(0);
+					}
+				}
+
+				h1 {
+					display: inline-block;
+					font-size: inherit;
+					line-height: 1;
+					margin: 0;
+
+					@include box-sizing(border-box);
+
+					@include respond-to(phone) {
+						display: block;
+						line-height: 16px;
+						max-width: 100%;
+						min-width: 55px;
+						padding: 0 16px 0 33px;
+					}
 				}
 			}
 
@@ -130,6 +149,10 @@ $editLayoutPanelWidth: 460px;
 				margin-right: 0;
 				width: 100%;
 
+				@include respond-to(phone, tablet) {
+					@include flexbox;
+				}
+
 				.nav-collapse {
 					@include respond-to(phone, tablet) {
 						clear: none;
@@ -138,6 +161,17 @@ $editLayoutPanelWidth: 460px;
 						height: auto;
 						overflow: visible;
 						position: static;
+						width: 30px;
+
+						@include flex-grow(4);
+
+						&:not(#_145_navAccountControlsNavbarCollapse) {
+							max-width: 45px;
+							padding: 5px;
+							width: 0;
+
+							@include flex-grow(1);
+						}
 					}
 
 					> .nav {
@@ -147,6 +181,10 @@ $editLayoutPanelWidth: 460px;
 							@include respond-to(phone, tablet) {
 								float: left;
 								position: static;
+								width: 100%;
+
+								@include flex-grow(1);
+								@include flex-shrink(1);
 
 								&.info-link-container {
 									float: right;
@@ -206,10 +244,12 @@ $editLayoutPanelWidth: 460px;
 							@include respond-to(phone, tablet) {
 								> a {
 									display: inline-block;
-									margin-left: 5px;
-									margin-top: 5px;
+									margin: 0;
 									padding: 0;
-
+									position: relative;
+									text-align: center;
+									width: 100%;
+									
 									> .nav-item-label {
 										display: none;
 									}
@@ -244,11 +284,14 @@ $editLayoutPanelWidth: 460px;
 								}
 
 								&.sign-in {
-									position: absolute;
-									right: 0;
+									> a {
+										float: right;
+										margin: 5px;
+										width: auto;
 
-									> a > .nav-item-label {
-										display: block;
+										& > .nav-item-label {
+											display: block;
+										}
 									}
 								}
 							}
@@ -263,9 +306,17 @@ $editLayoutPanelWidth: 460px;
 								float: left;
 								min-width: 0;
 								padding: 0;
+								width: 100%;
+
+								@include flexbox;
 
 								.dropdown-menu .nav-item-label {
 									display: inline;
+								}
+
+								> li:not(.sign-in) {
+									margin: 5px;
+									max-width: 45px;
 								}
 							}
 
@@ -1341,5 +1392,53 @@ $editLayoutPanelWidth: 460px;
 
 	.dockbar .nav-collapse {
 		-webkit-transform: none;
+	}
+}
+
+/* flexbox fallback for IE 9 */
+.ie9 {
+	@include respond-to(phone, tablet) {
+		.dockbar .navbar-inner .container {
+			.brand {
+				width: auto;
+				max-width: 45%;
+			}
+
+			.nav-collapse {
+				&#_145_navAccountControlsNavbarCollapse {
+					width: 55%;
+					max-width: 220px;
+
+					.nav-account-controls {
+						white-space: nowrap;
+
+						> li.dropdown {
+							margin: 0;
+							max-width: 55px;
+							padding: 5px;
+							width: 25%;
+
+							@include box-sizing(border-box);
+						}
+
+						li.sign-in a {
+							position: absolute;
+							right: 0;
+						}
+					}
+				}
+
+				&:not(#_145_navAccountControlsNavbarCollapse) {
+					width: 15%;
+					max-width: 55px;
+
+					@include box-sizing(border-box);
+
+					li {
+						width: 100%;
+					}
+				}
+			}
+		}
 	}
 }
