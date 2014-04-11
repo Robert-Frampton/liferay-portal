@@ -2189,7 +2189,7 @@ AUI.add(
 									if (vocabulary) {
 										var scrollTop = vocabulary.get('region').top;
 
-										A.one(instance._vocabularyListSelector).set('scrollTop', scrollTop);
+										A.one(instance._vocabularyListSelector).attr('scrollTop', scrollTop);
 									}
 								}
 							);
@@ -2462,7 +2462,7 @@ AUI.add(
 						var option = A.one('select.vocabulary-select-list option[value="' + value + '"]');
 
 						if (option) {
-							option.set(STR_SELECTED, true);
+							option.attr(STR_SELECTED, true);
 						}
 					},
 
@@ -2516,7 +2516,7 @@ AUI.add(
 
 						message = message || Liferay.Language.get('there-are-no-categories');
 
-						categoryMessages.set('className', CSS_MESSAGE_RESPONSE + STR_SPACE + className);
+						categoryMessages.attr('className', CSS_MESSAGE_RESPONSE + STR_SPACE + className);
 
 						categoryMessages.html(message);
 
@@ -2662,7 +2662,7 @@ AUI.add(
 
 						message = message || Liferay.Language.get('there-are-no-vocabularies');
 
-						vocabularyMessages.set('className', CSS_MESSAGE_RESPONSE + STR_SPACE + className);
+						vocabularyMessages.attr('className', CSS_MESSAGE_RESPONSE + STR_SPACE + className);
 
 						vocabularyMessages.html(message);
 

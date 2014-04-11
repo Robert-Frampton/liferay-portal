@@ -175,7 +175,7 @@ DDMTemplate ddmTemplate = null;
 				var displayStyleGroupId = selectedOption.attr('data-displaystylegroupid');
 
 				if (displayStyleGroupId) {
-					displayStyleGroupIdInput.set('value', displayStyleGroupId);
+					displayStyleGroupIdInput.attr('value', displayStyleGroupId);
 				}
 			}
 		}
