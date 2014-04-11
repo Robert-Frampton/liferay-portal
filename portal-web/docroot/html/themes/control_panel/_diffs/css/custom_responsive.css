@@ -19,7 +19,11 @@
 			.brand {
 				line-height: 16px;
 				padding: 12px 0 0 0;
+				width: 40px;
 				white-space: nowrap;
+
+				@include flexbox();
+				@include flex-grow(3);
 
 				.control-panel-back-link {
 					float: left;
@@ -31,13 +35,20 @@
 						margin: 0;
 						padding: 6px 8px;
 						position: absolute;
+
+						@inlcude flex-shrink(0);
 					}
 				}
 
 				h1 {
 					@include respond-to(phone) {
+						display: block;
 						height: 51px;
+						line-height: 16px;
 						margin-top: -5px;
+						max-width: 100%;
+						min-width: 55px;
+						padding: 0 16px 0 33px;
 						position: relative;
 
 						a {
@@ -91,15 +102,22 @@
 	}
 
 	.ie9 {
-		.dockbar .navbar-inner .container .nav-collapse .nav-account-controls {
-			text-align: right;
-
-			> li.dropdown {
-				display: inline-block;
-				float: none;
-				text-align: left;
-				vertical-align: top;
+		.dockbar .navbar-inner .container {
+			.brand {
+				width: auto;
+				max-width: 45%;
 			}
+			
+			.nav-collapse .nav-account-controls {
+				text-align: right;
+
+				> li.dropdown {
+					display: inline-block;
+					float: none;
+					text-align: left;
+					vertical-align: top;
+				}
+			}	
 		}
 	}
 }

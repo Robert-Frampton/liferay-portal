@@ -104,37 +104,6 @@ $editLayoutPanelWidth: 460px;
 				padding: 0;
 			}
 
-			.brand {
-				@include flexbox;
-
-				@include respond-to(phone) {
-					width: 40px;
-
-					@include flex-grow(3);
-
-					.control-panel-back-link {
-						@include flex-shrink(0);
-					}
-				}
-
-				h1 {
-					display: inline-block;
-					font-size: inherit;
-					line-height: 1;
-					margin: 0;
-
-					@include box-sizing(border-box);
-
-					@include respond-to(phone) {
-						display: block;
-						line-height: 16px;
-						max-width: 100%;
-						min-width: 55px;
-						padding: 0 16px 0 33px;
-					}
-				}
-			}
-
 			.btn-navbar {
 				float: left;
 				padding: 12px 15px;
@@ -1398,45 +1367,38 @@ $editLayoutPanelWidth: 460px;
 /* flexbox fallback for IE 9 */
 .ie9 {
 	@include respond-to(phone, tablet) {
-		.dockbar .navbar-inner .container {
-			.brand {
-				width: auto;
-				max-width: 45%;
-			}
+		.dockbar .navbar-inner .container .nav-collapse {
+			&#_145_navAccountControlsNavbarCollapse {
+				width: 55%;
+				max-width: 220px;
 
-			.nav-collapse {
-				&#_145_navAccountControlsNavbarCollapse {
-					width: 55%;
-					max-width: 220px;
+				.nav-account-controls {
+					white-space: nowrap;
 
-					.nav-account-controls {
-						white-space: nowrap;
+					> li.dropdown {
+						margin: 0;
+						max-width: 55px;
+						padding: 5px;
+						width: 25%;
 
-						> li.dropdown {
-							margin: 0;
-							max-width: 55px;
-							padding: 5px;
-							width: 25%;
+						@include box-sizing(border-box);
+					}
 
-							@include box-sizing(border-box);
-						}
-
-						li.sign-in a {
-							position: absolute;
-							right: 0;
-						}
+					li.sign-in a {
+						position: absolute;
+						right: 0;
 					}
 				}
+			}
 
-				&:not(#_145_navAccountControlsNavbarCollapse) {
-					width: 15%;
-					max-width: 55px;
+			&:not(#_145_navAccountControlsNavbarCollapse) {
+				width: 15%;
+				max-width: 55px;
 
-					@include box-sizing(border-box);
+				@include box-sizing(border-box);
 
-					li {
-						width: 100%;
-					}
+				li {
+					width: 100%;
 				}
 			}
 		}
