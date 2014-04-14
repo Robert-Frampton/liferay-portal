@@ -128,18 +128,19 @@ $editLayoutPanelWidth: 460px;
 						display: inline-block;
 						float: left;
 						height: auto;
+						max-width: 45px;
 						overflow: visible;
+						padding: 5px;
 						position: static;
-						width: 30px;
+						width: 45px;
 
-						@include flex-grow(4);
+						@include flex-shrink(1);
 
-						&:not(#_145_navAccountControlsNavbarCollapse) {
-							max-width: 45px;
-							padding: 5px;
-							width: 0;
-
-							@include flex-grow(1);
+						&#_145_navAccountControlsNavbarCollapse {
+							max-width: none;
+							min-width: 1px;
+							padding: 0;
+							width: auto;
 						}
 					}
 
@@ -152,7 +153,6 @@ $editLayoutPanelWidth: 460px;
 								position: static;
 								width: 100%;
 
-								@include flex-grow(1);
 								@include flex-shrink(1);
 
 								&.info-link-container {
@@ -273,9 +273,9 @@ $editLayoutPanelWidth: 460px;
 
 							@include respond-to(phone, tablet) {
 								float: left;
+								max-width: 100%;
 								min-width: 0;
 								padding: 0;
-								width: 100%;
 
 								@include flexbox;
 
@@ -286,6 +286,7 @@ $editLayoutPanelWidth: 460px;
 								> li:not(.sign-in) {
 									margin: 5px;
 									max-width: 45px;
+									width: 45px;
 								}
 							}
 
@@ -298,9 +299,15 @@ $editLayoutPanelWidth: 460px;
 									}
 								}
 
-								&.sign-in > a > .nav-item-icon {
+								&.sign-in {
 									@include respond-to(phone, tablet) {
-										display: none;
+										position: absolute;
+										right: 0;
+										width: auto;
+
+										& > a > .nav-item-icon {
+											display: none;
+										}
 									}
 								}
 							}
@@ -1374,6 +1381,7 @@ $editLayoutPanelWidth: 460px;
 
 				.nav-account-controls {
 					white-space: nowrap;
+					width: 100%;
 
 					> li.dropdown {
 						margin: 0;

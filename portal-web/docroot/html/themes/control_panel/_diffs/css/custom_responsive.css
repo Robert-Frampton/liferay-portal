@@ -12,18 +12,20 @@
 				display: none;
 			}
 
-			.nav-account-controls {
+			#_145_navAccountControls {
+				float: right;
 				text-align: top;
 			}
 
 			.brand {
 				line-height: 16px;
 				padding: 12px 0 0 0;
-				width: 40px;
+				width: auto;
 				white-space: nowrap;
 
 				@include flexbox();
-				@include flex-grow(3);
+				@include flex-grow(1);
+				@include flex-shrink(1);
 
 				.control-panel-back-link {
 					float: left;
@@ -56,8 +58,12 @@
 							overflow: hidden;
 							text-overflow: ellipsis;
 							white-space: nowrap;
-							width: 75px;
+							width: 100%;
 
+							&:only-child {
+								padding-top: 12px;
+							}
+							
 							.lfr-icon-menu-text {
 								font-size: 18px;
 							}
@@ -89,6 +95,14 @@
 						line-height: 32px;
 					}
 				}
+
+				& + .nav-collapse:not(#_145_navAddControlsNavbarCollapse) {
+					-webkit-box-ordinal-group: 2;
+
+					& ~ #_145_navAccountControlsNavbarCollapse {
+						-webkit-box-flex: 3;
+					}
+				}
 			}
 
 			.btn-navbar {
@@ -106,6 +120,16 @@
 			.brand {
 				width: auto;
 				max-width: 45%;
+
+				& + .nav-collapse:not(#_145_navAddControlsNavbarCollapse) {
+					& ~ #_145_navAccountControlsNavbarCollapse {
+						width: 40%;
+
+						.nav-account-controls > li.dropdown {
+							width: 33%;
+						}
+					}
+				}
 			}
 			
 			.nav-collapse .nav-account-controls {
