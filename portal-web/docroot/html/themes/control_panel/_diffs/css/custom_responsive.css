@@ -18,14 +18,14 @@
 			}
 
 			.brand {
+				@include flexbox();
+				@include flex-grow(1);
+				@include flex-shrink(1);
+
 				line-height: 16px;
 				padding: 12px 0 0 0;
 				width: auto;
 				white-space: nowrap;
-
-				@include flexbox();
-				@include flex-grow(1);
-				@include flex-shrink(1);
 
 				.control-panel-back-link {
 					float: left;
@@ -34,11 +34,11 @@
 					z-index: 2;
 
 					@include respond-to(phone) {
+						@inlcude flex-shrink(0);
+
 						margin: 0;
 						padding: 6px 8px;
 						position: absolute;
-
-						@inlcude flex-shrink(0);
 					}
 				}
 
@@ -63,16 +63,17 @@
 							&:only-child {
 								padding-top: 12px;
 							}
-							
+
 							.lfr-icon-menu-text {
 								font-size: 18px;
 							}
 						}
 
 						.control-panel-site-selector, .site-administration-title {
+							display: block;
+
 							@include ellipsis;
 
-							display: block;
 							font-size: 16px;
 						}
 
@@ -118,8 +119,8 @@
 	.ie9 {
 		.dockbar .navbar-inner .container {
 			.brand {
-				width: auto;
 				max-width: 45%;
+				width: auto;
 
 				& + .nav-collapse:not(#_145_navAddControlsNavbarCollapse) {
 					& ~ #_145_navAccountControlsNavbarCollapse {
@@ -131,7 +132,7 @@
 					}
 				}
 			}
-			
+
 			.nav-collapse .nav-account-controls {
 				text-align: right;
 
@@ -141,7 +142,7 @@
 					text-align: left;
 					vertical-align: top;
 				}
-			}	
+			}
 		}
 	}
 }

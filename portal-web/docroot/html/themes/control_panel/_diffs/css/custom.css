@@ -218,12 +218,12 @@ $dockbarOpenGradientStart: #0EA6F9;
 				}
 
 				h1 {
+					@include box-sizing(border-box);
+
 					display: inline-block;
 					font-size: inherit;
 					line-height: 1;
 					margin: 0;
-
-					@include box-sizing(border-box);
 				}
 
 				@include respond-to(phone, tablet) {
