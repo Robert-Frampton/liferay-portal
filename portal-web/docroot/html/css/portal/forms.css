@@ -188,7 +188,6 @@
 
 		input, input.input-large, textarea, .uneditable-input {
 			max-width: 100%;
-			width: auto;
 		}
 
 		select {
@@ -209,7 +208,7 @@
 
 		&.ios {
 			input, input.input-large, textarea, .uneditable-input {
-				max-width: 90% !important;
+				max-width: 100%;
 			}
 		}
 
