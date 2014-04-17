@@ -290,7 +290,15 @@ List<String> primaryKeys = new ArrayList<String>();
 				}
 			%>
 
-				<td class="table-cell <%= columnClassName %>" data-th="<%= headerNames.get(j) %>">
+			<%
+			String headerName = LanguageUtil.get(pageContext, HtmlUtil.escape(headerNames.get(j)));
+
+			if (Validator.isNull(headerName)) {
+				headerName = "Actions";
+			}
+			%>
+
+				<td class="table-cell <%= columnClassName %>" data-th="<%= headerName %>">
 
 					<%
 					entry.print(pageContext);

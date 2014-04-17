@@ -126,6 +126,7 @@ body.html-editor {
 	.responsive-table-stacked {
 		tbody tr td {
 			display: block;
+			padding-left: 8px;
 			text-align: left;
 
 			&:before {
@@ -134,19 +135,25 @@ body.html-editor {
 				font-weight: bold;
 				width: 120px;
 			}
+
+			.category-title {
+				display: inline;
+			}
+
+			&.table-cell.last .lfr-icon-menu .dropdown-toggle {
+				> img , .lfr-icon-menu-text {
+					display: inline;
+				}
+			}
 		}
 
 		th {
 			display: none;
 		}
 
-		tbody tr td, .table-data tr.lfr-role .first {
-			padding-left: 8px;
-		}
-
 		.table-data tr.lfr-role .first {
 			background-image: none;
-			text-transform: capitalize;
+			padding-left: 8px;
 		}
 	}
 }
