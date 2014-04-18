@@ -122,6 +122,33 @@ body.html-editor {
 			float: none;
 		}
 	}
+
+	.responsive-table-stacked {
+		tbody tr td {
+			display: block;
+			text-align: left;
+
+			&:before {
+				display: inline-block;
+				content: attr(data-th)": ";
+				font-weight: bold;
+				width: 120px;
+			}
+		}
+
+		th {
+			display: none;
+		}
+
+		tbody tr td, .table-data tr.lfr-role .first {
+			padding-left: 8px;
+		}
+
+		.table-data tr.lfr-role .first {
+			background-image: none;
+			text-transform: capitalize;
+		}
+	}
 }
 
 /* ---------- Text formatting ---------- */
