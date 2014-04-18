@@ -363,7 +363,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 						on: {
 							failure: function() {
 								if (saveStatus) {
-									saveStatus.set('className', 'alert alert-error save-status');
+									saveStatus.attr('className', 'alert alert-error save-status');
 									saveStatus.html('<%= UnicodeLanguageUtil.get(pageContext, "could-not-save-draft-to-the-server") %>');
 								}
 							},
@@ -371,7 +371,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 								Liferay.Util.toggleDisabled(publishButton, true);
 
 								if (saveStatus) {
-									saveStatus.set('className', 'alert alert-info save-status pending');
+									saveStatus.attr('className', 'alert alert-info save-status pending');
 									saveStatus.html('<%= UnicodeLanguageUtil.get(pageContext, "saving-draft") %>');
 								}
 							},
@@ -404,7 +404,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 									var now = saveText.replace(/\[TIME\]/gim, (new Date()).toString());
 
 									if (saveStatus) {
-										saveStatus.set('className', 'alert alert-success save-status');
+										saveStatus.attr('className', 'alert alert-success save-status');
 										saveStatus.html(now);
 									}
 								}
@@ -466,13 +466,13 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 	var values = container.all('.lfr-blogs-small-image-value');
 
 	var selectSmallImageType = function(index) {
-		types.set('checked', false);
+		types.attr('checked', false);
 
-		types.item(index).set('checked', true);
+		types.item(index).attr('checked', true);
 
-		values.set('disabled', true);
+		values.attr('disabled', true);
 
-		values.item(index).set('disabled', false);
+		values.item(index).attr('disabled', false);
 	};
 
 	container.delegate(
@@ -497,8 +497,8 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 
 					var expanded = !instance.get('expanded');
 
-					A.one('#<portlet:namespace />smallImage').set('value', expanded);
-					A.one('#<portlet:namespace />smallImageCheckbox').set('checked', expanded);
+					A.one('#<portlet:namespace />smallImage').attr('value', expanded);
+					A.one('#<portlet:namespace />smallImageCheckbox').attr('checked', expanded);
 
 					if (expanded) {
 						types.each(
@@ -510,7 +510,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 						);
 					}
 					else {
-						values.set('disabled', true);
+						values.attr('disabled', true);
 					}
 				}
 			}
