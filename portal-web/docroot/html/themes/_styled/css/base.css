@@ -122,6 +122,40 @@ body.html-editor {
 			float: none;
 		}
 	}
+
+	.responsive-table-stacked {
+		tbody tr td {
+			display: block;
+			padding-left: 8px;
+			text-align: left;
+
+			&:before {
+				display: inline-block;
+				content: attr(data-th)": ";
+				font-weight: bold;
+				width: 120px;
+			}
+
+			.category-title {
+				display: inline;
+			}
+
+			&.table-cell.last .lfr-icon-menu .dropdown-toggle {
+				> img , .lfr-icon-menu-text {
+					display: inline;
+				}
+			}
+		}
+
+		th {
+			display: none;
+		}
+
+		.table-data tr.lfr-role .first {
+			background-image: none;
+			padding-left: 8px;
+		}
+	}
 }
 
 /* ---------- Text formatting ---------- */

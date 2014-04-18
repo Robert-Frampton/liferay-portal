@@ -72,7 +72,7 @@ List<String> primaryKeys = new ArrayList<String>();
 	</c:if>
 
 	<div id="<%= namespace + id %>SearchContainer">
-		<table class="table table-bordered table-hover table-striped">
+		<table class="table table-bordered table-hover table-striped responsive-table-stacked">
 
 		<c:if test="<%= headerNames != null %>">
 			<thead class="table-columns">
@@ -290,7 +290,15 @@ List<String> primaryKeys = new ArrayList<String>();
 				}
 			%>
 
-				<td class="table-cell <%= columnClassName %>">
+			<%
+			String headerName = LanguageUtil.get(pageContext, HtmlUtil.escape(headerNames.get(j)));
+
+			if (Validator.isNull(headerName)) {
+				headerName = "Actions";
+			}
+			%>
+
+				<td class="table-cell <%= columnClassName %>" data-th="<%= headerName %>">
 
 					<%
 					entry.print(pageContext);
