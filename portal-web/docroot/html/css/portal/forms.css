@@ -193,6 +193,7 @@
 
 		select {
 			max-width: 100%;
+			width: auto;
 		}
 
 		@include respond-to(phone) {

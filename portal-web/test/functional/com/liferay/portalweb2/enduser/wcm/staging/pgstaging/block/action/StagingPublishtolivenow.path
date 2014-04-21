@@ -1,17 +1,17 @@
 <html>
 <head>
-<title>PGStagingPublishtolivenow</title>
+<title>StagingPublishtolivenow</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">PGStagingPublishtolivenow</td></tr>
+<tr><td rowspan="1" colspan="3">StagingPublishtolivenow</td></tr>
 </thead>
 <tbody>
 <tr>
 	<td>PAGE_NAME</td>
 	<td></td>
-	<td>PGStagingPublishtolivenow</td>
+	<td>StagingPublishtolivenow</td>
 </tr>
 <tr>
 	<td></td>
@@ -212,12 +212,12 @@
 <!--DATE_RANGE-->
 <tr>
 	<td>DATE_RANGE_START_DATE</td>
-	<td>//input[@id='_88_startDate']</td>
+	<td>//input[@name='_88_startDate']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>DATE_RANGE_END_DATE</td>
-	<td>//input[@id='_88_endDate']</td>
+	<td>//input[@name='_88_endDate']</td>
 	<td></td>
 </tr>
 <tr>
