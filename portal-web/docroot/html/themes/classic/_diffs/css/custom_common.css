@@ -353,7 +353,7 @@
 
 								> li > a {
 									color: #FFF;
-									font-weight: 300;
+									font-weight: 200;
 									line-height: 31px;
 
 									@include respond-to(phone, tablet) {
