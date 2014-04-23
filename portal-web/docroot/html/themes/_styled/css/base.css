@@ -124,7 +124,14 @@ body.html-editor {
 	}
 
 	.responsive-table-stacked {
+		@include box-sizing(border-box);
+
 		display: block;
+
+		thead {
+			clip: rect(0, 0, 0, 0);
+			position: absolute;
+		}
 
 		tbody tr {
 			td {
@@ -133,7 +140,7 @@ body.html-editor {
 				text-align: left;
 
 				&:before {
-					content: attr(data-th)": ";
+					content: attr(data-th);
 					font-weight: bold;
 				}
 
@@ -148,19 +155,26 @@ body.html-editor {
 				}
 			}
 
+			&:first-of-type .table-cell.first {
+				border-top-width: 0;
+			}
+
 			&.lfr-template {
 				display: none;
 			}
 		}
 
-		thead tr {
-			left: -9999px;
-			position: absolute;
-			top: -9999px;
-		}
-
-		thead, tbody, tr, th, td, td:before {
+		tbody, td, td:before, th, tr {
 			display: block;
+		}
+	}
+
+	.ie9 {
+		.responsive-table-stacked td {
+			@include box-sizing(border-box);
+
+			float: left;
+			width: 100%;
 		}
 	}
 }
