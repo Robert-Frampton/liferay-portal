@@ -2,10 +2,6 @@
 @import "mixins";
 
 .navbar .container {
-	.nav {
-		z-index: 1;
-	}
-
 	.nav-collapse .navbar-search-advanced {
 		float: none;
 		margin: 0;
