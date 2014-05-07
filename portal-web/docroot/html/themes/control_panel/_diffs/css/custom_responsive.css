@@ -20,9 +20,10 @@
 			.brand {
 				@include flexbox();
 				@include flex-grow(1);
-				@include flex-shrink(1);
+				@include flex-shrink(500);
 
 				line-height: 16px;
+				min-width: 128px;
 				padding: 12px 0 0 0;
 				white-space: nowrap;
 				width: auto;
@@ -96,14 +97,6 @@
 						line-height: 32px;
 					}
 				}
-
-				& + .nav-collapse:not(#_145_navAddControlsNavbarCollapse) {
-					-webkit-box-ordinal-group: 2;
-
-					& ~ #_145_navAccountControlsNavbarCollapse {
-						-webkit-box-flex: 3;
-					}
-				}
 			}
 
 			.btn-navbar {
@@ -112,6 +105,10 @@
 
 			.nav-account-controls > li:hover {
 				background-color: transparent;
+			}
+
+			.nav-collapse:not(#_145_navAccountControlsNavbarCollapse) {
+				@include flex-grow(100);
 			}
 		}
 	}
