@@ -157,7 +157,7 @@
 
 .aui {
 	input[type=file] {
-		max-width: 220px;
+		width: 100%;
 	}
 
 	fieldset {
