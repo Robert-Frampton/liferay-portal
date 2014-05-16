@@ -30,6 +30,16 @@
 	var simpleNode = A.one('#<%= id %>simple');
 	var toggleAdvancedNode = A.one('#<%= id %>toggleAdvanced');
 
+	var navBar = simpleNode.ancestor('.navbar');
+
+	if (navBar) {
+		var navs = navBar.all('.nav');
+
+		if (navs) {
+			navs.setStyle('z-index', 1);
+		}
+	}
+
 	var toggleDisabled = function(state) {
 		Util.toggleDisabled(simpleNode.all('input'), state);
 		Util.toggleDisabled(advancedNode.all('input'), !state);
