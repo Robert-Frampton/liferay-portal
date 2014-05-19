@@ -17,6 +17,8 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
+String randomNamespace = StringPool.UNDERLINE + StringUtil.randomId();
+
 boolean autoFocus = GetterUtil.getBoolean(request.getAttribute("liferay-ui:input-search:autoFocus"));
 String buttonLabel = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-search:buttonLabel"));
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-search:cssClass"));
@@ -30,9 +32,9 @@ String value = ParamUtil.getString(request, name);
 %>
 
 <div class="<%= cssClass %>">
-	<label class="hide-accessible" for="<portlet:namespace /><%= id %>"><%= title %></label>
+	<label class="hide-accessible" for="<portlet:namespace /><%= id + randomNamespace %>"><%= title %></label>
 
-	<input class="search-query span9" id="<portlet:namespace /><%= id %>" name="<portlet:namespace /><%= name %>" placeholder="<%= placeholder %>" title="<%= title %>" type="text" value="<%= HtmlUtil.escapeAttribute(value) %>" />
+	<input class="search-query span9" id="<portlet:namespace /><%= id + randomNamespace %>" name="<portlet:namespace /><%= name %>" placeholder="<%= placeholder %>" title="<%= title %>" type="text" value="<%= HtmlUtil.escapeAttribute(value) %>" />
 
 	<c:if test="<%= showButton %>">
 		<button class="btn" type="submit">
@@ -43,6 +45,6 @@ String value = ParamUtil.getString(request, name);
 
 <c:if test="<%= autoFocus %>">
 	<aui:script>
-		Liferay.Util.focusFormField('#<%= namespace %><%= id %>');
+		Liferay.Util.focusFormField('#<%= namespace %><%= id + randomNamespace %>');
 	</aui:script>
 </c:if>
