@@ -1065,3 +1065,8 @@
 		@include opacity(0.8);
 	}
 }
+
+.scroll-disabled {
+	height: 100%;
+	overflow: hidden;
+}
