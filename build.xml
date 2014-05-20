@@ -131,7 +131,9 @@
 			/>
 
 			<if>
-				<isset property="${ivy.pom.property.list}"/>
+				<not>
+					<equals arg1="${ivy.pom.property.list}" arg2="$${ivy.pom.property.list}" />
+				</not>
 				<then>
 					<for list="${ivy.pom.property.list}" param="ivy.pom.property">
 						<sequential>
@@ -168,7 +170,9 @@
 			/>
 
 			<if>
-				<isset property="${sonatype.property.list}"/>
+				<not>
+					<equals arg1="${sonatype.property.list}" arg2="$${sonatype.property.list}" />
+				</not>
 				<then>
 					<for list="${sonatype.property.list}" param="sonatype.property">
 						<sequential>
