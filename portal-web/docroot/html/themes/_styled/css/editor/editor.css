@@ -1,0 +1,621 @@
+@import "compass";
+
+$hoverColor: #E1EDF7;
+$selectedColor: #99BFDE;
+
+/* ---------- Main UI ---------- */
+
+.cke_chrome {
+	background-color: #EEE;
+	border: 1px solid #DDD;
+	display: block;
+}
+
+.cke_float {
+	margin-top: -5px;
+
+	.cke_inner {
+		padding: 0;
+	}
+
+	.cke_top {
+		padding-left: 5px;
+	}
+}
+
+.cke_inner {
+	display: block;
+	padding: 0 5px;
+	-webkit-touch-callout: none;
+}
+
+.cke_bottom, .cke_contents, .cke_top {
+	display: block;
+	overflow: hidden;
+}
+
+.cke_top {
+	padding: 5px 0 1px;
+	white-space: normal;
+}
+
+.cke_contents {
+	border: 1px solid #DDD;
+
+	.cke_source {
+		border-width: 0;
+	}
+}
+
+.cke_browser_ios .cke_contents {
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.cke_bottom {
+	padding: 6px 8px 2px;
+	position: relative;
+}
+
+.cke_resizer {
+	border-color: transparent #666 transparent transparent;
+	border-style: dashed solid dashed dashed;
+	border-width: 10px 10px 0 0;
+	cursor: se-resize;
+	float: right;
+	font-size: 0;
+	height: 0;
+	margin: 6px -8px 2px 0;
+	overflow: hidden;
+	vertical-align: bottom;
+	width: 0;
+}
+
+.cke_wysiwyg_div {
+	display: block;
+	height: 100%;
+	outline-style: none;
+	overflow: auto;
+	padding: 0 8px;
+}
+
+/* ---------- Panel ---------- */
+
+.cke_panel {
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	height: 100px;
+	overflow: hidden;
+	visibility: visible;
+	width: 120px;
+}
+
+.cke_menu_panel {
+	margin: 0;
+	padding: 0;
+}
+
+.cke_combopanel {
+	height: 170px;
+	width: 150px;
+}
+
+.cke_panel_frame {
+	font-size: 12px;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	width: 100%;
+}
+
+.cke_panel_container {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.cke_panel_list {
+	list-style-type: none;
+	margin: 3px;
+	padding: 0;
+	white-space: nowrap;
+}
+
+.cke_panel_listItem {
+	margin: 0;
+	padding-bottom: 1px;
+
+	h1, h2, h3, h4, h5, h6, p, pre {
+		margin-bottom: 0;
+		margin-top: 0;
+	}
+
+	a {
+		color: inherit !important;
+		display: block;
+		overflow: hidden;
+		padding: 3px 4px;
+		text-decoration: none;
+		text-overflow: ellipsis;
+
+		&:active, &:focus, &:hover {
+			background-color: $hoverColor;
+		}
+	}
+
+	&.cke_selected {
+		background-color: $hoverColor;
+	}
+}
+
+.cke_panel_block .cke_panel_grouptitle {
+	background-color: #EEE;
+	border: 1px solid #DDD;
+	border-width: 1px 0;
+	margin: 0;
+	padding: 4px 6px;
+	white-space: nowrap;
+}
+
+/* ---------- Color Panel ---------- */
+
+.cke_colorblock {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	padding: 10px;
+
+	&, a {
+		color: #474747;
+		text-decoration: none;
+	}
+
+	span.cke_colorbox {
+		border: 1px solid #808080;
+		float: left;
+		height: 16px;
+		width: 16px;
+	}
+
+	a.cke_colorbox {
+		border: 1px solid #FFF;
+		float: left;
+		padding: 1px;
+	}
+
+	.cke_colorauto, &.cke_colormore {
+		border: 1px solid #FFF;
+		cursor: pointer;
+		display: block;
+		padding: 6px;
+	}
+
+	.cke_colorauto {
+		margin-bottom: 5px;
+	}
+
+	.cke_colormore {
+		margin-top: 5px;
+	}
+
+	a {
+		&:active, &:focus, &:hover {
+			.cke_colorbox {
+				background-color: #E5E5E5;
+				border: #B6B6B6 1px solid;
+			}
+
+			&.cke_colorauto, &.cke_colormore {
+				background-color: $hoverColor;
+			}
+		}
+	}
+}
+
+/* ---------- Toolbar ---------- */
+
+.cke_toolbar {
+	float: left;
+}
+
+.cke_toolgroup {
+	border: 1px solid #DDD;
+	float: left;
+	margin: 0 6px 5px 0;
+}
+
+.cke_button {
+	background-color: #FFF;
+	border-width: 0;
+	cursor: default;
+	display: inline-block;
+	float: left;
+	height: 18px;
+	outline: none;
+	padding: 6px 7px;
+}
+
+.cke_button_disabled {
+	&:active, &:focus, &:hover {
+		background-color: #FFF;
+	}
+}
+
+.cke_button_off {
+	&:active, &:focus, &:hover {
+		background-color: $hoverColor;
+	}
+}
+
+.cke_button_on {
+	&, &:active, &:focus, &:hover {
+		background-color: $selectedColor;
+	}
+
+	.cke_button_icon {
+		background-image: url(images/icons-white.png) !important;
+	}
+
+	.cke_button__scayt_icon {
+		background-position: 0 -238px !important;
+	}
+
+	.cke_button_label {
+		color: #FFF;
+	}
+
+	.cke_button_arrow {
+		border-color: #FFF transparent transparent;
+	}
+}
+
+.cke_hidpi .cke_button_on .cke_button_icon {
+	background-image: url(images/hidpi/icons-white.png) !important;
+}
+
+.cke_button_icon {
+	background-repeat: no-repeat;
+	cursor: inherit;
+	display: inline-block;
+	float: left;
+	height: 16px;
+	margin-top: 1px;
+	width: 16px;
+}
+
+.cke_button_label {
+	color: #474747;
+	cursor: default;
+	display: none;
+	float: left;
+	line-height: 17px;
+	margin-top: 1px;
+	padding-left: 3px;
+	vertical-align: middle;
+}
+
+.cke_button_arrow {
+	border: 3px solid transparent;
+	border-top-color: #474747;
+	cursor: default;
+	display: inline-block;
+	height: 0;
+	margin: 8px 0 0 1px;
+	vertical-align: top;
+	width: 0;
+}
+
+.cke_toolbar_separator {
+	background-color: #DDD;
+	float: left;
+	height: 30px;
+	width: 1px;
+}
+
+.cke_toolbar_break {
+	clear: left;
+	display: block;
+}
+
+.cke_toolbox_collapser {
+	background-color: #FFF;
+	border: 1px solid #ADADAD;
+	cursor: default;
+	float: right;
+	font-size: 0;
+	height: 11px;
+	margin: 11px 0 0;
+	text-align: center;
+	width: 12px;
+
+	&:hover {
+		background-color: #EBEBEB;
+	}
+
+	&.cke_toolbox_collapser_min {
+		margin: 0 2px 4px;
+	}
+
+	.cke_arrow {
+		border: 3px solid transparent;
+		border-bottom-color: #474747;
+		display: inline-block;
+		font-size: 0;
+		height: 0;
+		margin-top: 1px;
+		width: 0;
+	}
+
+	&.cke_toolbox_collapser_min .cke_arrow {
+		border-bottom-color: transparent;
+		border-top-color: #474747;
+		margin-top: 4px;
+	}
+}
+
+/* ---------- Menu ---------- */
+
+.cke_menubutton {
+	color: #474747;
+	display: block;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 200;
+	text-decoration: none;
+
+	&:active, &:focus, &:hover {
+		background-color: $hoverColor;
+		display: block;
+	}
+}
+
+.cke_menubutton_disabled, .cke_menubutton_disabled, .cke_menubutton_disabled {
+	&:active, &:focus, &:hover {
+		background-color: #FFF;
+		cursor: default;
+		outline: none;
+	}
+}
+
+.cke_menubutton_icon .cke_button_icon {
+	margin: 6px 0 6px 4px;
+}
+
+.cke_menubutton_inner {
+	display: table-row;
+}
+
+.cke_menuarrow, .cke_menubutton_icon, .cke_menubutton_label {
+	display: table-cell;
+}
+
+.cke_menubutton_label {
+	padding: 0 5px;
+	vertical-align: middle;
+	white-space: nowrap;
+	width: 100%;
+}
+
+.cke_menubutton_on {
+	&, &:hover {
+		background-color: $selectedColor;
+		color: #FFF;
+	}
+}
+
+.cke_panel_frame .cke_menubutton_label {
+	display: none;
+}
+
+.cke_menuseparator {
+	background-color: #D3D3D3;
+	height: 1px;
+}
+
+.cke_menuarrow {
+	background: url(images/arrow.png) 0 10px no-repeat;
+	padding: 0 5px;
+
+	span {
+		display: none;
+	}
+}
+
+/* ---------- Rich combo ---------- */
+
+.cke_combo_label {
+	display: none;
+	float: left;
+	margin-right: 5px;
+}
+
+.cke_combo_button {
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	display: inline-block;
+	float: left;
+	margin: 0 6px 5px 0;
+	padding: 2px;
+}
+
+.cke_combo_off {
+	a.cke_combo_button {
+		&:active, &:focus, &:hover {
+			background: $hoverColor;
+		}
+	}
+}
+
+.cke_combo_on {
+	a.cke_combo_button {
+		&, &:active, &:focus, &:hover {
+			background-color: $selectedColor;
+		}
+	}
+
+	.cke_combo_text {
+		color: #FFF;
+	}
+
+	.cke_combo_arrow {
+		border-color: #FFF transparent transparent;
+	}
+}
+
+.cke_combo_text {
+	color: #474747;
+	cursor: default;
+	float: left;
+	line-height: 26px;
+	padding-left: 10px;
+}
+
+.cke_combo_open {
+	cursor: default;
+	display: inline-block;
+	font-size: 0;
+	height: 19px;
+	line-height: 17px;
+	margin: 1px 7px 1px;
+}
+
+.cke_combo_arrow {
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #474747;
+	float: left;
+	font-size: 0;
+	height: 0;
+	margin: 11px 0 0;
+	width: 0;
+}
+
+/* ---------- Elements path ---------- */
+
+.cke_path {
+	float: left;
+	margin: -2px 0 2px;
+
+	.cke_path_empty, .cke_path_item {
+		border-width: 0;
+		color: #777;
+		cursor: default;
+		display: inline-block;
+		float: left;
+		font-size: 12px;
+		line-height: 1em;
+		margin-right: 2px;
+		outline: 0;
+		padding: 3px 4px;
+	}
+
+	.cke_path_item {
+		&:active, &:focus, &:hover {
+			background-color: $selectedColor;
+			color: #FFF;
+			text-decoration: none;
+		}
+	}
+}
+
+/* ---------- Extras ---------- */
+
+.cke_chrome, .cke_contents {
+	@include border-radius(4px);
+}
+
+.cke_contents .cke_source {
+	@include box-shadow(none);
+	@include box-sizing(border-box);
+}
+
+.cke_float .cke_top {
+	@include border-radius(5px);
+	@include box-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+}
+
+.cke_wysiwyg_div {
+	@include box-sizing(border-box);
+}
+
+.cke_panel {
+	@include border-radius(6px);
+	@include box-shadow(0 6px 12px rgba(0, 0, 0, 0.175));
+}
+
+.cke_panel_listItem.cke_selected a {
+	@include box-shadow(inset 0 0 6px rgba(0, 0, 0, 0.125));
+}
+
+.cke_combo_button, .cke_toolbox_collapser, .cke_toolgroup {
+	@include border-radius(3px);
+}
+
+.cke_button:last-child {
+	@include border-radius(0 2px 2px 0);
+}
+
+.cke_button:first-child {
+	@include border-radius(2px 0 0 2px);
+}
+
+.cke_path_item:focus, .cke_path_item:hover, .cke_path_item:active, .cke_button:only-child {
+	@include border-radius(2px);
+}
+
+.cke_button_on, .cke_menubutton_on , .cke_button_off:active , .cke_combo_off a.cke_combo_button:active {
+	@include box-shadow(inset 0 3px 5px rgba(0, 0, 0, 0.125));
+}
+
+.cke_button_off .cke_button_icon {
+	@include opacity(0.8);
+}
+
+.cke_combo_disabled .cke_combo_inlinelabel, .cke_combo_disabled .cke_combo_open, .cke_button_disabled .cke_button_icon, .cke_menubutton_disabled .cke_menubutton_label {
+	@include opacity(0.3);
+}
+
+.cke_menuseparator {
+	@include opacity(0.7);
+}
+
+.cke_combo_on a.cke_combo_button {
+	&, &:active, &:focus, &:hover {
+		@include box-shadow(inset 0 3px 5px rgba(0, 0, 0, 0.125));
+	}
+}
+
+/* ---------- Presets ---------- */
+
+.cke_button__source_label, .cke_button__sourcedialog_label {
+	display: inline;
+}
+
+.cke_combo__fontsize .cke_combo_text {
+	width: 30px;
+}
+
+.cke_source {
+	background-color: #FFF;
+	font-family: 'Courier New' , Monospace;
+	font-size: small;
+	white-space: pre;
+}
+
+.cke_wysiwyg_div, .cke_wysiwyg_frame {
+	background-color: #FFF;
+}
+
+.cke_chrome {
+	visibility: inherit;
+}
+
+.cke_dialog {
+	visibility: hidden;
+}
+
+.cke_voice_label {
+	display: none;
+}
+
+legend.cke_voice_label {
+	display: none;
+}

@@ -123,6 +123,8 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 		config.resize_dir = 'vertical';
 	</c:if>
 
+	config.skin = 'editor,' + themeDisplay.getPathThemeRoot() + '/css/editor/';
+
 	config.stylesCombo_stylesSet = 'liferayStyles';
 
 	config.toolbar_editInPlace = [
