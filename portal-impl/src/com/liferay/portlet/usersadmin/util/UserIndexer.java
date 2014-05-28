@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.usersadmin.util;
 
+import com.liferay.portal.NoSuchContactException;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -383,7 +384,14 @@ public class UserIndexer extends BaseIndexer {
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				Contact.class);
 
-			indexer.reindex(user.getContact());
+			try {
+				indexer.reindex(user.getContact());
+			}
+			catch (NoSuchContactException nscce) {
+
+				// This is a temporary workaround for LPS-46825
+
+			}
 		}
 	}
 

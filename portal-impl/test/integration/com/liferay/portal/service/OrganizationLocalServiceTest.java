@@ -24,8 +24,8 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
-import com.liferay.portal.util.OrganizationTestUtil;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.test.OrganizationTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 
 import java.util.List;
 

@@ -46,24 +46,24 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
-import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortalImpl;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.test.GroupTestUtil;
+import com.liferay.portal.util.test.LayoutTestUtil;
+import com.liferay.portal.util.test.RandomTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
+import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.util.JournalTestUtil;
+import com.liferay.portlet.journal.util.test.JournalTestUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -113,8 +113,8 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 		_fileEntry = DLAppTestUtil.addFileEntry(
 			_stagingGroup.getGroupId(),
 			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			ServiceTestUtil.randomString() + ".txt",
-			ServiceTestUtil.randomString(), true);
+			RandomTestUtil.randomString() + ".txt",
+			RandomTestUtil.randomString(), true);
 
 		LiferayFileEntry liferayFileEntry = (LiferayFileEntry)_fileEntry;
 
@@ -146,9 +146,9 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 		_portletDataContextExport.setExportDataRootElement(rootElement);
 
 		_stagingPrivateLayout = LayoutTestUtil.addLayout(
-			_stagingGroup.getGroupId(), ServiceTestUtil.randomString(), true);
+			_stagingGroup.getGroupId(), RandomTestUtil.randomString(), true);
 		_stagingPublicLayout = LayoutTestUtil.addLayout(
-			_stagingGroup.getGroupId(), ServiceTestUtil.randomString(), false);
+			_stagingGroup.getGroupId(), RandomTestUtil.randomString(), false);
 
 		_portletDataContextExport.setPlid(_stagingPublicLayout.getPlid());
 
@@ -162,7 +162,7 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 		_portletDataContextImport.setImportDataRootElement(rootElement);
 
 		_livePublicLayout = LayoutTestUtil.addLayout(
-			_liveGroup.getGroupId(), ServiceTestUtil.randomString(), false);
+			_liveGroup.getGroupId(), RandomTestUtil.randomString(), false);
 
 		_portletDataContextImport.setPlid(_livePublicLayout.getPlid());
 
@@ -171,8 +171,8 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 		rootElement.addElement("entry");
 
 		_referrerStagedModel = JournalTestUtil.addArticle(
-			_stagingGroup.getGroupId(), ServiceTestUtil.randomString(),
-			ServiceTestUtil.randomString());
+			_stagingGroup.getGroupId(), RandomTestUtil.randomString(),
+			RandomTestUtil.randomString());
 	}
 
 	@After
@@ -244,6 +244,27 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 			Assert.assertTrue(
 				content.contains("[$dl-reference=" + entry + "$]"));
 		};
+	}
+
+	@Test
+	public void testExportDLReferencesInvalidReference() throws Exception {
+		_portletDataContextExport.setZipWriter(new TestReaderWriter());
+
+		StringBundler sb = new StringBundler(9);
+
+		sb.append("{{/documents/}}");
+		sb.append(StringPool.NEW_LINE);
+		sb.append("[[/documents/]]");
+		sb.append(StringPool.NEW_LINE);
+		sb.append("<a href=/documents/>Link</a>");
+		sb.append(StringPool.NEW_LINE);
+		sb.append("<a href=\"/documents/\">Link</a>");
+		sb.append(StringPool.NEW_LINE);
+		sb.append("<a href='/documents/'>Link</a>");
+
+		ExportImportHelperUtil.replaceExportDLReferences(
+			_portletDataContextExport, _referrerStagedModel, sb.toString(),
+			true);
 	}
 
 	@Test
@@ -369,9 +390,9 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 		Group group = user.getGroup();
 
 		Layout privateLayout = LayoutTestUtil.addLayout(
-			group.getGroupId(), ServiceTestUtil.randomString(), true);
+			group.getGroupId(), RandomTestUtil.randomString(), true);
 		Layout publicLayout = LayoutTestUtil.addLayout(
-			group.getGroupId(), ServiceTestUtil.randomString(), false);
+			group.getGroupId(), RandomTestUtil.randomString(), false);
 
 		PortletDataContext portletDataContextExport =
 			PortletDataContextFactoryUtil.createExportPortletDataContext(
@@ -381,8 +402,8 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 				new TestReaderWriter());
 
 		JournalArticle journalArticle = JournalTestUtil.addArticle(
-			group.getGroupId(), ServiceTestUtil.randomString(),
-			ServiceTestUtil.randomString());
+			group.getGroupId(), RandomTestUtil.randomString(),
+			RandomTestUtil.randomString());
 
 		Element rootElement = SAXReaderUtil.createElement("root");
 
@@ -470,9 +491,9 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 	@Test
 	public void testImportLinksToLayoutsIdsReplacement() throws Exception {
 		LayoutTestUtil.addLayout(
-			_liveGroup.getGroupId(), ServiceTestUtil.randomString(), true);
+			_liveGroup.getGroupId(), RandomTestUtil.randomString(), true);
 		LayoutTestUtil.addLayout(
-			_liveGroup.getGroupId(), ServiceTestUtil.randomString(), false);
+			_liveGroup.getGroupId(), RandomTestUtil.randomString(), false);
 
 		exportImportLayouts(true);
 		exportImportLayouts(false);

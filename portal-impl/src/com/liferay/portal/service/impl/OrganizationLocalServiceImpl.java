@@ -1447,7 +1447,8 @@ public class OrganizationLocalServiceImpl
 		throws SystemException {
 
 		if (!PropsValues.ORGANIZATIONS_INDEXER_ENABLED ||
-			!PropsValues.ORGANIZATIONS_SEARCH_WITH_INDEX) {
+			!PropsValues.ORGANIZATIONS_SEARCH_WITH_INDEX ||
+			isUseCustomSQL(params)) {
 
 			String parentOrganizationIdComparator = StringPool.EQUAL;
 
@@ -1538,7 +1539,8 @@ public class OrganizationLocalServiceImpl
 		throws SystemException {
 
 		if (!PropsValues.ORGANIZATIONS_INDEXER_ENABLED ||
-			!PropsValues.ORGANIZATIONS_SEARCH_WITH_INDEX) {
+			!PropsValues.ORGANIZATIONS_SEARCH_WITH_INDEX ||
+			isUseCustomSQL(params)) {
 
 			String parentOrganizationIdComparator = StringPool.EQUAL;
 
@@ -2153,6 +2155,14 @@ public class OrganizationLocalServiceImpl
 		else {
 			return false;
 		}
+	}
+
+	protected boolean isUseCustomSQL(LinkedHashMap<String, Object> params) {
+		if (params.isEmpty()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	protected void validate(

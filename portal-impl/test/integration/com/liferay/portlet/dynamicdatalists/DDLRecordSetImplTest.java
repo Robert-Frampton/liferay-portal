@@ -19,11 +19,11 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.test.RandomTestUtil;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
 import com.liferay.portlet.dynamicdatalists.service.BaseDDLServiceTestCase;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -58,9 +58,9 @@ public class DDLRecordSetImplTest extends BaseDDLServiceTestCase {
 		rootElement.addAttribute("available-locales", "en_US");
 		rootElement.addAttribute("default-locale", "en_US");
 
-		addTextElement(rootElement, ServiceTestUtil.randomString(), "Text 1");
-		addTextElement(rootElement, ServiceTestUtil.randomString(), "Text 2");
-		addTextElement(rootElement, ServiceTestUtil.randomString(), "Text 3");
+		addTextElement(rootElement, RandomTestUtil.randomString(), "Text 1");
+		addTextElement(rootElement, RandomTestUtil.randomString(), "Text 2");
+		addTextElement(rootElement, RandomTestUtil.randomString(), "Text 3");
 
 		DDMStructure ddmStructure = addStructure(
 			PortalUtil.getClassNameId(DDLRecordSet.class), null,

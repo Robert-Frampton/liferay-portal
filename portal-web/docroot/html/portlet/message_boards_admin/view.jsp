@@ -254,9 +254,9 @@ if ((category != null) && layout.isTypeControlPanel()) {
 								String[] threadPriority = MBUtil.getThreadPriority(mbSettings, themeDisplay.getLanguageId(), thread.getPriority(), themeDisplay);
 
 								if ((threadPriority != null) && (thread.getPriority() > 0)) {
-									buffer.append("<img class=\"thread-priority\" alt=\"");
+									buffer.append("<img alt=\"");
 									buffer.append(threadPriority[0]);
-									buffer.append("\" src=\"");
+									buffer.append("\" class=\"thread-priority\" src=\"");
 									buffer.append(threadPriority[1]);
 									buffer.append("\" title=\"");
 									buffer.append(threadPriority[0]);
@@ -264,13 +264,9 @@ if ((category != null) && layout.isTypeControlPanel()) {
 								}
 
 								if (thread.isLocked()) {
-									buffer.append("<img class=\"thread-priority\" alt=\"");
+									buffer.append("<i class=\"icon-lock\" title=\"");
 									buffer.append(LanguageUtil.get(pageContext, "thread-locked"));
-									buffer.append("\" src=\"");
-									buffer.append(themeDisplay.getPathThemeImages() + "/common/lock.png");
-									buffer.append("\" title=\"");
-									buffer.append(LanguageUtil.get(pageContext, "thread-locked"));
-									buffer.append("\" />");
+									buffer.append("\"></i>");
 								}
 
 								buffer.append(message.getSubject());
@@ -476,9 +472,9 @@ if ((category != null) && layout.isTypeControlPanel()) {
 						String[] threadPriority = MBUtil.getThreadPriority(mbSettings, themeDisplay.getLanguageId(), thread.getPriority(), themeDisplay);
 
 						if ((threadPriority != null) && (thread.getPriority() > 0)) {
-							buffer.append("<img class=\"thread-priority\" alt=\"");
+							buffer.append("<img alt=\"");
 							buffer.append(threadPriority[0]);
-							buffer.append("\" src=\"");
+							buffer.append("\" class=\"thread-priority\" src=\"");
 							buffer.append(threadPriority[1]);
 							buffer.append("\" title=\"");
 							buffer.append(threadPriority[0]);
@@ -486,9 +482,9 @@ if ((category != null) && layout.isTypeControlPanel()) {
 						}
 
 						if (thread.isLocked()) {
-							buffer.append("<img class=\"thread-priority\" alt=\"");
+							buffer.append("<img alt=\"");
 							buffer.append(LanguageUtil.get(pageContext, "thread-locked"));
-							buffer.append("\" src=\"");
+							buffer.append("\" class=\"thread-priority\" src=\"");
 							buffer.append(themeDisplay.getPathThemeImages() + "/common/lock.png");
 							buffer.append("\" title=\"");
 							buffer.append(LanguageUtil.get(pageContext, "thread-locked"));

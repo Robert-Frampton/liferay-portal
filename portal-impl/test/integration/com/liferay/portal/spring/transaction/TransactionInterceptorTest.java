@@ -19,13 +19,13 @@ import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
+import com.liferay.portal.log.test.CaptureAppender;
+import com.liferay.portal.log.test.Log4JLoggerTestUtil;
 import com.liferay.portal.model.ClassName;
 import com.liferay.portal.model.impl.ClassNameImpl;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.persistence.ClassNameUtil;
-import com.liferay.portal.test.CaptureAppender;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.test.Log4JLoggerTestUtil;
 
 import java.util.List;
 

@@ -112,6 +112,10 @@ import org.apache.commons.lang.time.StopWatch;
  */
 public class LayoutImporter {
 
+	public static LayoutImporter getInstance() {
+		return _instance;
+	}
+
 	public void importLayouts(
 			long userId, long groupId, boolean privateLayout,
 			Map<String, String[]> parameterMap, File file)
@@ -684,6 +688,28 @@ public class LayoutImporter {
 			}
 		}
 
+		// Import services
+
+		if (_log.isDebugEnabled() && !portletElements.isEmpty()) {
+			_log.debug("Importing services");
+		}
+
+		Element servicesElement = rootElement.element("services");
+
+		List<Element> serviceElements = servicesElement.elements("service");
+
+		for (Element serviceElement : serviceElements) {
+			String path = serviceElement.attributeValue("path");
+
+			Document serviceDocument = SAXReaderUtil.read(
+				portletDataContext.getZipEntryAsString(path));
+
+			serviceElement = serviceDocument.getRootElement();
+
+			_portletImporter.importServicePortletPreferences(
+				portletDataContext, serviceElement);
+		}
+
 		// Asset links
 
 		_portletImporter.readAssetLinks(portletDataContext);
@@ -1167,7 +1193,12 @@ public class LayoutImporter {
 		}
 	}
 
+	private LayoutImporter() {
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(LayoutImporter.class);
+
+	private static LayoutImporter _instance = new LayoutImporter();
 
 	private DeletionSystemEventImporter _deletionSystemEventImporter =
 		DeletionSystemEventImporter.getInstance();

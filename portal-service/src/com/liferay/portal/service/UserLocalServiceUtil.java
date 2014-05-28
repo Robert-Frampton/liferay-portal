@@ -2624,6 +2624,33 @@ public class UserLocalServiceUtil {
 			screenName, emailAddress, status, params, andSearch);
 	}
 
+	public static java.util.List<com.liferay.portal.model.User> searchSocial(
+		long userId, int[] socialRelationTypes, java.lang.String keywords,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .searchSocial(userId, socialRelationTypes, keywords, start,
+			end);
+	}
+
+	public static java.util.List<com.liferay.portal.model.User> searchSocial(
+		long companyId, long[] groupIds, java.lang.String keywords, int start,
+		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .searchSocial(companyId, groupIds, keywords, start, end);
+	}
+
+	public static java.util.List<com.liferay.portal.model.User> searchSocial(
+		long[] groupIds, long userId, int[] socialRelationTypes,
+		java.lang.String keywords, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .searchSocial(groupIds, userId, socialRelationTypes,
+			keywords, start, end);
+	}
+
 	public static com.liferay.portal.kernel.search.BaseModelSearchResult<com.liferay.portal.model.User> searchUsers(
 		long companyId, java.lang.String keywords, int status,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,

@@ -14,41 +14,64 @@
 
 package com.liferay.portlet.wiki;
 
-import com.liferay.portal.kernel.settings.BaseServiceSettings;
 import com.liferay.portal.kernel.settings.FallbackKeys;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.settings.Settings;
+import com.liferay.portal.kernel.settings.TypedSettings;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.util.PortalUtil;
+
+import java.io.IOException;
+
+import javax.portlet.ValidatorException;
 
 /**
  * @author Iván Zaera
  */
-public class WikiSettings extends BaseServiceSettings {
+public class WikiSettings {
+
+	public static final String[] MULTI_VALUED_KEYS = {};
+
+	public static FallbackKeys getFallbackKeys() {
+		FallbackKeys fallbackKeys = new FallbackKeys();
+
+		fallbackKeys.add(
+			"emailFromAddress", PropsKeys.WIKI_EMAIL_FROM_ADDRESS,
+			PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+		fallbackKeys.add(
+			"emailFromName", PropsKeys.WIKI_EMAIL_FROM_NAME,
+			PropsKeys.ADMIN_EMAIL_FROM_NAME);
+		fallbackKeys.add(
+			"emailPageAddedBody", PropsKeys.WIKI_EMAIL_PAGE_ADDED_BODY);
+		fallbackKeys.add(
+			"emailPageAddedEnabled", PropsKeys.WIKI_EMAIL_PAGE_ADDED_ENABLED);
+		fallbackKeys.add(
+			"emailPageAddedSubject", PropsKeys.WIKI_EMAIL_PAGE_ADDED_SUBJECT);
+		fallbackKeys.add(
+			"emailPageUpdatedBody", PropsKeys.WIKI_EMAIL_PAGE_UPDATED_BODY);
+		fallbackKeys.add(
+			"emailPageUpdatedEnabled",
+			PropsKeys.WIKI_EMAIL_PAGE_UPDATED_ENABLED);
+		fallbackKeys.add(
+			"emailPageUpdatedSubject",
+			PropsKeys.WIKI_EMAIL_PAGE_UPDATED_SUBJECT);
+
+		return fallbackKeys;
+	}
 
 	public WikiSettings(Settings settings) {
-		super(settings, _fallbackKeys);
-	}
-
-	public String getDisplayStyle() {
-		return typedSettings.getValue("displayStyle");
-	}
-
-	public long getDisplayStyleGroupId(long defaultDisplayStyleGroupId) {
-		return typedSettings.getLongValue(
-			"displayStyleGroupId", defaultDisplayStyleGroupId);
+		_typedSettings = new TypedSettings(settings);
 	}
 
 	public String getEmailFromAddress() {
-		return typedSettings.getValue("emailFromAddress");
+		return _typedSettings.getValue("emailFromAddress");
 	}
 
 	public String getEmailFromName() {
-		return typedSettings.getValue("emailFromName");
+		return _typedSettings.getValue("emailFromName");
 	}
 
 	public LocalizedValuesMap getEmailPageAddedBody() {
-		return typedSettings.getLocalizedValuesMap("emailPageAddedBody");
+		return _typedSettings.getLocalizedValuesMap("emailPageAddedBody");
 	}
 
 	public String getEmailPageAddedBodyXml() {
@@ -58,11 +81,11 @@ public class WikiSettings extends BaseServiceSettings {
 	}
 
 	public boolean getEmailPageAddedEnabled() {
-		return typedSettings.getBooleanValue("emailPageAddedEnabled");
+		return _typedSettings.getBooleanValue("emailPageAddedEnabled");
 	}
 
 	public LocalizedValuesMap getEmailPageAddedSubject() {
-		return typedSettings.getLocalizedValuesMap("emailPageAddedSubject");
+		return _typedSettings.getLocalizedValuesMap("emailPageAddedSubject");
 	}
 
 	public String getEmailPageAddedSubjectXml() {
@@ -73,7 +96,7 @@ public class WikiSettings extends BaseServiceSettings {
 	}
 
 	public LocalizedValuesMap getEmailPageUpdatedBody() {
-		return typedSettings.getLocalizedValuesMap("emailPageUpdatedBody");
+		return _typedSettings.getLocalizedValuesMap("emailPageUpdatedBody");
 	}
 
 	public String getEmailPageUpdatedBodyXml() {
@@ -83,11 +106,11 @@ public class WikiSettings extends BaseServiceSettings {
 	}
 
 	public boolean getEmailPageUpdatedEnabled() {
-		return typedSettings.getBooleanValue("emailPageUpdatedEnabled");
+		return _typedSettings.getBooleanValue("emailPageUpdatedEnabled");
 	}
 
 	public LocalizedValuesMap getEmailPageUpdatedSubject() {
-		return typedSettings.getLocalizedValuesMap("emailPageUpdatedSubject");
+		return _typedSettings.getLocalizedValuesMap("emailPageUpdatedSubject");
 	}
 
 	public String getEmailPageUpdatedSubjectXml() {
@@ -97,95 +120,12 @@ public class WikiSettings extends BaseServiceSettings {
 		return emailPageUpdatedSubjectMap.getLocalizationXml();
 	}
 
-	public boolean getEnableCommentRatings() {
-		return typedSettings.getBooleanValue("enableCommentRatings");
+	public void store() throws IOException, ValidatorException {
+		Settings settings = _typedSettings.getWrappedSettings();
+
+		settings.store();
 	}
 
-	public boolean getEnableComments() {
-		return typedSettings.getBooleanValue("enableComments");
-	}
-
-	public boolean getEnablePageRatings() {
-		return typedSettings.getBooleanValue("enablePageRatings");
-	}
-
-	public boolean getEnableRelatedAssets() {
-		return typedSettings.getBooleanValue("enableRelatedAssets");
-	}
-
-	public boolean getEnableRSS() {
-		if (!PortalUtil.isRSSFeedsEnabled()) {
-			return false;
-		}
-
-		return typedSettings.getBooleanValue("enableRss");
-	}
-
-	public String[] getHiddenNodes() {
-		return typedSettings.getValues("hiddenNodes");
-	}
-
-	public int getRssDelta() {
-		return typedSettings.getIntegerValue("rssDelta");
-	}
-
-	public String getRssDisplayStyle() {
-		return typedSettings.getValue("rssDisplayStyle");
-	}
-
-	public String getRssFeedType() {
-		return typedSettings.getValue("rssFeedType");
-	}
-
-	public String[] getVisibleNodes() {
-		return typedSettings.getValues("visibleNodes");
-	}
-
-	public void setHiddenNodes(String[] hiddenNodes) {
-		typedSettings.setValues("hiddenNodes", hiddenNodes);
-	}
-
-	public void setVisibleNodes(String[] visibleNodes) {
-		typedSettings.setValues("visibleNodes", visibleNodes);
-	}
-
-	private static FallbackKeys _fallbackKeys = new FallbackKeys();
-
-	static {
-		_fallbackKeys.add(
-			"emailFromAddress", PropsKeys.WIKI_EMAIL_FROM_ADDRESS,
-			PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
-		_fallbackKeys.add(
-			"emailFromName", PropsKeys.WIKI_EMAIL_FROM_NAME,
-			PropsKeys.ADMIN_EMAIL_FROM_NAME);
-		_fallbackKeys.add(
-			"emailPageAddedBody", PropsKeys.WIKI_EMAIL_PAGE_ADDED_BODY);
-		_fallbackKeys.add(
-			"emailPageAddedEnabled", PropsKeys.WIKI_EMAIL_PAGE_ADDED_ENABLED);
-		_fallbackKeys.add(
-			"emailPageAddedSubject", PropsKeys.WIKI_EMAIL_PAGE_ADDED_SUBJECT);
-		_fallbackKeys.add(
-			"emailPageUpdatedBody", PropsKeys.WIKI_EMAIL_PAGE_UPDATED_BODY);
-		_fallbackKeys.add(
-			"emailPageUpdatedEnabled",
-			PropsKeys.WIKI_EMAIL_PAGE_UPDATED_ENABLED);
-		_fallbackKeys.add(
-			"emailPageUpdatedSubject",
-			PropsKeys.WIKI_EMAIL_PAGE_UPDATED_SUBJECT);
-		_fallbackKeys.add(
-			"enableComments", PropsKeys.WIKI_PAGE_COMMENTS_ENABLED);
-		_fallbackKeys.add(
-			"enableCommentRatings", PropsKeys.WIKI_COMMENT_RATINGS_ENABLED);
-		_fallbackKeys.add(
-			"enablePageRatings", PropsKeys.WIKI_PAGE_RATINGS_ENABLED);
-		_fallbackKeys.add(
-			"enableRelatedAssets", PropsKeys.WIKI_RELATED_ASSETS_ENABLED);
-		_fallbackKeys.add("enableRss", PropsKeys.WIKI_RSS_ENABLED);
-		_fallbackKeys.add(
-			"rssDelta", PropsKeys.SEARCH_CONTAINER_PAGE_DEFAULT_DELTA);
-		_fallbackKeys.add(
-			"rssDisplayStyle", PropsKeys.RSS_FEED_DISPLAY_STYLE_DEFAULT);
-		_fallbackKeys.add("rssFeedType", PropsKeys.RSS_FEED_TYPE_DEFAULT);
-	}
+	private TypedSettings _typedSettings;
 
 }

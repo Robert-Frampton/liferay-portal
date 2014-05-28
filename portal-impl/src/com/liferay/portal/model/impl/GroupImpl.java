@@ -577,6 +577,24 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public String getUnambiguousName(String name, Locale locale) {
+		try {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(name);
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.OPEN_PARENTHESIS);
+			sb.append(getDescriptiveName(locale));
+			sb.append(StringPool.CLOSE_PARENTHESIS);
+
+			return sb.toString();
+		}
+		catch (Exception e) {
+			return name;
+		}
+	}
+
+	@Override
 	public boolean hasAncestor(long groupId) {
 		Group group = null;
 

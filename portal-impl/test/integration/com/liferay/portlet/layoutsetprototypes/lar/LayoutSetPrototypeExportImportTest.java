@@ -15,21 +15,19 @@
 package com.liferay.portlet.layoutsetprototypes.lar;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.lar.BasePortletExportImportTestCase;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
-import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.service.persistence.LayoutSetPrototypeUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
+import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
-import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
-import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.test.LayoutTestUtil;
+import com.liferay.portal.util.test.RandomTestUtil;
 
 import java.util.Map;
 
@@ -44,12 +42,11 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
-		SynchronousDestinationExecutionTestListener.class,
-		TransactionalCallbackAwareExecutionTestListener.class
+		ResetDatabaseExecutionTestListener.class,
+		SynchronousDestinationExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
-@Transactional
 public class LayoutSetPrototypeExportImportTest
 	extends BasePortletExportImportTestCase {
 
@@ -86,11 +83,10 @@ public class LayoutSetPrototypeExportImportTest
 
 		// Exclude default site templates
 
-		LayoutSetPrototypeUtil.removeAll();
+		LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototypes();
 
 		LayoutSetPrototype exportedLayoutSetPrototype =
-			LayoutTestUtil.addLayoutSetPrototype(
-				ServiceTestUtil.randomString());
+			LayoutTestUtil.addLayoutSetPrototype(RandomTestUtil.randomString());
 
 		Group exportedLayoutSetPrototypeGroup =
 			exportedLayoutSetPrototype.getGroup();
@@ -98,17 +94,17 @@ public class LayoutSetPrototypeExportImportTest
 		if (layoutPrototype) {
 			LayoutPrototype exportedLayoutPrototype =
 				LayoutTestUtil.addLayoutPrototype(
-					ServiceTestUtil.randomString());
+					RandomTestUtil.randomString());
 
 			LayoutTestUtil.addLayout(
 				exportedLayoutSetPrototypeGroup.getGroupId(),
-				ServiceTestUtil.randomString(), true, exportedLayoutPrototype,
+				RandomTestUtil.randomString(), true, exportedLayoutPrototype,
 				true);
 		}
 		else {
 			LayoutTestUtil.addLayout(
 				exportedLayoutSetPrototypeGroup.getGroupId(),
-				ServiceTestUtil.randomString(), true);
+				RandomTestUtil.randomString(), true);
 		}
 
 		exportImportPortlet(PortletKeys.LAYOUT_SET_PROTOTYPE);

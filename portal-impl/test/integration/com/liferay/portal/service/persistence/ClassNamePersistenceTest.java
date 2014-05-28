@@ -34,12 +34,12 @@ import com.liferay.portal.model.ClassName;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.impl.ClassNameModelImpl;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
 import com.liferay.portal.test.LiferayPersistenceIntegrationJUnitTestRunner;
-import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
+import com.liferay.portal.test.persistence.test.TransactionalPersistenceAdvice;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portal.util.test.RandomTestUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -99,7 +99,7 @@ public class ClassNamePersistenceTest {
 
 	@Test
 	public void testCreate() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		ClassName className = _persistence.create(pk);
 
@@ -126,13 +126,13 @@ public class ClassNamePersistenceTest {
 
 	@Test
 	public void testUpdateExisting() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		ClassName newClassName = _persistence.create(pk);
 
-		newClassName.setMvccVersion(ServiceTestUtil.nextLong());
+		newClassName.setMvccVersion(RandomTestUtil.nextLong());
 
-		newClassName.setValue(ServiceTestUtil.randomString());
+		newClassName.setValue(RandomTestUtil.randomString());
 
 		_persistence.update(newClassName);
 
@@ -171,7 +171,7 @@ public class ClassNamePersistenceTest {
 
 	@Test
 	public void testFindByPrimaryKeyMissing() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		try {
 			_persistence.findByPrimaryKey(pk);
@@ -209,7 +209,7 @@ public class ClassNamePersistenceTest {
 
 	@Test
 	public void testFetchByPrimaryKeyMissing() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		ClassName missingClassName = _persistence.fetchByPrimaryKey(pk);
 
@@ -264,7 +264,7 @@ public class ClassNamePersistenceTest {
 				ClassName.class.getClassLoader());
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("classNameId",
-				ServiceTestUtil.nextLong()));
+				RandomTestUtil.nextLong()));
 
 		List<ClassName> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -303,7 +303,7 @@ public class ClassNamePersistenceTest {
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property("classNameId"));
 
 		dynamicQuery.add(RestrictionsFactoryUtil.in("classNameId",
-				new Object[] { ServiceTestUtil.nextLong() }));
+				new Object[] { RandomTestUtil.nextLong() }));
 
 		List<Object> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -328,13 +328,13 @@ public class ClassNamePersistenceTest {
 	}
 
 	protected ClassName addClassName() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		ClassName className = _persistence.create(pk);
 
-		className.setMvccVersion(ServiceTestUtil.nextLong());
+		className.setMvccVersion(RandomTestUtil.nextLong());
 
-		className.setValue(ServiceTestUtil.randomString());
+		className.setValue(RandomTestUtil.randomString());
 
 		_persistence.update(className);
 

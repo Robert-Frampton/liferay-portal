@@ -19,8 +19,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.test.AbstractExecutionTestListener;
 import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.search.lucene.LuceneHelperUtil;
-import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.service.test.ServiceTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 
 /**
  * @author Miguel Pastor

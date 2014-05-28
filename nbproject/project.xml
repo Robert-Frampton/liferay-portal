@@ -24,12 +24,6 @@
 					<encoding>UTF-8</encoding>
 				</source-folder>
 				<source-folder>
-					<label>modules\core\registry-impl\src</label>
-					<type>java</type>
-					<location>modules/core/registry-impl/src</location>
-					<encoding>UTF-8</encoding>
-				</source-folder>
-				<source-folder>
 					<label>portal-impl\src</label>
 					<type>java</type>
 					<location>portal-impl/src</location>
@@ -69,6 +63,12 @@
 					<label>portal-service\test\unit</label>
 					<type>java</type>
 					<location>portal-service/test/unit</location>
+					<encoding>UTF-8</encoding>
+				</source-folder>
+				<source-folder>
+					<label>portal-test\src</label>
+					<type>java</type>
+					<location>portal-test/src</location>
 					<encoding>UTF-8</encoding>
 				</source-folder>
 				<source-folder>
@@ -154,10 +154,6 @@
 						<location>modules/core/registry/registry-api/src</location>
 					</source-folder>
 					<source-folder style="packages">
-						<label>modules\core\registry\registry-impl\src</label>
-						<location>modules/core/registry/registry-impl/src</location>
-					</source-folder>
-					<source-folder style="packages">
 						<label>portal-impl\src</label>
 						<location>portal-impl/src</location>
 					</source-folder>
@@ -180,6 +176,10 @@
 					<source-folder style="packages">
 						<label>portal-service\test\unit</label>
 						<location>portal-service/test/unit</location>
+					</source-folder>
+					<source-folder style="packages">
+						<label>portal-test\src</label>
+						<location>portal-test/src</location>
 					</source-folder>
 					<source-folder style="packages">
 						<label>portal-web\test\functional</label>

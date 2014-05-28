@@ -10,7 +10,6 @@
 .sass_cache_*.css
 _sass_cache_*.css
 cobertura.ser
-log
 
 **/.sonar
 
@@ -39,6 +38,8 @@ log
 /svn-revision
 /test.*.properties
 /WEB-INF
+
+/.ivy/cache/resolved-*
 
 /benchmarks/*.csv
 /benchmarks/*.sql
@@ -115,6 +116,13 @@ log
 /portal-service/test-coverage
 /portal-service/test-results
 /portal-service/woven-classes
+
+/portal-test/*.iml
+/portal-test/*.ipr
+/portal-test/*.iws
+/portal-test/classes
+/portal-test/portal-test*.asc
+/portal-test/portal-test*.jar
 
 /portal-web/*.iml
 /portal-web/*.ipr
