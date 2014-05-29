@@ -15,14 +15,13 @@
 package com.liferay.portlet.bookmarks.service;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
+import com.liferay.portal.util.test.GroupTestUtil;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
-import com.liferay.portlet.bookmarks.util.BookmarksTestUtil;
+import com.liferay.portlet.bookmarks.util.test.BookmarksTestUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,10 +33,9 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(
 	listeners = {
 		EnvironmentExecutionTestListener.class,
-		TransactionalCallbackAwareExecutionTestListener.class
+		ResetDatabaseExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-@Transactional
 public class BookmarksEntryServiceTest {
 
 	@Before

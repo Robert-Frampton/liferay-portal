@@ -804,8 +804,47 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	}
 
 	@Override
+	public long[] getRequiredClassNameIds() {
+		return _assetVocabulary.getRequiredClassNameIds();
+	}
+
+	@Override
+	public long[] getSelectedClassNameIds() {
+		return _assetVocabulary.getSelectedClassNameIds();
+	}
+
+	@Override
 	public com.liferay.portal.kernel.util.UnicodeProperties getSettingsProperties() {
 		return _assetVocabulary.getSettingsProperties();
+	}
+
+	@Override
+	public java.lang.String getUnambiguousTitle(
+		java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> vocabularies,
+		long groupId, java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetVocabulary.getUnambiguousTitle(vocabularies, groupId,
+			locale);
+	}
+
+	@Override
+	public boolean hasMoreThanOneCategorySelected(long[] categoryIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetVocabulary.hasMoreThanOneCategorySelected(categoryIds);
+	}
+
+	@Override
+	public boolean isAssociatedToAssetRendererFactory(long classNameId) {
+		return _assetVocabulary.isAssociatedToAssetRendererFactory(classNameId);
+	}
+
+	@Override
+	public boolean isMissingRequiredCategory(long classNameId,
+		long[] categoryIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetVocabulary.isMissingRequiredCategory(classNameId,
+			categoryIds);
 	}
 
 	@Override

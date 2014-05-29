@@ -25,19 +25,17 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.test.GroupTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
-import com.liferay.portlet.dynamicdatamapping.util.DDMStructureTestUtil;
-import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
+import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
+import com.liferay.portlet.dynamicdatamapping.util.test.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolder;
-import com.liferay.portlet.journal.model.JournalStructure;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
-import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.journal.util.comparator.ArticleCreateDateComparator;
 import com.liferay.portlet.journal.util.comparator.ArticleDisplayDateComparator;
 import com.liferay.portlet.journal.util.comparator.ArticleIDComparator;
@@ -45,6 +43,7 @@ import com.liferay.portlet.journal.util.comparator.ArticleModifiedDateComparator
 import com.liferay.portlet.journal.util.comparator.ArticleReviewDateComparator;
 import com.liferay.portlet.journal.util.comparator.ArticleTitleComparator;
 import com.liferay.portlet.journal.util.comparator.ArticleVersionComparator;
+import com.liferay.portlet.journal.util.test.JournalTestUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -137,7 +136,7 @@ public class JournalArticleFinderTest {
 
 		article = JournalTestUtil.addArticleWithXMLContent(
 			_group.getGroupId(), folder.getFolderId(),
-			PortalUtil.getClassNameId(JournalStructure.class),
+			PortalUtil.getClassNameId(DDMStructure.class),
 			"<title>Article 4</title>", _ddmStructure.getStructureKey(),
 			ddmTemplate.getTemplateKey());
 
@@ -251,7 +250,7 @@ public class JournalArticleFinderTest {
 
 		testQueryByC_G_F_C_A_V_T_D_C_T_S_T_D_R(
 			_group.getCompanyId(), _group.getGroupId(), _folderIds,
-			PortalUtil.getClassNameId(JournalStructure.class), null, null,
+			PortalUtil.getClassNameId(DDMStructure.class), null, null,
 			"Article", null, null, null, (String)null, null, null, null, null,
 			true, queryDefinition, 1);
 	}

@@ -29,17 +29,17 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
-import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.test.LayoutTestUtil;
+import com.liferay.portal.util.test.RandomTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portal.xml.XMLSchemaImpl;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
-import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
+import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructureConstants;
 import com.liferay.portlet.dynamicdatamapping.model.impl.DDMStructureImpl;
@@ -50,6 +50,7 @@ import com.liferay.portlet.dynamicdatamapping.storage.StorageType;
 import com.liferay.portlet.dynamicdatamapping.util.DDMImpl;
 import com.liferay.portlet.dynamicdatamapping.util.DDMXMLImpl;
 import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.util.test.JournalTestUtil;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -633,21 +634,21 @@ public class JournalConverterUtilTest extends BaseDDMServiceTestCase {
 		layouts.put(
 			_PRIVATE_LAYOUT,
 			LayoutTestUtil.addLayout(
-				TestPropsValues.getGroupId(), ServiceTestUtil.randomString(),
+				TestPropsValues.getGroupId(), RandomTestUtil.randomString(),
 				true));
 		layouts.put(
 			_PRIVATE_USER_LAYOUT,
 			LayoutTestUtil.addLayout(
-				user.getGroupId(), ServiceTestUtil.randomString(), true));
+				user.getGroupId(), RandomTestUtil.randomString(), true));
 		layouts.put(
 			_PUBLIC_LAYOUT,
 			LayoutTestUtil.addLayout(
-				TestPropsValues.getGroupId(), ServiceTestUtil.randomString(),
+				TestPropsValues.getGroupId(), RandomTestUtil.randomString(),
 				false));
 		layouts.put(
 			_PUBLIC_USER_LAYOUT,
 			LayoutTestUtil.addLayout(
-				user.getGroupId(), ServiceTestUtil.randomString(), false));
+				user.getGroupId(), RandomTestUtil.randomString(), false));
 
 		return layouts;
 	}

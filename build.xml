@@ -66,12 +66,7 @@
 
 	<macrodef name="setup-sdk">
 		<sequential>
-			<delete failonerror="false" includeemptydirs="true">
-				<fileset
-					dir="${project.dir}/tools/sdk"
-					excludes=".ivy/**"
-				/>
-			</delete>
+			<delete dir="${project.dir}/tools/sdk" />
 
 			<unzip
 				dest="${project.dir}/tools"
@@ -86,7 +81,10 @@
 
 			<propertyselector
 				casesensitive="false"
-				delimiter="," match="app\.(.+)\.dir"
+				delimiter=","
+				distinct="true"
+				match="app\.(server\.(geronimo|glassfish|jboss|jetty|jonas|resin|tcat|tcserver|tomcat|weblogic|websphere)).+\.dir"
+				override="true"
 				property="app.server.dir.property.list"
 				select="\1"
 			/>
@@ -131,7 +129,9 @@
 			/>
 
 			<if>
-				<isset property="${ivy.pom.property.list}"/>
+				<not>
+					<equals arg1="${ivy.pom.property.list}" arg2="$${ivy.pom.property.list}" />
+				</not>
 				<then>
 					<for list="${ivy.pom.property.list}" param="ivy.pom.property">
 						<sequential>
@@ -168,7 +168,9 @@
 			/>
 
 			<if>
-				<isset property="${sonatype.property.list}"/>
+				<not>
+					<equals arg1="${sonatype.property.list}" arg2="$${sonatype.property.list}" />
+				</not>
 				<then>
 					<for list="${sonatype.property.list}" param="sonatype.property">
 						<sequential>
@@ -198,6 +200,7 @@
 				auto.deploy.dir=${liferay.home}/osgi/apps
 				clean.delete.ivy.md5=true
 				clean.delete.lib=true
+				ivy.home=${project.dir}/.ivy
 				liferay.home=${liferay.home}
 			</echo>
 
@@ -247,6 +250,7 @@
 
 		<ant dir="portal-impl" target="clean" inheritAll="false" />
 		<ant dir="portal-pacl" target="clean" inheritAll="false" />
+		<ant dir="portal-test" target="clean" inheritAll="false" />
 
 		<ant dir="portal-web" target="clean" inheritAll="false" />
 
@@ -393,6 +397,7 @@
 
 		<ant dir="portal-impl" target="compile" inheritAll="false" />
 		<ant dir="portal-pacl" target="compile" inheritAll="false" />
+		<ant dir="portal-test" target="compile" inheritAll="false" />
 	</target>
 
 	<target name="compile-test">
@@ -442,6 +447,7 @@ ${app.server.tomcat.dir}, then run "ant -buildfile build-dist.xml unzip-tomcat".
 
 		<ant dir="portal-impl" target="deploy" inheritAll="false" />
 		<ant dir="portal-pacl" target="deploy" inheritAll="false" />
+		<ant dir="portal-test" target="deploy" inheritAll="false" />
 
 		<ant dir="portal-web" target="deploy" inheritAll="false" />
 
@@ -873,6 +879,7 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 
 		<ant dir="portal-impl" target="jar" inheritAll="false" />
 		<ant dir="portal-pacl" target="jar" inheritAll="false" />
+		<ant dir="portal-test" target="jar" inheritAll="false" />
 
 		<ant dir="portal-web" target="war" inheritAll="false" />
 
@@ -913,6 +920,7 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 			<link href="http://docs.liferay.com/portal/${lp.version.major}/javadocs" />
 
 			<packageset dir="portal-service/src" />
+			<packageset dir="portal-test/src" />
 			<packageset dir="util-bridges/src" />
 			<packageset dir="util-java/src" />
 			<packageset dir="util-slf4j/src" />
@@ -953,6 +961,7 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 
 			<packageset dir="portal-impl/src" />
 			<packageset dir="portal-service/src" />
+			<packageset dir="portal-test/src" />
 			<packageset dir="util-bridges/src" />
 			<packageset dir="util-java/src" />
 			<packageset dir="util-slf4j/src" />

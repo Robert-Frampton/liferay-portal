@@ -16,7 +16,9 @@
 	</target>
 
 	<target name="run-selenium-jonas">
-		<echo file="app.server.${user.name}.properties">app.server.type=jonas</echo>
+		<app-server-properties-update>
+			app.server.type=jonas
+		</app-server-properties-update>
 
 		<if>
 			<not>

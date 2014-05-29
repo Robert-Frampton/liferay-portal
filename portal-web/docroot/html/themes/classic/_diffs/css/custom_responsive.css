@@ -27,6 +27,19 @@
 			background: #009AE5;
 		}
 
+		#content, .portal-popup {
+			.navbar .nav-item-label {
+				display: inline-block;
+
+				@include ellipsis;
+
+				max-width: 85%;
+				overflow: hidden;
+				vertical-align: top;
+				word-break: normal;
+			}
+		}
+
 		.dockbar .navbar-inner .container .nav-collapse .nav-add-controls ul.dropdown-menu {
 			background: transparent;
 			padding: 0;

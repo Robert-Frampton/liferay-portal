@@ -16,13 +16,15 @@ package com.liferay.portlet.social.service;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.util.TestPropsValues;
-import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portal.util.comparator.UserScreenNameComparator;
+import com.liferay.portal.util.test.TestPropsValues;
+import com.liferay.portal.util.test.UserTestUtil;
 import com.liferay.portlet.social.model.SocialRelationConstants;
 
 import java.util.List;
@@ -222,6 +224,64 @@ public class SocialRelationLocalServiceTest {
 		SocialRelationLocalServiceUtil.addRelation(
 			fra5User.getUserId(), fra1User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
+	}
+
+	@Test
+	public void testGetMultipleGroups() throws Exception {
+		User dlc3User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc3");
+
+		GroupLocalServiceUtil.addUserGroup(
+			dlc3User.getUserId(), TestPropsValues.getGroupId());
+
+		User dlc4User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc4");
+
+		GroupLocalServiceUtil.addUserGroup(
+			dlc4User.getUserId(), TestPropsValues.getGroupId());
+
+		long[] groupIds = dlc4User.getGroupIds();
+
+		for (long groupId : dlc3User.getGroupIds()) {
+			ArrayUtil.remove(groupIds, groupId);
+		}
+
+		List<User> users = UserLocalServiceUtil.searchSocial(
+			TestPropsValues.getCompanyId(), groupIds, "dlc", QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
+
+		Assert.assertEquals(2, users.size());
+	}
+
+	@Test
+	public void testGetMultipleRelations() throws Exception {
+		User dlc2User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc2");
+
+		User dlc3User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc3");
+
+		GroupLocalServiceUtil.addUserGroup(
+			dlc3User.getUserId(), TestPropsValues.getGroupId());
+
+		User dlc4User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc4");
+
+		GroupLocalServiceUtil.addUserGroup(
+			dlc4User.getUserId(), TestPropsValues.getGroupId());
+
+		int[] socialRelationTypes = {
+			SocialRelationConstants.TYPE_BI_FRIEND,
+			SocialRelationConstants.TYPE_BI_COWORKER
+		};
+
+		// Does dlc2 should have 1 coworker and 4 friends?
+
+		List<User> users = UserLocalServiceUtil.searchSocial(
+			dlc2User.getUserId(), socialRelationTypes, "dlc", QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
+
+		Assert.assertEquals(5, users.size());
 	}
 
 	@Test

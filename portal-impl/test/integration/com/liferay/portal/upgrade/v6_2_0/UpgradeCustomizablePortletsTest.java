@@ -16,7 +16,6 @@ package com.liferay.portal.upgrade.v6_2_0;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.model.Group;
@@ -25,14 +24,14 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
-import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
-import com.liferay.portal.util.LayoutTestUtil;
+import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.test.GroupTestUtil;
+import com.liferay.portal.util.test.LayoutTestUtil;
+import com.liferay.portal.util.test.RandomTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.PortalPreferencesImpl;
 import com.liferay.portlet.PortalPreferencesWrapper;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
@@ -55,7 +54,7 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
-		TransactionalCallbackAwareExecutionTestListener.class
+		ResetDatabaseExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class UpgradeCustomizablePortletsTest
@@ -67,7 +66,6 @@ public class UpgradeCustomizablePortletsTest
 	}
 
 	@Test
-	@Transactional
 	public void testBasicPreferencesExtraction() throws Exception {
 		Layout layout = getLayout();
 
@@ -215,7 +213,7 @@ public class UpgradeCustomizablePortletsTest
 		Group group = GroupTestUtil.addGroup();
 
 		return LayoutTestUtil.addLayout(
-			group.getGroupId(), ServiceTestUtil.randomString(), false);
+			group.getGroupId(), RandomTestUtil.randomString(), false);
 	}
 
 	protected PortalPreferencesWrapper getPortalPreferences(

@@ -34,13 +34,13 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.impl.UserGroupModelImpl;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
 import com.liferay.portal.test.LiferayPersistenceIntegrationJUnitTestRunner;
-import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
+import com.liferay.portal.test.persistence.test.TransactionalPersistenceAdvice;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portal.util.test.RandomTestUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -100,7 +100,7 @@ public class UserGroupPersistenceTest {
 
 	@Test
 	public void testCreate() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		UserGroup userGroup = _persistence.create(pk);
 
@@ -127,31 +127,31 @@ public class UserGroupPersistenceTest {
 
 	@Test
 	public void testUpdateExisting() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		UserGroup newUserGroup = _persistence.create(pk);
 
-		newUserGroup.setMvccVersion(ServiceTestUtil.nextLong());
+		newUserGroup.setMvccVersion(RandomTestUtil.nextLong());
 
-		newUserGroup.setUuid(ServiceTestUtil.randomString());
+		newUserGroup.setUuid(RandomTestUtil.randomString());
 
-		newUserGroup.setCompanyId(ServiceTestUtil.nextLong());
+		newUserGroup.setCompanyId(RandomTestUtil.nextLong());
 
-		newUserGroup.setUserId(ServiceTestUtil.nextLong());
+		newUserGroup.setUserId(RandomTestUtil.nextLong());
 
-		newUserGroup.setUserName(ServiceTestUtil.randomString());
+		newUserGroup.setUserName(RandomTestUtil.randomString());
 
-		newUserGroup.setCreateDate(ServiceTestUtil.nextDate());
+		newUserGroup.setCreateDate(RandomTestUtil.nextDate());
 
-		newUserGroup.setModifiedDate(ServiceTestUtil.nextDate());
+		newUserGroup.setModifiedDate(RandomTestUtil.nextDate());
 
-		newUserGroup.setParentUserGroupId(ServiceTestUtil.nextLong());
+		newUserGroup.setParentUserGroupId(RandomTestUtil.nextLong());
 
-		newUserGroup.setName(ServiceTestUtil.randomString());
+		newUserGroup.setName(RandomTestUtil.randomString());
 
-		newUserGroup.setDescription(ServiceTestUtil.randomString());
+		newUserGroup.setDescription(RandomTestUtil.randomString());
 
-		newUserGroup.setAddedByLDAPImport(ServiceTestUtil.randomBoolean());
+		newUserGroup.setAddedByLDAPImport(RandomTestUtil.randomBoolean());
 
 		_persistence.update(newUserGroup);
 
@@ -201,7 +201,7 @@ public class UserGroupPersistenceTest {
 	public void testCountByUuid_C() {
 		try {
 			_persistence.countByUuid_C(StringPool.BLANK,
-				ServiceTestUtil.nextLong());
+				RandomTestUtil.nextLong());
 
 			_persistence.countByUuid_C(StringPool.NULL, 0L);
 
@@ -215,7 +215,7 @@ public class UserGroupPersistenceTest {
 	@Test
 	public void testCountByCompanyId() {
 		try {
-			_persistence.countByCompanyId(ServiceTestUtil.nextLong());
+			_persistence.countByCompanyId(RandomTestUtil.nextLong());
 
 			_persistence.countByCompanyId(0L);
 		}
@@ -227,8 +227,8 @@ public class UserGroupPersistenceTest {
 	@Test
 	public void testCountByC_P() {
 		try {
-			_persistence.countByC_P(ServiceTestUtil.nextLong(),
-				ServiceTestUtil.nextLong());
+			_persistence.countByC_P(RandomTestUtil.nextLong(),
+				RandomTestUtil.nextLong());
 
 			_persistence.countByC_P(0L, 0L);
 		}
@@ -240,7 +240,7 @@ public class UserGroupPersistenceTest {
 	@Test
 	public void testCountByC_N() {
 		try {
-			_persistence.countByC_N(ServiceTestUtil.nextLong(), StringPool.BLANK);
+			_persistence.countByC_N(RandomTestUtil.nextLong(), StringPool.BLANK);
 
 			_persistence.countByC_N(0L, StringPool.NULL);
 
@@ -262,7 +262,7 @@ public class UserGroupPersistenceTest {
 
 	@Test
 	public void testFindByPrimaryKeyMissing() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		try {
 			_persistence.findByPrimaryKey(pk);
@@ -303,7 +303,7 @@ public class UserGroupPersistenceTest {
 
 	@Test
 	public void testFetchByPrimaryKeyMissing() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		UserGroup missingUserGroup = _persistence.fetchByPrimaryKey(pk);
 
@@ -358,7 +358,7 @@ public class UserGroupPersistenceTest {
 				UserGroup.class.getClassLoader());
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("userGroupId",
-				ServiceTestUtil.nextLong()));
+				RandomTestUtil.nextLong()));
 
 		List<UserGroup> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -397,7 +397,7 @@ public class UserGroupPersistenceTest {
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property("userGroupId"));
 
 		dynamicQuery.add(RestrictionsFactoryUtil.in("userGroupId",
-				new Object[] { ServiceTestUtil.nextLong() }));
+				new Object[] { RandomTestUtil.nextLong() }));
 
 		List<Object> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -424,31 +424,31 @@ public class UserGroupPersistenceTest {
 	}
 
 	protected UserGroup addUserGroup() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		UserGroup userGroup = _persistence.create(pk);
 
-		userGroup.setMvccVersion(ServiceTestUtil.nextLong());
+		userGroup.setMvccVersion(RandomTestUtil.nextLong());
 
-		userGroup.setUuid(ServiceTestUtil.randomString());
+		userGroup.setUuid(RandomTestUtil.randomString());
 
-		userGroup.setCompanyId(ServiceTestUtil.nextLong());
+		userGroup.setCompanyId(RandomTestUtil.nextLong());
 
-		userGroup.setUserId(ServiceTestUtil.nextLong());
+		userGroup.setUserId(RandomTestUtil.nextLong());
 
-		userGroup.setUserName(ServiceTestUtil.randomString());
+		userGroup.setUserName(RandomTestUtil.randomString());
 
-		userGroup.setCreateDate(ServiceTestUtil.nextDate());
+		userGroup.setCreateDate(RandomTestUtil.nextDate());
 
-		userGroup.setModifiedDate(ServiceTestUtil.nextDate());
+		userGroup.setModifiedDate(RandomTestUtil.nextDate());
 
-		userGroup.setParentUserGroupId(ServiceTestUtil.nextLong());
+		userGroup.setParentUserGroupId(RandomTestUtil.nextLong());
 
-		userGroup.setName(ServiceTestUtil.randomString());
+		userGroup.setName(RandomTestUtil.randomString());
 
-		userGroup.setDescription(ServiceTestUtil.randomString());
+		userGroup.setDescription(RandomTestUtil.randomString());
 
-		userGroup.setAddedByLDAPImport(ServiceTestUtil.randomBoolean());
+		userGroup.setAddedByLDAPImport(RandomTestUtil.randomBoolean());
 
 		_persistence.update(userGroup);
 

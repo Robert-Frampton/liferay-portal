@@ -41,7 +41,16 @@
 			</else>
 		</if>
 
-		<execute action="SOSiteHome#assertElementPresent" locator-key1="EVENTS_DISPLAY_TODAYS_EVENTS_EVENT_TIME" />
+		<if>
+			<isset var="startDateTime" />
+			<then>
+				<execute action="SOSiteHome#assertElementPresent" locator-key1="EVENTS_DISPLAY_TODAYS_EVENTS_EVENT_TIME" value1="${startDateTime}" />
+			</then>
+			<else>
+				<execute action="SOSiteHome#assertElementPresent" locator-key1="EVENTS_DISPLAY_TODAYS_EVENTS_EVENT_TIME" />
+			</else>
+		</if>
+
 		<execute action="SOSiteHome#click" locator-key1="EVENTS_DISPLAY_TODAYS_EVENTS_EVENT_TITLE" />
 
 		<execute action="PGCalendarVieweventdetails#assertTextEquals" locator-key1="EVENT_TITLE" value1="${eventTitle}" />
@@ -49,7 +58,7 @@
 		<if>
 			<isset var="startDateTime" />
 			<then>
-				<execute action="PGCalendarVieweventdetails#assertTextEquals" locator-key1="START_DATE_FIELD" value1="${stateDateTime}" />
+				<execute action="PGCalendarVieweventdetails#assertTextEquals" locator-key1="START_DATE_FIELD" value1="${startDateTime}" />
 			</then>
 			<else>
 				<execute action="PGCalendarVieweventdetails#assertElementPresent" locator-key1="START_DATE_FIELD" />
@@ -67,6 +76,37 @@
 		</if>
 
 		<execute action="PGCalendarVieweventdetails#assertElementPresent" locator-key1="RESOURCES_FIELD" />
+
+		<if>
+			<equals arg1="${schedulerEventDialogBox}" arg2="true" />
+			<then>
+				<execute action="PGCalendarVieweventdetails#assertElementPresent" locator-key1="MAYBE_BUTTON" />
+				<execute action="PGCalendarVieweventdetails#assertElementPresent" locator-key1="DECLINE_BUTTON" />
+			</then>
+		</if>
+
+		<if>
+			<isset var="eventCommentList" />
+			<then>
+				<for list="${eventCommentList}" param="eventComment">
+					<var name="key_eventComment" value="${eventComment}" />
+					<var name="key_user" value="${user}" />
+
+					<execute action="PGCalendarVieweventdetails#assertTextEquals" locator-key1="COMMENTS_USER_NAME" value1="${user}" />
+					<execute action="PGCalendarVieweventdetails#assertTextEquals" locator-key1="COMMENTS_BODY" value1="${eventComment}" />
+				</for>
+			</then>
+			<elseif>
+				<isset var="eventComment" />
+				<then>
+					<var name="key_eventComment" value="${eventComment}" />
+					<var name="key_user" value="${user}" />
+
+					<execute action="PGCalendarVieweventdetails#assertTextEquals" locator-key1="COMMENTS_USER_NAME" value1="${user}" />
+					<execute action="PGCalendarVieweventdetails#assertTextEquals" locator-key1="COMMENTS_BODY" value1="${eventComment}" />
+				</then>
+			</elseif>
+		</if>
 	</command>
 
 	<command name="viewUpcomingEventSiteEvent">

@@ -24,7 +24,7 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.util.SocialActivityHierarchyEntryThreadLocal;
-import com.liferay.portlet.social.util.SocialActivityTestUtil;
+import com.liferay.portlet.social.util.test.SocialActivityTestUtil;
 
 import java.util.List;
 

@@ -29,11 +29,11 @@ import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.ListType;
 import com.liferay.portal.model.ModelListener;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
 import com.liferay.portal.test.LiferayPersistenceIntegrationJUnitTestRunner;
-import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
+import com.liferay.portal.test.persistence.test.TransactionalPersistenceAdvice;
+import com.liferay.portal.util.test.RandomTestUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -93,7 +93,7 @@ public class ListTypePersistenceTest {
 
 	@Test
 	public void testCreate() throws Exception {
-		int pk = ServiceTestUtil.nextInt();
+		int pk = RandomTestUtil.nextInt();
 
 		ListType listType = _persistence.create(pk);
 
@@ -120,15 +120,15 @@ public class ListTypePersistenceTest {
 
 	@Test
 	public void testUpdateExisting() throws Exception {
-		int pk = ServiceTestUtil.nextInt();
+		int pk = RandomTestUtil.nextInt();
 
 		ListType newListType = _persistence.create(pk);
 
-		newListType.setMvccVersion(ServiceTestUtil.nextLong());
+		newListType.setMvccVersion(RandomTestUtil.nextLong());
 
-		newListType.setName(ServiceTestUtil.randomString());
+		newListType.setName(RandomTestUtil.randomString());
 
-		newListType.setType(ServiceTestUtil.randomString());
+		newListType.setType(RandomTestUtil.randomString());
 
 		_persistence.update(newListType);
 
@@ -167,7 +167,7 @@ public class ListTypePersistenceTest {
 
 	@Test
 	public void testFindByPrimaryKeyMissing() throws Exception {
-		int pk = ServiceTestUtil.nextInt();
+		int pk = RandomTestUtil.nextInt();
 
 		try {
 			_persistence.findByPrimaryKey(pk);
@@ -205,7 +205,7 @@ public class ListTypePersistenceTest {
 
 	@Test
 	public void testFetchByPrimaryKeyMissing() throws Exception {
-		int pk = ServiceTestUtil.nextInt();
+		int pk = RandomTestUtil.nextInt();
 
 		ListType missingListType = _persistence.fetchByPrimaryKey(pk);
 
@@ -238,7 +238,7 @@ public class ListTypePersistenceTest {
 				ListType.class.getClassLoader());
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("listTypeId",
-				ServiceTestUtil.nextInt()));
+				RandomTestUtil.nextInt()));
 
 		List<ListType> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -277,7 +277,7 @@ public class ListTypePersistenceTest {
 		dynamicQuery.setProjection(ProjectionFactoryUtil.property("listTypeId"));
 
 		dynamicQuery.add(RestrictionsFactoryUtil.in("listTypeId",
-				new Object[] { ServiceTestUtil.nextInt() }));
+				new Object[] { RandomTestUtil.nextInt() }));
 
 		List<Object> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -285,15 +285,15 @@ public class ListTypePersistenceTest {
 	}
 
 	protected ListType addListType() throws Exception {
-		int pk = ServiceTestUtil.nextInt();
+		int pk = RandomTestUtil.nextInt();
 
 		ListType listType = _persistence.create(pk);
 
-		listType.setMvccVersion(ServiceTestUtil.nextLong());
+		listType.setMvccVersion(RandomTestUtil.nextLong());
 
-		listType.setName(ServiceTestUtil.randomString());
+		listType.setName(RandomTestUtil.randomString());
 
-		listType.setType(ServiceTestUtil.randomString());
+		listType.setType(RandomTestUtil.randomString());
 
 		_persistence.update(listType);
 

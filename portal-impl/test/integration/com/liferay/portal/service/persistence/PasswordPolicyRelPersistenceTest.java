@@ -32,12 +32,12 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.PasswordPolicyRel;
 import com.liferay.portal.model.impl.PasswordPolicyRelModelImpl;
 import com.liferay.portal.service.PasswordPolicyRelLocalServiceUtil;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.BasePersistence;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
 import com.liferay.portal.test.LiferayPersistenceIntegrationJUnitTestRunner;
-import com.liferay.portal.test.persistence.TransactionalPersistenceAdvice;
+import com.liferay.portal.test.persistence.test.TransactionalPersistenceAdvice;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portal.util.test.RandomTestUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -97,7 +97,7 @@ public class PasswordPolicyRelPersistenceTest {
 
 	@Test
 	public void testCreate() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		PasswordPolicyRel passwordPolicyRel = _persistence.create(pk);
 
@@ -124,17 +124,17 @@ public class PasswordPolicyRelPersistenceTest {
 
 	@Test
 	public void testUpdateExisting() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		PasswordPolicyRel newPasswordPolicyRel = _persistence.create(pk);
 
-		newPasswordPolicyRel.setMvccVersion(ServiceTestUtil.nextLong());
+		newPasswordPolicyRel.setMvccVersion(RandomTestUtil.nextLong());
 
-		newPasswordPolicyRel.setPasswordPolicyId(ServiceTestUtil.nextLong());
+		newPasswordPolicyRel.setPasswordPolicyId(RandomTestUtil.nextLong());
 
-		newPasswordPolicyRel.setClassNameId(ServiceTestUtil.nextLong());
+		newPasswordPolicyRel.setClassNameId(RandomTestUtil.nextLong());
 
-		newPasswordPolicyRel.setClassPK(ServiceTestUtil.nextLong());
+		newPasswordPolicyRel.setClassPK(RandomTestUtil.nextLong());
 
 		_persistence.update(newPasswordPolicyRel);
 
@@ -155,7 +155,7 @@ public class PasswordPolicyRelPersistenceTest {
 	@Test
 	public void testCountByPasswordPolicyId() {
 		try {
-			_persistence.countByPasswordPolicyId(ServiceTestUtil.nextLong());
+			_persistence.countByPasswordPolicyId(RandomTestUtil.nextLong());
 
 			_persistence.countByPasswordPolicyId(0L);
 		}
@@ -167,8 +167,8 @@ public class PasswordPolicyRelPersistenceTest {
 	@Test
 	public void testCountByC_C() {
 		try {
-			_persistence.countByC_C(ServiceTestUtil.nextLong(),
-				ServiceTestUtil.nextLong());
+			_persistence.countByC_C(RandomTestUtil.nextLong(),
+				RandomTestUtil.nextLong());
 
 			_persistence.countByC_C(0L, 0L);
 		}
@@ -188,7 +188,7 @@ public class PasswordPolicyRelPersistenceTest {
 
 	@Test
 	public void testFindByPrimaryKeyMissing() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		try {
 			_persistence.findByPrimaryKey(pk);
@@ -228,7 +228,7 @@ public class PasswordPolicyRelPersistenceTest {
 
 	@Test
 	public void testFetchByPrimaryKeyMissing() throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		PasswordPolicyRel missingPasswordPolicyRel = _persistence.fetchByPrimaryKey(pk);
 
@@ -283,7 +283,7 @@ public class PasswordPolicyRelPersistenceTest {
 				PasswordPolicyRel.class.getClassLoader());
 
 		dynamicQuery.add(RestrictionsFactoryUtil.eq("passwordPolicyRelId",
-				ServiceTestUtil.nextLong()));
+				RandomTestUtil.nextLong()));
 
 		List<PasswordPolicyRel> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -324,7 +324,7 @@ public class PasswordPolicyRelPersistenceTest {
 				"passwordPolicyRelId"));
 
 		dynamicQuery.add(RestrictionsFactoryUtil.in("passwordPolicyRelId",
-				new Object[] { ServiceTestUtil.nextLong() }));
+				new Object[] { RandomTestUtil.nextLong() }));
 
 		List<Object> result = _persistence.findWithDynamicQuery(dynamicQuery);
 
@@ -351,17 +351,17 @@ public class PasswordPolicyRelPersistenceTest {
 
 	protected PasswordPolicyRel addPasswordPolicyRel()
 		throws Exception {
-		long pk = ServiceTestUtil.nextLong();
+		long pk = RandomTestUtil.nextLong();
 
 		PasswordPolicyRel passwordPolicyRel = _persistence.create(pk);
 
-		passwordPolicyRel.setMvccVersion(ServiceTestUtil.nextLong());
+		passwordPolicyRel.setMvccVersion(RandomTestUtil.nextLong());
 
-		passwordPolicyRel.setPasswordPolicyId(ServiceTestUtil.nextLong());
+		passwordPolicyRel.setPasswordPolicyId(RandomTestUtil.nextLong());
 
-		passwordPolicyRel.setClassNameId(ServiceTestUtil.nextLong());
+		passwordPolicyRel.setClassNameId(RandomTestUtil.nextLong());
 
-		passwordPolicyRel.setClassPK(ServiceTestUtil.nextLong());
+		passwordPolicyRel.setClassPK(RandomTestUtil.nextLong());
 
 		_persistence.update(passwordPolicyRel);
 

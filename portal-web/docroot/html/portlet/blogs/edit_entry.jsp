@@ -59,6 +59,19 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 	<liferay-ui:error exception="<%= EntryContentException.class %>" message="please-enter-valid-content" />
 	<liferay-ui:error exception="<%= EntryTitleException.class %>" message="please-enter-a-valid-title" />
 
+	<liferay-ui:error exception="<%= FileSizeException.class %>">
+
+		<%
+		long fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.DL_FILE_MAX_SIZE);
+
+		if (fileMaxSize == 0) {
+			fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE);
+		}
+		%>
+
+		<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(fileMaxSize, locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
+	</liferay-ui:error>
+
 	<liferay-ui:asset-categories-error />
 
 	<liferay-ui:asset-tags-error />
@@ -70,7 +83,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 	</c:if>
 
 	<c:if test="<%= entry != null %>">
-		<aui:workflow-status id="<%= String.valueOf(entry.getEntryId()) %>" status="<%= entry.getStatus() %>" />
+		<aui:workflow-status id="<%= String.valueOf(entry.getEntryId()) %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= entry.getStatus() %>" />
 	</c:if>
 
 	<aui:fieldset>

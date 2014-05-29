@@ -23,7 +23,7 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
-import com.liferay.portlet.wiki.util.WikiTestUtil;
+import com.liferay.portlet.wiki.util.test.WikiTestUtil;
 
 import java.util.List;
 import java.util.Map;

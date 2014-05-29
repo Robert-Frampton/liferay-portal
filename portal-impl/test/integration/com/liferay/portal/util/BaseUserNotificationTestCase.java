@@ -27,6 +27,9 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserNotificationDeliveryLocalServiceUtil;
 import com.liferay.portal.service.UserNotificationEventLocalServiceUtil;
+import com.liferay.portal.util.test.GroupTestUtil;
+import com.liferay.portal.util.test.MailServiceTestUtil;
+import com.liferay.portal.util.test.UserTestUtil;
 
 import java.util.ArrayList;
 import java.util.List;

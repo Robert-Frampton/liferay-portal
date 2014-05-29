@@ -990,6 +990,12 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	}
 
 	@Override
+	public java.lang.String getUnambiguousName(java.lang.String name,
+		java.util.Locale locale) {
+		return _group.getUnambiguousName(name, locale);
+	}
+
+	@Override
 	public boolean hasAncestor(long groupId) {
 		return _group.hasAncestor(groupId);
 	}

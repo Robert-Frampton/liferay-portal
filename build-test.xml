@@ -687,12 +687,14 @@ create database lportal2 character set utf8;</echo>
 					/>
 				</delete>
 
-				<copy todir="${todir}">
-					<fileset
-						dir="${jdbc.drivers.optional.dir}/db2/8.1.18"
-						includes="${jdbc.db2.driver}"
-					/>
-				</copy>
+				<for list="${jdbc.db2.driver}" param="jdbc.driver">
+					<sequential>
+						<get
+							dest="${todir}"
+							src="${test.jdbc.drivers.url}/db2/8.1.18/@{jdbc.driver}"
+						/>
+					</sequential>
+				</for>
 			</then>
 			<elseif>
 				<and>
@@ -1791,10 +1793,11 @@ tck.url=true</echo>
 		</if>
 
 		<if>
-			<isset property="ignore.error" />
+			<isset property="ignore.errors" />
 			<then>
 				<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
-					ignore.error=${ignore.error}
+					ignore.errors=${ignore.errors}
+					ignore.errors.delimiter=${ignore.errors.delimiter}
 				</echo>
 			</then>
 		</if>
@@ -2181,13 +2184,15 @@ plugins.includes=marketplace-portlet</echo>
 			<elseif>
 				<equals arg1="${test.build.bundle.weblogic}" arg2="true" />
 				<then>
-					<echo file="app.server.${user.name}.properties">app.server.type=weblogic</echo>
+					<app-server-properties-update>
+						app.server.type=weblogic
+					</app-server-properties-update>
 
 					<ant antfile="build-dist.xml" target="unzip-weblogic" inheritAll="false" />
 
 					<antcall target="deploy" inheritAll="false" />
 
-					<delete file="app.server.${user.name}.properties" />
+					<app-server-properties-reset />
 				</then>
 			</elseif>
 		</if>
@@ -2443,27 +2448,6 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 
 	<target name="rebuild-database" depends="generate-test-properties,build-sql-file">
 		<if>
-			<equals arg1="${database.type}" arg2="sybase" />
-			<then>
-				<parallel>
-					<daemons>
-						<exec executable="${plink.executable}">
-							<arg line="-pw ${vm.password} ${vm.username}@${database.host} cmd.exe /c C:/Sybase/ASE-15_0/install/RUN_LIFERAYEAD7385.bat" />
-						</exec>
-					</daemons>
-
-					<sequential>
-						<waitfor>
-							<socket server="${database.host}" port="5000" />
-						</waitfor>
-
-						<sleep seconds="5" />
-					</sequential>
-				</parallel>
-			</then>
-		</if>
-
-		<if>
 			<not>
 				<isset property="skip.rebuild-database" />
 			</not>
@@ -2479,13 +2463,22 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 				</if>
 
 				<if>
-					<equals arg1="${database.type}" arg2="hsql" />
+					<equals arg1="${database.type}" arg2="db2" />
 					<then>
-						<delete dir="${liferay.home}/data" includeemptydirs="true" />
-
-						<copy file="sql/${database.name}.properties" tofile="${liferay.home}/data/hsql/${database.name}.properties" />
-						<copy file="sql/${database.name}.script" tofile="${liferay.home}/data/hsql/${database.name}.script" />
+						<exec executable="${db2.executable}">
+							<arg value="-fcreate.sql" />
+							<arg value="-t" />
+						</exec>
 					</then>
+					<elseif>
+						<equals arg1="${database.type}" arg2="hsql" />
+						<then>
+							<delete dir="${liferay.home}/data" includeemptydirs="true" />
+
+							<copy file="sql/${database.name}.properties" tofile="${liferay.home}/data/hsql/${database.name}.properties" />
+							<copy file="sql/${database.name}.script" tofile="${liferay.home}/data/hsql/${database.name}.script" />
+						</then>
+					</elseif>
 					<elseif>
 						<equals arg1="${database.type}" arg2="mysql" />
 						<then>
@@ -2536,10 +2529,10 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 						<equals arg1="${database.type}" arg2="postgresql" />
 						<then>
 							<exec executable="${postgresql.executable}">
-								<arg value="-U" />
-								<arg value="${database.username}" />
 								<arg value="-f" />
 								<arg value="create.sql" />
+								<arg value="-U" />
+								<arg value="${database.username}" />
 							</exec>
 						</then>
 					</elseif>
@@ -2547,14 +2540,14 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 						<equals arg1="${database.type}" arg2="sybase" />
 						<then>
 							<exec executable="${sybase.executable}">
-								<arg value="-U" />
-								<arg value="${database.username}" />
-								<arg value="-S" />
-								<arg value="${database.schema}" />
-								<arg value="-P" />
-								<arg value="${database.password}" />
 								<arg value="-i" />
 								<arg value="create.sql" />
+								<arg value="-P" />
+								<arg value="${database.password}" />
+								<arg value="-S" />
+								<arg value="${database.schema}" />
+								<arg value="-U" />
+								<arg value="${database.username}" />
 							</exec>
 						</then>
 					</elseif>

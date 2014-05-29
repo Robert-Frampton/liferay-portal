@@ -15,7 +15,6 @@
 package com.liferay.portal.service;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -24,9 +23,10 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutFriendlyURL;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
-import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
-import com.liferay.portal.util.LayoutTestUtil;
+import com.liferay.portal.test.ResetDatabaseExecutionTestListener;
+import com.liferay.portal.util.test.GroupTestUtil;
+import com.liferay.portal.util.test.LayoutTestUtil;
+import com.liferay.portal.util.test.RandomTestUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,10 +44,9 @@ import org.testng.Assert;
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
-		TransactionalCallbackAwareExecutionTestListener.class
+		ResetDatabaseExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-@Transactional
 public class LayoutFriendlyURLServiceTest {
 
 	@Test
@@ -62,7 +61,7 @@ public class LayoutFriendlyURLServiceTest {
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
-		String name = ServiceTestUtil.randomString();
+		String name = RandomTestUtil.randomString();
 
 		nameMap.put(LocaleUtil.GERMANY, name);
 		nameMap.put(LocaleUtil.US, name);
@@ -109,7 +108,7 @@ public class LayoutFriendlyURLServiceTest {
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
-		String name = ServiceTestUtil.randomString();
+		String name = RandomTestUtil.randomString();
 
 		nameMap.put(LocaleUtil.SPAIN, name);
 		nameMap.put(LocaleUtil.US, name);

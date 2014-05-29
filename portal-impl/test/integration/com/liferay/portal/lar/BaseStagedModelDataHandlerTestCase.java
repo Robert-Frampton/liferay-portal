@@ -40,9 +40,9 @@ import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
-import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.util.GroupTestUtil;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.test.GroupTestUtil;
+import com.liferay.portal.util.test.ServiceContextTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetTag;
@@ -51,13 +51,13 @@ import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
-import com.liferay.portlet.asset.util.AssetTestUtil;
+import com.liferay.portlet.asset.util.test.AssetTestUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
-import com.liferay.portlet.messageboards.util.MBTestUtil;
+import com.liferay.portlet.messageboards.util.test.MBTestUtil;
 import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
-import com.liferay.portlet.ratings.util.RatingsTestUtil;
+import com.liferay.portlet.ratings.util.test.RatingsTestUtil;
 
 import java.io.Serializable;
 
@@ -87,8 +87,8 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		liveGroup = GroupTestUtil.addGroup();
 		stagingGroup = GroupTestUtil.addGroup();
 
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			stagingGroup.getGroupId());
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(stagingGroup.getGroupId());
 
 		ServiceContextThreadLocal.pushServiceContext(serviceContext);
 	}

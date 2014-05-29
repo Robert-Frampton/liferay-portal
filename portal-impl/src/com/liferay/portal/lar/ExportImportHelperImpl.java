@@ -497,7 +497,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 		File file = FileUtil.createTempFile("lar");
 		InputStream inputStream = DLFileEntryLocalServiceUtil.getFileAsStream(
-			userId, fileEntry.getFileEntryId(), fileEntry.getVersion(), false);
+			fileEntry.getFileEntryId(), fileEntry.getVersion(), false);
 
 		ManifestSummary manifestSummary = null;
 
@@ -1808,6 +1808,10 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		if (!legacyURL) {
 			String[] pathArray = dlReference.split(StringPool.SLASH);
 
+			if (pathArray.length < 3) {
+				return map;
+			}
+
 			map.put("groupId", new String[] {pathArray[2]});
 
 			if (pathArray.length == 4) {
@@ -2054,7 +2058,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 	}
 
 	protected FileEntry getFileEntry(Map<String, String[]> map) {
-		if (map == null) {
+		if (MapUtil.isEmpty(map)) {
 			return null;
 		}
 

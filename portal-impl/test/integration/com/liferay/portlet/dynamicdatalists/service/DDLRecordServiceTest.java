@@ -19,13 +19,13 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.test.SearchContextTestUtil;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecord;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion;
@@ -153,7 +153,7 @@ public class DDLRecordServiceTest extends BaseDDLServiceTestCase {
 	}
 
 	protected SearchContext getSearchContext(String keywords) throws Exception {
-		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+		SearchContext searchContext = SearchContextTestUtil.getSearchContext(
 			group.getGroupId());
 
 		searchContext.setAttribute("recordSetId", recordSet.getRecordSetId());

@@ -526,26 +526,6 @@
 		<reference package-path="com.liferay.portlet.trash" entity="TrashEntry" />
 		<reference package-path="com.liferay.portlet.trash" entity="TrashVersion" />
 	</entity>
-	<entity name="JournalStructure" local-service="true" remote-service="true" deprecated="true">
-
-		<!-- References -->
-
-		<reference package-path="com.liferay.portal" entity="ClassName" />
-		<reference package-path="com.liferay.portal" entity="Group" />
-		<reference package-path="com.liferay.portal" entity="User" />
-		<reference package-path="com.liferay.portlet.dynamicdatamapping" entity="DDMStructure" />
-	</entity>
-	<entity name="JournalTemplate" local-service="true" remote-service="true" deprecated="true">
-
-		<!-- References -->
-
-		<reference package-path="com.liferay.portal" entity="ClassName" />
-		<reference package-path="com.liferay.portal" entity="Group" />
-		<reference package-path="com.liferay.portal" entity="Image" />
-		<reference package-path="com.liferay.portal" entity="User" />
-		<reference package-path="com.liferay.portlet.dynamicdatamapping" entity="DDMTemplate" />
-		<reference package-path="com.liferay.portlet.journal" entity="JournalStructure" />
-	</entity>
 	<exceptions>
 		<exception>ArticleContent</exception>
 		<exception>ArticleDisplayDate</exception>
@@ -561,9 +541,6 @@
 		<exception>DuplicateArticleImageId</exception>
 		<exception>DuplicateFeedId</exception>
 		<exception>DuplicateFolderName</exception>
-		<exception>DuplicateStructureElement</exception>
-		<exception>DuplicateStructureId</exception>
-		<exception>DuplicateTemplateId</exception>
 		<exception>FeedContentField</exception>
 		<exception>FeedId</exception>
 		<exception>FeedName</exception>
@@ -571,16 +548,5 @@
 		<exception>FeedTargetPortletId</exception>
 		<exception>FolderName</exception>
 		<exception>InvalidDDMStructure</exception>
-		<exception>RequiredStructure</exception>
-		<exception>RequiredTemplate</exception>
-		<exception>StructureId</exception>
-		<exception>StructureInheritance</exception>
-		<exception>StructureName</exception>
-		<exception>StructureXsd</exception>
-		<exception>TemplateId</exception>
-		<exception>TemplateName</exception>
-		<exception>TemplateSmallImageName</exception>
-		<exception>TemplateSmallImageSize</exception>
-		<exception>TemplateXsl</exception>
 	</exceptions>
 </service-builder>

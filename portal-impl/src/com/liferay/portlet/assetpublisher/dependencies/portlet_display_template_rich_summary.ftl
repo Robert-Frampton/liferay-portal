@@ -22,7 +22,7 @@
 	<#assign viewURL = assetPublisherHelper.getAssetViewURL(renderRequest, renderResponse, entry) />
 
 	<#if assetLinkBehavior != "showFullContent">
-		<#assign viewURL = assetRenderer.getURLViewInContext(renderRequest, renderResponse, viewURL) />
+		<#assign viewURL = assetPublisherHelper.getAssetViewURL(renderRequest, renderResponse, entry, true) />
 	</#if>
 
 	<div class="asset-abstract">
@@ -35,7 +35,11 @@
 		</div>
 
 		<h3 class="asset-title">
-			<a class="${assetRenderer.getIconCssClass()}" href="${viewURL}">${entryTitle}</a>
+			<a href="${viewURL}">
+				<i class="${assetRenderer.getIconCssClass()}"></i>
+
+				${entryTitle}
+			</a>
 		</h3>
 
 		<@getMetadataField fieldName="tags" />
@@ -98,7 +102,7 @@
 			<#assign title = languageUtil.format(locale, "edit-x", entryTitle, false) />
 
 			<@liferay_ui["icon"]
-				image="edit"
+				iconCssClass="icon-edit-sign"
 				message=title
 				url="javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "editAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(editPortletURL.toString()) + "'});"
 			/>
@@ -150,10 +154,6 @@
 					portletURL=renderResponse.createRenderURL()
 				/>
 			<#elseif fieldName == "view-count">
-				<@liferay_ui["icon"]
-					image="history"
-				/>
-
 				${entry.getViewCount()} <@liferay.language key="views" />
 			</#if>
 		</span>
@@ -180,7 +180,7 @@
 		${printURL.setWindowState("pop_up")}
 
 		<@liferay_ui["icon"]
-			image="print"
+			iconCssClass="icon-print"
 			message="print"
 			url="javascript:Liferay.Util.openWindow({id:'" + renderResponse.getNamespace() + "printAsset', title: '" + languageUtil.format(locale, "print-x-x", ["hide-accessible", entryTitle], false) + "', uri: '" + htmlUtil.escapeURL(printURL.toString()) + "'});"
 		/>

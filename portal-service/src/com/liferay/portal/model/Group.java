@@ -125,6 +125,9 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public java.lang.String getTypeSettingsProperty(java.lang.String key);
 
+	public java.lang.String getUnambiguousName(java.lang.String name,
+		java.util.Locale locale);
+
 	public boolean hasAncestor(long groupId);
 
 	public boolean hasLocalOrRemoteStagingGroup();

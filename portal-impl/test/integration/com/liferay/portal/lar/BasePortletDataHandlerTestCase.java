@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.test.GroupTestUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
 
 import java.util.Date;

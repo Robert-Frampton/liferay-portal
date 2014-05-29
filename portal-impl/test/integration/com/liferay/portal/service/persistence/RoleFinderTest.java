@@ -32,9 +32,9 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
-import com.liferay.portal.util.ResourceBlockPermissionTestUtil;
-import com.liferay.portal.util.ResourceBlockTestUtil;
-import com.liferay.portal.util.ResourcePermissionTestUtil;
+import com.liferay.portal.util.test.ResourceBlockPermissionTestUtil;
+import com.liferay.portal.util.test.ResourceBlockTestUtil;
+import com.liferay.portal.util.test.ResourcePermissionTestUtil;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 
 import java.util.List;

@@ -95,10 +95,10 @@ import com.liferay.portal.webserver.WebServerServletTokenUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
-import com.liferay.portlet.dynamicdatamapping.NoSuchStructureException;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
 import com.liferay.portlet.dynamicdatamapping.StorageFieldNameException;
 import com.liferay.portlet.dynamicdatamapping.StorageFieldRequiredException;
+import com.liferay.portlet.dynamicdatamapping.StructureXsdException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.storage.FieldConstants;
@@ -118,7 +118,6 @@ import com.liferay.portlet.journal.ArticleVersionException;
 import com.liferay.portlet.journal.DuplicateArticleIdException;
 import com.liferay.portlet.journal.InvalidDDMStructureException;
 import com.liferay.portlet.journal.NoSuchArticleException;
-import com.liferay.portlet.journal.StructureXsdException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalArticleDisplay;
@@ -5789,58 +5788,56 @@ public class JournalArticleLocalServiceImpl
 		}
 	}
 
-	protected void checkStructure(Document contentDocument, Element root)
+	protected void checkStructure(Document contentDocument, Element rootElement)
 		throws PortalException {
 
-		for (Element el : root.elements()) {
-			checkStructureField(el, contentDocument);
+		for (Element element : rootElement.elements()) {
+			String name = element.getName();
 
-			checkStructure(contentDocument, el);
+			if (name.equals("dynamic-element")) {
+				checkStructureField(element, contentDocument);
+
+				checkStructure(contentDocument, element);
+			}
 		}
 	}
 
 	protected void checkStructure(JournalArticle article)
 		throws PortalException, SystemException {
 
-		Group companyGroup = groupLocalService.getCompanyGroup(
-			article.getCompanyId());
-
-		DDMStructure structure = null;
+		DDMStructure ddmStructure = article.getDDMStructure();
 
 		try {
-			structure = ddmStructurePersistence.findByG_C_S(
-				PortalUtil.getSiteGroupId(article.getGroupId()),
-				classNameLocalService.getClassNameId(JournalArticle.class),
-				article.getStructureId());
-		}
-		catch (NoSuchStructureException nsse) {
-			structure = ddmStructurePersistence.findByG_C_S(
-				companyGroup.getGroupId(),
-				classNameLocalService.getClassNameId(JournalArticle.class),
-				article.getStructureId());
-		}
-
-		try {
-			Document xsdDocument = SAXReaderUtil.read(structure.getXsd());
-
-			checkStructure(article.getDocument(), xsdDocument.getRootElement());
+			checkStructure(article, ddmStructure);
 		}
 		catch (DocumentException de) {
 			throw new SystemException(de);
 		}
 		catch (StructureXsdException sxsde) {
-			long groupId = article.getGroupId();
-			String articleId = article.getArticleId();
-			double version = article.getVersion();
-
 			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Article {groupId=" + groupId + ", articleId=" +
-						articleId + ", version=" + version +
-							"} has content that does not match its " +
-								"structure: " + sxsde.getMessage());
+				StringBundler sb = new StringBundler(8);
+
+				sb.append("Article {groupId=");
+				sb.append(article.getGroupId());
+				sb.append(", articleId=");
+				sb.append(article.getArticleId());
+				sb.append(", version=");
+				sb.append(article.getVersion());
+				sb.append("} has content that does not match its structure: ");
+				sb.append(sxsde.getMessage());
+
+				_log.warn(sb.toString());
 			}
 		}
+	}
+
+	protected void checkStructure(
+			JournalArticle article, DDMStructure structure)
+		throws DocumentException, PortalException {
+
+		Document xsdDocument = SAXReaderUtil.read(structure.getXsd());
+
+		checkStructure(article.getDocument(), xsdDocument.getRootElement());
 	}
 
 	protected void checkStructureField(Element el, Document contentDocument)
