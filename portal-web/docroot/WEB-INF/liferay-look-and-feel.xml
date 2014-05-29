@@ -17,6 +17,7 @@
 		<settings>
 			<setting configurable="true" key="bullet-style" options="dots,arrows" type="select" value="dots" />
 			<setting configurable="true" key="portlet-setup-show-borders-default" type="checkbox" value="true" />
+			<setting configurable="false" key="use-custom-ckeditor-skin" value="true" />
 			<setting configurable="false" key="show-site-name-default" value="true" />
 			<setting configurable="false" key="show-site-name-supported" value="true" />
 		</settings>

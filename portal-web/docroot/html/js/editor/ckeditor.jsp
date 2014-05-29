@@ -35,6 +35,8 @@ if (!_ckEditorConfigFileNames.contains(ckEditorConfigFileName)) {
 	ckEditorConfigFileName = "ckconfig.jsp";
 }
 
+boolean useCustomSkin = GetterUtil.getBoolean(themeDisplay.getThemeSetting("use-custom-ckeditor-skin"), true);
+
 boolean useCustomDataProcessor = false;
 
 if (!ckEditorConfigFileName.equals("ckconfig.jsp")) {
@@ -215,6 +217,10 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 	CKEDITOR.disableAutoInline = true;
 
 	CKEDITOR.env.isCompatible = true;
+
+	<c:if test="<%= useCustomSkin %>">
+		CKEDITOR.config.skin = 'editor,' + '<%= HtmlUtil.escapeJS(themeDisplay.getPathThemeCss()) %>' + '/editor/';
+	</c:if>
 </script>
 
 <aui:script use="<%= modules %>">
