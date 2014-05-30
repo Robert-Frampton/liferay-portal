@@ -88,9 +88,9 @@ PortletURL portletURL = (PortletURL)request.getAttribute("view.jsp-portletURL");
 			if (!subfolders.isEmpty()) {
 				int subfoldersCount = DLAppServiceUtil.getFoldersCount(repositoryId, curFolder.getFolderId());
 
-				buffer.append("<br /><u>");
+				buffer.append("<br /><span style="text-decoration: underline;">");
 				buffer.append(LanguageUtil.get(pageContext, "subfolders"));
-				buffer.append("</u>: ");
+				buffer.append("</span>: ");
 
 				for (int j = 0; j < subfolders.size(); j++) {
 					Folder subfolder = (Folder)subfolders.get(j);
