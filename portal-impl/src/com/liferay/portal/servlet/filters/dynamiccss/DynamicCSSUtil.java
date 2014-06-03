@@ -497,9 +497,27 @@ public class DynamicCSSUtil {
 				break;
 			}
 
-			sb.append(content.substring(pos, importY));
-			sb.append(CharPool.QUESTION);
+			Boolean hasQuotes = false;
+
+			String urlStart = content.substring(pos, importY);
+
+			Matcher stringUrlQuotesMatcher = _urlQuotesPattern.matcher(urlStart);
+
+			if (stringUrlQuotesMatcher.find()) {
+				urlStart = stringUrlQuotesMatcher.replaceAll("$1");
+				hasQuotes = true;
+			}
+
+			char querySymbol = (content.substring(pos, importY).indexOf(CharPool.QUESTION) == -1) ? CharPool.QUESTION : CharPool.AMPERSAND;
+
+			sb.append(urlStart);
+			sb.append(querySymbol);
 			sb.append(queryString);
+
+			if (hasQuotes) {
+				sb.append(CharPool.QUOTE);
+			}
+
 			sb.append(_CSS_IMPORT_END);
 
 			pos = importY + _CSS_IMPORT_END.length();
@@ -525,6 +543,7 @@ public class DynamicCSSUtil {
 		"\\/([^\\/]+)-theme\\/", Pattern.CASE_INSENSITIVE);
 	private static Pattern _portalThemePattern = Pattern.compile(
 		"themes\\/([^\\/]+)\\/css", Pattern.CASE_INSENSITIVE);
+	private static Pattern _urlQuotesPattern = Pattern.compile("(url\\(\"[\\s\\S]+)\"");
 	private static ScriptingContainer _scriptingContainer;
 	private static Object _scriptObject;
 
