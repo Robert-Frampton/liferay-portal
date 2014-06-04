@@ -142,7 +142,6 @@ img.icon {
 	line-height: 1;
 	margin: 0.1em 0.2em;
 	padding: 0.3em 0.5em 0.3em;
-	font-weight: bold;
 }
 
 .lfr-token-primary {
@@ -173,8 +172,8 @@ img.icon {
 }
 
 .underline-bold {
-	text-decoration: underline;
 	font-weight: bold;
+	text-decoration: underline;
 }
 
 /* Skin */
