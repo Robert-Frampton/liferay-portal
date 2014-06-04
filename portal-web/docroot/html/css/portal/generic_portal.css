@@ -142,6 +142,7 @@ img.icon {
 	line-height: 1;
 	margin: 0.1em 0.2em;
 	padding: 0.3em 0.5em 0.3em;
+	font-weight: bold;
 }
 
 .lfr-token-primary {
@@ -169,6 +170,11 @@ img.icon {
 		right: auto;
 		top: expression( ( LFR_IGNORE_ME = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) + 'px' );
 	}
+}
+
+.underline-bold {
+	text-decoration: underline;
+	font-weight: bold;
 }
 
 /* Skin */
