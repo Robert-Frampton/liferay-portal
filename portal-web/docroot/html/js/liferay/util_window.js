@@ -48,6 +48,7 @@ AUI.add(
 					centered: true,
 					modal: true,
 					headerContent: '&nbsp;',
+					parentScrollable: false,
 					visible: true,
 					zIndex: Liferay.zIndex.WINDOW
 				},
