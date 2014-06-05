@@ -171,8 +171,7 @@ img.icon {
 	}
 }
 
-.underline-bold {
-	font-weight: bold;
+.emphasized {
 	text-decoration: underline;
 }
 
