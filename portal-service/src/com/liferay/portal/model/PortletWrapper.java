@@ -348,8 +348,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	}
 
 	@Override
-	public void persist()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public void persist() {
 		_portlet.persist();
 	}
 
@@ -1866,7 +1865,7 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	* @return the workflow handler instances of the portlet
 	*/
 	@Override
-	public java.util.List<com.liferay.portal.kernel.workflow.WorkflowHandler> getWorkflowHandlerInstances() {
+	public java.util.List<com.liferay.portal.kernel.workflow.WorkflowHandler<?>> getWorkflowHandlerInstances() {
 		return _portlet.getWorkflowHandlerInstances();
 	}
 
