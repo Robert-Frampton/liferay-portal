@@ -42,12 +42,6 @@ boolean portletDecorate = GetterUtil.getBoolean(portletSetup.getValue("portletSe
 
 Boolean portletDecorateObj = (Boolean)renderRequest.getAttribute(WebKeys.PORTLET_DECORATE);
 
-if (portletDecorateObj != null) {
-	portletDecorate = portletDecorateObj.booleanValue();
-
-	request.removeAttribute(WebKeys.PORTLET_DECORATE);
-}
-
 // Portlet title
 
 String portletTitle = PortletConfigurationUtil.getPortletTitle(portletSetup, themeDisplay.getLanguageId());
