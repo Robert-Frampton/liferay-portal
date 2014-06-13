@@ -15,7 +15,6 @@
 package com.liferay.portlet.documentlibrary;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.settings.FallbackKeys;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.settings.ParameterMapSettings;
@@ -24,6 +23,7 @@ import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.settings.TypedSettings;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.util.DLConstants;
 
 import java.util.Map;
@@ -35,9 +35,7 @@ public class DLSettings {
 
 	public static final String[] MULTI_VALUED_KEYS = {};
 
-	public static DLSettings getInstance(long groupId)
-		throws PortalException, SystemException {
-
+	public static DLSettings getInstance(long groupId) throws PortalException {
 		Settings settings = SettingsFactoryUtil.getGroupServiceSettings(
 			groupId, DLConstants.SERVICE_NAME);
 
@@ -46,7 +44,7 @@ public class DLSettings {
 
 	public static DLSettings getInstance(
 			long groupId, Map<String, String[]> parameterMap)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Settings settings = SettingsFactoryUtil.getGroupServiceSettings(
 			groupId, DLConstants.SERVICE_NAME);
@@ -173,14 +171,14 @@ public class DLSettings {
 		return fallbackKeys;
 	}
 
-	static {
-		FallbackKeys fallbackKeys = _getFallbackKeys();
+	private static final String[] _MULTI_VALUED_KEYS = {};
 
+	static {
 		SettingsFactory settingsFactory =
 			SettingsFactoryUtil.getSettingsFactory();
 
-		settingsFactory.registerFallbackKeys(
-			DLConstants.SERVICE_NAME, fallbackKeys);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.BLOGS, _getFallbackKeys(), _MULTI_VALUED_KEYS);
 	}
 
 	private TypedSettings _typedSettings;

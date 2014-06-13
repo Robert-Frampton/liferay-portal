@@ -34,8 +34,7 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.portlet.asset.model.impl.AssetVocabularyImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getCategories()
-		throws com.liferay.portal.kernel.exception.SystemException;
+	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getCategories();
 
 	public long[] getRequiredClassNameIds();
 
@@ -50,17 +49,14 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 	public java.lang.String getUnambiguousTitle(
 		java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> vocabularies,
 		long groupId, java.util.Locale locale)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
+		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public boolean hasMoreThanOneCategorySelected(long[] categoryIds)
-		throws com.liferay.portal.kernel.exception.SystemException;
+	public boolean hasMoreThanOneCategorySelected(long[] categoryIds);
 
 	public boolean isAssociatedToClassNameId(long classNameId);
 
 	public boolean isMissingRequiredCategory(long classNameId,
-		long[] categoryIds)
-		throws com.liferay.portal.kernel.exception.SystemException;
+		long[] categoryIds);
 
 	public boolean isMultiValued();
 

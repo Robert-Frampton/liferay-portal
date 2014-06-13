@@ -114,12 +114,11 @@ public abstract class UserGroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param userGroupId the primary key of the user group
 	 * @return the user group that was removed
 	 * @throws PortalException if a user group with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public UserGroup deleteUserGroup(long userGroupId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return userGroupPersistence.remove(userGroupId);
 	}
 
@@ -129,12 +128,11 @@ public abstract class UserGroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param userGroup the user group
 	 * @return the user group that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public UserGroup deleteUserGroup(UserGroup userGroup)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return userGroupPersistence.remove(userGroup);
 	}
 
@@ -410,20 +408,16 @@ public abstract class UserGroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * @throws SystemException
 	 */
 	@Override
-	public void addGroupUserGroups(long groupId, long[] userGroupIds)
-		throws SystemException {
+	public void addGroupUserGroups(long groupId, long[] userGroupIds) {
 		groupPersistence.addUserGroups(groupId, userGroupIds);
 	}
 
 	/**
-	 * @throws SystemException
 	 */
 	@Override
-	public void addGroupUserGroups(long groupId, List<UserGroup> UserGroups)
-		throws SystemException {
+	public void addGroupUserGroups(long groupId, List<UserGroup> UserGroups) {
 		groupPersistence.addUserGroups(groupId, UserGroups);
 	}
 
@@ -539,20 +533,16 @@ public abstract class UserGroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * @throws SystemException
 	 */
 	@Override
-	public void addTeamUserGroups(long teamId, long[] userGroupIds)
-		throws SystemException {
+	public void addTeamUserGroups(long teamId, long[] userGroupIds) {
 		teamPersistence.addUserGroups(teamId, userGroupIds);
 	}
 
 	/**
-	 * @throws SystemException
 	 */
 	@Override
-	public void addTeamUserGroups(long teamId, List<UserGroup> UserGroups)
-		throws SystemException {
+	public void addTeamUserGroups(long teamId, List<UserGroup> UserGroups) {
 		teamPersistence.addUserGroups(teamId, UserGroups);
 	}
 
@@ -682,10 +672,9 @@ public abstract class UserGroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * @throws SystemException
 	 */
 	@Override
-	public void clearUserUserGroups(long userId) throws SystemException {
+	public void clearUserUserGroups(long userId) {
 		userPersistence.clearUserGroups(userId);
 	}
 
@@ -774,11 +763,10 @@ public abstract class UserGroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void setUserUserGroups(long userId, long[] userGroupIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userPersistence.setUserGroups(userId, userGroupIds);
 	}
 

@@ -150,11 +150,10 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param userId the primary key of the user
 	 * @return the user that was removed
 	 * @throws PortalException if a user with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public User deleteUser(long userId) throws PortalException, SystemException {
+	public User deleteUser(long userId) throws PortalException {
 		return userPersistence.remove(userId);
 	}
 
@@ -164,11 +163,10 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param user the user
 	 * @return the user that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public User deleteUser(User user) throws PortalException, SystemException {
+	public User deleteUser(User user) throws PortalException {
 		return userPersistence.remove(user);
 	}
 
@@ -442,21 +440,19 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addGroupUsers(long groupId, long[] userIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		groupPersistence.addUsers(groupId, userIds);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addGroupUsers(long groupId, List<User> Users)
-		throws PortalException, SystemException {
+		throws PortalException {
 		groupPersistence.addUsers(groupId, Users);
 	}
 
@@ -572,30 +568,26 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addOrganizationUsers(long organizationId, long[] userIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		organizationPersistence.addUsers(organizationId, userIds);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addOrganizationUsers(long organizationId, List<User> Users)
-		throws PortalException, SystemException {
+		throws PortalException {
 		organizationPersistence.addUsers(organizationId, Users);
 	}
 
 	/**
-	 * @throws SystemException
 	 */
 	@Override
-	public void clearOrganizationUsers(long organizationId)
-		throws SystemException {
+	public void clearOrganizationUsers(long organizationId) {
 		organizationPersistence.clearUsers(organizationId);
 	}
 
@@ -706,21 +698,19 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addRoleUsers(long roleId, long[] userIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		rolePersistence.addUsers(roleId, userIds);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addRoleUsers(long roleId, List<User> Users)
-		throws PortalException, SystemException {
+		throws PortalException {
 		rolePersistence.addUsers(roleId, Users);
 	}
 
@@ -733,21 +723,19 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void deleteRoleUser(long roleId, long userId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		rolePersistence.removeUser(roleId, userId);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void deleteRoleUser(long roleId, User user)
-		throws PortalException, SystemException {
+		throws PortalException {
 		rolePersistence.removeUser(roleId, user);
 	}
 
@@ -821,11 +809,10 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void setRoleUsers(long roleId, long[] userIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		rolePersistence.setUsers(roleId, userIds);
 	}
 
@@ -845,21 +832,19 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addTeamUsers(long teamId, long[] userIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		teamPersistence.addUsers(teamId, userIds);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addTeamUsers(long teamId, List<User> Users)
-		throws PortalException, SystemException {
+		throws PortalException {
 		teamPersistence.addUsers(teamId, Users);
 	}
 
@@ -975,49 +960,44 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addUserGroupUsers(long userGroupId, long[] userIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userGroupPersistence.addUsers(userGroupId, userIds);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addUserGroupUsers(long userGroupId, List<User> Users)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userGroupPersistence.addUsers(userGroupId, Users);
 	}
 
 	/**
-	 * @throws SystemException
 	 */
 	@Override
-	public void clearUserGroupUsers(long userGroupId) throws SystemException {
+	public void clearUserGroupUsers(long userGroupId) {
 		userGroupPersistence.clearUsers(userGroupId);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void deleteUserGroupUser(long userGroupId, long userId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userGroupPersistence.removeUser(userGroupId, userId);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void deleteUserGroupUser(long userGroupId, User user)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userGroupPersistence.removeUser(userGroupId, user);
 	}
 
@@ -1092,11 +1072,10 @@ public abstract class UserLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void setUserGroupUsers(long userGroupId, long[] userIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userGroupPersistence.setUsers(userGroupId, userIds);
 	}
 

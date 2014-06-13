@@ -102,11 +102,10 @@ public abstract class TeamLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param teamId the primary key of the team
 	 * @return the team that was removed
 	 * @throws PortalException if a team with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Team deleteTeam(long teamId) throws PortalException, SystemException {
+	public Team deleteTeam(long teamId) throws PortalException {
 		return teamPersistence.remove(teamId);
 	}
 
@@ -116,11 +115,10 @@ public abstract class TeamLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param team the team
 	 * @return the team that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Team deleteTeam(Team team) throws PortalException, SystemException {
+	public Team deleteTeam(Team team) throws PortalException {
 		return teamPersistence.remove(team);
 	}
 

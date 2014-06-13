@@ -130,12 +130,11 @@ public abstract class OrganizationLocalServiceBaseImpl
 	 * @param organizationId the primary key of the organization
 	 * @return the organization that was removed
 	 * @throws PortalException if a organization with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public Organization deleteOrganization(long organizationId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return organizationPersistence.remove(organizationId);
 	}
 
@@ -145,12 +144,11 @@ public abstract class OrganizationLocalServiceBaseImpl
 	 * @param organization the organization
 	 * @return the organization that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public Organization deleteOrganization(Organization organization)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return organizationPersistence.remove(organization);
 	}
 
@@ -428,22 +426,19 @@ public abstract class OrganizationLocalServiceBaseImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addGroupOrganizations(long groupId, long[] organizationIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		groupPersistence.addOrganizations(groupId, organizationIds);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addGroupOrganizations(long groupId,
-		List<Organization> Organizations)
-		throws PortalException, SystemException {
+		List<Organization> Organizations) throws PortalException {
 		groupPersistence.addOrganizations(groupId, Organizations);
 	}
 
@@ -541,11 +536,10 @@ public abstract class OrganizationLocalServiceBaseImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void setGroupOrganizations(long groupId, long[] organizationIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		groupPersistence.setOrganizations(groupId, organizationIds);
 	}
 

@@ -15,7 +15,6 @@
 package com.liferay.portlet.documentlibrary;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.settings.FallbackKeys;
 import com.liferay.portal.kernel.settings.ParameterMapSettings;
 import com.liferay.portal.kernel.settings.Settings;
@@ -36,14 +35,9 @@ import java.util.Map;
  */
 public class DLPortletInstanceSettings {
 
-	public static final String[] MULTI_VALUED_KEYS = {
-		"displayViews", "entryColumns", "fileEntryColumns", "folderColumns",
-		"mimeTypes"
-	};
-
 	public static DLPortletInstanceSettings getInstance(
 			Layout layout, String portletId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Settings settings = SettingsFactoryUtil.getPortletInstanceSettings(
 			layout, portletId);
@@ -53,7 +47,7 @@ public class DLPortletInstanceSettings {
 
 	public static DLPortletInstanceSettings getInstance(
 			Layout layout, String portletId, Map<String, String[]> parameterMap)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Settings settings = SettingsFactoryUtil.getPortletInstanceSettings(
 			layout, portletId);
@@ -171,24 +165,31 @@ public class DLPortletInstanceSettings {
 		return fallbackKeys;
 	}
 
-	static {
-		FallbackKeys fallbackKeys = _getFallbackKeys();
+	private static final String[] _MIME_TYPES_DEFAULT = ArrayUtil.toStringArray(
+		DLUtil.getAllMediaGalleryMimeTypes());
 
+	private static final String[] _MULTI_VALUED_KEYS = {
+		"displayViews", "entryColumns", "fileEntryColumns", "folderColumns",
+		"mimeTypes"
+	};
+
+	static {
 		SettingsFactory settingsFactory =
 			SettingsFactoryUtil.getSettingsFactory();
 
-		settingsFactory.registerFallbackKeys(
-			PortletKeys.DOCUMENT_LIBRARY, fallbackKeys);
-		settingsFactory.registerFallbackKeys(
-			PortletKeys.DOCUMENT_LIBRARY_ADMIN, fallbackKeys);
-		settingsFactory.registerFallbackKeys(
-			PortletKeys.DOCUMENT_LIBRARY_DISPLAY, fallbackKeys);
-		settingsFactory.registerFallbackKeys(
-			PortletKeys.MEDIA_GALLERY_DISPLAY, fallbackKeys);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.DOCUMENT_LIBRARY, _getFallbackKeys(),
+			_MULTI_VALUED_KEYS);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.DOCUMENT_LIBRARY_ADMIN, _getFallbackKeys(),
+			_MULTI_VALUED_KEYS);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.DOCUMENT_LIBRARY_DISPLAY, _getFallbackKeys(),
+			_MULTI_VALUED_KEYS);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.MEDIA_GALLERY_DISPLAY, _getFallbackKeys(),
+			_MULTI_VALUED_KEYS);
 	}
-
-	private static final String[] _MIME_TYPES_DEFAULT = ArrayUtil.toStringArray(
-		DLUtil.getAllMediaGalleryMimeTypes());
 
 	private TypedSettings _typedSettings;
 

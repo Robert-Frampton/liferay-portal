@@ -102,13 +102,11 @@ public abstract class ExportImportConfigurationLocalServiceBaseImpl
 	 * @param exportImportConfigurationId the primary key of the export import configuration
 	 * @return the export import configuration that was removed
 	 * @throws PortalException if a export import configuration with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public ExportImportConfiguration deleteExportImportConfiguration(
-		long exportImportConfigurationId)
-		throws PortalException, SystemException {
+		long exportImportConfigurationId) throws PortalException {
 		return exportImportConfigurationPersistence.remove(exportImportConfigurationId);
 	}
 
@@ -118,13 +116,12 @@ public abstract class ExportImportConfigurationLocalServiceBaseImpl
 	 * @param exportImportConfiguration the export import configuration
 	 * @return the export import configuration that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public ExportImportConfiguration deleteExportImportConfiguration(
 		ExportImportConfiguration exportImportConfiguration)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return exportImportConfigurationPersistence.remove(exportImportConfiguration);
 	}
 

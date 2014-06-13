@@ -85,8 +85,8 @@ public class FriendlyURLServletTest {
 	}
 
 	@Test(expected = NoSuchGroupException.class)
-	public void testGetRedirectWithNonExistentSite() throws Exception {
-		testGetRedirect("/non-existent-site/home", Portal.PATH_MAIN, null);
+	public void testGetRedirectWithNonexistentSite() throws Exception {
+		testGetRedirect("/nonexistent-site/home", Portal.PATH_MAIN, null);
 	}
 
 	protected String getPath(Group group, Layout layout) {

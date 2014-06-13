@@ -123,12 +123,11 @@ public abstract class RepositoryLocalServiceBaseImpl
 	 * @param repositoryId the primary key of the repository
 	 * @return the repository that was removed
 	 * @throws PortalException if a repository with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public Repository deleteRepository(long repositoryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return repositoryPersistence.remove(repositoryId);
 	}
 
@@ -137,12 +136,10 @@ public abstract class RepositoryLocalServiceBaseImpl
 	 *
 	 * @param repository the repository
 	 * @return the repository that was removed
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Repository deleteRepository(Repository repository)
-		throws SystemException {
+	public Repository deleteRepository(Repository repository) {
 		return repositoryPersistence.remove(repository);
 	}
 

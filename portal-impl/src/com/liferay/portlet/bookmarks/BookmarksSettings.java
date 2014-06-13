@@ -15,7 +15,6 @@
 package com.liferay.portlet.bookmarks;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.settings.FallbackKeys;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.settings.ParameterMapSettings;
@@ -35,7 +34,7 @@ import java.util.Map;
 public class BookmarksSettings {
 
 	public static BookmarksSettings getInstance(long groupId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Settings settings = SettingsFactoryUtil.getGroupServiceSettings(
 			groupId, BookmarksConstants.SERVICE_NAME);
@@ -45,7 +44,7 @@ public class BookmarksSettings {
 
 	public static BookmarksSettings getInstance(
 			long groupId, Map<String, String[]> parameterMap)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Settings settings = SettingsFactoryUtil.getGroupServiceSettings(
 			groupId, BookmarksConstants.SERVICE_NAME);
@@ -192,14 +191,17 @@ public class BookmarksSettings {
 		return fallbackKeys;
 	}
 
-	static {
-		FallbackKeys fallbackKeys = _getFallbackKeys();
+	private static final String[] _MULTI_VALUED_KEYS = {
+		"entryColumns", "folderColumns"
+	};
 
+	static {
 		SettingsFactory settingsFactory =
 			SettingsFactoryUtil.getSettingsFactory();
 
-		settingsFactory.registerFallbackKeys(
-			BookmarksConstants.SERVICE_NAME, fallbackKeys);
+		settingsFactory.registerSettingsMetadata(
+			BookmarksConstants.SERVICE_NAME, _getFallbackKeys(),
+			_MULTI_VALUED_KEYS);
 	}
 
 	private TypedSettings _typedSettings;

@@ -107,12 +107,11 @@ public abstract class PasswordPolicyLocalServiceBaseImpl
 	 * @param passwordPolicyId the primary key of the password policy
 	 * @return the password policy that was removed
 	 * @throws PortalException if a password policy with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public PasswordPolicy deletePasswordPolicy(long passwordPolicyId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return passwordPolicyPersistence.remove(passwordPolicyId);
 	}
 
@@ -122,12 +121,11 @@ public abstract class PasswordPolicyLocalServiceBaseImpl
 	 * @param passwordPolicy the password policy
 	 * @return the password policy that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public PasswordPolicy deletePasswordPolicy(PasswordPolicy passwordPolicy)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return passwordPolicyPersistence.remove(passwordPolicy);
 	}
 

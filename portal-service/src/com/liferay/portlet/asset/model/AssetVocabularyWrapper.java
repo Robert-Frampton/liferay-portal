@@ -795,8 +795,7 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	}
 
 	@Override
-	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getCategories()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getCategories() {
 		return _assetVocabulary.getCategories();
 	}
 
@@ -823,15 +822,13 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	public java.lang.String getUnambiguousTitle(
 		java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> vocabularies,
 		long groupId, java.util.Locale locale)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _assetVocabulary.getUnambiguousTitle(vocabularies, groupId,
 			locale);
 	}
 
 	@Override
-	public boolean hasMoreThanOneCategorySelected(long[] categoryIds)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public boolean hasMoreThanOneCategorySelected(long[] categoryIds) {
 		return _assetVocabulary.hasMoreThanOneCategorySelected(categoryIds);
 	}
 
@@ -842,8 +839,7 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 
 	@Override
 	public boolean isMissingRequiredCategory(long classNameId,
-		long[] categoryIds)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long[] categoryIds) {
 		return _assetVocabulary.isMissingRequiredCategory(classNameId,
 			categoryIds);
 	}

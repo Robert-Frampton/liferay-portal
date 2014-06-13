@@ -15,7 +15,6 @@
 package com.liferay.portlet.wiki;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.settings.FallbackKeys;
 import com.liferay.portal.kernel.settings.ModifiableSettings;
 import com.liferay.portal.kernel.settings.ParameterMapSettings;
@@ -39,13 +38,9 @@ import javax.portlet.ValidatorException;
  */
 public class WikiPortletInstanceSettings {
 
-	public static final String[] MULTI_VALUED_KEYS = {
-		"visibleNodes", "hiddenNodes"
-	};
-
 	public static WikiPortletInstanceSettings getInstance(
 			Layout layout, String portletId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Settings settings = SettingsFactoryUtil.getPortletInstanceSettings(
 			layout, portletId);
@@ -55,7 +50,7 @@ public class WikiPortletInstanceSettings {
 
 	public static WikiPortletInstanceSettings getInstance(
 			Layout layout, String portletId, Map<String, String[]> parameterMap)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Settings settings = SettingsFactoryUtil.getPortletInstanceSettings(
 			layout, portletId);
@@ -160,17 +155,20 @@ public class WikiPortletInstanceSettings {
 		return fallbackKeys;
 	}
 
-	static {
-		FallbackKeys fallbackKeys = _getFallbackKeys();
+	private static final String[] _MULTI_VALUED_KEYS = {
+		"hiddenNodes", "visibleNodes"
+	};
 
+	static {
 		SettingsFactory settingsFactory =
 			SettingsFactoryUtil.getSettingsFactory();
 
-		settingsFactory.registerFallbackKeys(PortletKeys.WIKI, fallbackKeys);
-		settingsFactory.registerFallbackKeys(
-			PortletKeys.WIKI_ADMIN, fallbackKeys);
-		settingsFactory.registerFallbackKeys(
-			PortletKeys.WIKI_DISPLAY, fallbackKeys);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.WIKI, _getFallbackKeys(), _MULTI_VALUED_KEYS);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.WIKI_ADMIN, _getFallbackKeys(), _MULTI_VALUED_KEYS);
+		settingsFactory.registerSettingsMetadata(
+			PortletKeys.WIKI_DISPLAY, _getFallbackKeys(), _MULTI_VALUED_KEYS);
 	}
 
 	private TypedSettings _typedSettings;

@@ -100,12 +100,11 @@ public abstract class BackgroundTaskLocalServiceBaseImpl
 	 * @param backgroundTaskId the primary key of the background task
 	 * @return the background task that was removed
 	 * @throws PortalException if a background task with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public BackgroundTask deleteBackgroundTask(long backgroundTaskId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return backgroundTaskPersistence.remove(backgroundTaskId);
 	}
 
@@ -115,12 +114,11 @@ public abstract class BackgroundTaskLocalServiceBaseImpl
 	 * @param backgroundTask the background task
 	 * @return the background task that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public BackgroundTask deleteBackgroundTask(BackgroundTask backgroundTask)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return backgroundTaskPersistence.remove(backgroundTask);
 	}
 
@@ -210,8 +208,7 @@ public abstract class BackgroundTaskLocalServiceBaseImpl
 	}
 
 	@Override
-	public BackgroundTask fetchBackgroundTask(long backgroundTaskId)
-		throws SystemException {
+	public BackgroundTask fetchBackgroundTask(long backgroundTaskId) {
 		return backgroundTaskPersistence.fetchByPrimaryKey(backgroundTaskId);
 	}
 
@@ -221,11 +218,10 @@ public abstract class BackgroundTaskLocalServiceBaseImpl
 	 * @param backgroundTaskId the primary key of the background task
 	 * @return the background task
 	 * @throws PortalException if a background task with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Override
 	public BackgroundTask getBackgroundTask(long backgroundTaskId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return backgroundTaskPersistence.findByPrimaryKey(backgroundTaskId);
 	}
 

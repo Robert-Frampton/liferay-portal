@@ -108,12 +108,10 @@ public abstract class AddressLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param addressId the primary key of the address
 	 * @return the address that was removed
 	 * @throws PortalException if a address with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Address deleteAddress(long addressId)
-		throws PortalException, SystemException {
+	public Address deleteAddress(long addressId) throws PortalException {
 		return addressPersistence.remove(addressId);
 	}
 
@@ -122,11 +120,10 @@ public abstract class AddressLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param address the address
 	 * @return the address that was removed
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Address deleteAddress(Address address) throws SystemException {
+	public Address deleteAddress(Address address) {
 		return addressPersistence.remove(address);
 	}
 

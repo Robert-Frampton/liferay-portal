@@ -15,7 +15,6 @@
 package com.liferay.portal.repository;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.BaseRepository;
 import com.liferay.portal.kernel.repository.Repository;
 import com.liferay.portal.kernel.repository.RepositoryFactory;
@@ -24,9 +23,9 @@ import com.liferay.portal.service.RepositoryLocalService;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
-import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalService;
-import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalService;
-import com.liferay.portlet.documentlibrary.service.DLFolderLocalService;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryService;
+import com.liferay.portlet.documentlibrary.service.DLFileVersionService;
+import com.liferay.portlet.documentlibrary.service.DLFolderService;
 
 /**
  * @author Adolfo Pérez
@@ -37,7 +36,7 @@ public class RepositoryFactoryImpl extends BaseRepositoryFactory<Repository>
 	@Override
 	protected BaseRepository createExternalRepository(
 			long repositoryId, long classNameId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		return createExternalRepositoryImpl(repositoryId, classNameId);
 	}
@@ -45,7 +44,7 @@ public class RepositoryFactoryImpl extends BaseRepositoryFactory<Repository>
 	@Override
 	protected Repository createExternalRepository(
 			long folderId, long fileEntryId, long fileVersionId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		long repositoryId = getRepositoryId(
 			folderId, fileEntryId, fileVersionId);
@@ -68,45 +67,39 @@ public class RepositoryFactoryImpl extends BaseRepositoryFactory<Repository>
 
 	@Override
 	protected long getFileEntryRepositoryId(long fileEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
-		DLFileEntryLocalService dlFileEntryLocalService =
-			getDlFileEntryLocalService();
+		DLFileEntryService dlFileEntryService = getDlFileEntryService();
 
-		DLFileEntry dlFileEntry = dlFileEntryLocalService.getFileEntry(
-			fileEntryId);
+		DLFileEntry dlFileEntry = dlFileEntryService.getFileEntry(fileEntryId);
 
 		return dlFileEntry.getRepositoryId();
 	}
 
 	@Override
 	protected long getFileVersionRepositoryId(long fileVersionId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
-		DLFileVersionLocalService dlFileVersionLocalService =
-			getDlFileVersionLocalService();
+		DLFileVersionService dlFileVersionService = getDlFileVersionService();
 
-		DLFileVersion dlFileVersion = dlFileVersionLocalService.getFileVersion(
+		DLFileVersion dlFileVersion = dlFileVersionService.getFileVersion(
 			fileVersionId);
 
 		return dlFileVersion.getRepositoryId();
 	}
 
 	@Override
-	protected long getFolderRepositoryId(long folderId)
-		throws PortalException, SystemException {
+	protected long getFolderRepositoryId(long folderId) throws PortalException {
+		DLFolderService dlFolderService = getDlFolderService();
 
-		DLFolderLocalService dlFolderLocalService = getDlFolderLocalService();
-
-		DLFolder dlFolder = dlFolderLocalService.getFolder(folderId);
+		DLFolder dlFolder = dlFolderService.getFolder(folderId);
 
 		return dlFolder.getRepositoryId();
 	}
 
 	@Override
 	protected com.liferay.portal.model.Repository getRepository(
-			long repositoryId)
-		throws SystemException {
+			long repositoryId) {
 
 		RepositoryLocalService repositoryLocalService =
 			getRepositoryLocalService();

@@ -129,11 +129,10 @@ public abstract class RoleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param roleId the primary key of the role
 	 * @return the role that was removed
 	 * @throws PortalException if a role with the primary key could not be found
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Role deleteRole(long roleId) throws PortalException, SystemException {
+	public Role deleteRole(long roleId) throws PortalException {
 		return rolePersistence.remove(roleId);
 	}
 
@@ -143,11 +142,10 @@ public abstract class RoleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param role the role
 	 * @return the role that was removed
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Role deleteRole(Role role) throws PortalException, SystemException {
+	public Role deleteRole(Role role) throws PortalException {
 		return rolePersistence.remove(role);
 	}
 
@@ -555,21 +553,19 @@ public abstract class RoleLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addUserRoles(long userId, long[] roleIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userPersistence.addRoles(userId, roleIds);
 	}
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void addUserRoles(long userId, List<Role> Roles)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userPersistence.addRoles(userId, Roles);
 	}
 
@@ -664,11 +660,10 @@ public abstract class RoleLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	/**
 	 * @throws PortalException
-	 * @throws SystemException
 	 */
 	@Override
 	public void setUserRoles(long userId, long[] roleIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 		userPersistence.setRoles(userId, roleIds);
 	}
 

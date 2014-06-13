@@ -15,7 +15,6 @@
 package com.liferay.portal.util.test;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -25,6 +24,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
@@ -59,37 +59,61 @@ public class TestPropsValues {
 	public static final String USER_PASSWORD = TestPropsUtil.get(
 		"user.password");
 
-	public static long getCompanyId() throws PortalException, SystemException {
+	public static Company getCompany() throws PortalException {
+		if (_company == null) {
+			_company = CompanyLocalServiceUtil.getCompanyByWebId(
+				TestPropsValues.COMPANY_WEB_ID);
+		}
+
+		return _company;
+	}
+
+	public static long getCompanyId() throws PortalException {
 		if (_companyId > 0) {
 			return _companyId;
 		}
 
-		Company company = CompanyLocalServiceUtil.getCompanyByWebId(
-			TestPropsValues.COMPANY_WEB_ID);
+		Company company = getCompany();
 
 		_companyId = company.getCompanyId();
 
 		return _companyId;
 	}
 
-	public static long getGroupId() throws PortalException, SystemException {
+	public static Group getGroup() throws PortalException {
+		if (_group == null) {
+			_group = GroupLocalServiceUtil.getGroup(
+				getCompanyId(), GroupConstants.GUEST);
+		}
+
+		return _group;
+	}
+
+	public static long getGroupId() throws PortalException {
 		if (_groupId > 0) {
 			return _groupId;
 		}
 
-		Group group = GroupLocalServiceUtil.getGroup(
-			getCompanyId(), GroupConstants.GUEST);
+		Group group = getGroup();
 
 		_groupId = group.getGroupId();
 
 		return _groupId;
 	}
 
-	public static long getPlid() throws Exception {
+	public static Layout getLayout() throws PortalException {
+		if (_layout == null) {
+			_layout = LayoutLocalServiceUtil.getLayout(getPlid());
+		}
+
+		return _layout;
+	}
+
+	public static long getPlid() throws PortalException {
 		return getPlid(getGroupId());
 	}
 
-	public static long getPlid(long groupId) throws Exception {
+	public static long getPlid(long groupId) {
 		if (_plid > 0) {
 			return _plid;
 		}
@@ -99,7 +123,7 @@ public class TestPropsValues {
 		return _plid;
 	}
 
-	public static User getUser() throws PortalException, SystemException {
+	public static User getUser() throws PortalException {
 		if (_user == null) {
 			Role role = RoleLocalServiceUtil.getRole(
 				getCompanyId(), RoleConstants.ADMINISTRATOR);
@@ -117,7 +141,7 @@ public class TestPropsValues {
 		return _user;
 	}
 
-	public static long getUserId() throws PortalException, SystemException {
+	public static long getUserId() throws PortalException {
 		if (_userId == 0) {
 			User user = getUser();
 
@@ -131,8 +155,11 @@ public class TestPropsValues {
 
 	private static Log _log = LogFactoryUtil.getLog(TestPropsValues.class);
 
+	private static Company _company;
 	private static long _companyId;
+	private static Group _group;
 	private static long _groupId;
+	private static Layout _layout;
 	private static long _plid;
 	private static User _user;
 	private static long _userId;

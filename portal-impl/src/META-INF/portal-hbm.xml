@@ -1188,6 +1188,7 @@
 		<property name="deliverBy" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="delivered" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="payload" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="actionRequired" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="archived" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 	<class name="com.liferay.portal.model.impl.UserTrackerImpl" table="UserTracker" dynamic-update="true">

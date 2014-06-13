@@ -2311,6 +2311,7 @@ create table UserNotificationEvent (
 	deliverBy LONG,
 	delivered BOOLEAN,
 	payload TEXT null,
+	actionRequired BOOLEAN,
 	archived BOOLEAN
 );
 

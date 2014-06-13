@@ -43,6 +43,7 @@
 
 		.btn {
 			clip: rect(0, 0, 0, 0);
+			left: -9999px;
 			position: absolute;
 		}
 	}
@@ -138,6 +139,16 @@
 
 .field-wrapper .btn {
 	margin-top: 6px;
+}
+
+.label-required {
+	&:after {
+		content: ")";
+	}
+
+	&:before {
+		content: "(";
+	}
 }
 
 .lfr-input-resource {
