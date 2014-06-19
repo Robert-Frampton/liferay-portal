@@ -217,6 +217,8 @@
 			}
 
 			.add-content-details {
+				box-sizing: content-box;
+
 				.add-content-title, .add-content-description {
 					@include ellipsis;
 
