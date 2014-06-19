@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.rpc.IntrabandRPCUtil;
 import com.liferay.portal.kernel.process.ProcessCallable;
-import com.liferay.portal.kernel.process.ProcessException;
 
 import java.util.concurrent.Future;
 
@@ -119,7 +118,7 @@ public class StubHolder<T> {
 		implements ProcessCallable<Boolean> {
 
 		@Override
-		public Boolean call() throws ProcessException {
+		public Boolean call() {
 			return StartupHelperUtil.isStartupFinished();
 		}
 
