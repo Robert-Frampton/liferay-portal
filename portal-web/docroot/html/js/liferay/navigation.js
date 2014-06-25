@@ -14,7 +14,9 @@ AUI.add(
 
 		var TPL_EDITOR = '<div class="add-page-editor"><div class="input-group"></div></div>';
 
-		var TPL_FIELD_INPUT = '<input class="add-page-editor-input" type="text" value="{0}" />';
+		var TPL_FIELD_INPUT = '<input class="add-page-editor-input form-control" type="text" value="{0}" />';
+
+		var TPL_SPAN = '<span class="input-group-btn"></span>';
 
 		var TPL_LINK = '<a href="{url}">{pageTitle}</a>';
 
@@ -567,6 +569,10 @@ AUI.add(
 				).render(editorContainer);
 
 				toolbar.get('contentBox').swallowEvent('click');
+
+				var toolbarSpan = ANode.create(Lang.sub(TPL_SPAN, [prevVal]));
+
+				toolbarBoundingBox.wrap(toolbarSpan);
 
 				var optionItem;
 
