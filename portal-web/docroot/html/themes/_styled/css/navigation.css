@@ -130,6 +130,16 @@
 
 /* ---------- General navigation ---------- */
 
+@include respond-to(phone, tablet) {
+	.aui .navbar-nav {
+		float: none;
+
+		> li {
+			float: none;
+		}
+	}
+}
+
 .nav.list-group {
 	li > a {
 		&:focus, &:hover {
