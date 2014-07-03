@@ -130,6 +130,22 @@
 
 /* ---------- General navigation ---------- */
 
+.aui .navbar-nav {
+	.lfr-nav-sortable {
+		float: none;
+
+		@include respond-to(desktop) {
+			float: left;
+		}
+	}
+}
+
+.aui #navigation [role=menubar] {
+	@include respond-to(tablet) {
+		float: none;
+	}
+}
+
 .nav.list-group {
 	li > a {
 		&:focus, &:hover {
