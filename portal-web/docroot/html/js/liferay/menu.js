@@ -112,8 +112,6 @@ AUI.add(
 
 					handles.length = 0;
 
-					instance._overlay.hide();
-
 					var trigger = instance._activeTrigger;
 
 					instance._activeMenu = null;
@@ -123,96 +121,16 @@ AUI.add(
 						trigger.removeClass(CSS_BTN_PRIMARY);
 					}
 					else {
+						trigger.removeClass(CSS_OPEN);
 						trigger.get(PARENT_NODE).removeClass(CSS_OPEN);
+						menu.removeClass(CSS_OPEN);
 					}
 				}
 			},
 
-			_getAlignPoints: A.cached(
-				function(cssClass) {
-					var instance = this;
-
-					var alignPoints = DEFAULT_ALIGN_POINTS;
-
-					var defaultHorizontalAlign = STR_LEFT;
-
-					var mapAlignHorizontalOverlay = MAP_ALIGN_HORIZONTAL_OVERLAY;
-
-					var mapAlignHorizontalTrigger = MAP_ALIGN_HORIZONTAL_TRIGGER;
-
-					var langDir = Liferay.Language.direction[themeDisplay.getLanguageId()] || STR_LTR;
-
-					if (langDir === STR_RTL) {
-						defaultHorizontalAlign = STR_RIGHT;
-
-						mapAlignHorizontalOverlay = MAP_ALIGN_HORIZONTAL_OVERLAY_RTL;
-						mapAlignHorizontalTrigger = MAP_ALIGN_HORIZONTAL_TRIGGER_RTL;
-					}
-
-					if (cssClass.indexOf(AUTO) === -1) {
-						var directionMatch = cssClass.match(REGEX_DIRECTION);
-
-						var direction = (directionMatch && directionMatch[1]) || AUTO;
-
-						var overlayHorizontal = mapAlignHorizontalOverlay[direction] || defaultHorizontalAlign;
-						var overlayVertical = MAP_ALIGN_VERTICAL_OVERLAY[direction] || STR_TOP;
-
-						var triggerHorizontal = mapAlignHorizontalTrigger[direction] || defaultHorizontalAlign;
-						var triggerVertical = MAP_ALIGN_VERTICAL_TRIGGER[direction] || STR_TOP;
-
-						alignPoints = [overlayVertical + overlayHorizontal, triggerVertical + triggerHorizontal];
-					}
-
-					return alignPoints;
-				}
-			),
-
 			_getMenu: function(trigger) {
 				var instance = this;
 
-				var overlay = instance._overlay;
-
-				if (!overlay) {
-					var MenuOverlay = A.Component.create(
-						{
-							NAME: 'overlay',
-
-							AUGMENTS: [
-								A.WidgetCssClass,
-								A.WidgetPosition,
-								A.WidgetStdMod,
-								A.WidgetModality,
-								A.WidgetPositionAlign,
-								A.WidgetPositionConstrain,
-								A.WidgetStack
-							],
-
-							CSS_PREFIX: 'overlay',
-
-							EXTENDS: A.Widget
-						}
-					);
-
-					overlay = new MenuOverlay(
-						{
-							align: {
-								node: trigger,
-								points: DEFAULT_ALIGN_POINTS
-							},
-							constrain: true,
-							hideClass: false,
-							preventOverlap: true,
-							zIndex: Liferay.zIndex.MENU
-						}
-					).render();
-
-					instance._overlay = overlay;
-				}
-				else {
-					overlay.set('align.node', trigger);
-				}
-
-				var listContainer = trigger.getData('menuListContainer');
 				var menu = trigger.getData('menu');
 				var menuHeight = trigger.getData('menuHeight');
 
@@ -224,32 +142,31 @@ AUI.add(
 
 				var listItems;
 
-				if (!menu || !listContainer) {
-					listContainer = trigger.next('ul');
+				if (!menu) {
+					menu = trigger.next('ul');
 
-					listItems = listContainer.all(SELECTOR_LIST_ITEM);
-
-					menu = A.Node.create(TPL_MENU);
-
-					listContainer.placeBefore(menu);
+					listItems = menu.all(SELECTOR_LIST_ITEM);
 
 					listItems.last().addClass('last');
 
-					menu.append(listContainer);
-
-					trigger.setData('menuListContainer', listContainer);
 					trigger.setData('menu', menu);
 
-					instance._setARIARoles(trigger, menu, listContainer);
+					instance._setARIARoles(trigger, menu);
 
-					Util.createFlyouts(
-						{
-							container: listContainer.getDOM()
-						}
-					);
+					// Util.createFlyouts(
+					// 	{
+					// 		container: menu.getDOM()
+					// 	}
+					// );
+
+					//WidgetPositionConstrain
+
+					menu.plug(A.WidgetPositionConstrain);
+
+					menu.set('constrain', true);
 
 					if (trigger.hasClass('select')) {
-						listContainer.delegate(
+						menu.delegate(
 							'click',
 							function(event) {
 								var selectedListItem = event.currentTarget;
@@ -277,19 +194,17 @@ AUI.add(
 					}
 				}
 
-				overlay.setStdModContent(A.WidgetStdMod.BODY, menu);
-
 				if (!menuHeight) {
-					menuHeight = instance._getMenuHeight(trigger, menu, listItems || listContainer.all(SELECTOR_LIST_ITEM));
+					menuHeight = instance._getMenuHeight(trigger, menu, listItems || menu.all(SELECTOR_LIST_ITEM));
 
 					trigger.setData('menuHeight', menuHeight);
 
 					if (menuHeight !== AUTO) {
-						listContainer.setStyle('maxHeight', menuHeight);
+						menu.setStyle('maxHeight', menuHeight);
 					}
 				}
 
-				instance._getFocusManager();
+				//instance._getFocusManager();
 
 				return menu;
 			},
@@ -322,77 +237,12 @@ AUI.add(
 				return height;
 			},
 
-			_positionActiveMenu: function() {
-				var instance = this;
-
-				var menu = instance._activeMenu;
-				var trigger = instance._activeTrigger;
-
-				if (menu) {
-					var cssClass = trigger.attr(ATTR_CLASS_NAME);
-
-					var overlay = instance._overlay;
-
-					if (Util.isPhone() || Util.isTablet()) {
-						overlay.hide();
-
-						overlay.setAttrs(
-							{
-								align: null,
-								centered: true,
-								modal: true,
-								width: '90%'
-							}
-						);
-					}
-					else {
-						var align = overlay.get('align');
-
-						align.points = instance._getAlignPoints(cssClass);
-
-						overlay.setAttrs(
-							{
-								align: align,
-								centered: false,
-								modal: false,
-								width: 'auto'
-							}
-						);
-
-						var focusManager = overlay.bodyNode.focusManager;
-
-						if (focusManager) {
-							focusManager.focus(0);
-						}
-					}
-
-					overlay.show();
-
-					if (Browser.isIe() && Browser.getMajorVersion() <= 7) {
-						var searchContainer = menu.one(SELECTOR_SEARCH_CONTAINER);
-
-						if (searchContainer) {
-							searchContainer.width(menu.innerWidth());
-
-							menu.one(SELECTOR_SEARCH_INPUT).width('100%');
-						}
-					}
-
-					if (cssClass.indexOf(CSS_EXTENDED) > -1) {
-						trigger.addClass(CSS_BTN_PRIMARY);
-					}
-					else {
-						trigger.get(PARENT_NODE).addClass(CSS_OPEN);
-					}
-				}
-			},
-
-			_setARIARoles: function(trigger, menu, listContainer) {
+			_setARIARoles: function(trigger, menu) {
 				var links = menu.all(SELECTOR_ANCHOR);
 
 				var searchContainer = menu.one(SELECTOR_SEARCH_CONTAINER);
 
-				var listNode = menu.one('ul');
+				var listNode = menu;
 
 				var ariaListNodeAttr = 'menu';
 				var ariaLinksAttr = 'menuitem';
@@ -428,7 +278,9 @@ AUI.add(
 		var buffer = [];
 
 		Menu.register = function(id) {
-			var menuNode = document.getElementById(id);
+			//var menuNode = document.getElementById(id);
+
+			var menuNode = A.one('#' + id);
 
 			if (!Menu._INSTANCE) {
 				new Menu();
@@ -596,30 +448,28 @@ AUI.add(
 
 					activeTrigger.get(PARENT_NODE).removeClass(CSS_OPEN);
 				}
+				else if (activeTrigger) {
+					instance._closeActiveMenu();
+
+					return;
+				}
 
 				if (!trigger.hasClass('disabled')) {
 					var menu = instance._getMenu(trigger);
+
+					trigger.addClass(CSS_OPEN);
+					trigger.get(PARENT_NODE).addClass(CSS_OPEN);
+					menu.addClass(CSS_OPEN);
 
 					instance._activeMenu = menu;
 					instance._activeTrigger = trigger;
 
 					if (!handles.length) {
-						var listContainer = trigger.getData('menuListContainer');
-
 						A.Event.defineOutside('touchend');
 
 						handles.push(
 							A.getWin().on('resize', A.debounce(instance._positionActiveMenu, 200, instance)),
-							A.getDoc().on(EVENT_CLICK, instance._closeActiveMenu, instance),
-							listContainer.on(
-								'touchendoutside',
-								function(event) {
-									event.preventDefault();
-
-									instance._closeActiveMenu();
-								},
-								instance
-							)
+							A.getDoc().on(EVENT_CLICK, instance._closeActiveMenu, instance)
 						);
 
 						var DDM = A.DD && A.DD.DDM;
@@ -628,8 +478,6 @@ AUI.add(
 							handles.push(DDM.on('ddm:start', instance._closeActiveMenu, instance));
 						}
 					}
-
-					instance._positionActiveMenu();
 
 					event.halt();
 				}

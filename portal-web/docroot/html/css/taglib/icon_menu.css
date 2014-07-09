@@ -21,7 +21,8 @@
 
 	&.dropdown-menu {
 		float: none;
-		position: relative;
+		position: absolute;
+		text-align: left;
 
 		@include respond-to(phone, tablet) {
 			> li > a {
