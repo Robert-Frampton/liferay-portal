@@ -535,6 +535,12 @@ $editLayoutPanelWidth: 460px;
 		}
 	}
 
+	@include respond-to(phone, tablet) {
+		.site-add-controls .icon-plus {
+			padding-right: 5px;
+		}
+	}
+
 	.dockbar-split {
 		.dockbar {
 			height: 0;
