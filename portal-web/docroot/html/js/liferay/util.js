@@ -1100,6 +1100,7 @@
 		Util,
 		'checkAll',
 		function(form, name, allBox, selectClassName) {
+			var inputDisabled = form.all('input[disabled]');
 			var selector;
 
 			if (isArray(name)) {
@@ -1113,7 +1114,10 @@
 
 			form.all(selector).attr(STR_CHECKED, A.one(allBox).get(STR_CHECKED));
 
-			if (selectClassName) {
+			if (inputDisabled) {
+				inputDisabled.attr(STR_CHECKED, false);
+			}
+			else if (selectClassName) {
 				form.all(selectClassName).toggleClass('info', A.one(allBox).get(STR_CHECKED));
 			}
 		},
