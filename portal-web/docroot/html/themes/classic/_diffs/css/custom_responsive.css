@@ -185,6 +185,16 @@
 			}
 		}
 
+		@media (max-width: 767px) {
+			.lfr-has-add-content, .lfr-has-edit-layout {
+				padding-left: 0;
+			}
+
+			.lfr-admin-panel {
+				margin: 0;
+			}
+		}
+
 		.portlet-dockbar {
 			width: 100%;
 		}
