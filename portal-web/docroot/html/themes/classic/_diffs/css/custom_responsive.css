@@ -138,6 +138,12 @@
 									.nav-item-label {
 										vertical-align: middle;
 									}
+
+									.icon-plus {
+										@include respond-to(phone, tablet) {
+											margin-right: 5px;
+										}
+									}
 								}
 							}
 						}
