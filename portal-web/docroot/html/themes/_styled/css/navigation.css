@@ -128,6 +128,10 @@
 	}
 }
 
+.aui .add-page-editor .input-group-btn {
+	width: 0;
+}
+
 /* ---------- General navigation ---------- */
 
 .navigation-pane .app-view-navigation-entry .overlay.entry-action .btn {
