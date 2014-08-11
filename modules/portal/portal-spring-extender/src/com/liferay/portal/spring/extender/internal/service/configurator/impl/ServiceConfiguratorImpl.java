@@ -62,7 +62,7 @@ public class ServiceConfiguratorImpl
 
 		reconfigureCaches();
 
-		processResourceActionsConfigs();
+		readResourceActions();
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class ServiceConfiguratorImpl
 		}
 	}
 
-	protected void processResourceActionsConfigs() {
+	protected void readResourceActions() {
 		Configuration configuration = ConfigurationFactoryUtil.getConfiguration(
 			_classLoader, "portlet");
 
