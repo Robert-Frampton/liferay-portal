@@ -133,16 +133,14 @@
 										font-size: 22px;
 										margin-top: 0;
 										vertical-align: middle;
+
+										@include respond-to(phone, tablet) {
+											width: 1em;
+										}
 									}
 
 									.nav-item-label {
 										vertical-align: middle;
-									}
-
-									.icon-plus {
-										@include respond-to(phone, tablet) {
-											margin-right: 5px;
-										}
 									}
 								}
 							}
