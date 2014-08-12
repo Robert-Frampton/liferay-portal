@@ -584,6 +584,12 @@ $dockbarOpenGradientStart: #0EA6F9;
 					border: solid #D3D3D3;
 					border-width: 0 0 1px;
 				}
+
+				.panel-toggle i {
+					display: inline-block;
+					text-align: center;
+					width: 1em;
+				}
 			}
 		}
 
@@ -1081,6 +1087,8 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 
 		.panel-page-menu {
+			padding-left: 15px;
+			
 			.minimize-panels a {
 				display: block;
 				opacity: 1;
