@@ -146,6 +146,10 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 	}
 
+	.btn:active:focus {
+		outline: 0;
+	}
+
 	.form-group {
 		margin-bottom: 30px;
 
