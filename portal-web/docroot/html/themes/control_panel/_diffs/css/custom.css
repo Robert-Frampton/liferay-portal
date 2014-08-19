@@ -539,6 +539,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 			}
 
 			.panel-group {
+				border-left: 1px solid #D3D3D3;
 				border-right-width: 0;
 				margin-bottom: 0;
 
@@ -694,7 +695,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 			.control-panel-tools {
 				cursor: pointer;
-				padding: 12px 0 13px;
+				padding: 14px;
 
 				&:hover {
 					background-color: #DDD;
