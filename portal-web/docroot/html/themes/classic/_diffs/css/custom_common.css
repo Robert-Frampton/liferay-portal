@@ -101,6 +101,15 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 	li {
 		line-height: 27px;
+
+		.checkbox {
+			line-height: 21px;
+			padding-left: 30px;
+		}
+
+		.badge {
+			margin-left: 5px;
+		}
 	}
 
 	select:focus {
