@@ -186,6 +186,16 @@
 			}
 		}
 
+		.modify-pages .lfr-nav-updateable .add-page-editor {
+			.add-page-editor-input {
+				width: 69%;
+			}
+
+			.btn {
+				margin-bottom: 5px;
+			}
+		}
+
 		.portlet-dockbar {
 			width: 100%;
 		}
