@@ -207,5 +207,22 @@
 		.staging-toggle .variations-options a {
 			padding: 0;
 		}
+
+		.lfr-portlet-title-editable {
+			.btn {
+				display: inline-block;
+			}
+
+			.btn-group {
+				margin-top: -3px;
+			}
+			.combobox-content .field-content {
+				vertical-align: top;
+
+				.field-input-text {
+					margin-top: 2px;
+				}
+			}
+		}
 	}
 }

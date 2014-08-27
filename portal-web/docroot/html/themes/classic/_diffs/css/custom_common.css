@@ -151,6 +151,28 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 	}
 
+	.btn-group {
+		margin-top: -2px;
+
+		> .btn {
+			float: none;
+		}
+	}
+
+	.btn-toolbar {
+		display: inline-block;
+		margin-left: -2px;
+		vertical-align: middle;
+	}
+
+	.combobox-content .field-content {
+		vertical-align: middle;
+
+		.field-input-text {
+			margin-top: -3px;
+		}
+	}
+
 	.form-group {
 		margin-bottom: 30px;
 
@@ -764,7 +786,6 @@ $dockbarOpenGradientStart: #0EA6F9;
 
 				.panel-toggle {
 					color: #999;
-					padding-left: 8px;
 
 					&:after, &:before {
 						float: right;
