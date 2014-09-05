@@ -4612,7 +4612,8 @@ public class JournalArticleLocalServiceImpl
 	}
 
 	@Override
-	public void setTreePaths(final long folderId, final String treePath)
+	public void setTreePaths(
+			final long folderId, final String treePath, final boolean reindex)
 		throws PortalException {
 
 		ActionableDynamicQuery actionableDynamicQuery =
@@ -4651,6 +4652,10 @@ public class JournalArticleLocalServiceImpl
 					article.setTreePath(treePath);
 
 					updateJournalArticle(article);
+
+					if (!reindex) {
+						return;
+					}
 
 					indexer.reindex(article);
 				}
@@ -5499,8 +5504,6 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		int oldStatus = article.getStatus();
-
-		article.setModifiedDate(serviceContext.getModifiedDate(now));
 
 		boolean neverExpire = false;
 

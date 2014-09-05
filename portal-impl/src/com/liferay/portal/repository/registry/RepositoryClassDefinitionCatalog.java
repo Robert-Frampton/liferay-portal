@@ -12,15 +12,25 @@
  * details.
  */
 
-package com.liferay.portal.kernel.json;
+package com.liferay.portal.repository.registry;
+
+import com.liferay.portal.repository.util.ExternalRepositoryFactory;
+
+import java.util.Collection;
 
 /**
- * @author Igor Spasic
+ * @author Adolfo Pérez
  */
-public interface JSONIncludesManager {
+public interface RepositoryClassDefinitionCatalog {
 
-	public String[] lookupExcludes(Class<?> type);
+	public Collection<String> getExternalRepositoryClassNames();
 
-	public String[] lookupIncludes(Class<?> type);
+	public RepositoryClassDefinition getRepositoryClassDefinition(
+		String className);
+
+	public void registerLegacyExternalRepositoryFactory(
+		String className, ExternalRepositoryFactory externalRepositoryFactory);
+
+	public void unregisterLegacyExternalRepositoryFactory(String className);
 
 }

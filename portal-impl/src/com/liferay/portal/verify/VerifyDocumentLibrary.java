@@ -16,7 +16,6 @@ package com.liferay.portal.verify;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -303,10 +302,7 @@ public class VerifyDocumentLibrary extends VerifyProcess {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
 			DLFileEntry.class);
 
-		Criterion criterion1 = RestrictionsFactoryUtil.like("title", "%/%");
-		Criterion criterion2 = RestrictionsFactoryUtil.like("title", "%\\\\%");
-
-		dynamicQuery.add(RestrictionsFactoryUtil.or(criterion1, criterion2));
+		dynamicQuery.add(RestrictionsFactoryUtil.like("title", "%\\\\%"));
 
 		List<DLFileEntry> dlFileEntries =
 			DLFileEntryLocalServiceUtil.dynamicQuery(dynamicQuery);
@@ -321,9 +317,7 @@ public class VerifyDocumentLibrary extends VerifyProcess {
 
 			String title = dlFileEntry.getTitle();
 
-			String newTitle = title.replace(StringPool.SLASH, StringPool.BLANK);
-
-			newTitle = newTitle.replace(
+			String newTitle = title.replace(
 				StringPool.BACK_SLASH, StringPool.UNDERLINE);
 
 			dlFileEntry.setTitle(newTitle);
@@ -422,6 +416,7 @@ public class VerifyDocumentLibrary extends VerifyProcess {
 		checkMimeTypes();
 		checkTitles();
 		deleteOrphanedDLFileEntries();
+		updateClassNameId();
 		updateFileEntryAssets();
 		updateFolderAssets();
 		verifyTree();
@@ -438,6 +433,21 @@ public class VerifyDocumentLibrary extends VerifyProcess {
 		}
 
 		return mimeType;
+	}
+
+	protected void updateClassNameId() {
+		try {
+			runSQL(
+				"update DLFileEntry set classNameId = 0 where classNameId is " +
+					"null");
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to fix file entries where class name ID is null",
+					e);
+			}
+		}
 	}
 
 	protected void updateFileEntryAssets() throws Exception {

@@ -207,6 +207,25 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		return content;
 	}
 
+	protected void checkFinderCacheInterfaceMethod(
+		String fileName, String content) {
+
+		if (!fileName.endsWith("FinderImpl.java") ||
+			!content.contains("public static final FinderPath")) {
+
+			return;
+		}
+
+		Matcher matcher = _fetchByPrimaryKeysMethodPattern.matcher(content);
+
+		if (!matcher.find()) {
+			processErrorMessage(
+				fileName,
+				"LPS-49552: Missing override of BasePersistenceImpl." +
+					"fetchByPrimaryKeys(Set<Serializable>): " + fileName);
+		}
+	}
+
 	protected String checkIfClause(
 			String ifClause, String fileName, int lineCount)
 		throws IOException {
@@ -355,6 +374,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			Type type = javaField.getType();
 
 			String fieldTypeName = type.getFullyQualifiedName();
+
+			if (_immutableFieldTypes == null) {
+				_immutableFieldTypes = getImmutableFieldTypes();
+			}
 
 			if (!javaField.isPrivate() || !javaField.isFinal() ||
 				!_immutableFieldTypes.contains(fieldTypeName)) {
@@ -973,6 +996,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		newContent = checkImmutableAndStaticableFieldTypes(
 			fileName, packagePath, className, newContent);
 
+		// LPS-49552
+
+		checkFinderCacheInterfaceMethod(fileName, newContent);
+
 		newContent = fixIncorrectEmptyLineBeforeCloseCurlyBrace(
 			newContent, fileName);
 
@@ -1176,18 +1203,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			"test.annotations.excludes");
 		_upgradeServiceUtilExclusions = getPropertyList(
 			"upgrade.service.util.excludes");
-
-		_immutableFieldTypes = SetUtil.fromArray(
-			new String[] {
-				"boolean", "byte", "char", "double", "float", "int", "long",
-				"short", "java.lang.Boolean", "java.lang.Byte",
-				"java.lang.Character", "java.lang.Class", "java.lang.Double",
-				"java.lang.Float", "java.lang.Int", "java.lang.Long",
-				"java.lang.Number", "java.lang.Short", "java.lang.String",
-				"java.lang.reflect.Field", "java.lang.reflect.Method"
-			});
-
-		_immutableFieldTypes.addAll(getPropertyList("immutable.field.types"));
 
 		for (String fileName : fileNames) {
 			format(fileName);
@@ -2165,6 +2180,22 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		return null;
 	}
 
+	protected Set<String> getImmutableFieldTypes() {
+		Set<String> immutableFieldTypes = SetUtil.fromArray(
+			new String[] {
+				"boolean", "byte", "char", "double", "float", "int", "long",
+				"short", "java.lang.Boolean", "java.lang.Byte",
+				"java.lang.Character", "java.lang.Class", "java.lang.Double",
+				"java.lang.Float", "java.lang.Int", "java.lang.Long",
+				"java.lang.Number", "java.lang.Short", "java.lang.String",
+				"java.lang.reflect.Field", "java.lang.reflect.Method"
+			});
+
+		immutableFieldTypes.addAll(getPropertyList("immutable.field.types"));
+
+		return immutableFieldTypes;
+	}
+
 	protected List<String> getImportedExceptionClassNames(
 		JavaDocBuilder javaDocBuilder) {
 
@@ -2420,6 +2451,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 	private Pattern _diamondOperatorPattern = Pattern.compile(
 		"(return|=)\n?(\t+| )new ([A-Za-z]+)(Map|Set|List)<(.+)>" +
 			"\\(\n*\t*(.*)\\);\n");
+	private Pattern _fetchByPrimaryKeysMethodPattern = Pattern.compile(
+		"@Override\n\tpublic Map<(.+)> fetchByPrimaryKeys\\(");
 	private List<String> _fitOnSingleLineExclusions;
 	private List<String> _hibernateSQLQueryExclusions;
 	private Set<String> _immutableFieldTypes;

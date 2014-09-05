@@ -170,6 +170,11 @@ public class CMISFileEntry extends CMISModel implements FileEntry {
 	}
 
 	@Override
+	public String getFileName() {
+		return DLUtil.getSanitizedFileName(getTitle(), getExtension());
+	}
+
+	@Override
 	public FileVersion getFileVersion() throws PortalException {
 		return getLatestFileVersion();
 	}

@@ -835,6 +835,11 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 		</if>
 
 		<ant-execute
+			ant.dir="${project.dir}/modules/core/registry-api"
+			ant.target="deploy"
+		/>
+
+		<ant-execute
 			ant.dir="${project.dir}/modules"
 			ant.target="deploy"
 		/>

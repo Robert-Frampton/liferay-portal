@@ -36,7 +36,7 @@ import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 /**
@@ -46,13 +46,10 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class InputPermissionsParamsTag extends TagSupport {
 
-	public static String doTag(String modelName, PageContext pageContext)
+	public static String doTag(String modelName, HttpServletRequest request)
 		throws Exception {
 
 		try {
-			HttpServletRequest request =
-				(HttpServletRequest)pageContext.getRequest();
-
 			RenderResponse renderResponse =
 				(RenderResponse)request.getAttribute(
 					JavaConstants.JAVAX_PORTLET_RESPONSE);
@@ -132,13 +129,11 @@ public class InputPermissionsParamsTag extends TagSupport {
 			sb.append("inputPermissionsViewRole=");
 			sb.append(HttpUtil.encodeURL(inputPermissionsViewRole));
 
-			pageContext.getOut().print(sb.toString());
+			return sb.toString();
 		}
 		catch (Exception e) {
 			throw new JspException(e);
 		}
-
-		return StringPool.BLANK;
 	}
 
 	public static String getDefaultViewRole(
@@ -186,7 +181,9 @@ public class InputPermissionsParamsTag extends TagSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		try {
-			doTag(_modelName, pageContext);
+			JspWriter jspWriter = pageContext.getOut();
+
+			jspWriter.write(_modelName);
 
 			return EVAL_PAGE;
 		}

@@ -1832,6 +1832,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>placeholder</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>resizable</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2610,6 +2615,16 @@
 		<attribute>
 			<name>tempImageFileName</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>menu-item</name>
+		<tag-class>com.liferay.taglib.ui.MenuItemTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>menuItem</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>

@@ -12,24 +12,30 @@
  * details.
  */
 
-package com.liferay.portal.repository.registry;
+package com.liferay.portal.json;
 
-import com.liferay.portal.repository.util.ExternalRepositoryFactory;
+import com.liferay.portal.kernel.json.JSONContext;
 
-import java.util.Collection;
+import jodd.json.JsonContext;
 
 /**
- * @author Adolfo Pérez
+ * @author Igor Spasic
  */
-public interface RepositoryDefinitionCatalog {
+public class JoddJSONContext implements JSONContext {
 
-	public Collection<String> getExternalRepositoryClassNames();
+	public JoddJSONContext(JsonContext jsonContext) {
+		_jsonContext = jsonContext;
+	}
 
-	public RepositoryDefinition getRepositoryDefinition(String className);
+	public JsonContext getImplementation() {
+		return _jsonContext;
+	}
 
-	public void registerLegacyExternalRepositoryFactory(
-		String className, ExternalRepositoryFactory externalRepositoryFactory);
+	@Override
+	public void write(String content) {
+		_jsonContext.write(content);
+	}
 
-	public void unregisterLegacyExternalRepositoryFactory(String className);
+	private final JsonContext _jsonContext;
 
 }

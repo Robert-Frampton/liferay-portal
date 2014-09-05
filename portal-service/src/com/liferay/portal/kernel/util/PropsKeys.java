@@ -813,6 +813,8 @@ public interface PropsKeys {
 
 	public static final String DL_SHOW_LIFERAY_SYNC_MESSAGE = "dl.show.liferay.sync.message";
 
+	public static final String DL_STORE_ADVANCED_FILE_SYSTEM_ROOT_DIR = "dl.store.advanced.file.system.root.dir";
+
 	public static final String DL_STORE_ANTIVIRUS_ENABLED = "dl.store.antivirus.enabled";
 
 	public static final String DL_STORE_ANTIVIRUS_IMPL = "dl.store.antivirus.impl";
@@ -1282,8 +1284,6 @@ public interface PropsKeys {
 	public static final String JOURNAL_TEMPLATE_LANGUAGE_CONTENT = "journal.template.language.content";
 
 	public static final String JOURNAL_TRANSFORMER_LISTENER = "journal.transformer.listener";
-
-	public static final String JSON_DESERIALIZER_STRICT_MODE = "json.deserializer.strict.mode";
 
 	public static final String JSON_SERVICE_AUTH_TOKEN_ENABLED = "json.service.auth.token.enabled";
 

@@ -342,6 +342,11 @@ public class DLFileEntryLocalServiceUtil {
 		return getService().fetchFileEntryByAnyImageId(imageId);
 	}
 
+	public static com.liferay.portlet.documentlibrary.model.DLFileEntry fetchFileEntryByFileName(
+		long groupId, long folderId, java.lang.String fileName) {
+		return getService().fetchFileEntryByFileName(groupId, folderId, fileName);
+	}
+
 	public static com.liferay.portlet.documentlibrary.model.DLFileEntry fetchFileEntryByName(
 		long groupId, long folderId, java.lang.String name) {
 		return getService().fetchFileEntryByName(groupId, folderId, name);
@@ -783,9 +788,10 @@ public class DLFileEntryLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static void setTreePaths(long folderId, java.lang.String treePath)
+	public static void setTreePaths(long folderId, java.lang.String treePath,
+		boolean reindex)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		getService().setTreePaths(folderId, treePath);
+		getService().setTreePaths(folderId, treePath, reindex);
 	}
 
 	public static void unlockFileEntry(long fileEntryId) {

@@ -1,3 +1,4 @@
+<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -11,27 +12,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+--%>
 
-package com.liferay.portal.json;
+<%@ include file="/html/taglib/init.jsp" %>
 
-import com.liferay.portal.kernel.json.JSONTransformer;
-
-import flexjson.transformer.Transformer;
-
-/**
- * @author Brian Wing Shun Chan
- */
-public class FlexjsonTransformer implements Transformer {
-
-	public FlexjsonTransformer(JSONTransformer jsonTransformer) {
-		_jsonTransformer = jsonTransformer;
-	}
-
-	@Override
-	public void transform(Object object) {
-		_jsonTransformer.transform(object);
-	}
-
-	private JSONTransformer _jsonTransformer;
-
-}
+<%@ page import="com.liferay.portal.kernel.servlet.taglib.ui.DeleteMenuItem" %><%@
+page import="com.liferay.portal.kernel.servlet.taglib.ui.JavascriptMenuItem" %><%@
+page import="com.liferay.portal.kernel.servlet.taglib.ui.MenuItem" %><%@
+page import="com.liferay.portal.kernel.servlet.taglib.ui.URLMenuItem" %>

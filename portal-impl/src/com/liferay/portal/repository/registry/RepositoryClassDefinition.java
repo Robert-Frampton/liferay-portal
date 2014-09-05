@@ -12,15 +12,22 @@
  * details.
  */
 
-package com.liferay.portal.json.transformer;
+package com.liferay.portal.repository.registry;
 
-import com.liferay.portal.kernel.json.JSONTransformer;
-
-import flexjson.transformer.AbstractTransformer;
+import com.liferay.portal.kernel.repository.DocumentRepository;
+import com.liferay.portal.kernel.repository.RepositoryFactory;
+import com.liferay.portal.kernel.repository.event.RepositoryEventTrigger;
 
 /**
- * @author Igor Spasic
+ * @author Adolfo Pérez
  */
-public abstract class BaseJSONTransformer
-	extends AbstractTransformer implements JSONTransformer {
+public interface RepositoryClassDefinition {
+
+	public RepositoryInstanceDefinition createRepositoryInstanceDefinition(
+		DocumentRepository documentRepository);
+
+	public RepositoryEventTrigger getRepositoryEventTrigger();
+
+	public RepositoryFactory getRepositoryFactory();
+
 }

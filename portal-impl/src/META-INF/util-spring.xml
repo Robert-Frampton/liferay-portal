@@ -175,11 +175,6 @@
 	<bean id="com.liferay.portal.kernel.json.JSONFactoryUtil" class="com.liferay.portal.kernel.json.JSONFactoryUtil">
 		<property name="JSONFactory" ref="com.liferay.portal.kernel.json.JSONFactory" />
 	</bean>
-	<bean id="com.liferay.portal.kernel.json.JSONIncludesManagerUtil" class="com.liferay.portal.kernel.json.JSONIncludesManagerUtil">
-		<property name="JSONIncludesManager">
-			<bean class="com.liferay.portal.json.JSONIncludesManagerImpl" />
-		</property>
-	</bean>
 	<bean id="com.liferay.portal.kernel.jsonwebservice.JSONWebServiceActionsManager" class="com.liferay.portal.jsonwebservice.JSONWebServiceActionsManagerImpl" />
 	<bean id="com.liferay.portal.kernel.jsonwebservice.JSONWebServiceActionsManagerUtil" class="com.liferay.portal.kernel.jsonwebservice.JSONWebServiceActionsManagerUtil">
 		<property name="JSONWebServiceActionsManager" ref="com.liferay.portal.kernel.jsonwebservice.JSONWebServiceActionsManager" />
@@ -548,7 +543,7 @@
 	<bean id="com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil" class="com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil">
 		<property name="portletFileRepository" ref="com.liferay.portal.portletfilerepository.PortletFileRepository" />
 	</bean>
-	<bean id="com.liferay.portal.repository.registry.RepositoryDefinitionCatalog" class="com.liferay.portal.repository.registry.RepositoryDefinitionCatalogImpl" init-method="loadDefaultRepositoryDefiners">
+	<bean id="com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalog" class="com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalogImpl" init-method="loadDefaultRepositoryDefiners">
 		<property name="legacyExternalRepositoryFactory">
 			<bean class="com.liferay.portal.repository.external.LegacyExternalRepositoryFactory" />
 		</property>
@@ -560,8 +555,8 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="com.liferay.portal.repository.registry.RepositoryDefinitionCatalogUtil" class="com.liferay.portal.repository.registry.RepositoryDefinitionCatalogUtil">
-		<property name="repositoryDefinitionCatalog" ref="com.liferay.portal.repository.registry.RepositoryDefinitionCatalog" />
+	<bean id="com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalogUtil" class="com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalogUtil">
+		<property name="repositoryClassDefinitionCatalog" ref="com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalog" />
 	</bean>
 	<bean id="com.liferay.portal.resiliency.mpi.portlet.PortalResiliencyPortletContainerWrapper" class="com.liferay.portal.resiliency.mpi.portlet.PortalResiliencyPortletContainerWrapper" factory-method="createPortalResiliencyPortletContainerWrapper">
 		<constructor-arg name="portletContainer" ref="com.liferay.portlet.PortletContainerImpl" />

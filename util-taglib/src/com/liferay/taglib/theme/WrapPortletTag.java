@@ -30,7 +30,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
 
 /**
@@ -41,8 +40,7 @@ public class WrapPortletTag
 
 	public static String doTag(
 			String wrapPage, String portletPage, ServletContext servletContext,
-			HttpServletRequest request, HttpServletResponse response,
-			PageContext pageContext)
+			HttpServletRequest request, HttpServletResponse response)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(

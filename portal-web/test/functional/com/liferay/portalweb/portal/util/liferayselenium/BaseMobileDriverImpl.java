@@ -101,7 +101,7 @@ public abstract class BaseMobileDriverImpl
 	public void assertJavaScriptErrors(String ignoreJavaScriptError)
 		throws Exception {
 
-		throw new UnsupportedOperationException();
+		WebDriverHelper.assertJavaScriptErrors(this, ignoreJavaScriptError);
 	}
 
 	@Override
@@ -421,7 +421,7 @@ public abstract class BaseMobileDriverImpl
 
 	@Override
 	public void makeVisible(String locator) {
-		throw new UnsupportedOperationException();
+		WebDriverHelper.makeVisible(this, locator);
 	}
 
 	@Override
@@ -521,11 +521,6 @@ public abstract class BaseMobileDriverImpl
 
 	@Override
 	public void setDefaultTimeout() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setDefaultTimeoutImplicit() {
 		throw new UnsupportedOperationException();
 	}
 

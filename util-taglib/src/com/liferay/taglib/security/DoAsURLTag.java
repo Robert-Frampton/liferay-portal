@@ -32,7 +32,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
 /**
@@ -40,12 +39,8 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class DoAsURLTag extends TagSupport {
 
-	public static void doTag(
-			long doAsUserId, String var, PageContext pageContext)
+	public static String doTag(long doAsUserId, HttpServletRequest request)
 		throws Exception {
-
-		HttpServletRequest request =
-			(HttpServletRequest)pageContext.getRequest();
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -83,22 +78,23 @@ public class DoAsURLTag extends TagSupport {
 		String encDoAsUserId = Encryptor.encrypt(
 			company.getKeyObj(), String.valueOf(doAsUserId));
 
-		doAsURL = HttpUtil.addParameter(doAsURL, "doAsUserId", encDoAsUserId);
-
-		if (Validator.isNotNull(var)) {
-			pageContext.setAttribute(var, doAsURL);
-		}
-		else {
-			JspWriter jspWriter = pageContext.getOut();
-
-			jspWriter.write(doAsURL);
-		}
+		return HttpUtil.addParameter(doAsURL, "doAsUserId", encDoAsUserId);
 	}
 
 	@Override
 	public int doEndTag() throws JspException {
 		try {
-			doTag(_doAsUserId, _var, pageContext);
+			String doAsURL = doTag(
+				_doAsUserId, (HttpServletRequest)pageContext.getRequest());
+
+			if (Validator.isNotNull(_var)) {
+				pageContext.setAttribute(_var, doAsURL);
+			}
+			else {
+				JspWriter jspWriter = pageContext.getOut();
+
+				jspWriter.write(doAsURL);
+			}
 		}
 		catch (Exception e) {
 			throw new JspException(e);
