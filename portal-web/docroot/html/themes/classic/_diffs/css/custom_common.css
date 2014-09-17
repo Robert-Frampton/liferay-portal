@@ -348,10 +348,44 @@
 				}
 			}
 
+			li.dropdown.admin-links {
+				width: 160px;
+
+				.dropdown-toggle {
+					text-align: center;
+					margin: 0;
+				}
+			}
+
+			li.dropdown.my-sites {
+				width: 160px;
+
+				.dropdown-toggle {
+					text-align: center;
+					margin: 0;
+				}
+			}
+ 
 			li.dropdown.user-avatar {
+				width: 160px;
+
+				.dropdown-toggle {
+					text-align: center;
+					margin: 0;
+				}
+
 				.dropdown-menu {
 					right: 0;
 					left: auto;
+				}
+
+				.user-full-name {
+					display: inline-block;
+					max-height: 20px;
+					max-width: 85px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 				}
 			}
 		}
