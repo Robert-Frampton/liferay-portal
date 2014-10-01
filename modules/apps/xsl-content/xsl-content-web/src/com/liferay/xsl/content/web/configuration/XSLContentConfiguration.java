@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,16 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/taglib/init.jsp" %>
+package com.liferay.xsl.content.web.configuration;
 
-<%
-String formName = (String)request.getAttribute("liferay-ui:tabs:formName");
-String[] names = (String[])request.getAttribute("liferay-ui:tabs:names");
-String namesJS = (String)request.getAttribute("liferay-ui:tabs:namesJS");
-String param = (String)request.getAttribute("liferay-ui:tabs:param");
-String[] urls = (String[])request.getAttribute("liferay-ui:tabs:urls");
-String value = (String)request.getAttribute("liferay-ui:tabs:value");
-String[] values = (String[])request.getAttribute("liferay-ui:tabs:values");
-%>
+import aQute.bnd.annotation.metatype.Meta;
+
+/**
+ * @author Raymond Augé
+ */
+@Meta.OCD(id = "com.liferay.xsl.content.web", localization = "content.Language")
+public interface XSLContentConfiguration {
+
+	@Meta.AD(id = "xsl.secure.processing.enabled", deflt = "true")
+	public boolean isXslSecureProcessingEnabled();
+
+}

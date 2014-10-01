@@ -90,19 +90,16 @@
 	</aui:button-row>
 </aui:form>
 
-<aui:script use="aui-base">
-	var showAssetCount = A.one('#<portlet:namespace />showAssetCount');
+<aui:script>
+	var showAssetCount = AUI.$('#<portlet:namespace />showAssetCount');
 
 	function showHiddenFields() {
-		var assetCountOptions = A.one('#<portlet:namespace />assetCountOptions');
+		var assetCountOptions = AUI.$('#<portlet:namespace />assetCountOptions');
 
 		if (showAssetCount && assetCountOptions) {
-			if (showAssetCount.get('checked')) {
-				assetCountOptions.show();
-			}
-			else {
-				assetCountOptions.hide();
-			}
+			var isChecked = showAssetCount.prop('checked');
+
+			assetCountOptions.toggleClass('hide', !isChecked);
 		}
 	}
 
