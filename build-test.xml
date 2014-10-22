@@ -2752,7 +2752,7 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 			</then>
 		</if>
 
-		<ant dir="portal-impl" target="build-selenium-new-block" inheritAll="false" />
+		<ant dir="portal-impl" target="build-selenium-block" inheritAll="false" />
 
 		<antcall target="compile-test" inheritAll="false" />
 
@@ -3625,6 +3625,18 @@ if (ppstate.equals("normal")) {
 			</then>
 		</if>
 
+		<if>
+			<and>
+				<contains string="${hook.plugins.includes}" substring="so-hook" />
+				<equals arg1="${app.server.type}" arg2="jboss" />
+			</and>
+			<then>
+				<start-app-server />
+
+				<stop-app-server />
+			</then>
+		</if>
+
 		<antcall target="prepare-selenium" />
 
 		<if>
@@ -3729,13 +3741,6 @@ if (ppstate.equals("normal")) {
 						}
 					]]>
 				</script>
-			</then>
-		</if>
-
-		<if>
-			<contains string="${hook.plugins.includes}" substring="so-hook" />
-			<then>
-				<echo file="${app.server.portal.dir}/html/portlet/dockbar/license_warning.jsp" />
 			</then>
 		</if>
 
