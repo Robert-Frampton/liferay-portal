@@ -22,6 +22,8 @@ JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_AR
 boolean smallImage = BeanParamUtil.getBoolean(article, request, "smallImage");
 
 String defaultLanguageId = (String)request.getAttribute("edit_article.jsp-defaultLanguageId");
+
+boolean useSmallImageURL = (article != null) && Validator.isNotNull(article.getSmallImageURL());
 %>
 
 <liferay-ui:error-marker key="errorSection" value="abstract" />
@@ -66,15 +68,15 @@ String defaultLanguageId = (String)request.getAttribute("edit_article.jsp-defaul
 
 				<aui:col width="<%= (smallImage && (article != null)) ? 50 : 100 %>">
 					<aui:fieldset>
-						<aui:input cssClass="lfr-journal-small-image-type" inlineField="<%= true %>" label="small-image-url" name="smallImageType" type="radio" />
+						<aui:input cssClass="lfr-journal-small-image-type lfr-journal-small-image-url" inlineField="<%= true %>" label="small-image-url" name="smallImageType" type="radio" checked="<%= useSmallImageURL %>"/>
 
-						<aui:input cssClass="lfr-journal-small-image-value" inlineField="<%= true %>" label="" name="smallImageURL" title="small-image-url" />
+						<aui:input cssClass="lfr-journal-small-image-value" disabled="<%= !useSmallImageURL %>" inlineField="<%= true %>" label="" name="smallImageURL" title="small-image-url" />
 					</aui:fieldset>
 
 					<aui:fieldset>
-						<aui:input cssClass="lfr-journal-small-image-type" inlineField="<%= true %>" label="small-image" name="smallImageType" type="radio" />
+						<aui:input cssClass="lfr-journal-small-image-type lfr-journal-small-image-file" inlineField="<%= true %>" label="small-image" name="smallImageType" type="radio" checked="<%= !useSmallImageURL %>"/>
 
-						<aui:input cssClass="lfr-journal-small-image-value" inlineField="<%= true %>" label="" name="smallFile" type="file" />
+						<aui:input cssClass="lfr-journal-small-image-value" disabled="<%= useSmallImageURL %>" inlineField="<%= true %>" label="" name="smallFile" type="file" />
 					</aui:fieldset>
 				</aui:col>
 			</aui:row>
@@ -82,30 +84,21 @@ String defaultLanguageId = (String)request.getAttribute("edit_article.jsp-defaul
 	</div>
 
 	<aui:script use="aui-toggler">
-		var container = A.one('#<portlet:namespace />smallImageContainer');
+		var container = $('#<portlet:namespace />smallImageContainer');
 
-		var types = container.all('.lfr-journal-small-image-type');
-		var values = container.all('.lfr-journal-small-image-value');
+		var urlType = container.find('.lfr-journal-small-image-url');
 
-		var selectSmallImageType = function(index) {
-			types.attr('checked', false);
+		var urlValue = container.find('#<portlet:namespace />smallImageURL');
+		var fileValue = container.find('#<portlet:namespace />smallFile');
 
-			types.item(index).attr('checked', true);
+		function updateDisabledFields() {
+			var isURL = urlType.prop('checked');
 
-			values.attr('disabled', true);
+			urlValue.prop('disabled', !isURL);
+			fileValue.prop('disabled', isURL);
+		}
 
-			values.item(index).attr('disabled', false);
-		};
-
-		container.delegate(
-			'change',
-			function(event) {
-				var index = types.indexOf(event.currentTarget);
-
-				selectSmallImageType(index);
-			},
-			'.lfr-journal-small-image-type'
-		);
+		container.on('change', '.lfr-journal-small-image-type', updateDisabledFields);
 
 		new A.Toggler(
 			{
@@ -113,31 +106,20 @@ String defaultLanguageId = (String)request.getAttribute("edit_article.jsp-defaul
 				content: '#<portlet:namespace />smallImageContainer .lfr-journal-small-image-content',
 				expanded: <%= smallImage %>,
 				header: '#<portlet:namespace />smallImageContainer .lfr-journal-small-image-header',
-				on: {
-					animatingChange: function(event) {
-						var instance = this;
+				after: {
+					expandedChange: function(event) {
+						var expanded = this.get('expanded');
 
-						var expanded = !instance.get('expanded');
-
-						A.one('#<portlet:namespace />smallImage').attr('checked', expanded);
-
-						if (expanded) {
-							types.each(
-								function(item, index) {
-									if (item.get('checked')) {
-										values.item(index).attr('disabled', false);
-									}
-								}
-							);
+						if (!expanded) {
+							urlValue.prop('disabled', true);
+							fileValue.prop('disabled', true);
 						}
 						else {
-							values.attr('disabled', true);
+							updateDisabledFields();
 						}
 					}
 				}
 			}
 		);
-
-		selectSmallImageType('<%= (article != null) && Validator.isNotNull(article.getSmallImageURL()) ? 0 : 1 %>');
 	</aui:script>
 </aui:fieldset>
