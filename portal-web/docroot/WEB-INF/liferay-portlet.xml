@@ -257,16 +257,6 @@
 		<css-class-wrapper>portlet-translator</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>27</portlet-name>
-		<icon>/html/icons/unit_converter.png</icon>
-		<struts-path>unit_converter</struts-path>
-		<remoteable>true</remoteable>
-		<private-request-attributes>false</private-request-attributes>
-		<private-session-attributes>false</private-session-attributes>
-		<render-weight>50</render-weight>
-		<css-class-wrapper>portlet-unit-converter</css-class-wrapper>
-	</portlet>
-	<portlet>
 		<portlet-name>28</portlet-name>
 		<icon>/html/icons/bookmarks.png</icon>
 		<struts-path>bookmarks</struts-path>
@@ -733,19 +723,6 @@
 		<icon>/html/icons/default.png</icon>
 		<struts-path>portal</struts-path>
 		<system>true</system>
-	</portlet>
-	<portlet>
-		<portlet-name>97</portlet-name>
-		<icon>/html/icons/quick_note.png</icon>
-		<struts-path>quick_note</struts-path>
-		<use-default-template>false</use-default-template>
-		<layout-cacheable>true</layout-cacheable>
-		<instanceable>true</instanceable>
-		<private-request-attributes>false</private-request-attributes>
-		<private-session-attributes>false</private-session-attributes>
-		<render-weight>50</render-weight>
-		<header-portlet-css>/html/portlet/quick_note/css/main.css</header-portlet-css>
-		<css-class-wrapper>portlet-quick-note</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>98</portlet-name>
