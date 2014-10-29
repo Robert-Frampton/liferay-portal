@@ -20,7 +20,7 @@ feature or API will be dropped in an upcoming version.
 replaces an old API, in spite of the old API being kept in Liferay Portal for
 backwards compatibility.
 
-*This document has been reviewed through commit `67853c0`.*
+*This document has been reviewed through commit `a00a5c3`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -574,5 +574,39 @@ should see your convert process in the configuration UI.
 
 This change was made as a part of the ongoing strategy to modularize Liferay
 Portal by means of an OSGi container. 
+
+---------------------------------------
+
+### Migration of the Field *Type* from the Journal Article API into a Vocabulary
+- **Date:** 2014-Oct-13
+- **JIRA Ticket:** LPS-50764
+
+#### What changed?
+
+The field *type* from the Journal Article entity has been removed. The Journal
+API no longer supports this parameter. A new vocabulary called *Web Content
+Types* is created when migrating from previous versions of Liferay, and the
+types from the existing articles are kept as categories of this vocabulary.
+
+#### Who is affected?
+
+This affects any caller of the removed methods `JournalArticle.getType()` and
+`JournalFeed.getType()`, and callers of `ArticleTypeException`'s methods, that
+attempt to use the former `type` parameter of the `JournalArticle` or
+`JournalFeed` service.
+
+#### How should I update my code?
+
+If your logic was not affected by the type, you can simply remove the `type`
+parameter from the Journal API call. If your logic was affected by the type, you
+should now use the `AssetCategoryService` to obtain the category of the journal
+articles.
+
+#### Why was this change made?
+
+Web Content Types had to be updated in a properties file and could not be
+translated easily. Categories provide a much more flexible behavior and a better
+UI. In addition, all the features, such as filters, developed for categories can
+be used now in asset publishers and faceted search.
 
 ---------------------------------------

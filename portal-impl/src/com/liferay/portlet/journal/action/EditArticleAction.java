@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -485,20 +486,21 @@ public class EditArticleAction extends PortletAction {
 
 		Locale defaultLocale = LocaleUtil.fromLanguageId(defaultLanguageId);
 
-		String title = ParamUtil.getString(
-			uploadPortletRequest, "title_" + defaultLanguageId);
-		String description = ParamUtil.getString(
-			uploadPortletRequest, "description_" + defaultLanguageId);
+		Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(
+			actionRequest, "title");
+		Map<Locale, String> descriptionMap =
+			LocalizationUtil.getLocalizationMap(actionRequest, "description");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			JournalArticle.class.getName(), uploadPortletRequest);
 
-		String structureId = ParamUtil.getString(
-			uploadPortletRequest, "structureId");
+		String ddmStructureKey = ParamUtil.getString(
+			uploadPortletRequest, "ddmStructureKey");
 
 		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
 			PortalUtil.getSiteGroupId(groupId),
-			PortalUtil.getClassNameId(JournalArticle.class), structureId, true);
+			PortalUtil.getClassNameId(JournalArticle.class), ddmStructureKey,
+			true);
 
 		String languageId = defaultLanguageId;
 
@@ -520,8 +522,8 @@ public class EditArticleAction extends PortletAction {
 			throw new ArticleContentSizeException();
 		}
 
-		String templateId = ParamUtil.getString(
-			uploadPortletRequest, "templateId");
+		String ddmTemplateKey = ParamUtil.getString(
+			uploadPortletRequest, "ddmTemplateKey");
 		String layoutUuid = ParamUtil.getString(
 			uploadPortletRequest, "layoutUuid");
 
@@ -604,26 +606,20 @@ public class EditArticleAction extends PortletAction {
 		String oldUrlTitle = StringPool.BLANK;
 
 		if (cmd.equals(Constants.ADD)) {
-			Map<Locale, String> titleMap = new HashMap<Locale, String>();
-
-			titleMap.put(defaultLocale, title);
-
-			Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
-
-			descriptionMap.put(defaultLocale, description);
 
 			// Add article
 
 			article = JournalArticleServiceUtil.addArticle(
 				groupId, folderId, classNameId, classPK, articleId,
-				autoArticleId, titleMap, descriptionMap, content, structureId,
-				templateId, layoutUuid, displayDateMonth, displayDateDay,
-				displayDateYear, displayDateHour, displayDateMinute,
-				expirationDateMonth, expirationDateDay, expirationDateYear,
-				expirationDateHour, expirationDateMinute, neverExpire,
-				reviewDateMonth, reviewDateDay, reviewDateYear, reviewDateHour,
-				reviewDateMinute, neverReview, indexable, smallImage,
-				smallImageURL, smallFile, images, articleURL, serviceContext);
+				autoArticleId, titleMap, descriptionMap, content,
+				ddmStructureKey, ddmTemplateKey, layoutUuid, displayDateMonth,
+				displayDateDay, displayDateYear, displayDateHour,
+				displayDateMinute, expirationDateMonth, expirationDateDay,
+				expirationDateYear, expirationDateHour, expirationDateMinute,
+				neverExpire, reviewDateMonth, reviewDateDay, reviewDateYear,
+				reviewDateHour, reviewDateMinute, neverReview, indexable,
+				smallImage, smallImageURL, smallFile, images, articleURL,
+				serviceContext);
 
 			AssetPublisherUtil.addAndStoreSelection(
 				actionRequest, JournalArticle.class.getName(),
@@ -636,18 +632,12 @@ public class EditArticleAction extends PortletAction {
 			article = JournalArticleServiceUtil.getArticle(
 				groupId, articleId, version);
 
-			Map<Locale, String> titleMap = article.getTitleMap();
-			Map<Locale, String> descriptionMap = article.getDescriptionMap();
-
 			String tempOldUrlTitle = article.getUrlTitle();
 
 			if (cmd.equals(Constants.PREVIEW) || cmd.equals(Constants.UPDATE)) {
-				titleMap.put(defaultLocale, title);
-				descriptionMap.put(defaultLocale, description);
-
 				article = JournalArticleServiceUtil.updateArticle(
 					groupId, folderId, articleId, version, titleMap,
-					descriptionMap, content, structureId, templateId,
+					descriptionMap, content, ddmStructureKey, ddmTemplateKey,
 					layoutUuid, displayDateMonth, displayDateDay,
 					displayDateYear, displayDateHour, displayDateMinute,
 					expirationDateMonth, expirationDateDay, expirationDateYear,

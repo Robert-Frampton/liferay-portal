@@ -78,7 +78,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
-import com.liferay.portlet.journalcontent.util.JournalContentUtil;
+import com.liferay.portlet.journal.util.JournalContentUtil;
 import com.liferay.portlet.sites.util.Sites;
 import com.liferay.portlet.sites.util.SitesUtil;
 
@@ -268,13 +268,13 @@ public class LayoutImporter {
 
 		if (serviceContext == null) {
 			serviceContext = new ServiceContext();
-
-			serviceContext.setCompanyId(companyId);
-			serviceContext.setSignedIn(false);
-			serviceContext.setUserId(userId);
-
-			ServiceContextThreadLocal.pushServiceContext(serviceContext);
 		}
+
+		serviceContext.setCompanyId(companyId);
+		serviceContext.setSignedIn(false);
+		serviceContext.setUserId(userId);
+
+		ServiceContextThreadLocal.pushServiceContext(serviceContext);
 
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
