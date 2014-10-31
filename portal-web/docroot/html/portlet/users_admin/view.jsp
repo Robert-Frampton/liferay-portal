@@ -182,11 +182,12 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 		submitForm(document.<portlet:namespace />fm, '<portlet:actionURL><portlet:param name="struts_action" value="/users_admin/edit_organization" /></portlet:actionURL>');
 	}
 
-	function <portlet:namespace />search() {
+	function <portlet:namespace />exportUsers() {
 		document.<portlet:namespace />fm.method = 'post';
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '';
 
-		submitForm(document.<portlet:namespace />fm, '<%= portletURLString %>');
+		submitForm(document.<portlet:namespace />fm, '<portlet:actionURL><portlet:param name="struts_action" value="/users_admin/export_users" /></portlet:actionURL>&compress=0&etag=0&strip=0', false);
+
+		document.<portlet:namespace />fm.setAttribute('action', '<%= portletURLString %>');
 	}
 
 	function <portlet:namespace />showUsers(status) {
