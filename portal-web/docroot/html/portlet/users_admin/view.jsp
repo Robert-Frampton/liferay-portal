@@ -261,4 +261,6 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 		},
 		['aui-io']
 	);
+
+	document.querySelector('#<portlet:namespace />navBar button[type="submit"]').addEventListener("click", <portlet:namespace />search);
 </aui:script>
