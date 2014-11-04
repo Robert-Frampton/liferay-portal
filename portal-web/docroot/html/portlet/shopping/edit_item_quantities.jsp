@@ -84,8 +84,10 @@ for (int i = values.size() - 1; i >= 0; i--) {
 
 			</liferay-ui:search-container-row>
 
-			<aui:script>
-				var fieldsQuantities = opener.document.<portlet:namespace />fm.<portlet:namespace />fieldsQuantities.value;
+			<aui:script sandbox="<%= true %>">
+				var form = $(document.<portlet:namespace />fm);
+				var openerForm = $(opener.document.<portlet:namespace />fm);
+				var fieldsQuantities = openerForm.fm('fieldsQuantities').val();
 				var itemQuantities = [];
 
 				if (fieldsQuantities) {
@@ -100,7 +102,7 @@ for (int i = values.size() - 1; i >= 0; i--) {
 				for (int i = searchContainer.getStart(); i < searchContainer.getResultEnd(); i++) {
 				%>
 
-					document.<portlet:namespace />fm.<portlet:namespace />fieldsQuantity<%= i %>.value = itemQuantities[<%= i %>];
+					form.fm('fieldsQuantity<%= i %>').val(itemQuantities[<%= i %>]);
 
 				<%
 				}
@@ -112,13 +114,13 @@ for (int i = values.size() - 1; i >= 0; i--) {
 					for (int i = searchContainer.getStart(); i < searchContainer.getResultEnd(); i++) {
 					%>
 
-						itemQuantities.splice(<%= i %>, 1, document.<portlet:namespace />fm.<portlet:namespace />fieldsQuantity<%= i %>.value);
+						itemQuantities.splice(<%= i %>, 1, form.fm('fieldsQuantity<%= i %>').val());
 
 					<%
 					}
 					%>
 
-					opener.document.<portlet:namespace />fm.<portlet:namespace />fieldsQuantities.value = itemQuantities.join(',');
+					openerForm.fm('fieldsQuantities').val(itemQuantities.join(','));
 				}
 
 				function <portlet:namespace />updateItemQuantities() {
@@ -127,7 +129,9 @@ for (int i = values.size() - 1; i >= 0; i--) {
 					self.close();
 				}
 
-				AUI.$('.taglib-page-iterator li a').on('click', <portlet:namespace />setItemQuantities);
+				$('.taglib-page-iterator li a').on('click', <portlet:namespace />setItemQuantities);
+
+				$('#<portlet:namespace />updateItemQuantities').on('click', <portlet:namespace />updateItemQuantities);
 			</aui:script>
 
 			<liferay-ui:search-iterator />
@@ -135,7 +139,7 @@ for (int i = values.size() - 1; i >= 0; i--) {
 	</aui:fieldset>
 
 	<aui:button-row>
-		<aui:button onClick='<%= renderResponse.getNamespace() + "updateItemQuantities();" %>' value="update" />
+		<aui:button name="updateItemQuantities" value="update" />
 
 		<aui:button onClick="self.close();" type="cancel" />
 	</aui:button-row>

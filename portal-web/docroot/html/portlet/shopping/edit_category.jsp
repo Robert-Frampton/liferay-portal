@@ -114,17 +114,20 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 
 <aui:script>
 	function <portlet:namespace />saveCategory() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '<%= (category == null) ? Constants.ADD : Constants.UPDATE %>';
+		var form = AUI.$(document.<portlet:namespace />fm);
 
-		submitForm(document.<portlet:namespace />fm);
+		form.fm('<%= Constants.CMD %>').val('<%= (category == null) ? Constants.ADD : Constants.UPDATE %>');
+
+		submitForm(form);
 	}
 
 	function <portlet:namespace />removeCategory() {
 		var $ = AUI.$;
+		var form = $(document.<portlet:namespace />fm);
 
-		document.<portlet:namespace />fm.<portlet:namespace />parentCategoryId.value = '<%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>';
+		form.fm('parentCategoryId').val('<%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>');
 
-		document.getElementById('<portlet:namespace />parentCategoryName').value = '';
+		form.fm('parentCategoryName').val('');
 
 		$('#<portlet:namespace />merge-with-parent-checkbox-div').addClass('hide');
 
@@ -132,12 +135,15 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 	}
 
 	function <portlet:namespace />selectCategory(parentCategoryId, parentCategoryName) {
-		document.<portlet:namespace />fm.<portlet:namespace />parentCategoryId.value = parentCategoryId;
+		var $ = AUI.$;
+		var form = $(document.<portlet:namespace />fm);
 
-		document.getElementById('<portlet:namespace />parentCategoryName').value = parentCategoryName;
+		form.fm('parentCategoryId').val(parentCategoryId);
+
+		form.fm('parentCategoryName').val(parentCategoryName);
 
 		if (parentCategoryId != <%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>) {
-			AUI.$('#<portlet:namespace />merge-with-parent-checkbox-div').removeClass('hide');
+			$('#<portlet:namespace />merge-with-parent-checkbox-div').removeClass('hide');
 		}
 	}
 </aui:script>
