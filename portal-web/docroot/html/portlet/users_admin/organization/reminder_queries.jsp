@@ -96,6 +96,8 @@ Map<Locale, String> reminderQueriesMap = LocalizationUtil.getLocalizedParameter(
 </aui:fieldset>
 
 <aui:script sandbox="<%= true %>">
+	var form = $(document.<portlet:namespace />fm);
+	var languageOptions = form.fm('reminderQueryLanguageId').children();
 	var lastLanguageId = '<%= currentLanguageId %>';
 	var reminderQueriesChanged = false;
 
@@ -122,9 +124,11 @@ Map<Locale, String> reminderQueriesMap = LocalizationUtil.getLocalizedParameter(
 
 		var selLanguageId = '';
 
-		for (var i = 0; i < document.<portlet:namespace />fm.<portlet:namespace />reminderQueryLanguageId.length; i++) {
-			if (document.<portlet:namespace />fm.<portlet:namespace />reminderQueryLanguageId.options[i].selected) {
-				selLanguageId = document.<portlet:namespace />fm.<portlet:namespace />reminderQueryLanguageId.options[i].value;
+		for (var i = 0; i < languageOptions.length; i++) {
+			var option = languageOptions.eq(i);
+
+			if (option.prop('selected')) {
+				selLanguageId = option.val();
 
 				break;
 			}
