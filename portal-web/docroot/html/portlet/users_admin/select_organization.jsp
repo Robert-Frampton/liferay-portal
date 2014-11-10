@@ -146,7 +146,7 @@ if (Validator.isNotNull(target)) {
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:script use="aui-base">
+<aui:script sandbox="<%= true %>">
 	var Util = Liferay.Util;
 
 	var openingLiferay = Util.getOpener().Liferay;
@@ -154,7 +154,7 @@ if (Validator.isNotNull(target)) {
 	openingLiferay.fire(
 		'<portlet:namespace />enableRemovedOrganizations',
 		{
-			selectors: A.all('.selector-button:disabled')
+			selectors: $('.selector-button:disabled')
 		}
 	);
 
