@@ -122,15 +122,12 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 		<portlet:namespace />doDeleteOrganization('<%= Organization.class.getName() %>', organizationId);
 	}
 
-	function <portlet:namespace />doDeleteOrganization(className, id) {
-		var ids = id;
-
+	function <portlet:namespace />doDeleteOrganization(className, ids) {
 		var status = <%= WorkflowConstants.STATUS_INACTIVE %>;
 
 		<portlet:namespace />getUsersCount(
 			className, ids, status,
-			function(event, id, obj) {
-				var responseData = this.get('responseData');
+			function(responseData) {
 				var count = parseInt(responseData);
 
 				if (count > 0) {
@@ -138,8 +135,7 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 
 					<portlet:namespace />getUsersCount(
 						className, ids, status,
-						function(event, id, obj) {
-							responseData = this.get('responseData');
+						function(responseData) {
 							count = parseInt(responseData);
 
 							if (count > 0) {
@@ -150,10 +146,12 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 							else {
 								var message = null;
 
-								if (id && (id.toString().split(',').length > 1)) {
+								if (ids && (ids.toString().split(',').length > 1)) {
+
 									message = '<%= UnicodeLanguageUtil.get(request, "one-or-more-organizations-are-associated-with-deactivated-users.-do-you-want-to-proceed-with-deleting-the-selected-organizations-by-automatically-unassociating-the-deactivated-users") %>';
 								}
 								else {
+
 									message = '<%= UnicodeLanguageUtil.get(request, "the-selected-organization-is-associated-with-deactivated-users.-do-you-want-to-proceed-with-deleting-the-selected-organization-by-automatically-unassociating-the-deactivated-users") %>';
 								}
 
@@ -180,6 +178,20 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 		document.<portlet:namespace />fm.<portlet:namespace />deleteOrganizationIds.value = organizationIds;
 
 		submitForm(document.<portlet:namespace />fm, '<portlet:actionURL><portlet:param name="struts_action" value="/users_admin/edit_organization" /></portlet:actionURL>');
+	}
+
+	function <portlet:namespace />getUsersCount(className, ids, status, callback) {
+		AUI.$.ajax(
+			'<%= themeDisplay.getPathMain() %>/users_admin/get_users_count',
+			{
+				data: {
+					className: className,
+					ids: ids,
+					status: status
+				},
+				success: callback
+			}
+		);
 	}
 
 	function <portlet:namespace />search() {
@@ -237,28 +249,5 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 			}
 		},
 		['liferay-util-list-fields']
-	);
-
-	Liferay.provide(
-		window,
-		'<portlet:namespace />getUsersCount',
-		function(className, ids, status, callback) {
-			var A = AUI();
-
-			A.io.request(
-				'<%= themeDisplay.getPathMain() %>/users_admin/get_users_count',
-				{
-					data: {
-						className: className,
-						ids: ids,
-						status: status
-					},
-					on: {
-						success: callback
-					}
-				}
-			);
-		},
-		['aui-io']
 	);
 </aui:script>
