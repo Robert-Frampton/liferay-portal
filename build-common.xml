@@ -488,7 +488,17 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<attribute name="ant.target" />
 
 		<sequential>
-			<ant antfile="@{ant.build.file}" dir="@{ant.dir}" target="@{ant.target}" inheritAll="false" />
+			<if>
+				<os family="unix" />
+				<then>
+					<ant antfile="@{ant.build.file}" dir="@{ant.dir}" target="@{ant.target}" inheritAll="false" />
+				</then>
+				<else>
+					<exec dir="@{ant.dir}" executable="${ant.home}/bin/ant.bat" failonerror="true">
+						<arg line="-f @{ant.build.file} @{ant.target}" />
+					</exec>
+				</else>
+			</if>
 		</sequential>
 	</macrodef>
 
@@ -636,6 +646,41 @@ Please set the environment variable ANT_OPTS to the recommended value of
 							</if>
 						</sequential>
 					</for>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="compile-test-cmd">
+		<attribute name="test.type" />
+
+		<sequential>
+			<if>
+				<available file="test/@{test.type}" type="dir" />
+				<then>
+					<setup-test-classpath
+						test.type="@{test.type}"
+					/>
+
+					<mkdir dir="test-classes/@{test.type}" />
+					<mkdir dir="test-results/@{test.type}" />
+
+					<copy todir="test-classes/@{test.type}" preservelastmodified="true">
+						<fileset dir="test" includes="*.properties,META-INF/*.dtd,META-INF/*.xml" />
+						<fileset dir="test/@{test.type}" includes="**/*.policy,**/*.properties,**/dependencies/**,META-INF/*.xml" />
+					</copy>
+
+					<javac
+						classpathref="test.classpath"
+						compiler="${javac.compiler}"
+						debug="${javac.debug}"
+						deprecation="${javac.deprecation}"
+						destdir="test-classes/@{test.type}"
+						encoding="${javac.encoding}"
+						includeAntRuntime="false"
+						nowarn="${javac.nowarn}"
+						srcdir="test/@{test.type}"
+					/>
 				</then>
 			</if>
 		</sequential>
@@ -1080,84 +1125,24 @@ rerun your task.
 				<available file="test/unit" type="dir" />
 			</or>
 			<then>
-				<antcall target="compile-test-integration" inheritall="false" />
-				<antcall target="compile-test-unit" inheritall="false" />
+				<compile-test-cmd
+					test.type="integration"
+				/>
+
+				<compile-test-cmd
+					test.type="unit"
+				/>
 			</then>
 			<else>
-				<antcall target="compile-test-functional" inheritall="false" />
+				<compile-test-cmd
+					test.type="functional"
+				/>
+
+				<compile-test-cmd
+					test.type="functional-generated"
+				/>
 			</else>
 		</if>
-	</target>
-
-	<target name="compile-test-cmd">
-		<if>
-			<available file="test/${test.type}" type="dir" />
-			<then>
-				<setup-test-classpath
-					test.type="${test.type}"
-				/>
-
-				<mkdir dir="test-classes/${test.type}" />
-				<mkdir dir="test-results/${test.type}" />
-
-				<copy todir="test-classes/${test.type}" preservelastmodified="true">
-					<fileset dir="test" includes="*.properties,META-INF/*.dtd,META-INF/*.xml" />
-					<fileset dir="test/${test.type}" includes="**/*.policy,**/*.properties,**/dependencies/**,META-INF/*.xml" />
-				</copy>
-
-				<javac
-					classpathref="test.classpath"
-					compiler="${javac.compiler}"
-					debug="${javac.debug}"
-					deprecation="${javac.deprecation}"
-					destdir="test-classes/${test.type}"
-					encoding="${javac.encoding}"
-					includeAntRuntime="false"
-					nowarn="${javac.nowarn}"
-					srcdir="test/${test.type}"
-				/>
-			</then>
-		</if>
-	</target>
-
-	<target name="compile-test-functional">
-		<ant target="compile-test-cmd">
-			<property name="test.type" value="functional" />
-		</ant>
-
-		<ant target="compile-test-cmd">
-			<property name="test.type" value="functional-generated" />
-		</ant>
-	</target>
-
-	<target name="compile-test-integration">
-		<ant target="compile-test-cmd">
-			<property name="test.type" value="integration" />
-		</ant>
-
-		<unzip
-			dest="${project.dir}/portal-impl/test-classes/integration"
-			src="${project.dir}/portal-impl/portal-impl.jar"
-		>
-			<patternset>
-				<include name="META-INF/MANIFEST.MF" />
-			</patternset>
-		</unzip>
-
-		<unzip
-			dest="${project.dir}/portal-service/test-classes/integration"
-			src="${project.dir}/portal-service/portal-service.jar"
-		>
-			<patternset>
-				<include name="META-INF/MANIFEST.MF" />
-			</patternset>
-		</unzip>
-	</target>
-
-	<target name="compile-test-unit">
-		<ant target="compile-test-cmd">
-			<property name="test.type" value="unit" />
-		</ant>
 	</target>
 
 	<target name="format-javadoc">
@@ -1541,7 +1526,11 @@ rerun your task.
 		</if>
 	</target>
 
-	<target name="test-integration" depends="compile,compile-test-integration">
+	<target name="test-integration" depends="compile">
+		<compile-test-cmd
+			test.type="integration"
+		/>
+
 		<var name="test.class" value="*Test" />
 
 		<ant target="test-cmd">
@@ -1776,7 +1765,11 @@ rerun your task.
 		</for>
 	</target>
 
-	<target name="test-unit" depends="compile,compile-test-unit">
+	<target name="test-unit" depends="compile">
+		<compile-test-cmd
+			test.type="unit"
+		/>
+
 		<property name="test.class" value="*Test" />
 
 		<ant target="test-cmd">
