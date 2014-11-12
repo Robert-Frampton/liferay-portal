@@ -140,7 +140,7 @@ else {
 		<%@ include file="/html/portlet/users_admin/user/password_reminder_query_questions.jspf" %>
 
 		<c:if test="<%= PropsValues.USERS_REMINDER_QUERIES_CUSTOM_QUESTION_ENABLED %>">
-			<div id="<portlet:namespace />customQuestionDiv">
+			<div class="<%= hasCustomQuestion ? "" : "hide" %>" id="<portlet:namespace />customQuestionDiv">
 				<aui:input fieldParam="reminderQueryCustomQuestion" label="custom-question" name="reminderQueryQuestion" />
 			</div>
 		</c:if>
@@ -151,25 +151,21 @@ else {
 	<aui:script sandbox="<%= true %>">
 		var customQuestionDiv = $('#<portlet:namespace />customQuestionDiv');
 
-		if (<%= !hasCustomQuestion %> && customQuestionDiv.length) {
-			customQuestionDiv.addClass('hide');
-		}
+		var reminderQueryQuestion = $('#<portlet:namespace />reminderQueryQuestion');
 
-		$('#<portlet:namespace />reminderQueryQuestion').on(
+		reminderQueryQuestion.on(
 			'change',
 			function(event) {
-				if ($(event.target).val() == '<%= UsersAdmin.CUSTOM_QUESTION %>') {
+				if (reminderQueryQuestion.val() == '<%= UsersAdmin.CUSTOM_QUESTION %>') {
 					var reminderQueryCustomQuestion = $('#<portlet:namespace />reminderQueryCustomQuestion');
 
-					if (customQuestionDiv.length) {
-						customQuestionDiv.removeClass('hide');
-					}
+					customQuestionDiv.removeClass('hide');
 
 					<%
 					for (String question : PropsValues.USERS_REMINDER_QUERIES_QUESTIONS) {
 					%>
 
-						if (reminderQueryCustomQuestion && (reminderQueryCustomQuestion.val() == '<%= UnicodeFormatter.toString(question) %>')) {
+						if (reminderQueryCustomQuestion.val() == '<%= UnicodeFormatter.toString(question) %>') {
 							reminderQueryCustomQuestion.val('');
 						}
 
@@ -180,9 +176,7 @@ else {
 					Liferay.Util.focusFormField('#<portlet:namespace />reminderQueryCustomQuestion');
 				}
 				else {
-					if (customQuestionDiv.length) {
-						customQuestionDiv.addClass('hide');
-					}
+					customQuestionDiv.addClass('hide');
 
 					Liferay.Util.focusFormField('#<portlet:namespace />reminderQueryAnswer');
 				}
