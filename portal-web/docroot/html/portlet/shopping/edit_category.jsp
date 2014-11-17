@@ -114,53 +114,36 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 
 <aui:script>
 	function <portlet:namespace />saveCategory() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '<%= (category == null) ? Constants.ADD : Constants.UPDATE %>';
+		var form = AUI.$(document.<portlet:namespace />fm);
 
-		submitForm(document.<portlet:namespace />fm);
+		form.fm('<%= Constants.CMD %>').val('<%= (category == null) ? Constants.ADD : Constants.UPDATE %>');
+
+		submitForm(form);
 	}
 
-	Liferay.provide(
-		window,
-		'<portlet:namespace />removeCategory',
-		function() {
-			var A = AUI();
+	function <portlet:namespace />removeCategory() {
+		var $ = AUI.$;
+		var form = $(document.<portlet:namespace />fm);
 
-			document.<portlet:namespace />fm.<portlet:namespace />parentCategoryId.value = '<%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>';
+		form.fm('parentCategoryId').val('<%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>');
 
-			document.getElementById('<portlet:namespace />parentCategoryName').value = '';
+		form.fm('parentCategoryName').val('');
 
-			var mergeWithParent = A.one('#<portlet:namespace />merge-with-parent-checkbox-div');
-			var mergeWithParentCategory = A.one('#<portlet:namespace />mergeWithParentCategory');
+		$('#<portlet:namespace />merge-with-parent-checkbox-div').addClass('hide');
 
-			if (mergeWithParent) {
-				mergeWithParent.hide();
-			}
+		$('#<portlet:namespace />mergeWithParentCategory').prop('checked', false);
+	}
 
-			if (mergeWithParentCategory) {
-				mergeWithParentCategory.attr('checked', false);
-			}
-		},
-		['aui-base']
-	);
+	function <portlet:namespace />selectCategory(parentCategoryId, parentCategoryName) {
+		var $ = AUI.$;
+		var form = $(document.<portlet:namespace />fm);
 
-	Liferay.provide(
-		window,
-		'<portlet:namespace />selectCategory',
-		function(parentCategoryId, parentCategoryName) {
-			var A = AUI();
+		form.fm('parentCategoryId').val(parentCategoryId);
 
-			document.<portlet:namespace />fm.<portlet:namespace />parentCategoryId.value = parentCategoryId;
+		form.fm('parentCategoryName').val(parentCategoryName);
 
-			document.getElementById('<portlet:namespace />parentCategoryName').value = parentCategoryName;
-
-			if (parentCategoryId != <%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>) {
-				var mergeWithParent = A.one('#<portlet:namespace />merge-with-parent-checkbox-div');
-
-				if (mergeWithParent) {
-					mergeWithParent.show();
-				}
-			}
-		},
-		['aui-base']
-	);
+		if (parentCategoryId != <%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>) {
+			$('#<portlet:namespace />merge-with-parent-checkbox-div').removeClass('hide');
+		}
+	}
 </aui:script>

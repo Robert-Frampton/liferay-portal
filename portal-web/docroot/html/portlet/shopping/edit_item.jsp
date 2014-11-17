@@ -80,7 +80,7 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 	<portlet:param name="struts_action" value="/shopping/edit_item" />
 </portlet:actionURL>
 
-<aui:form action="<%= editItemURL %>" enctype="multipart/form-data" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveItem();" %>'>
+<aui:form action="<%= editItemURL %>" enctype="multipart/form-data" method="post" name="fm">
 	<input name="scroll" type="hidden" value="" />
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
@@ -137,7 +137,7 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 
 				<aui:button onClick="<%= taglibOpenCategoryWindow %>" value="select" />
 
-				<aui:button onClick='<%= renderResponse.getNamespace() + "removeCategory();" %>' value="remove" />
+				<aui:button name="removeCategory" value="remove" />
 			</div>
 		</c:if>
 
@@ -153,7 +153,7 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 
 		<aui:input bean="<%= item %>" model="<%= ShoppingItem.class %>" name="featured" />
 
-		<aui:input checked="<%= infiniteStock %>" helpMessage="disable-stock-checking-help" label="disable-stock-checking" name="infiniteStock" onChange='<%= renderResponse.getNamespace() + "toggleInfiniteStock(this);" %>' type="checkbox" />
+		<aui:input checked="<%= infiniteStock %>" helpMessage="disable-stock-checking-help" label="disable-stock-checking" name="infiniteStock" type="checkbox" />
 
 		<c:if test="<%= (fieldsCount == 0) && !infiniteStock %>">
 			<aui:input bean="<%= item %>" model="<%= ShoppingItem.class %>" name="stockQuantity" />
@@ -239,7 +239,7 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 
 					<c:if test="<%= fieldsCount > 0 %>">
 						<td>
-							<aui:button onClick='<%= renderResponse.getNamespace() + "deleteField(" + i + ");" %>' value="delete" />
+							<aui:button cssClass="lfr-edit-item-delete-field" data-index="<%= i %>" name="deleteField" value="delete" />
 						</td>
 					</c:if>
 				</tr>
@@ -254,10 +254,10 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 				<br />
 			</c:if>
 
-			<aui:button onClick='<%= renderResponse.getNamespace() + "addField();" %>' value="add-field" />
+			<aui:button name="addField" value="add-field" />
 
 			<c:if test="<%= (fieldsCount > 0) && !infiniteStock %>">
-				<aui:button onClick='<%= renderResponse.getNamespace() + "editItemQuantities();" %>' value="edit-stock-quantity" />
+				<aui:button name="editItemQuantities" value="edit-stock-quantity" />
 			</c:if>
 
 			<br /><br />
@@ -407,12 +407,12 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 									<aui:input label="active" name='<%= "active" + i %>' type="checkbox" value="<%= active %>" />
 								</td>
 								<td>
-									<aui:input checked="<%= defaultPrice %>" label="default" name="defaultPrice" onClick='<%= "document." + renderResponse.getNamespace() + "fm." + renderResponse.getNamespace() + "active" + i + ".checked = true;" %>' type="radio" value="<% i %>" />
+									<aui:input cssClass="lfr-edit-item-default-price" checked="<%= defaultPrice %>" id='<%= "defaultPrice" + i %>' label="default" name="defaultPrice" type="radio" value="<%= i %>" />
 								</td>
 
 								<c:if test="<%= pricesCount > 1 %>">
 									<td>
-										<aui:button onClick='<%= renderResponse.getNamespace() + "deletePrice(" + i + ");" %>' value="delete" />
+										<aui:button cssClass="lfr-edit-item-delete-price" data-index="<%= i %>" value="delete" />
 									</td>
 								</c:if>
 							</tr>
@@ -431,7 +431,7 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 				</table>
 			</aui:fieldset>
 
-			<aui:button onClick='<%= renderResponse.getNamespace() + "addPrice();" %>' value="add-price" />
+			<aui:button name="addPrice" value="add-price" />
 		</liferay-ui:panel>
 
 		<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>"  id="shoppingEditItemImagesPanel" persistState="<%= true %>" title="images">
@@ -518,82 +518,127 @@ int priceId = ParamUtil.getInteger(request, "priceId", -1);
 	</liferay-ui:panel-container>
 </aui:form>
 
+<aui:script sandbox="<%= true %>">
+	var form = $(document.<portlet:namespace />fm);
+
+	form.on(
+		'submit',
+		function() {
+			form.fm('<%= Constants.CMD %>').val('<%= (item == null) ? Constants.ADD : Constants.UPDATE %>');
+
+			submitForm(form);
+		}
+	);
+
+	$('#<portlet:namespace />addField').on(
+		'click',
+		function() {
+			form.fm('scroll').val('<portlet:namespace />fields');
+			form.fm('fieldsCount').val(<%= fieldsCount + 1 %>);
+
+			submitForm(form);
+		}
+	);
+
+	$('#<portlet:namespace />addPrice').on(
+		'click',
+		function() {
+			form.fm('scroll').val('<portlet:namespace />prices');
+			form.fm('pricesCount').val(<%= pricesCount + 1 %>);
+
+			submitForm(form);
+		}
+	);
+
+	$('#p_p_id<portlet:namespace />').on(
+		'click',
+		'.lfr-edit-item-delete-field',
+		function() {
+			var index = $(event.target).data('index');
+
+			form.fm('scroll').val('<portlet:namespace />fields');
+			form.fm('fieldsCount').val(<%= fieldsCount - 1 %>);
+			form.fm('fieldId').val(index);
+
+			submitForm(form);
+		}
+	);
+
+	$('#p_p_id<portlet:namespace />').on(
+		'click',
+		'.lfr-edit-item-delete-price',
+		function() {
+			var index = $(event.target).data('index');
+
+			if ($('#<portlet:namespace />defaultPrice' + index).prop('checked')) {
+				alert('<%= UnicodeLanguageUtil.get(request, "you-cannot-delete-or-deactivate-a-default-price") %>');
+			}
+			else if (form.fm('pricesCount').val() > 1) {
+				form.fm('scroll').val('<portlet:namespace />prices');
+				form.fm('pricesCount').val(<%= pricesCount - 1 %>);
+				form.fm('priceId').val(index);
+
+				submitForm(form);
+			}
+		}
+	);
+
+	$('#<portlet:namespace />editItemQuantities').on(
+		'click',
+		function() {
+			var itemQuantitiesURL = '<liferay-portlet:renderURL anchor="false" windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/shopping/edit_item_quantities" /></liferay-portlet:renderURL>';
+
+			<%
+			for (int i = 0; i < fieldsCount; i++) {
+			%>
+				itemQuantitiesURL += '&<portlet:namespace />n<%= i %>=' + encodeURIComponent(form.fm('fieldName<%= i %>').val());
+				itemQuantitiesURL += '&<portlet:namespace />v<%= i %>=' + encodeURIComponent(form.fm('fieldValues<%= i %>').val());
+
+			<%
+			}
+			%>
+
+			var itemQuantitiesWindow = window.open(itemQuantitiesURL, 'itemQuantities', 'directories=no,height=400,location=no,menubar=no,resizable=no,scrollbars=yes,status=no,toolbar=no,width=300');
+
+			void('');
+
+			itemQuantitiesWindow.focus();
+		}
+	);
+
+	$('#<portlet:namespace />removeCategory').on(
+		'click',
+		function() {
+			form.fm('categoryId').val('<%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>');
+
+			form.fm('categoryName').val('');
+		}
+	);
+
+	$('#<portlet:namespace />infiniteStock').on(
+		'change',
+		function() {
+			submitForm(form);
+		}
+	);
+
+	$('#p_p_id<portlet:namespace />').on(
+		'change',
+		'.lfr-edit-item-default-price',
+		function(event) {
+			var index = $(event.target).val();
+
+			form.fm('active' + index).prop('checked', true);
+		}
+	);
+</aui:script>
+
 <aui:script>
-	function <portlet:namespace />addField() {
-		document.<portlet:namespace />fm.scroll.value = '<portlet:namespace />fields';
-		document.<portlet:namespace />fm.<portlet:namespace />fieldsCount.value = <%= fieldsCount + 1 %>;
-
-		submitForm(document.<portlet:namespace />fm);
-	}
-
-	function <portlet:namespace />addPrice() {
-		document.<portlet:namespace />fm.scroll.value = '<portlet:namespace />prices';
-		document.<portlet:namespace />fm.<portlet:namespace />pricesCount.value = <%= pricesCount + 1 %>;
-
-		submitForm(document.<portlet:namespace />fm);
-	}
-
-	function <portlet:namespace />deleteField(i) {
-		document.<portlet:namespace />fm.scroll.value = '<portlet:namespace />fields';
-		document.<portlet:namespace />fm.<portlet:namespace />fieldsCount.value = <%= fieldsCount - 1 %>;
-		document.<portlet:namespace />fm.<portlet:namespace />fieldId.value = i;
-
-		submitForm(document.<portlet:namespace />fm);
-	}
-
-	function <portlet:namespace />deletePrice(i) {
-		if (document.<portlet:namespace />fm.<portlet:namespace />defaultPrice[i].checked) {
-			alert('<%= UnicodeLanguageUtil.get(request, "you-cannot-delete-or-deactivate-a-default-price") %>');
-		}
-		else if (document.<portlet:namespace />fm.<portlet:namespace />pricesCount.value > 1) {
-			document.<portlet:namespace />fm.scroll.value = '<portlet:namespace />prices';
-			document.<portlet:namespace />fm.<portlet:namespace />pricesCount.value = <%= pricesCount - 1 %>;
-			document.<portlet:namespace />fm.<portlet:namespace />priceId.value = i;
-
-			submitForm(document.<portlet:namespace />fm);
-		}
-	}
-
-	function <portlet:namespace />editItemQuantities() {
-		var itemQuantitiesURL = '<liferay-portlet:renderURL anchor="false" windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/shopping/edit_item_quantities" /></liferay-portlet:renderURL>';
-
-		<%
-		for (int i = 0; i < fieldsCount; i++) {
-		%>
-
-			itemQuantitiesURL += '&<portlet:namespace />n<%= i %>=' + encodeURIComponent(document.<portlet:namespace />fm.<portlet:namespace />fieldName<%= i %>.value);
-			itemQuantitiesURL += '&<portlet:namespace />v<%= i %>=' + encodeURIComponent(document.<portlet:namespace />fm.<portlet:namespace />fieldValues<%= i %>.value);
-
-		<%
-		}
-		%>
-
-		var itemQuantitiesWindow = window.open(itemQuantitiesURL, 'itemQuantities', 'directories=no,height=400,location=no,menubar=no,resizable=no,scrollbars=yes,status=no,toolbar=no,width=300');
-
-		void('');
-
-		itemQuantitiesWindow.focus();
-	}
-
-	function <portlet:namespace />removeCategory() {
-		document.<portlet:namespace />fm.<portlet:namespace />categoryId.value = '<%= ShoppingCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>';
-
-		document.getElementById('<portlet:namespace />categoryName').value = '';
-	}
-
-	function <portlet:namespace />saveItem() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '<%= (item == null) ? Constants.ADD : Constants.UPDATE %>';
-
-		submitForm(document.<portlet:namespace />fm);
-	}
-
 	function <portlet:namespace />selectCategory(categoryId, categoryName) {
-		document.<portlet:namespace />fm.<portlet:namespace />categoryId.value = categoryId;
+		var form = AUI.$(document.<portlet:namespace />fm);
 
-		document.getElementById('<portlet:namespace />categoryName').value = categoryName;
-	}
+		form.fm('categoryId').val(categoryId);
 
-	function <portlet:namespace />toggleInfiniteStock(checkbox) {
-		submitForm(document.<portlet:namespace />fm);
+		form.fm('categoryName').val(categoryName);
 	}
 </aui:script>
