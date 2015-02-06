@@ -226,61 +226,46 @@ String modelName = (String)request.getAttribute("liferay-ui:input-permissions:mo
 		</div>
 
 		<aui:script>
-			Liferay.provide(
-				window,
-				'<%= uniqueNamespace %>inputPermissionsShowOptions',
-				function() {
-					var A = AUI();
+			function <%= uniqueNamespace %>inputPermissionsShowOptions() {
+				var $ = AUI.$;
 
-					A.one('#<%= uniqueNamespace %>inputPermissionsHideOptionsLink').show();
-					A.one('#<%= uniqueNamespace %>inputPermissionsTable').show();
+				$('#<%= uniqueNamespace %>inputPermissionsHideOptionsLink').removeClass('hide');
+				$('#<%= uniqueNamespace %>inputPermissionsTable').removeClass('hide');
 
-					A.one('#<%= uniqueNamespace %>inputPermissionsShowOptionsLink').hide();
-					A.one('#<%= uniqueNamespace %>inputPermissionsShowOptions').val("true");
-				},
-				['aui-base']
-			);
+				$('#<%= uniqueNamespace %>inputPermissionsShowOptionsLink').addClass('hide');
+				$('#<%= uniqueNamespace %>inputPermissionsShowOptions').val("true");
+			}
 
-			Liferay.provide(
-				window,
-				'<%= uniqueNamespace %>inputPermissionsHideOptions',
-				function() {
-					var A = AUI();
+			function <%= uniqueNamespace %>inputPermissionsHideOptions() {
+				var $ = AUI.$;
 
-					A.one('#<%= uniqueNamespace %>inputPermissionsShowOptionsLink').show();
-					A.one('#<%= uniqueNamespace %>inputPermissionsTable').hide();
+				$('#<%= uniqueNamespace %>inputPermissionsShowOptionsLink').removeClass('hide');
+				$('#<%= uniqueNamespace %>inputPermissionsTable').addClass('hide');
 
-					A.one('#<%= uniqueNamespace %>inputPermissionsHideOptionsLink').hide();
-					A.one('#<%= uniqueNamespace %>inputPermissionsShowOptions').val("false");
-				},
-				['aui-base']
-			);
+				$('#<%= uniqueNamespace %>inputPermissionsHideOptionsLink').addClass('hide');
+				$('#<%= uniqueNamespace %>inputPermissionsShowOptions').val("false");
+			}
 
-			Liferay.provide(
-				window,
-				'<%= uniqueNamespace %>updatePermissionsView',
-				function() {
-					var A = AUI();
+			function <%= uniqueNamespace %>updatePermissionsView() {
+				var $ = AUI.$;
 
-					var viewableBySelect = A.one('#<%= uniqueNamespace %>inputPermissionsViewRole');
-					var guestViewCheckbox = A.one('#<%= uniqueNamespace %>guestPermissions_VIEW');
-					var groupViewCheckbox = A.one('#<%= uniqueNamespace %>groupPermissions_VIEW');
+				var viewableBy = $('#<%= uniqueNamespace %>inputPermissionsViewRole').val();
+				var guestViewCheckbox = $('#<%= uniqueNamespace %>guestPermissions_VIEW');
+				var groupViewCheckbox = $('#<%= uniqueNamespace %>groupPermissions_VIEW');
 
-					if (viewableBySelect.val() == '<%= RoleConstants.GUEST %>') {
-						guestViewCheckbox.attr('checked', true);
-						groupViewCheckbox.attr('checked', false);
-					}
-					else if (viewableBySelect.val() == '<%= defaultGroupRole.getName() %>') {
-						guestViewCheckbox.attr('checked', false);
-						groupViewCheckbox.attr('checked', true);
-					}
-					else {
-						guestViewCheckbox.attr('checked', false);
-						groupViewCheckbox.attr('checked', false);
-					}
-				},
-				['aui-base']
-			);
+				if (viewableBy == '<%= RoleConstants.GUEST %>') {
+					guestViewCheckbox.prop('checked', true);
+					groupViewCheckbox.prop('checked', false);
+				}
+				else if (viewableBy == '<%= defaultGroupRole.getName() %>') {
+					guestViewCheckbox.prop('checked', false);
+					groupViewCheckbox.prop('checked', true);
+				}
+				else {
+					guestViewCheckbox.prop('checked', false);
+					groupViewCheckbox.prop('checked', false);
+				}
+			}
 		</aui:script>
 	</c:when>
 	<c:otherwise>
@@ -299,26 +284,34 @@ String modelName = (String)request.getAttribute("liferay-ui:input-permissions:mo
 
 		<aui:script>
 			function <%= namespace %>checkGroupAndGuestPermissions() {
-				if (document.<%= formName %>.<%= namespace %>addGroupPermissionsBox.checked ||
-					document.<%= formName %>.<%= namespace %>addGuestPermissionsBox.checked) {
+				var form = AUI.$(document.<%= formName %>);
 
-					document.<%= formName %>.<%= namespace %>addUserPermissionsBox.checked = false;
+				var groupPermissionsChecked = form.fm('addGroupPermissionsBox').prop('checked');
+				var guestPermissionsChecked = form.fm('addGuestPermissionsBox').prop('checked');
+
+				var addUserPermissionsCheckbox = form.fm('addUserPermissionsBox');
+
+				if (groupPermissionsChecked || guestPermissionsChecked) {
+					addUserPermissionsCheckbox.prop('checked', false);
 				}
-				else if (!document.<%= formName %>.<%= namespace %>addGroupPermissionsBox.checked &&
-						!document.<%= formName %>.<%= namespace %>addGuestPermissionsBox.checked) {
-
-					document.<%= formName %>.<%= namespace %>addUserPermissionsBox.checked = true;
+				else if (!groupPermissionsChecked && !guestPermissionsChecked) {
+					addUserPermissionsCheckbox.prop('checked', true);
 				}
 			}
 
 			function <%= namespace %>checkUserPermissions() {
-				if (document.<%= formName %>.<%= namespace %>addUserPermissionsBox.checked) {
-					document.<%= formName %>.<%= namespace %>addGroupPermissionsBox.checked = false;
-					document.<%= formName %>.<%= namespace %>addGuestPermissionsBox.checked = false;
+				var form = AUI.$(document.<%= formName %>);
+
+				var groupPermissionsCheckbox = form.fm('addGroupPermissionsBox');
+				var guestPermissionsCheckbox = form.fm('addGuestPermissionsBox');
+
+				if (form.fm('addUserPermissionsBox').prop('checked')) {
+					groupPermissionsCheckbox.prop('checked', false);
+					guestPermissionsCheckbox.prop('checked', false);
 				}
 				else {
-					document.<%= formName %>.<%= namespace %>addGroupPermissionsBox.checked = true;
-					document.<%= formName %>.<%= namespace %>addGuestPermissionsBox.checked = true;
+					groupPermissionsCheckbox.prop('checked', true);
+					guestPermissionsCheckbox.prop('checked', true);
 				}
 			}
 		</aui:script>
