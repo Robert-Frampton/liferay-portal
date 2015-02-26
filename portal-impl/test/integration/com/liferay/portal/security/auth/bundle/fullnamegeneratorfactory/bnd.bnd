@@ -1,4 +1,5 @@
-Bundle-Description: Test Bundle for FullNameGeneratorFactory
+Bundle-Description: Test Bundle for FullNameGeneratorFactoryTest
 Bundle-Version: 1.0
 Private-Package: $(bundle.package).*
+
 -dsannotations: *

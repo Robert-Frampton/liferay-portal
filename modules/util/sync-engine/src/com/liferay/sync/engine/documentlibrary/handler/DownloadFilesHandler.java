@@ -102,12 +102,13 @@ public class DownloadFilesHandler extends BaseHandler {
 
 						Handler<Void> handler = handlers.get(field.getKey());
 
-						JsonNode fieldValue = field.getValue();
+						JsonNode valueJsonNode = field.getValue();
 
-						String exception = handler.getException(
-							fieldValue.textValue());
+						JsonNode exceptionJsonNode = valueJsonNode.get(
+							"exception");
 
-						handler.handlePortalException(exception);
+						handler.handlePortalException(
+							exceptionJsonNode.textValue());
 					}
 
 					break;

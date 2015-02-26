@@ -1,4 +1,5 @@
-Bundle-Description: Test Bundle for ScreeNameGeneratorFactory
+Bundle-Description: Test Bundle for ScreeNameValidatorFactoryTest
 Bundle-Version: 1.0
 Private-Package: $(bundle.package).*
+
 -dsannotations: *

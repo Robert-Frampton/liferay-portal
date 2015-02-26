@@ -1,4 +1,5 @@
-Bundle-Description: Test Bundle for EmailAddressGeneratorFactory
+Bundle-Description: Test Bundle for EmailAddressGeneratorFactoryTest
 Bundle-Version: 1.0
 Private-Package: $(bundle.package).*
+
 -dsannotations: *

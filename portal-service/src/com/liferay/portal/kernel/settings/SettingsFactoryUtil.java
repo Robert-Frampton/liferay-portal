@@ -15,7 +15,6 @@
 package com.liferay.portal.kernel.settings;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.resource.manager.ResourceManager;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.model.Layout;
 
@@ -73,6 +72,12 @@ public class SettingsFactoryUtil {
 		return getSettingsFactory().getServerSettings(settingsId);
 	}
 
+	public static SettingsDescriptor<?> getSettingsDescriptor(
+		String settingsId) {
+
+		return getSettingsFactory().getSettingsDescriptor(settingsId);
+	}
+
 	public static SettingsFactory getSettingsFactory() {
 		PortalRuntimePermission.checkGetBeanProperty(SettingsFactoryUtil.class);
 
@@ -80,11 +85,11 @@ public class SettingsFactoryUtil {
 	}
 
 	public static void registerSettingsMetadata(
-		String settingsId, FallbackKeys fallbackKeys, String[] multiValuedKeys,
-		ResourceManager resourceManager) {
+		Class<?> settingsClass, Object serviceConfigurationBean,
+		FallbackKeys fallbackKeys) {
 
 		getSettingsFactory().registerSettingsMetadata(
-			settingsId, fallbackKeys, multiValuedKeys, null, resourceManager);
+			settingsClass, null, fallbackKeys);
 	}
 
 	public void setSettingsFactory(SettingsFactory settingsFactory) {
