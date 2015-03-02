@@ -17,8 +17,8 @@
 <%@ include file="/html/portlet/init.jsp" %>
 
 <%@ page import="com.liferay.portal.service.SubscriptionLocalServiceUtil" %><%@
+page import="com.liferay.portlet.blogs.BlogsGroupServiceSettings" %><%@
 page import="com.liferay.portlet.blogs.BlogsPortletInstanceSettings" %><%@
-page import="com.liferay.portlet.blogs.BlogsSettings" %><%@
 page import="com.liferay.portlet.blogs.EntryContentException" %><%@
 page import="com.liferay.portlet.blogs.EntryDescriptionException" %><%@
 page import="com.liferay.portlet.blogs.EntrySmallImageNameException" %><%@
@@ -43,8 +43,8 @@ if (portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
 	portletName = portletResource;
 }
 
+BlogsGroupServiceSettings blogsGroupServiceSettings = BlogsGroupServiceSettings.getInstance(scopeGroupId);
 BlogsPortletInstanceSettings blogsPortletInstanceSettings = BlogsPortletInstanceSettings.getInstance(layout, portletId);
-BlogsSettings blogsSettings = BlogsSettings.getInstance(scopeGroupId);
 
 int pageAbstractLength = PropsValues.BLOGS_PAGE_ABSTRACT_LENGTH;
 

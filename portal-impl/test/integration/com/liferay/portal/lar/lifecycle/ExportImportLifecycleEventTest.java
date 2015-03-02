@@ -94,7 +94,7 @@ public class ExportImportLifecycleEventTest extends PowerMockito {
 		}
 		catch (Throwable t) {
 			if (_log.isInfoEnabled()) {
-				_log.info(t);
+				_log.info(t, t);
 			}
 		}
 
@@ -114,7 +114,7 @@ public class ExportImportLifecycleEventTest extends PowerMockito {
 		}
 		catch (Throwable t) {
 			if (_log.isInfoEnabled()) {
-				_log.info(t);
+				_log.info(t, t);
 			}
 		}
 
@@ -133,7 +133,7 @@ public class ExportImportLifecycleEventTest extends PowerMockito {
 		}
 		catch (Throwable t) {
 			if (_log.isInfoEnabled()) {
-				_log.info(t);
+				_log.info(t, t);
 			}
 		}
 
@@ -155,7 +155,7 @@ public class ExportImportLifecycleEventTest extends PowerMockito {
 		}
 		catch (Throwable t) {
 			if (_log.isInfoEnabled()) {
-				_log.info(t);
+				_log.info(t, t);
 			}
 		}
 
@@ -175,7 +175,7 @@ public class ExportImportLifecycleEventTest extends PowerMockito {
 		}
 		catch (Throwable t) {
 			if (_log.isInfoEnabled()) {
-				_log.info(t);
+				_log.info(t, t);
 			}
 		}
 
@@ -198,6 +198,7 @@ public class ExportImportLifecycleEventTest extends PowerMockito {
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 
 		themeDisplay.setLocale(LocaleUtil.getDefault());
+		themeDisplay.setUser(TestPropsValues.getUser());
 
 		when(
 			portletRequest.getAttribute(WebKeys.THEME_DISPLAY)
@@ -218,7 +219,7 @@ public class ExportImportLifecycleEventTest extends PowerMockito {
 		}
 		catch (Throwable t) {
 			if (_log.isInfoEnabled()) {
-				_log.info(t);
+				_log.info(t, t);
 			}
 		}
 

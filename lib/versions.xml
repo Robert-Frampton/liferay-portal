@@ -2512,7 +2512,7 @@
 					</license>
 				</licenses>
 				<comments>
-					See the Ant target "build-ruby-gems-jar" in portal-impl/build.xml.
+					See modules/util/ruby-gem.
 				</comments>
 			</library>
 			<library>
