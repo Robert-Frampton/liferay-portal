@@ -38,11 +38,11 @@ List<ExportImportConfiguration> recentExportImportConfigurations = ExportImportC
 			url="<%= publishRenderURL.toString() %>"
 		/>
 
-		<aui:script use="aui-base">
-			var publishGlobalLink = A.one('#<portlet:namespace /><%= groupId + "publishGlobalLink" %>');
+		<aui:script sandbox="<%= true %>">
+			var publishGlobalLink = $('#<portlet:namespace /><%= groupId + "publishGlobalLink" %>');
 
-			if (publishGlobalLink) {
-				publishGlobalLink.detach('click');
+			if (publishGlobalLink.length) {
+				publishGlobalLink.off('click');
 
 				publishGlobalLink.on(
 					'click',
@@ -52,7 +52,7 @@ List<ExportImportConfiguration> recentExportImportConfigurations = ExportImportC
 						Liferay.LayoutExporter.publishToLive(
 							{
 								title: '<%= UnicodeFormatter.toString(publishMessage) %>',
-								url: event.currentTarget.attr('href')
+								url: $(event.currentTarget).attr('href')
 							}
 						);
 					}
@@ -169,11 +169,11 @@ List<ExportImportConfiguration> recentExportImportConfigurations = ExportImportC
 				</c:otherwise>
 			</c:choose>
 
-			<aui:script use="aui-base">
-				var publishLink = A.one('#<portlet:namespace /><%= layoutSetBranchId + "publishLink" %>');
+			<aui:script sandbox="<%= true %>">
+				var publishLink = $('#<portlet:namespace /><%= layoutSetBranchId + "publishLink" %>');
 
-				if (publishLink) {
-					publishLink.detach('click');
+				if (publishLink.length) {
+					publishLink.off('click');
 
 					publishLink.on(
 						'click',
@@ -183,7 +183,7 @@ List<ExportImportConfiguration> recentExportImportConfigurations = ExportImportC
 							Liferay.LayoutExporter.publishToLive(
 								{
 									title: '<%= UnicodeFormatter.toString(publishMessage) %>',
-									url: event.currentTarget.attr('href')
+									url: $(event.currentTarget).attr('href')
 								}
 							);
 						}
@@ -217,11 +217,11 @@ List<ExportImportConfiguration> recentExportImportConfigurations = ExportImportC
 				</c:otherwise>
 			</c:choose>
 
-			<aui:script use="aui-base">
-				var layoutSetBranchesLink = A.one('#<portlet:namespace />manageLayoutSetBranches');
+			<aui:script sandbox="<%= true %>">
+				var layoutSetBranchesLink = $('#<portlet:namespace />manageLayoutSetBranches');
 
-				if (layoutSetBranchesLink) {
-					layoutSetBranchesLink.detach('click');
+				if (layoutSetBranchesLink.length) {
+					layoutSetBranchesLink.off('click');
 
 					layoutSetBranchesLink.on(
 						'click',
@@ -235,7 +235,7 @@ List<ExportImportConfiguration> recentExportImportConfigurations = ExportImportC
 									},
 									id: '<portlet:namespace />layoutSetBranches',
 									title: '<%= UnicodeLanguageUtil.get(request, "manage-site-pages-variations") %>',
-									uri: event.currentTarget.attr('href')
+									uri: $(event.currentTarget).attr('href')
 								}
 							);
 						}
