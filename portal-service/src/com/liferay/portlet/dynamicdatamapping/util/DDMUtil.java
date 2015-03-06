@@ -46,8 +46,8 @@ public class DDMUtil {
 		return getDDM().getDDMDisplay(classNameId);
 	}
 
-	public static DDMPermissionHandler getDDMPermissionHandler(long classNameId)
-		throws PortalException {
+	public static DDMPermissionHandler getDDMPermissionHandler(
+		long classNameId) {
 
 		return getDDM().getDDMPermissionHandler(classNameId);
 	}

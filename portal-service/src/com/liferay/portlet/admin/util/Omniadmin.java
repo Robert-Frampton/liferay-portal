@@ -12,26 +12,17 @@
  * details.
  */
 
-package com.liferay.sync.engine.documentlibrary.handler;
+package com.liferay.portlet.admin.util;
 
-import com.liferay.sync.engine.documentlibrary.event.Event;
-import com.liferay.sync.engine.model.SyncFile;
-import com.liferay.sync.engine.service.SyncFileService;
+import com.liferay.portal.model.User;
 
 /**
- * @author Shinn Lok
+ * @author Michael C. Han
  */
-public class MoveToTrashHandler extends BaseJSONHandler {
+public interface Omniadmin {
 
-	public MoveToTrashHandler(Event event) {
-		super(event);
-	}
+	public boolean isOmniadmin(long userId);
 
-	@Override
-	public void processResponse(String response) throws Exception {
-		SyncFile syncFile = getLocalSyncFile();
-
-		SyncFileService.deleteSyncFile(syncFile, true);
-	}
+	public boolean isOmniadmin(User user);
 
 }
