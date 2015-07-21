@@ -46,7 +46,7 @@ function prepublish() {
 	var exec = require('child_process').exec;
 
 	var antBuildThemes = exec(
-		'ant build-themes',
+		'ant compile',
 		{
 			cwd: path.join(__dirname, '../../../')
 		},
