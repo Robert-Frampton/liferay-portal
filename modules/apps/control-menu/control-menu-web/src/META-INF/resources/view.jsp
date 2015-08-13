@@ -44,7 +44,7 @@ if (user.isSetupComplete() || themeDisplay.isImpersonated()) {
 				<li class="left pull-left">
 					<ul>
 						<li>
-							<a class="control-menu-icon sidenav-toggler" href="javascript:;" id="sidenavToggleId"><span class="icon-align-justify icon-monospaced"></span></a>
+							<a class="control-menu-icon sidenav-toggler" data-content="#wrapper" data-toggle="sidenav" data-type="fixed-push" data-type-mobile="fixed" href="#sidenavSliderId" id="sidenavToggleId"><span class="icon-align-justify icon-monospaced"></span></a>
 						</li>
 					</ul>
 				</li>

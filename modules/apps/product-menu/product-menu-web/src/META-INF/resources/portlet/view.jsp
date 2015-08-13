@@ -139,26 +139,18 @@ if (Validator.isNotNull(themeDisplay.getPpid())) {
 </div>
 
 <aui:script use="liferay-store">
-	var sidenavContainer = $('#sidenavContainerId');
+	$('#sidenavToggleId').sideNavigation();
 
-	sidenavContainer.sideNavigation(
-		{
-			gutter: '0',
-			toggler: '#sidenavToggleId',
-			type: 'fixed-push',
-			typeMobile: 'fixed',
-			width: '320px'
-		}
-	);
+	var sidenavSlider = $('#sidenavSliderId');
 
-	sidenavContainer.on(
+	sidenavSlider.on(
 		'closed.lexicon.sidenav',
 		function(event) {
 			Liferay.Store('liferay_product_menu_state', 'closed');
 		}
 	);
 
-	sidenavContainer.on(
+	sidenavSlider.on(
 		'open.lexicon.sidenav',
 		function(event) {
 			Liferay.Store('liferay_product_menu_state', 'open');

@@ -1,26 +1,14 @@
-.lfr-product-menu-panel {
-	.sidenav-menu-slider {
-		bottom: 0;
-		left: 0;
-		position: fixed;
-		top: 0;
-		width: 0;
-
-		@include respond-to(desktop, tablet) {
-			width: 320px;
-		}
+@include respond-to(tablet, desktop) {
+	#wrapper.open {
+		padding-left: 320px;
 	}
+}
 
-	&.open {
-		@include respond-to(desktop, tablet) {
-			.sidenav-content {
-				padding-left: 320px;
-			}
-		}
+.sidenav-fixed.sidenav-menu-slider {
+	z-index: 501;
 
-		&.closed .sidenav-content {
-			padding-left: 0;
-		}
+	&, .sidenav-menu {
+		width: 320px;
 	}
 }
 
