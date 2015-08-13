@@ -1,17 +1,3 @@
-@include respond-to(tablet, desktop) {
-	#wrapper.open {
-		padding-left: 320px;
-	}
-}
-
-.sidenav-fixed.sidenav-menu-slider {
-	z-index: 501;
-
-	&, .sidenav-menu {
-		width: 320px;
-	}
-}
-
 .lfr-admin-panel {
 	background-color: #FFF;
 	bottom: 0;
