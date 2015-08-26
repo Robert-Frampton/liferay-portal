@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project>
+	<property name="themes.dir" value="src/META-INF/resources" />
+	<property name="unstyled.theme.dir" value="../frontend-themes-unstyled/${themes.dir}/_unstyled" />
+	<property name="styled.theme.dir" value="../frontend-themes-styled/${themes.dir}/_styled" />
+
+	<property name="auto.deploy.dir" value="${liferay.home}/osgi/portal" />
+
+	<macrodef name="build-themes">
+		<attribute name="resources.dir" />
+
+		<sequential>
+			<if>
+				<available file="@{resources.dir}/_diffs/images" />
+				<then>
+					<for param="file">
+						<path>
+							<fileset
+								dir="${resources.dir}/_diffs/images"
+								includes="**/screenshot.png"
+							/>
+						</path>
+						<sequential>
+							<propertyregex input="@{file}" override="yes" property="thumbnail.file" regexp="screenshot\.png" replace="thumbnail\.png" />
+
+							<if>
+								<not>
+									<uptodate targetfile="${thumbnail.file}" srcfile="@{file}" />
+								</not>
+								<then>
+									<java
+										classname="com.liferay.portal.tools.ThumbnailBuilder"
+										classpathref="portal.classpath"
+									>
+										<arg value="thumbnail.original.file=@{file}" />
+										<arg value="thumbnail.thumbnail.file=${thumbnail.file}" />
+										<arg value="thumbnail.height=120" />
+										<arg value="thumbnail.width=160" />
+										<arg value="thumbnail.overwrite=false" />
+									</java>
+								</then>
+							</if>
+						</sequential>
+					</for>
+				</then>
+			</if>
+
+			<copy todir="@{resources.dir}" overwrite="true" preservelastmodified="true">
+				<fileset
+					dir="${unstyled.theme.dir}"
+					excludes="npm-debug.log,package.json"
+				/>
+			</copy>
+
+			<copy todir="@{resources.dir}" overwrite="true" preservelastmodified="true">
+				<fileset
+					dir="${styled.theme.dir}"
+					excludes="npm-debug.log,package.json"
+				/>
+			</copy>
+
+			<if>
+				<available file="@{resources.dir}/_diffs" />
+				<then>
+					<copy todir="@{resources.dir}" overwrite="true" preservelastmodified="true">
+						<fileset
+							dir="@{resources.dir}/_diffs"
+						/>
+					</copy>
+				</then>
+			</if>
+
+ 			<copy
+				file="${unstyled.theme.dir}/images/favicon.ico"
+				preservelastmodified="true"
+				todir="@{resources.dir}"
+			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="clean-css">
+		<attribute name="resources.dir" />
+
+		<sequential>
+			<delete includeemptydirs="true">
+				<fileset dir="@{resources.dir}" includes="**/.sass-cache/**,**/.sass_cache_*.css,**/_sass_cache_*.css" />
+			</delete>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="clean-themes">
+		<attribute name="resources.dir" />
+
+		<sequential>
+			<delete includeemptydirs="true" quiet="true" failonerror="false">
+				<fileset
+					dir="@{resources.dir}"
+					excludes="**/_diffs/**"
+				/>
+			</delete>
+		</sequential>
+	</macrodef>
+</project>
