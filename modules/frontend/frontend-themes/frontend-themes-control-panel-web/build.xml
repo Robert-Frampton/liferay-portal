@@ -9,6 +9,12 @@
 
 	<property name="auto.deploy.dir" value="${liferay.home}/osgi/modules" />
 
+	<macrodef name="copy-classic-variables-file">
+		<sequential>
+			<copy file="../frontend-themes-classic-web/src/META-INF/resources/classic/css/_liferay_variables_custom.scss" tofile="${resources.dir}/css/classic/_liferay_variables_custom.scss" />
+		</sequential>
+	</macrodef>
+
 	<target name="clean">
 		<clean-css
 			resources.dir="${resources.dir}"
@@ -26,6 +32,8 @@
 	</target>
 
 	<target name="compile">
+		<copy-classic-variables-file />
+
 		<build-themes
 			resources.dir="${resources.dir}"
 		/>
