@@ -35,6 +35,4 @@ public class PortalWebResourceConstants {
 	public static final String RESOURCE_TYPE_JS_LOADER_MODULES =
 		"js_loader_modules";
 
-	public static final String RESOURCE_TYPE_THEMES = "themes";
-
 }
