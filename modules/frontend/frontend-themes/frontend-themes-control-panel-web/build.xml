@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project>
+	<property name="resources.dir" value="src/META-INF/resources/control_panel" />
+
+	<import file="../build-themes-common.xml" />
+	<import file="../../../../tools/sdk/build-common-osgi-plugin.xml" />
+
+	<property name="auto.deploy.dir" value="${liferay.home}/osgi/modules" />
+
+	<macrodef name="copy-classic-variables-file">
+		<sequential>
+			<copy file="../frontend-themes-classic-web/src/META-INF/resources/classic/css/_liferay_variables_custom.scss" tofile="${resources.dir}/css/classic/_liferay_variables_custom.scss" />
+		</sequential>
+	</macrodef>
+
+	<target name="clean">
+		<clean-css
+			resources.dir="${resources.dir}"
+		/>
+
+		<clean-themes
+			resources.dir="${resources.dir}"
+		/>
+
+		<delete dir="${resources.dir}/color_schemes" />
+
+		<clean
+			module.dir="${basedir}"
+		/>
+	</target>
+
+	<target name="compile">
+		<copy-classic-variables-file />
+
+		<build-themes
+			resources.dir="${resources.dir}"
+		/>
+
+		<compile
+			module.dir="${basedir}"
+		/>
+	</target>
+</project>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project>
+	<property name="resources.dir" value="src/META-INF/resources/admin" />
+
+	<import file="../build-themes-common.xml" />
+	<import file="../../../../tools/sdk/build-common-osgi-plugin.xml" />
+
+	<property name="auto.deploy.dir" value="${liferay.home}/osgi/modules" />
+
+	<target name="clean">
+		<clean-css
+			resources.dir="${resources.dir}"
+		/>
+
+		<clean-themes
+			resources.dir="${resources.dir}"
+		/>
+
+		<delete dir="${resources.dir}/color_schemes" />
+
+		<clean
+			module.dir="${basedir}"
+		/>
+	</target>
+
+	<target name="compile">
+		<build-themes
+			resources.dir="${resources.dir}"
+		/>
+
+		<compile
+			module.dir="${basedir}"
+		/>
+	</target>
+</project>
