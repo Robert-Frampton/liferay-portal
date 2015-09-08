@@ -96,15 +96,16 @@
 
 <aui:input name="assetLinkEntryIds" type="hidden" />
 
-<aui:script use="aui-base,escape,liferay-search-container">
-	A.getBody().delegate(
+<aui:script use="liferay-search-container">
+	var searchContainer = Liferay.SearchContainer.get('<portlet:namespace/>assetLinksSearchContainer');
+
+	$('body').on(
 		'click',
+		'.asset-selector a',
 		function(event) {
 			event.preventDefault();
 
-			var searchContainerName = '<portlet:namespace/>assetLinksSearchContainer';
-
-			var searchContainer = Liferay.SearchContainer.get(searchContainerName);
+			var assetSelector = $(event.currentTarget);
 
 			var searchContainerData = searchContainer.getData();
 
@@ -122,26 +123,21 @@
 						modal: true
 					},
 					eventName: '<%= inputAssetLinksDisplayContext.getEventName() %>',
-					id: '<%= inputAssetLinksDisplayContext.getEventName() %>' + event.currentTarget.attr('id'),
+					id: '<%= inputAssetLinksDisplayContext.getEventName() %>' + assetSelector.attr('id'),
 					selectedData: searchContainerData,
-					title: event.currentTarget.attr('data-title'),
-					uri: event.currentTarget.attr('data-href')
+					title: assetSelector.data('title'),
+					uri: assetSelector.data('href')
 				},
 				function(event) {
 					var entryLink = '<a class="modify-link" data-rowId="' + event.assetentryid + '" href="javascript:;"><%= UnicodeFormatter.toString(removeLinkIcon) %></a>';
 
-					searchContainer.addRow([event.assettype, A.Escape.html(event.assettitle), A.Escape.html(event.groupdescriptivename), entryLink], event.assetentryid);
+					searchContainer.addRow([event.assettype, _.escape(event.assettitle), _.escape(event.groupdescriptivename), entryLink], event.assetentryid);
 
 					searchContainer.updateDataStore();
 				}
 			);
-		},
-		'.asset-selector a'
+		}
 	);
-</aui:script>
-
-<aui:script use="liferay-search-container">
-	var searchContainer = Liferay.SearchContainer.get('<portlet:namespace/>assetLinksSearchContainer');
 
 	searchContainer.get('contentBox').delegate(
 		'click',
