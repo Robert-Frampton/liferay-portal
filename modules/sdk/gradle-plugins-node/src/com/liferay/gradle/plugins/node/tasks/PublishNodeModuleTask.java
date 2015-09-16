@@ -75,6 +75,10 @@ public class PublishNodeModuleTask extends ExecuteNpmTask {
 		return GradleUtil.toString(_moduleAuthor);
 	}
 
+	public String getModuleBugsUrl() {
+		return GradleUtil.toString(_moduleBugsUrl);
+	}
+
 	@Input
 	@Optional
 	public String getModuleDescription() {
@@ -131,6 +135,10 @@ public class PublishNodeModuleTask extends ExecuteNpmTask {
 
 	public void setModuleAuthor(Object moduleAuthor) {
 		_moduleAuthor = moduleAuthor;
+	}
+
+	public void setModuleBugsUrl(Object moduleBugsUrl) {
+		_moduleBugsUrl = moduleBugsUrl;
 	}
 
 	public void setModuleDescription(Object moduleDescription) {
@@ -190,6 +198,12 @@ public class PublishNodeModuleTask extends ExecuteNpmTask {
 
 		if (Validator.isNotNull(author)) {
 			map.put("author", author);
+		}
+
+		String bugsUrl = getModuleBugsUrl();
+
+		if (Validator.isNotNull(bugsUrl)) {
+			map.put("bugs", bugsUrl);
 		}
 
 		String description = getModuleDescription();
@@ -265,6 +279,7 @@ public class PublishNodeModuleTask extends ExecuteNpmTask {
 		PublishNodeModuleTask.class);
 
 	private Object _moduleAuthor;
+	private Object _moduleBugsUrl;
 	private Object _moduleDescription;
 	private final List<Object> _moduleKeywords = new ArrayList<>();
 	private Object _moduleLicense;
