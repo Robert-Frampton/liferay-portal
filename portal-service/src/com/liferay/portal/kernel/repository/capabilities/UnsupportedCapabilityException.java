@@ -12,23 +12,23 @@
  * details.
  */
 
-package com.liferay.layout.item.selector.criterion;
+package com.liferay.portal.kernel.repository.capabilities;
 
-import com.liferay.item.selector.BaseItemSelectorCriterion;
+import com.liferay.portal.kernel.exception.SystemException;
 
 /**
- * @author Sergio González
+ * @author Iván Zaera
  */
-public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
+public class UnsupportedCapabilityException extends SystemException {
 
-	public boolean isCheckDisplayPage() {
-		return _checkDisplayPage;
+	public UnsupportedCapabilityException(
+		Class<? extends Capability> capabilityClass,
+		String providerDescription) {
+
+		super(
+			String.format(
+				"%s does not support capability %s", providerDescription,
+				capabilityClass.getName()));
 	}
-
-	public void setCheckDisplayPage(boolean checkDisplayPage) {
-		_checkDisplayPage = checkDisplayPage;
-	}
-
-	private boolean _checkDisplayPage;
 
 }

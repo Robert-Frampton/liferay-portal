@@ -398,6 +398,7 @@ public class MetaInfoCacheServletResponseTest {
 			metaInfoCacheServletResponse.getResponse());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testFinishResponse() throws IOException {
 		final AtomicLong contentLengthReference = new AtomicLong();
