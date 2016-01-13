@@ -106,6 +106,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -778,23 +779,53 @@ public class MainServlet extends ActionServlet {
 	}
 
 	protected void initCompanies() throws Exception {
-		if (_log.isDebugEnabled()) {
-			_log.debug("Initialize companies");
-		}
+		ServiceDependencyManager serviceDependencyManager =
+			new ServiceDependencyManager();
 
-		ServletContext servletContext = getServletContext();
+		serviceDependencyManager.addServiceDependencyListener(
+			new ServiceDependencyListener() {
 
-		try {
-			String[] webIds = PortalInstances.getWebIds();
+				@Override
+				public void dependenciesFulfilled() {
+					try {
+						if (_log.isDebugEnabled()) {
+							_log.debug("Initialize companies");
+						}
 
-			for (String webId : webIds) {
-				PortalInstances.initCompany(servletContext, webId);
-			}
-		}
-		finally {
-			CompanyThreadLocal.setCompanyId(
-				PortalInstances.getDefaultCompanyId());
-		}
+						ServletContext servletContext = getServletContext();
+
+						try {
+							String[] webIds = PortalInstances.getWebIds();
+
+							for (String webId : webIds) {
+								PortalInstances.initCompany(
+									servletContext, webId);
+							}
+						}
+						finally {
+							CompanyThreadLocal.setCompanyId(
+								PortalInstances.getDefaultCompanyId());
+						}
+					}
+					catch (Exception e) {
+						_log.error(e, e);
+					}
+				}
+
+				@Override
+				public void destroy() {
+				}
+
+			});
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		Filter classicThemeContextFilter = registry.getFilter(
+			"(&(objectClass=" + ServletContext.class.getName() +
+			")(osgi.web.symbolicname=com.liferay.frontend.theme.classic.web))");
+
+		serviceDependencyManager.registerDependencies(
+			classicThemeContextFilter);
 	}
 
 	protected void initExt() throws Exception {
