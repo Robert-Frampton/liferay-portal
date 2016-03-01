@@ -1270,6 +1270,11 @@ public class WabProcessor {
 		}
 	}
 
+	protected String _context;
+	protected final File _file;
+	protected File _pluginDir;
+	protected PluginPackage _pluginPackage;
+
 	private static final String _SERVICE_BEAN_POST_PROCESSOR_SPRING_XML =
 		"/WEB-INF/classes/META-INF/service-bean-post-processor-spring.xml";
 
@@ -1277,15 +1282,11 @@ public class WabProcessor {
 
 	private String _bundleVersion;
 	private final ClassLoader _classLoader;
-	private String _context;
 	private final Set<String> _exportPackageNames = new HashSet<>();
-	private final File _file;
 	private final Set<String> _ignoredResources = new HashSet<>();
 	private final Set<String> _importPackageNames = new HashSet<>();
 	private File _manifestFile;
 	private final Map<String, String[]> _parameters;
-	private File _pluginDir;
-	private PluginPackage _pluginPackage;
 	private String _servicePackageName;
 	private final Pattern _tldPackagesPattern = Pattern.compile(
 		"<[^>]+?-class>\\p{Space}*?(.*?)\\p{Space}*?</[^>]+?-class>");
