@@ -18,6 +18,7 @@ dependencies {
 	provided group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
 	provided group: "org.apache.ant", name: "ant", version: "1.9.4"
 	provided group: "org.apache.felix", name: "org.apache.felix.fileinstall", transitive: false, version: "3.5.1-20150728.201454-4"
+	provided group: "org.eclipse.tycho", name: "org.eclipse.osgi", version: "3.10.101.v20150820-1432"
 	provided group: "org.osgi", name: "org.osgi.core", version: "5.0.0"
 	provided group: "org.ow2.asm", name: "asm-debug-all", version: "5.0.1"
 	provided group: "org.springframework", name: "spring-beans", version: "3.2.15.RELEASE"
