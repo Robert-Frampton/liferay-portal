@@ -22,8 +22,6 @@ import com.liferay.portal.osgi.web.wab.generator.internal.handler.WabURLStreamHa
 
 import java.util.Dictionary;
 
-import javax.servlet.ServletContext;
-
 import org.apache.felix.fileinstall.ArtifactUrlTransformer;
 
 import org.osgi.framework.Bundle;
@@ -79,8 +77,7 @@ public class WabGenerator {
 
 		bundleContext.registerService(
 			URLStreamHandlerService.class.getName(),
-			new WabURLStreamHandlerService(bundleContext, classLoader),
-			properties);
+			new WabURLStreamHandlerService(classLoader), properties);
 
 		properties = new HashMapDictionary<>();
 
@@ -103,11 +100,8 @@ public class WabGenerator {
 
 	protected void unsetModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
-
-		_servletContext = null;
 	}
 
 	private ServiceRegistration<ArtifactUrlTransformer> _serviceRegistration;
-	private ServletContext _servletContext;
 
 }

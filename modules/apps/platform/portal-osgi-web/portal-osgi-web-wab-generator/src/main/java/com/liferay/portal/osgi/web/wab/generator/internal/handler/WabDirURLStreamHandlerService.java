@@ -46,9 +46,9 @@ public class WabDirURLStreamHandlerService
 			URL filePath = new URL(url.getFile());
 
 			File wabDir = new File(filePath.toURI());
-			
+
 			Matcher matcher = _pattern.matcher(wabDir.getName());
-			
+
 			String contextName = wabDir.getName();
 
 			if (matcher.matches()) {
@@ -69,7 +69,7 @@ public class WabDirURLStreamHandlerService
 				wabDirURL.toExternalForm());
 
 			return wabDirHandler.openConnection(url);
-		} 
+		}
 		catch (IOException | URISyntaxException e) {
 		}
 
