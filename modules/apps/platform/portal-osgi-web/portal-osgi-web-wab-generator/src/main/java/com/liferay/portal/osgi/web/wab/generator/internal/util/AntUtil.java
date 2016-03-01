@@ -59,10 +59,9 @@ public class AntUtil {
 
 				StringBundler sb = new StringBundler();
 
-				try {
-					UnsyncBufferedReader unsyncBufferedReader =
+				try (UnsyncBufferedReader unsyncBufferedReader =
 						new UnsyncBufferedReader(
-							new UnsyncStringReader(buildEvent.getMessage()));
+							new UnsyncStringReader(buildEvent.getMessage()));) {
 
 					String line = unsyncBufferedReader.readLine();
 
