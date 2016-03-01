@@ -19,7 +19,6 @@ import com.liferay.portal.osgi.web.wab.generator.internal.connection.WabURLConne
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.osgi.framework.BundleContext;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 
 /**
@@ -29,19 +28,15 @@ import org.osgi.service.url.AbstractURLStreamHandlerService;
 public class WabURLStreamHandlerService
 	extends AbstractURLStreamHandlerService {
 
-	public WabURLStreamHandlerService(
-		BundleContext bundleContext, ClassLoader classLoader) {
-
-		_bundleContext = bundleContext;
+	public WabURLStreamHandlerService(ClassLoader classLoader) {
 		_classLoader = classLoader;
 	}
 
 	@Override
 	public URLConnection openConnection(URL url) {
-		return new WabURLConnection(_bundleContext, _classLoader, url);
+		return new WabURLConnection(_classLoader, url);
 	}
 
-	private final BundleContext _bundleContext;
 	private final ClassLoader _classLoader;
 
 }
