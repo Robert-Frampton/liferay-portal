@@ -14,16 +14,28 @@
 
 package com.liferay.portal.osgi.web.wab.generator.internal.handler;
 
+import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.Node;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.xml.UnsecureSAXReaderUtil;
+import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.osgi.web.wab.generator.internal.processor.WabDirProcessor;
 
 import java.io.File;
 import java.io.IOException;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,16 +55,24 @@ public class WabDirURLStreamHandlerService
 	@Override
 	public URLConnection openConnection(URL url) {
 		try {
-			URL filePath = new URL(url.getFile());
+			URI filePath = new URI(url.getPath());
 
-			File wabDir = new File(filePath.toURI());
+			File warDir = new File(filePath);
 
-			Matcher matcher = _pattern.matcher(wabDir.getName());
+			String contextName = HttpUtil.getParameter(
+				url.toExternalForm(), "Web-ContextPath");
 
-			String contextName = wabDir.getName();
+			if (contextName == StringPool.BLANK) {
+				contextName = detectContextNameFromFilePath(warDir);
+			}
 
-			if (matcher.matches()) {
-				contextName = matcher.group(1);
+			if (contextName == StringPool.BLANK) {
+				contextName = detectContextNameFromDescriptor(warDir);
+			}
+
+			if (contextName == StringPool.BLANK) {
+				throw new IllegalArgumentException(
+					"Could not determine contextName from url " + url);
 			}
 
 			Map<String, String[]> parameters = new HashMap<>();
@@ -61,9 +81,9 @@ public class WabDirURLStreamHandlerService
 
 			parameters.put("Web-ContextPath", webContextPath);
 
-			new WabDirProcessor(_classLoader, wabDir, parameters);
+			new WabDirProcessor(_classLoader, warDir, parameters);
 
-			URL wabDirURL = wabDir.toURI().toURL();
+			URL wabDirURL = warDir.toURI().toURL();
 
 			WabDirHandler wabDirHandler = new WabDirHandler(
 				wabDirURL.toExternalForm());
@@ -76,8 +96,56 @@ public class WabDirURLStreamHandlerService
 		return null;
 	}
 
-	private static final Pattern _pattern = Pattern.compile(
-		"(.*?)(-\\d+\\.\\d+\\.\\d+\\.\\d+)?");
+	private String detectContextNameFromDescriptor(File warDir)
+		throws IOException {
+
+		File lookAndFeelXml = new File(
+			warDir, "WEB-INF/liferay-look-and-feel.xml");
+
+		Document document = readDocument(lookAndFeelXml);
+
+		Element rootElement = document.getRootElement();
+
+		XPath xPath = SAXReaderUtil.createXPath("//theme/@id", null, null);
+
+		List<Node> nodes = xPath.selectNodes(rootElement);
+
+		String themeId = null;
+
+		if (nodes != null && nodes.size() > 0) {
+			Node themeNode = nodes.get(0);
+
+			themeId = themeNode.getText();
+		}
+
+		if (themeId != null) {
+			return themeId + "-theme";
+		}
+
+		return null;
+	}
+
+	private String detectContextNameFromFilePath(File warDir) {
+		Pattern p = Pattern.compile(".*\\/(.*-(T|t)heme)\\/.*");
+		Matcher m = p.matcher(warDir.getAbsolutePath());
+
+		if (m.matches()) {
+			return m.group(1);
+		}
+
+		return null;
+	}
+
+	private Document readDocument(File file) throws IOException {
+		String content = FileUtil.read(file);
+
+		try {
+			return UnsecureSAXReaderUtil.read(content);
+		}
+		catch (DocumentException de) {
+			throw new IOException(de);
+		}
+	}
 
 	private final ClassLoader _classLoader;
 
