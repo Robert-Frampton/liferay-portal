@@ -32,7 +32,7 @@ public class WabDirProcessor extends WabProcessor {
 
 		super(classLoader, dir, parameters);
 
-		_pluginDir = autoDeployDir();
+		pluginDir = autoDeployDir();
 
 		if (!isValidOSGiBundle()) {
 			transformToOSGiBundle();
@@ -47,16 +47,16 @@ public class WabDirProcessor extends WabProcessor {
 
 		executeAutoDeployers(autoDeploymentContext);
 
-		_pluginPackage = autoDeploymentContext.getPluginPackage();
+		pluginPackage = autoDeploymentContext.getPluginPackage();
 
-		if (_pluginPackage != null) {
-			_context = _pluginPackage.getContext();
+		if (pluginPackage != null) {
+			context = pluginPackage.getContext();
 		}
 		else {
-			_context = autoDeploymentContext.getContext();
+			context = autoDeploymentContext.getContext();
 		}
 
-		return _file;
+		return warFile;
 	}
 
 	protected AutoDeploymentContext buildAutoDeploymentContextDir(
@@ -67,7 +67,7 @@ public class WabDirProcessor extends WabProcessor {
 
 		autoDeploymentContext.setContext(context);
 
-		autoDeploymentContext.setFile(_file);
+		autoDeploymentContext.setFile(warFile);
 
 		return autoDeploymentContext;
 	}

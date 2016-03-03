@@ -112,7 +112,7 @@ public class WabDirURLStreamHandlerService
 
 		String themeId = null;
 
-		if (nodes != null && nodes.size() > 0) {
+		if ((nodes != null) && (nodes.size() > 0)) {
 			Node themeNode = nodes.get(0);
 
 			themeId = themeNode.getText();
@@ -126,8 +126,7 @@ public class WabDirURLStreamHandlerService
 	}
 
 	private String detectContextNameFromFilePath(File warDir) {
-		Pattern p = Pattern.compile(".*\\/(.*-(T|t)heme)\\/.*");
-		Matcher m = p.matcher(warDir.getAbsolutePath());
+		Matcher m = _pattern.matcher(warDir.getAbsolutePath());
 
 		if (m.matches()) {
 			return m.group(1);
@@ -146,6 +145,9 @@ public class WabDirURLStreamHandlerService
 			throw new IOException(de);
 		}
 	}
+
+	private static final Pattern _pattern = Pattern.compile(
+		".*\\/(.*-(T|t)heme)\\/.*");
 
 	private final ClassLoader _classLoader;
 

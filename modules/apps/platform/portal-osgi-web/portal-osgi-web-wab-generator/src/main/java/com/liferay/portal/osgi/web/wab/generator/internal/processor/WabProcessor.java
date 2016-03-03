@@ -105,15 +105,15 @@ public class WabProcessor {
 		ClassLoader classLoader, File file, Map<String, String[]> parameters) {
 
 		_classLoader = classLoader;
-		_file = file;
 		_parameters = parameters;
+		warFile = file;
 	}
 
 	public InputStream getInputStream() throws IOException {
-		_pluginDir = autoDeploy();
+		pluginDir = autoDeploy();
 
-		if ((_pluginDir == null) || !_pluginDir.exists() ||
-			!_pluginDir.isDirectory()) {
+		if ((pluginDir == null) || !pluginDir.exists() ||
+			!pluginDir.isDirectory()) {
 
 			return null;
 		}
@@ -122,7 +122,7 @@ public class WabProcessor {
 			transformToOSGiBundle();
 		}
 
-		File file = _file.getParentFile();
+		File file = warFile.getParentFile();
 
 		File outputFile = new File(file, "output.zip");
 
@@ -134,8 +134,8 @@ public class WabProcessor {
 				getManifestFile());
 
 			writeJarPaths(
-				jarOutputStream, _ignoredResources, _pluginDir,
-				_pluginDir.toURI());
+				jarOutputStream, _ignoredResources, pluginDir,
+				pluginDir.toURI());
 		}
 
 		if (PropsValues.MODULE_FRAMEWORK_WEB_GENERATOR_GENERATED_WABS_STORE) {
@@ -159,13 +159,13 @@ public class WabProcessor {
 
 		executeAutoDeployers(autoDeploymentContext);
 
-		_pluginPackage = autoDeploymentContext.getPluginPackage();
+		pluginPackage = autoDeploymentContext.getPluginPackage();
 
-		if (_pluginPackage != null) {
-			_context = _pluginPackage.getContext();
+		if (pluginPackage != null) {
+			context = pluginPackage.getContext();
 		}
 		else {
-			_context = autoDeploymentContext.getContext();
+			context = autoDeploymentContext.getContext();
 		}
 
 		File deployDir = autoDeploymentContext.getDeployDir();
@@ -210,13 +210,13 @@ public class WabProcessor {
 
 		autoDeploymentContext.setContext(context);
 
-		File file = new File(_file.getParentFile(), "deploy");
+		File file = new File(warFile.getParentFile(), "deploy");
 
 		file.mkdirs();
 
 		autoDeploymentContext.setDestDir(file.getAbsolutePath());
 
-		autoDeploymentContext.setFile(_file);
+		autoDeploymentContext.setFile(warFile);
 
 		return autoDeploymentContext;
 	}
@@ -357,7 +357,7 @@ public class WabProcessor {
 			return _manifestFile;
 		}
 
-		File manifestFile = new File(_pluginDir, "META-INF/MANIFEST.MF");
+		File manifestFile = new File(pluginDir, "META-INF/MANIFEST.MF");
 
 		if (!manifestFile.exists()) {
 			FileUtil.mkdirs(manifestFile.getParent());
@@ -372,7 +372,7 @@ public class WabProcessor {
 
 	protected Properties getPluginPackageProperties() {
 		File file = new File(
-			_pluginDir, "WEB-INF/liferay-plugin-package.properties");
+			pluginDir, "WEB-INF/liferay-plugin-package.properties");
 
 		if (!file.exists()) {
 			return null;
@@ -429,9 +429,9 @@ public class WabProcessor {
 		Map<String, File> classPath = new LinkedHashMap<>();
 
 		classPath.put(
-			"ext/WEB-INF/classes", new File(_pluginDir, "ext/WEB-INF/classes"));
+			"ext/WEB-INF/classes", new File(pluginDir, "ext/WEB-INF/classes"));
 		classPath.put(
-			"WEB-INF/classes", new File(_pluginDir, "WEB-INF/classes"));
+			"WEB-INF/classes", new File(pluginDir, "WEB-INF/classes"));
 
 		String[] portalDependencyJars = new String[0];
 
@@ -442,7 +442,7 @@ public class WabProcessor {
 		}
 
 		processFiles(
-			_pluginDir, _pluginDir.toURI(), classPath, portalDependencyJars);
+			pluginDir, pluginDir.toURI(), classPath, portalDependencyJars);
 
 		analyzer.setProperty(
 			Constants.BUNDLE_CLASSPATH, StringUtil.merge(classPath.keySet()));
@@ -469,7 +469,7 @@ public class WabProcessor {
 			_parameters, Constants.BUNDLE_SYMBOLICNAME);
 
 		if (Validator.isNull(bundleSymbolicName)) {
-			bundleSymbolicName = _context.substring(1);
+			bundleSymbolicName = context.substring(1);
 		}
 
 		analyzer.setProperty(Constants.BUNDLE_SYMBOLICNAME, bundleSymbolicName);
@@ -480,8 +480,8 @@ public class WabProcessor {
 			_parameters, Constants.BUNDLE_VERSION);
 
 		if (Validator.isNull(_bundleVersion)) {
-			if (_pluginPackage != null) {
-				_bundleVersion = _pluginPackage.getVersion();
+			if (pluginPackage != null) {
+				_bundleVersion = pluginPackage.getVersion();
 			}
 			else {
 				_bundleVersion = "1.0.0";
@@ -711,7 +711,7 @@ public class WabProcessor {
 
 			if (path.startsWith("WEB-INF/lib/")) {
 				if (path.endsWith("-service.jar")) {
-					if (path.endsWith(_context.concat("-service.jar"))) {
+					if (path.endsWith(context.concat("-service.jar"))) {
 						expandServiceJarIntoClassesDir(uri, file);
 					}
 
@@ -763,7 +763,7 @@ public class WabProcessor {
 	}
 
 	protected void processLiferayPortletXML() throws IOException {
-		File file = new File(_pluginDir, "WEB-INF/liferay-portlet.xml");
+		File file = new File(pluginDir, "WEB-INF/liferay-portlet.xml");
 
 		if (!file.exists()) {
 			return;
@@ -787,7 +787,7 @@ public class WabProcessor {
 			}
 
 			strutsPathElement.setText(
-				Portal.PATH_MODULE.substring(1) + _context + strutsPath);
+				Portal.PATH_MODULE.substring(1) + context + strutsPath);
 		}
 
 		formatDocument(file, document);
@@ -853,12 +853,12 @@ public class WabProcessor {
 	}
 
 	protected void processRequiredDeploymentContexts(Analyzer analyzer) {
-		if (_pluginPackage == null) {
+		if (pluginPackage == null) {
 			return;
 		}
 
 		List<String> requiredDeploymentContexts =
-			_pluginPackage.getRequiredDeploymentContexts();
+			pluginPackage.getRequiredDeploymentContexts();
 
 		if (ListUtil.isEmpty(requiredDeploymentContexts)) {
 			return;
@@ -971,7 +971,7 @@ public class WabProcessor {
 	}
 
 	protected void processTLDDependencies() throws IOException {
-		File dir = new File(_pluginDir, "WEB-INF/tld");
+		File dir = new File(pluginDir, "WEB-INF/tld");
 
 		if (!dir.exists() || !dir.isDirectory()) {
 			return;
@@ -1042,7 +1042,7 @@ public class WabProcessor {
 	}
 
 	protected void processWebXML(String path) throws IOException {
-		File file = new File(_pluginDir, path);
+		File file = new File(pluginDir, path);
 
 		if (!file.exists()) {
 			return;
@@ -1078,7 +1078,7 @@ public class WabProcessor {
 			String namespace)
 		throws IOException {
 
-		File file = new File(_pluginDir, fileName);
+		File file = new File(pluginDir, fileName);
 
 		if (!file.exists()) {
 			return;
@@ -1127,8 +1127,8 @@ public class WabProcessor {
 	protected void transformToOSGiBundle() throws IOException {
 		Analyzer analyzer = new Analyzer();
 
-		analyzer.setBase(_pluginDir);
-		analyzer.setJar(_pluginDir);
+		analyzer.setBase(pluginDir);
+		analyzer.setJar(pluginDir);
 		analyzer.setProperty("-jsp", "*.jsp,*.jspf");
 		analyzer.setProperty(
 			"-plugin", "com.liferay.ant.bnd.jsp.JspAnalyzerPlugin");
@@ -1182,7 +1182,7 @@ public class WabProcessor {
 
 		StringBundler sb = new StringBundler(5);
 
-		String name = _file.getName();
+		String name = warFile.getName();
 
 		sb.append(name.substring(0, name.lastIndexOf(StringPool.PERIOD)));
 
@@ -1253,7 +1253,7 @@ public class WabProcessor {
 
 			if (path.startsWith("WEB-INF/lib/") &&
 				path.endsWith("-service.jar") &&
-				!path.endsWith(_context.concat("-service.jar"))) {
+				!path.endsWith(context.concat("-service.jar"))) {
 
 				continue;
 			}
@@ -1270,10 +1270,10 @@ public class WabProcessor {
 		}
 	}
 
-	protected String _context;
-	protected final File _file;
-	protected File _pluginDir;
-	protected PluginPackage _pluginPackage;
+	protected String context;
+	protected File pluginDir;
+	protected PluginPackage pluginPackage;
+	protected final File warFile;
 
 	private static final String _SERVICE_BEAN_POST_PROCESSOR_SPRING_XML =
 		"/WEB-INF/classes/META-INF/service-bean-post-processor-spring.xml";

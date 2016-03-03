@@ -66,16 +66,16 @@ public class WabURLConnection extends URLConnection {
 					"Web-ContextPath");
 		}
 
-		File file = transferToTempFile(new URL(url.getPath()));
+		File warFile = transferToTempFile(new URL(url.getPath()));
 
 		try {
 			WabProcessor wabProcessor = new WabProcessor(
-				_classLoader, file, parameters);
+				_classLoader, warFile, parameters);
 
 			return wabProcessor.getInputStream();
 		}
 		finally {
-			FileUtil.deltree(file.getParentFile());
+			FileUtil.deltree(warFile.getParentFile());
 		}
 	}
 
