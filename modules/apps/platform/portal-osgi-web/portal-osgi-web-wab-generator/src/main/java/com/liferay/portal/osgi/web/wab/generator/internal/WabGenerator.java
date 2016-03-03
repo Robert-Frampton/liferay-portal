@@ -37,6 +37,7 @@ import org.osgi.service.url.URLStreamHandlerService;
 /**
  * @author Miguel Pastor
  * @author Raymond Augé
+ * @author Gregory Amerson
  */
 @Component(immediate = true)
 public class WabGenerator {
