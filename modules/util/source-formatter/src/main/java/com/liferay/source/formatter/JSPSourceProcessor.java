@@ -48,6 +48,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.dom4j.Document;
+import org.dom4j.Element;
+
 /**
  * @author Hugo Huijser
  */
@@ -97,7 +100,7 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 			}
 
 			fileName = StringUtil.replace(
-				fileName, StringPool.BACK_SLASH, StringPool.SLASH);
+				fileName, CharPool.BACK_SLASH, CharPool.SLASH);
 
 			includedAndReferencedFileNames.addAll(
 				getJSPIncludeFileNames(fileName, fileNames));
@@ -111,7 +114,7 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 
 		for (String fileName : includedAndReferencedFileNames) {
 			fileName = StringUtil.replace(
-				fileName, StringPool.SLASH, StringPool.BACK_SLASH);
+				fileName, CharPool.SLASH, CharPool.BACK_SLASH);
 
 			if (!fileNames.contains(fileName)) {
 				fileNames.add(fileName);
@@ -344,8 +347,6 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 			newContent, _emptyLineInNestedTagsPattern1, true);
 		newContent = fixEmptyLineInNestedTags(
 			newContent, _emptyLineInNestedTagsPattern2, false);
-		newContent = fixEmptyLineInNestedTags(
-			newContent, _emptyLineInNestedTagsPattern3, false);
 
 		newContent = fixMissingEmptyLinesBetweenTags(newContent);
 
@@ -536,8 +537,30 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 		Matcher matcher = pattern.matcher(content);
 
 		while (matcher.find()) {
+			String tabs2 = null;
+
+			if (startTag) {
+				String secondLine = matcher.group(3);
+
+				if (secondLine.equals("<%") || secondLine.startsWith("<%--") ||
+					secondLine.startsWith("<!--")) {
+
+					continue;
+				}
+
+				tabs2 = matcher.group(2);
+			}
+			else {
+				String firstLine = matcher.group(2);
+
+				if (firstLine.equals("%>")) {
+					continue;
+				}
+
+				tabs2 = matcher.group(3);
+			}
+
 			String tabs1 = matcher.group(1);
-			String tabs2 = matcher.group(2);
 
 			if ((startTag && ((tabs1.length() + 1) == tabs2.length())) ||
 				(!startTag && ((tabs1.length() - 1) == tabs2.length()))) {
@@ -716,6 +739,8 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 
 				if (!trimmedLine.startsWith(StringPool.DOUBLE_SLASH) &&
 					!trimmedLine.startsWith(StringPool.STAR)) {
+
+					line = formatIncorrectSyntax(line, "\t ", "\t", false);
 
 					line = formatWhitespace(line, javaSource);
 
@@ -1068,6 +1093,19 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 		Matcher matcher = _multilineTagPattern.matcher(content);
 
 		while (matcher.find()) {
+			char beforeClosingTagChar = content.charAt(matcher.start(2) - 1);
+
+			if ((beforeClosingTagChar != CharPool.NEW_LINE) &&
+				(beforeClosingTagChar != CharPool.TAB)) {
+
+				String closingTag = matcher.group(2);
+				String tabs = matcher.group(1);
+
+				return StringUtil.replaceFirst(
+					content, closingTag, "\n" + tabs + closingTag,
+					matcher.start(2));
+			}
+
 			String tag = matcher.group();
 
 			String singlelineTag = StringUtil.removeChar(
@@ -1093,17 +1131,27 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 			String line, String tagName, String attributeAndValue)
 		throws Exception {
 
+		if (attributeAndValue.matches(
+				".*=\"<%= Boolean\\.(FALSE|TRUE) %>\".*")) {
+
+			String newAttributeAndValue = StringUtil.replace(
+				attributeAndValue,
+				new String[] {
+					"=\"<%= Boolean.FALSE %>\"", "=\"<%= Boolean.TRUE %>\""
+				},
+				new String[] {"=\"<%= false %>\"", "=\"<%= true %>\""});
+
+			return StringUtil.replace(
+				line, attributeAndValue, newAttributeAndValue);
+		}
+
 		if (!attributeAndValue.endsWith(StringPool.QUOTE) ||
 			attributeAndValue.contains("\"<%=")) {
 
 			return line;
 		}
 
-		if (tagName.startsWith("liferay-")) {
-			tagName = tagName.substring(8);
-		}
-
-		JavaClass tagJavaClass = getTagJavaClass(tagName);
+		JavaClass tagJavaClass = _tagJavaClassesMap.get(tagName);
 
 		if (tagJavaClass == null) {
 			return line;
@@ -1140,7 +1188,27 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 			}
 		}
 
-		return line;
+		if (!attributeAndValue.matches(".*=\"(false|true)\".*")) {
+			return line;
+		}
+
+		JavaMethod setAttributeMethod = tagJavaClass.getMethodBySignature(
+			setAttributeMethodName, new Type[] {new Type("java.lang.String")},
+			true);
+
+		if (setAttributeMethod == null) {
+			return line;
+		}
+
+		String newAttributeAndValue = StringUtil.replace(
+			attributeAndValue, new String[] {"=\"false\"", "=\"true\""},
+			new String[] {
+				"=\"<%= Boolean.FALSE.toString() %>\"",
+				"=\"<%= Boolean.TRUE.toString() %>\""
+			});
+
+		return StringUtil.replace(
+			line, attributeAndValue, newAttributeAndValue);
 	}
 
 	protected String formatTaglibVariable(String fileName, String content) {
@@ -1172,8 +1240,7 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 				content, taglibName, taglibValue, matcher.start(4));
 
 			return content = StringUtil.replaceFirst(
-				content, matcher.group(1), StringPool.BLANK,
-				matcher.start());
+				content, matcher.group(1), StringPool.BLANK, matcher.start());
 		}
 
 		return content;
@@ -1346,86 +1413,26 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 		return _primitiveTagAttributeDataTypes;
 	}
 
-	protected JavaClass getTagJavaClass(String tag) throws Exception {
-		JavaClass tagJavaClass = _tagJavaClassesMap.get(tag);
-
-		if (tagJavaClass != null) {
-			return tagJavaClass;
+	protected String getUtilTaglibSrcDirName() {
+		if (_utilTaglibSrcDirName != null) {
+			return _utilTaglibSrcDirName;
 		}
 
-		String[] tagParts = StringUtil.split(tag, CharPool.COLON);
-
-		if (tagParts.length != 2) {
-			return null;
-		}
-
-		String utilTaglibDirName = getUtilTaglibDirName();
-
-		if (Validator.isNull(utilTaglibDirName)) {
-			return null;
-		}
-
-		String tagName = tagParts[1];
-
-		String tagJavaClassName = TextFormatter.format(
-			tagName, TextFormatter.M);
-
-		tagJavaClassName =
-			TextFormatter.format(tagJavaClassName, TextFormatter.G) + "Tag";
-
-		String tagCategory = tagParts[0];
-
-		StringBundler sb = new StringBundler(6);
-
-		sb.append(utilTaglibDirName);
-		sb.append("/src/com/liferay/taglib/");
-		sb.append(tagCategory);
-		sb.append(StringPool.SLASH);
-		sb.append(tagJavaClassName);
-		sb.append(".java");
-
-		File tagJavaFile = new File(sb.toString());
-
-		if (!tagJavaFile.exists()) {
-			return null;
-		}
-
-		JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
-
-		javaDocBuilder.addSource(tagJavaFile);
-
-		sb = new StringBundler(4);
-
-		sb.append("com.liferay.taglib.");
-		sb.append(tagCategory);
-		sb.append(StringPool.PERIOD);
-		sb.append(tagJavaClassName);
-
-		tagJavaClass = javaDocBuilder.getClassByName(sb.toString());
-
-		_tagJavaClassesMap.put(tag, tagJavaClass);
-
-		return tagJavaClass;
-	}
-
-	protected String getUtilTaglibDirName() {
-		if (_utilTaglibDirName != null) {
-			return _utilTaglibDirName;
-		}
-
-		File utilTaglibDir = getFile("util-taglib", PORTAL_MAX_DIR_LEVEL);
+		File utilTaglibDir = getFile("util-taglib/src", PORTAL_MAX_DIR_LEVEL);
 
 		if (utilTaglibDir != null) {
-			_utilTaglibDirName = utilTaglibDir.getAbsolutePath();
+			_utilTaglibSrcDirName = utilTaglibDir.getAbsolutePath();
 
-			_utilTaglibDirName = StringUtil.replace(
-				_utilTaglibDirName, StringPool.BACK_SLASH, StringPool.SLASH);
+			_utilTaglibSrcDirName = StringUtil.replace(
+				_utilTaglibSrcDirName, StringPool.BACK_SLASH, StringPool.SLASH);
+
+			_utilTaglibSrcDirName += StringPool.SLASH;
 		}
 		else {
-			_utilTaglibDirName = StringPool.BLANK;
+			_utilTaglibSrcDirName = StringPool.BLANK;
 		}
 
-		return _utilTaglibDirName;
+		return _utilTaglibSrcDirName;
 	}
 
 	protected String getVariableName(String line) {
@@ -1709,9 +1716,6 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 			getIncludes());
 
 		try {
-			Pattern pattern = Pattern.compile(
-				"\\s*@\\s*include\\s*file=['\"](.*)['\"]");
-
 			for (String fileName : allFileNames) {
 				File file = new File(fileName);
 
@@ -1722,7 +1726,7 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 
 				String content = FileUtil.read(file);
 
-				Matcher matcher = pattern.matcher(content);
+				Matcher matcher = _includeFilePattern.matcher(content);
 
 				String newContent = content;
 
@@ -1753,6 +1757,8 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 		catch (Exception e) {
 			ReflectionUtil.throwException(e);
 		}
+
+		_populateTagJavaClasses();
 	}
 
 	@Override
@@ -1781,9 +1787,94 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 			line, attributeAndValue, newAttributeAndValue);
 	}
 
-	private static final String[] _INCLUDES = new String[] {
-		"**/*.jsp", "**/*.jspf", "**/*.vm"
-	};
+	private void _populateTagJavaClasses() throws Exception {
+		List<String> tldFileNames = getFileNames(
+			new String[] {"**/dependencies/**", "**/util-taglib/**"},
+			new String[] {"**/*.tld"});
+
+		outerLoop:
+		for (String tldFileName : tldFileNames) {
+			File tldFile = new File(tldFileName);
+
+			tldFileName = StringUtil.replace(
+				tldFileName, StringPool.BACK_SLASH, StringPool.SLASH);
+
+			String content = FileUtil.read(tldFile);
+
+			Document document = readXML(content);
+
+			Element rootElement = document.getRootElement();
+
+			Element shortNameElement = rootElement.element("short-name");
+
+			String shortName = shortNameElement.getStringValue();
+
+			List<Element> tagElements = rootElement.elements("tag");
+
+			String srcDir = null;
+
+			for (Element tagElement : tagElements) {
+				Element tagClassElement = tagElement.element("tag-class");
+
+				String tagClassName = tagClassElement.getStringValue();
+
+				if (!tagClassName.startsWith("com.liferay")) {
+					continue;
+				}
+
+				if (srcDir == null) {
+					if (tldFileName.contains("/src/")) {
+						srcDir = tldFile.getAbsolutePath();
+
+						srcDir = StringUtil.replace(
+							srcDir, StringPool.BACK_SLASH, StringPool.SLASH);
+
+						srcDir =
+							srcDir.substring(0, srcDir.lastIndexOf("/src/")) +
+								"/src/main/java/";
+					}
+					else {
+						srcDir = getUtilTaglibSrcDirName();
+
+						if (Validator.isNull(srcDir)) {
+							continue outerLoop;
+						}
+					}
+				}
+
+				StringBundler sb = new StringBundler(3);
+
+				sb.append(srcDir);
+				sb.append(
+					StringUtil.replace(
+						tagClassName, CharPool.PERIOD, CharPool.SLASH));
+				sb.append(".java");
+
+				File tagJavaFile = new File(sb.toString());
+
+				if (!tagJavaFile.exists()) {
+					continue;
+				}
+
+				JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
+
+				javaDocBuilder.addSource(tagJavaFile);
+
+				JavaClass tagJavaClass = javaDocBuilder.getClassByName(
+					tagClassName);
+
+				Element tagNameElement = tagElement.element("name");
+
+				String tagName = tagNameElement.getStringValue();
+
+				_tagJavaClassesMap.put(
+					shortName + StringPool.COLON + tagName, tagJavaClass);
+			}
+		}
+	}
+
+	private static final String[] _INCLUDES =
+		new String[] {"**/*.jsp", "**/*.jspf", "**/*.vm"};
 
 	private static final String[][] _LIFERAY_FRONTEND_DEFINE_OBJECTS =
 		new String[][] {
@@ -1802,7 +1893,7 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 				"WindowState", "windowState",
 				"liferayPortletRequest.getWindowState()"
 			}
-	};
+		};
 
 	private static final String[][] _LIFERAY_THEME_DEFINE_OBJECTS =
 		new String[][] {
@@ -1937,11 +2028,9 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 	private final Pattern _emptyJavaSourceTagPattern = Pattern.compile(
 		"\n\t*<%\n+\t*%>\n");
 	private final Pattern _emptyLineInNestedTagsPattern1 = Pattern.compile(
-		"\n(\t*)<\\w.*[^/]>\n\n(\t*)<\\w.*>\n");
+		"\n(\t*)(?:<\\w.*[^/])?>\n\n(\t*)(<.*)\n");
 	private final Pattern _emptyLineInNestedTagsPattern2 = Pattern.compile(
-		"\n(\t*)/>\n\n(\t*)</\\w.*>(\n|$)");
-	private final Pattern _emptyLineInNestedTagsPattern3 = Pattern.compile(
-		"\n(\t*)<\\w.*>\n\n(\t*)</\\w.*>(\n|$)");
+		"\n(\t*)(.*>)\n\n(\t*)</.*(\n|$)");
 	private final Pattern _ifTagPattern = Pattern.compile(
 		"^<c:if test=('|\")<%= (.+) %>('|\")>$");
 	private final List<String> _importClassNames = new ArrayList<>();
@@ -1949,7 +2038,9 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 	private final Pattern _importsPattern = Pattern.compile(
 		"page import=\"(.+)\"");
 	private Set<String> _includeFileNames = new HashSet<>();
-	private Pattern _incorrectClosingTagPattern = Pattern.compile(
+	private final Pattern _includeFilePattern = Pattern.compile(
+		"\\s*@\\s*include\\s*file=['\"](.*)['\"]");
+	private final Pattern _incorrectClosingTagPattern = Pattern.compile(
 		"\n(\t*)\t((?!<\\w).)* />\n");
 	private Pattern _javaClassPattern = Pattern.compile(
 		"\n(private|protected|public).* class ([A-Za-z0-9]+) " +
@@ -1964,10 +2055,10 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 	private final Pattern _missingEmptyLineBetweenDefineOjbectsPattern =
 		Pattern.compile("<.*:defineObjects />\n<.*:defineObjects />\n");
 	private final Pattern _missingEmptyLineBetweenTagsPattern = Pattern.compile(
-		"\n(\t*)</[a-z-]+:([a-z-]+)>\n(\t*)<[a-z-]+");
+		"\n(\t*)</[-\\w]+:([-\\w]+)>\n(\t*)<[-\\w]+");
 	private boolean _moveFrequentlyUsedImportsToCommonInit;
 	private final Pattern _multilineTagPattern = Pattern.compile(
-		"[\n\t]<[-\\w]+:[-\\w]+\n.*?\n\t*/?>(\n|$)", Pattern.DOTALL);
+		"\n(\t*)<[-\\w]+:[-\\w]+\n.*?(/?>)(\n|$)", Pattern.DOTALL);
 	private Set<String> _primitiveTagAttributeDataTypes;
 	private final Pattern _redirectBackURLPattern = Pattern.compile(
 		"(String redirect = ParamUtil\\.getString\\(request, \"redirect\".*" +
@@ -1993,7 +2084,7 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 	private final Pattern _uncompressedJSPTaglibPattern = Pattern.compile(
 		"(<.*taglib uri=\".*>\n*)+", Pattern.MULTILINE);
 	private List<String> _unusedVariablesExcludes;
-	private String _utilTaglibDirName;
+	private String _utilTaglibSrcDirName;
 	private final Pattern _xssPattern = Pattern.compile(
 		"\\s+([^\\s]+)\\s*=\\s*(Bean)?ParamUtil\\.getString\\(");
 
