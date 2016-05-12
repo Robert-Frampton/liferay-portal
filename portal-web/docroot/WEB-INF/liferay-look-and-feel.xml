@@ -35,10 +35,4 @@
 			<portlet-decorator-css-class>portlet-decorate</portlet-decorator-css-class>
 		</portlet-decorator>
 	</theme>
-	<theme id="admin" name="Admin">
-		<root-path>/admin</root-path>
-		<template-extension>ftl</template-extension>
-		<control-panel-theme>true</control-panel-theme>
-		<page-theme>false</page-theme>
-	</theme>
 </look-and-feel>
