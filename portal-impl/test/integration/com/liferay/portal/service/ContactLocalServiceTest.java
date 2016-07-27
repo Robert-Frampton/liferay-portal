@@ -25,10 +25,8 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -44,66 +42,64 @@ public class ContactLocalServiceTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
 
-	@Test(expected = SystemException.class)
-	public void testAddFutureBirthdayByContact() throws Exception {
-		Date future = new Date(System.currentTimeMillis() + 100000);
+	@Test(expected = ContactBirthdayException.class)
+	public void testCustomAddContactWithFutureBirthday() throws Exception {
+		_user = UserTestUtil.addUser();
 
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.add(Calendar.YEAR, 1000);
+
+		ContactLocalServiceUtil.addContact(
+			_user.getUserId(), Contact.class.getName(), _user.getUserId(),
+			_user.getEmailAddress(), _user.getFirstName(),
+			_user.getMiddleName(), _user.getLastName(), 0, 0, _user.getMale(),
+			calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE),
+			calendar.get(Calendar.YEAR), "", "", "", "", "",
+			_user.getJobTitle());
+	}
+
+	@Test(expected = ContactBirthdayException.class)
+	public void testCustomUpdateContactWithFutureBirthday() throws Exception {
+		_user = UserTestUtil.addUser();
+
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.add(Calendar.YEAR, 1000);
+
+		ContactLocalServiceUtil.updateContact(
+			_user.getContactId(), _user.getEmailAddress(), _user.getFirstName(),
+			_user.getMiddleName(), _user.getLastName(), 0, 0, _user.getMale(),
+			calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE),
+			calendar.get(Calendar.YEAR), "", "", "", "", "",
+			_user.getJobTitle());
+	}
+
+	@Test(expected = SystemException.class)
+	public void testDefaultAddContactWithFutureBirthday() throws Exception {
 		Contact contact = ContactLocalServiceUtil.createContact(
 			CounterLocalServiceUtil.increment());
 
-		contact.setBirthday(future);
+		Date date = new Date(System.currentTimeMillis() + 100000);
+
+		contact.setBirthday(date);
 
 		ContactLocalServiceUtil.addContact(contact);
 	}
 
-	@Test(expected = ContactBirthdayException.class)
-	public void testAddFutureBirthdayByProperties() throws Exception {
-		User user = UserTestUtil.addUser();
-
-		_users.add(user);
-
-		Calendar future = Calendar.getInstance();
-
-		future.add(Calendar.YEAR, 1000);
-
-		ContactLocalServiceUtil.addContact(
-			user.getUserId(), Contact.class.getName(), user.getUserId(),
-			user.getEmailAddress(), user.getFirstName(), user.getMiddleName(),
-			user.getLastName(), 0, 0, user.getMale(),
-			future.get(Calendar.MONTH), future.get(Calendar.DATE),
-			future.get(Calendar.YEAR), "", "", "", "", "", user.getJobTitle());
-	}
-
 	@Test(expected = SystemException.class)
-	public void testUpdateFutureBirthdayByContact() throws Exception {
-		Date future = new Date(System.currentTimeMillis() + 100000);
+	public void testDefaultUpdateContactWithFutureBirthday() throws Exception {
+		Date date = new Date(System.currentTimeMillis() + 100000);
 
 		Contact contact = ContactLocalServiceUtil.createContact(
 			CounterLocalServiceUtil.increment());
 
-		contact.setBirthday(future);
+		contact.setBirthday(date);
 
 		ContactLocalServiceUtil.updateContact(contact);
 	}
 
-	@Test(expected = ContactBirthdayException.class)
-	public void testUpdateFutureBirthdayByProperties() throws Exception {
-		User user = UserTestUtil.addUser();
-
-		_users.add(user);
-
-		Calendar future = Calendar.getInstance();
-
-		future.add(Calendar.YEAR, 1000);
-
-		ContactLocalServiceUtil.updateContact(
-			user.getContactId(), user.getEmailAddress(), user.getFirstName(),
-			user.getMiddleName(), user.getLastName(), 0, 0, user.getMale(),
-			future.get(Calendar.MONTH), future.get(Calendar.DATE),
-			future.get(Calendar.YEAR), "", "", "", "", "", user.getJobTitle());
-	}
-
 	@DeleteAfterTestRun
-	private final List<User> _users = new ArrayList<>();
+	private User _user;
 
 }
