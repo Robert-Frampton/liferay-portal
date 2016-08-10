@@ -19,6 +19,12 @@
 			<message key="name.invalidPattern" value="Local non-final variable ''{0}'' must match pattern ''{1}''" />
 		</module>
 		<module name="MemberName">
+			<property name="applyToPackage" value="false" />
+			<property name="applyToPrivate" value="false" />
+			<property name="format" value="^[a-z0-9][_a-zA-Z0-9]*$" />
+			<message key="name.invalidPattern" value="Protected or public non-static field ''{0}'' must match pattern ''{1}''" />
+		</module>
+		<module name="MemberName">
 			<property name="applyToProtected" value="false" />
 			<property name="applyToPublic" value="false" />
 			<property name="format" value="^_[a-z0-9][_a-zA-Z0-9]*$" />
@@ -35,6 +41,12 @@
 		<module name="ParameterName" />
 		<module name="RequireThis" />
 		<module name="StaticVariableName">
+			<property name="applyToPackage" value="false" />
+			<property name="applyToPrivate" value="false" />
+			<property name="format" value="^[a-z0-9][_a-zA-Z0-9]*$" />
+			<message key="name.invalidPattern" value="Protected or public static non-final field ''{0}'' must match pattern ''{1}''" />
+		</module>
+		<module name="StaticVariableName">
 			<property name="applyToProtected" value="false" />
 			<property name="applyToPublic" value="false" />
 			<property name="format" value="^_[a-z0-9][_a-zA-Z0-9]*$" />
@@ -46,5 +58,11 @@
 			<message key="name.invalidPattern" value="Class, interface, enum or annotation ''{0}'' must match pattern ''{1}''" />
 		</module>
 		<module name="UpperEll" />
+
+		<!-- Custom checks -->
+
+		<module name="com.liferay.source.formatter.checkstyle.checks.UnusedParameterCheck">
+			<message key="parameter.unused" value="Parameter ''{0}'' is unused" />
+		</module>
 	</module>
 </module>
