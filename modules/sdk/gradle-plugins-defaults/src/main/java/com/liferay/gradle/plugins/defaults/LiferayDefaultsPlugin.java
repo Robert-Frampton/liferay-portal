@@ -18,7 +18,6 @@ import com.liferay.gradle.plugins.LiferayPlugin;
 import com.liferay.gradle.plugins.defaults.internal.LiferayCIPlugin;
 import com.liferay.gradle.plugins.defaults.internal.LiferayRelengPlugin;
 import com.liferay.gradle.plugins.defaults.internal.NodeDefaultsPlugin;
-import com.liferay.gradle.plugins.defaults.internal.util.GradleUtil;
 import com.liferay.gradle.util.Validator;
 
 import org.gradle.api.Plugin;
@@ -34,11 +33,10 @@ public class LiferayDefaultsPlugin extends LiferayPlugin {
 		super.apply(project);
 
 		if (_isRunningInCIEnvironment()) {
-			GradleUtil.applyPlugin(project, LiferayCIPlugin.class);
+			LiferayCIPlugin.INSTANCE.apply(project);
 		}
 
-		GradleUtil.applyPlugin(project, LiferayRelengPlugin.class);
-
+		LiferayRelengPlugin.INSTANCE.apply(project);
 		NodeDefaultsPlugin.INSTANCE.apply(project);
 	}
 
