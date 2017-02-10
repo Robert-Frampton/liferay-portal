@@ -121,6 +121,21 @@ for (Locale availableLocale : LanguageUtil.getAvailableLocales(themeDisplay.getS
 	var STR_VALUE = 'value';
 
 	var availableFields;
+
+	var displayNotice = function(message, timeout, type, useAnimation) {
+		new Liferay.Notice(
+			{
+				closeText: false,
+				content: message + '<button class="close" type="button">&times;</button>',
+				noticeClass: 'hide',
+				timeout: timeout || 10000,
+				toggleText: false,
+				noticeClass: type || 'alert-warning',
+				useAnimation: Lang.isValue(useAnimation) ? useAnimation : false
+			}
+		).show();
+	}
+
 	var formEditor;
 
 	var getContentValue = function() {
@@ -163,13 +178,23 @@ for (Locale availableLocale : LanguageUtil.getAvailableLocales(themeDisplay.getS
 
 		content = content.replace(/nestedFields/g, 'fields');
 
-		content = JSON.parse(content);
+		if (!(content.includes("{") && content.includes("}"))) {
+			displayNotice("JSON Syntax is incorrect, do no omit { or }", 5000, 'alert-danger', true);
+		}
 
-		formBuilder.translationManager.set('availableLocales', content.availableLanguageIds);
+		else if (!(content.includes("fields"))) {
+			displayNotice("You cannot delete the fields element", 5000, 'alert-danger', true);
+		}
 
-		content = formBuilder.deserializeDefinitionFields(content);
+		else {
+			content = JSON.parse(content);
 
-		formBuilder.set('fields', content);
+			formBuilder.translationManager.set('availableLocales', content.availableLanguageIds);
+
+			content = formBuilder.deserializeDefinitionFields(content);
+
+			formBuilder.set('fields', content);
+		}
 	};
 
 	var setEditorSize = function() {
