@@ -181,6 +181,14 @@
 		}
 	}
 
+	.col-md-9 {
+		.button-holder {
+			&.dialog-footer {
+				position: static;
+			}
+		}
+	}
+
 	.dialog-body,
 	.export-dialog-tree,
 	.lfr-dynamic-uploader,
@@ -204,13 +212,5 @@
 
 	.portlet-configuration-edit-templates .portlet-configuration-body-content {
 		bottom: 0;
-	}
-}
-
-.col-md-9 {
-	.button-holder {
-		&.dialog-footer {
-			position: static;
-		}
 	}
 }
