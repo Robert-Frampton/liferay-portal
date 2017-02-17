@@ -147,6 +147,10 @@
 		&.rotated {
 			padding: 10px 50px;
 
+			@media screen and (max-height: 500px) {
+				padding: 50px;
+			}
+
 			&:before {
 				height: 50px;
 				width: 5px;
@@ -164,6 +168,10 @@
 
 		&.rotated {
 			padding: 20px 50px;
+
+			@media screen and (max-height: 850px) {
+				padding: 50px;
+			}
 
 			&:before {
 				height: 10px;
