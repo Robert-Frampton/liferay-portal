@@ -55,7 +55,7 @@ if (Validator.isNotNull(languageId)) {
 								<liferay-ui:icon label="<%= true %>" message='<%= LanguageUtil.format(request, "version-x", sourceVersion) %>' />
 							</c:when>
 							<c:otherwise>
-								<liferay-ui:icon-menu direction="down" extended="<%= false %>" message='<%= LanguageUtil.format(request, "version-x", sourceVersion) %>' showArrow="<%= true %>" showWhenSingleIcon="<%= true %>" useIconCaret="<%= true %>">
+								<liferay-ui:icon-menu direction="down" extended="<%= false %>" horizontalOverlayDirection="right" message='<%= LanguageUtil.format(request, "version-x", sourceVersion) %>' showArrow="<%= true %>" showWhenSingleIcon="<%= true %>" useIconCaret="<%= true %>">
 
 									<%
 									PortletURL sourceURL = PortletURLUtil.clone(portletURL, renderResponse);
@@ -96,7 +96,7 @@ if (Validator.isNotNull(languageId)) {
 							<liferay-ui:icon label="<%= true %>" message='<%= LanguageUtil.format(request, "version-x", targetVersion) %>' />
 						</c:when>
 						<c:otherwise>
-							<liferay-ui:icon-menu direction="down" extended="<%= false %>" message='<%= LanguageUtil.format(request, "version-x", targetVersion) %>' showArrow="<%= true %>" showWhenSingleIcon="<%= true %>" useIconCaret="<%= true %>">
+							<liferay-ui:icon-menu direction="down" extended="<%= false %>" horizontalOverlayDirection="right" message='<%= LanguageUtil.format(request, "version-x", targetVersion) %>' showArrow="<%= true %>" showWhenSingleIcon="<%= true %>" useIconCaret="<%= true %>">
 
 								<%
 								PortletURL targetURL = PortletURLUtil.clone(portletURL, renderResponse);

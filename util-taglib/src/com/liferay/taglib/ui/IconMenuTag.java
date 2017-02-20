@@ -96,6 +96,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 				_direction = "left";
 				_endPage = null;
 				_extended = true;
+				_horizontalOverlayDirection = null;
 				_icon = null;
 				_id = null;
 				_localizeMessage = true;
@@ -182,6 +183,12 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 
 	public void setExtended(boolean extended) {
 		_extended = extended;
+	}
+
+	public void setHorizontalOverlayDirection(
+		String horizontalOverlayDirection) {
+
+		_horizontalOverlayDirection = horizontalOverlayDirection;
 	}
 
 	public void setIcon(String icon) {
@@ -323,6 +330,11 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 					jspWriter.write(_direction);
 					jspWriter.write(" max-display-items-");
 					jspWriter.write(String.valueOf(_maxDisplayItems));
+
+					if (Validator.isNotNull(_horizontalOverlayDirection)) {
+						jspWriter.write(" horizontal-overlay-direction-");
+						jspWriter.write(_horizontalOverlayDirection);
+					}
 
 					if (_disabled) {
 						jspWriter.write(" disabled");
@@ -494,6 +506,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 	private boolean _disabled;
 	private String _endPage;
 	private boolean _extended = true;
+	private String _horizontalOverlayDirection;
 	private String _icon;
 	private String _id;
 	private boolean _localizeMessage = true;
