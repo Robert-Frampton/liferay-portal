@@ -122,19 +122,21 @@ for (Locale availableLocale : LanguageUtil.getAvailableLocales(themeDisplay.getS
 
 	var availableFields;
 
-	var displayNotice = function(message, timeout, type, useAnimation) {
-		new Liferay.Notice(
+	var displayWarning = function(message) {
+		new Liferay.Notification(
 			{
-				closeText: false,
-				content: message + '<button class="close" type="button">&times;</button>',
-				noticeClass: 'hide',
-				timeout: timeout || 10000,
-				toggleText: false,
-				noticeClass: type || 'alert-warning',
-				useAnimation: Lang.isValue(useAnimation) ? useAnimation : false
+				closeable: true,
+				delay: {
+					hide: 5000,
+					show: 0,
+				},
+				duration: 500,
+				message: message,
+				title: Liferay.Language.get('warning'),
+				type: 'warning'
 			}
-		).show();
-	}
+		).render('body');
+	};
 
 	var formEditor;
 
@@ -178,16 +180,18 @@ for (Locale availableLocale : LanguageUtil.getAvailableLocales(themeDisplay.getS
 
 		content = content.replace(/nestedFields/g, 'fields');
 
-		if (!(content.includes("{") && content.includes("}"))) {
-			displayNotice("JSON Syntax is incorrect, do no omit { or }", 5000, 'alert-danger', true);
+		if (content.indexOf('availableLanguageIds') === -1 || content.indexOf('defaultLanguageId') === -1 || content.indexOf('fields') === -1) {
+			displayWarning('<%= UnicodeLanguageUtil.get(resourceBundle, "you-cannot-remove-default-attributes") %>');
 		}
-
-		else if (!(content.includes("fields"))) {
-			displayNotice("You cannot delete the fields element", 5000, 'alert-danger', true);
-		}
-
 		else {
-			content = JSON.parse(content);
+			try {
+				content = JSON.parse(content);
+			}
+			catch(e) {
+				displayWarning('<%= UnicodeLanguageUtil.get(resourceBundle, "you-have-entered-invalid-json") %>');
+
+				return;
+			}
 
 			formBuilder.translationManager.set('availableLocales', content.availableLanguageIds);
 
