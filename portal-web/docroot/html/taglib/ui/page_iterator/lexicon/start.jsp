@@ -34,6 +34,8 @@ String url = (String)request.getAttribute("liferay-ui:page-iterator:url");
 String urlAnchor = (String)request.getAttribute("liferay-ui:page-iterator:urlAnchor");
 int pages = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:page-iterator:pages"));
 
+int initialPages = 20;
+
 if ((portletURL != null) && Validator.isNull(url) && Validator.isNull(urlAnchor)) {
 	String[] urlArray = PortalUtil.stripURLAnchor(portletURL.toString(), StringPool.POUND);
 
@@ -145,7 +147,7 @@ if (forcePost && (portletURL != null)) {
 							<ul class="inline-scroller link-list">
 
 								<%
-								for (int i = 4; i < pages; i++) {
+								for (int i = 4; i < initialPages; i++) {
 								%>
 
 									<li>
@@ -171,10 +173,10 @@ if (forcePost && (portletURL != null)) {
 						<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">...</a>
 
 						<div class="dropdown-menu dropdown-menu-top-center">
-							<ul class="inline-scroller link-list">
+							<ul class="inline-scroller link-list" data-maxindex="<%= pages - 2 %>">
 
 								<%
-								for (int i = 2; i < (pages - 2); i++) {
+								for (int i = 2; i < (initialPages); i++) {
 								%>
 
 									<li>
@@ -208,11 +210,11 @@ if (forcePost && (portletURL != null)) {
 							<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">...</a>
 
 							<div class="dropdown-menu dropdown-menu-top-center">
-								<ul class="inline-scroller link-list">
+								<ul class="inline-scroller link-list" data-maxindex="<%= cur - 1 %>">
 					</c:if>
 
 					<%
-					for (int i = 2; i < (cur - 1); i++) {
+					for (int i = 2; i < (initialPages); i++) {
 					%>
 
 						<li>
@@ -250,11 +252,11 @@ if (forcePost && (portletURL != null)) {
 							<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">...</a>
 
 							<div class="dropdown-menu dropdown-menu-top-center">
-								<ul class="inline-scroller link-list">
+								<ul class="inline-scroller link-list" data-curindex="<%= cur + 2 %>">
 					</c:if>
 
 					<%
-					for (int i = (cur + 2); i < pages; i++) {
+					for (int i = (cur + 2); i < ((cur + 2) + initialPages); i++) {
 					%>
 
 						<li>
@@ -282,6 +284,25 @@ if (forcePost && (portletURL != null)) {
 			</li>
 		</ul>
 	</div>
+</c:if>
+
+<c:if test="<%= pages > initialPages %>">
+	<aui:script use="liferay-dynamic-inline-scroll">
+		new Liferay.DynamicInlineScroll(
+			{
+				cur: '<%= cur %>',
+				curParam: '<%= curParam %>',
+				forcePost: '<%= forcePost %>',
+				formName: '<%= formName %>',
+				initialPages: '<%= initialPages %>',
+				jsCall: '<%= jsCall %>',
+				namespace: '<%= namespace %>',
+				pages: '<%= pages %>',
+				url: '<%= url %>',
+				urlAnchor: '<%= urlAnchor %>'
+			}
+		).render();
+	</aui:script>
 </c:if>
 
 <aui:script>
