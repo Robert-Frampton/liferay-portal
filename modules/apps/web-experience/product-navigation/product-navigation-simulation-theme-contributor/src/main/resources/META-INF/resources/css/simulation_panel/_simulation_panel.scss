@@ -186,6 +186,7 @@
 	right: 320px;
 	top: 0;
 	z-index: 500;
+	overflow: auto;
 
 	.modal-content {
 		border-width: 0;
@@ -193,6 +194,8 @@
 
 	.modal-dialog {
 		top: 64px !important;
+		padding-bottom: 5%;
+		position: absolute;
 	}
 }
 
