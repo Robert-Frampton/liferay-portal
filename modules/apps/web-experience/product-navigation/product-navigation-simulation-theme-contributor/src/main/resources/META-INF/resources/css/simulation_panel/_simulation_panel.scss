@@ -182,20 +182,20 @@
 	bottom: 0;
 	display: none;
 	left: 0;
+	overflow: auto;
 	position: fixed;
 	right: 320px;
 	top: 0;
 	z-index: 500;
-	overflow: auto;
 
 	.modal-content {
 		border-width: 0;
 	}
 
 	.modal-dialog {
-		top: 64px !important;
 		margin-bottom: 25px !important;
 		position: absolute;
+		top: 64px !important;
 	}
 }
 
