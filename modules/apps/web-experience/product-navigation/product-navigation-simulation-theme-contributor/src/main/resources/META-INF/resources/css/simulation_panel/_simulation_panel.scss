@@ -190,6 +190,10 @@
 	.modal-content {
 		border-width: 0;
 	}
+
+	.modal-dialog {
+		top: 64px !important;
+	}
 }
 
 .lfr-has-simulation-panel {
