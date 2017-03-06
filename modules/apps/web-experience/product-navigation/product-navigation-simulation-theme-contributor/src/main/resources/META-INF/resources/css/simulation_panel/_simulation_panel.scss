@@ -179,13 +179,13 @@
 }
 
 .lfr-simulation-device {
-	bottom: 0;
+	bottom: 25px;
 	display: none;
 	left: 0;
 	overflow: auto;
 	position: fixed;
 	right: 320px;
-	top: 0;
+	top: 68px;
 	z-index: 500;
 
 	.modal-content {
@@ -193,9 +193,12 @@
 	}
 
 	.modal-dialog {
-		margin-bottom: 25px !important;
 		position: absolute;
-		top: 64px !important;
+
+		&.autosize {
+			margin-top: 68px;
+			position: fixed;
+		}
 	}
 }
 
