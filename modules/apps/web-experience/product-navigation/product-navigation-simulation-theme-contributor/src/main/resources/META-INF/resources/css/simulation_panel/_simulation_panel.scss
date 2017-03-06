@@ -182,6 +182,7 @@
 	bottom: 0;
 	display: none;
 	left: 0;
+	overflow: auto;
 	position: fixed;
 	right: 320px;
 	top: 0;
@@ -189,6 +190,12 @@
 
 	.modal-content {
 		border-width: 0;
+	}
+
+	.modal-dialog {
+		margin-bottom: 25px !important;
+		position: absolute;
+		top: 64px !important;
 	}
 }
 
