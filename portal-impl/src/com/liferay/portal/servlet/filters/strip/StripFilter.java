@@ -656,9 +656,9 @@ public class StripFilter extends BasePortalFilter {
 
 					continue;
 				}
-				else if (hasMarker(charBuffer, _MARKER_STYLE_OPEN) 
-						|| hasMarker(charBuffer, _MARKER_DATA_SENNA_STYLE_PERMANENT) 
-						|| hasMarker(charBuffer, _MARKER_DATA_SENNA_STYLE_TEMPORARY))  {
+				else if (hasMarker(charBuffer, _MARKER_STYLE_OPEN)
+						|| hasMarker(charBuffer, _MARKER_DATA_SENNA_STYLE_PERMANENT)
+						|| hasMarker(charBuffer, _MARKER_DATA_SENNA_STYLE_TEMPORARY)) {
 					processCSS(request, response, charBuffer, writer);
 
 					continue;
@@ -714,7 +714,7 @@ public class StripFilter extends BasePortalFilter {
 		"style data-senna-track=\"temporary\" type=\"text/css\">".toCharArray();
 
 	private static final char[] _MARKER_DATA_SENNA_STYLE_PERMANENT =
-			"style data-senna-track=\"permanent\" type=\"text/css\">".toCharArray();
+		"style data-senna-track=\"permanent\" type=\"text/css\">".toCharArray();
 
 	private static final String _MARKER_TEXTAREA_CLOSE = "/textarea>";
 
