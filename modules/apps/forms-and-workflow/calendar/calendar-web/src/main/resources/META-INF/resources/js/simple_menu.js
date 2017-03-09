@@ -113,6 +113,12 @@ AUI.add(
 						(new A.EventHandle(instance._eventHandlers)).detach();
 					},
 
+					_afterAddEventModalLoad: function(event) {
+						var instance = this;
+
+						event.target.node.getDOMNode().contentWindow.focus();
+					},
+
 					_closeMenu: function() {
 						var instance = this;
 

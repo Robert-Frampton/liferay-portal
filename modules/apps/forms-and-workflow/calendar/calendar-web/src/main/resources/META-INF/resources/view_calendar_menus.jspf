@@ -193,6 +193,12 @@ String backURL = PortalUtil.getCurrentURL(request);
 									calendarId: activeCalendar.get('calendarId')
 								}
 							)
+						},
+						function(modal) {
+							modal.iframe.on(
+								'load',
+								A.bind(instance._afterAddEventModalLoad, instance)
+							);
 						}
 					);
 				},
