@@ -44,9 +44,10 @@ AUI.add(
 
 						instance._editorFullscreen = host.one('#Fullscreen');
 						instance._editorSource = host.one('#Source');
-						instance._editorSwitch = host.one('#Switch');
 						instance._editorSwitchTheme = host.one('#SwitchTheme');
 						instance._editorWrapper = host.one('#Wrapper');
+						instance._editorCodeView = host.one('#CodeView');
+						instance._editorTextView = host.one('#TextView');
 
 						instance._toggleSourceSwitchFn = A.debounce(instance._toggleSourceSwitch, 100, instance);
 
@@ -54,9 +55,8 @@ AUI.add(
 
 						instance._eventHandles = [
 							instance._editorFullscreen.on('click', instance._onFullScreenBtnClick, instance),
-							instance._editorSwitch.on('blur', instance._onSwitchBlur, instance),
-							instance._editorSwitch.on('click', instance._switchMode, instance),
-							instance._editorSwitch.on('focus', instance._onSwitchFocus, instance),
+							instance._editorCodeView.on('click', instance._switchMode, instance),
+							instance._editorTextView.on('click', instance._switchMode, instance),
 							instance._editorSwitchTheme.on('click', instance._switchTheme, instance),
 							instance.doAfter('getHTML', instance._getHTML, instance)
 						];
@@ -113,6 +113,8 @@ AUI.add(
 						instance._toggleEditorModeUI();
 
 						instance._sourceEditor = sourceEditor;
+
+						instance._sourceEditor.editor.focus();
 					},
 
 					_getEditorStateLexiconIcon: function() {
@@ -262,6 +264,8 @@ AUI.add(
 							host.setHTML(content);
 
 							instance._toggleEditorModeUI();
+
+							host._alloyEditor.get('nativeEditor').focus();
 						}
 						else if (editor) {
 							var currentContent = event.content || host.getHTML();
@@ -271,36 +275,42 @@ AUI.add(
 							}
 
 							instance._toggleEditorModeUI();
+
+							instance._sourceEditor.editor.focus();
 						}
 						else {
 							instance._createSourceEditor();
 						}
+
+
 					},
 
 					_switchTheme: function(event) {
 						var instance = this;
 
 						instance._sourceEditor.switchTheme();
+
+						instance._sourceEditor.editor.focus();
 					},
 
 					_toggleEditorModeUI: function() {
 						var instance = this;
 
 						var editorFullscreen = instance._editorFullscreen;
-						var editorSwitch = instance._editorSwitch;
-						var editorSwitchContainer = editorSwitch.ancestor();
 						var editorSwitchTheme = instance._editorSwitchTheme;
 						var editorWrapper = instance._editorWrapper;
+						var editorTextView = instance._editorTextView;
+						var editorCodeView = instance._editorCodeView;
+						var editorSwitchContainer = editorCodeView.ancestor();
 
 						editorWrapper.toggleClass(CSS_SHOW_SOURCE);
 						editorSwitchContainer.toggleClass(CSS_SHOW_SOURCE);
 						editorFullscreen.toggleClass('hide');
 						editorSwitchTheme.toggleClass('hide');
+						editorTextView.toggleClass('hide');
+						editorCodeView.toggleClass('hide');
 
 						instance._isVisible = editorWrapper.hasClass(CSS_SHOW_SOURCE);
-
-						editorSwitch.one('.lexicon-icon').replace(instance._getEditorStateLexiconIcon());
-						editorSwitch.setAttribute('data-title', instance._isVisible ? Liferay.Language.get('text-view') : Liferay.Language.get('code-view'));
 
 						instance._toggleSourceSwitchFn(
 							{
@@ -314,7 +324,7 @@ AUI.add(
 
 						var showSourceSwitch = instance._isVisible || instance._isFocused || !editorState.hidden;
 
-						instance._editorSwitch.ancestor().toggleClass('hide', !showSourceSwitch);
+						instance._editorCodeView.ancestor().toggleClass('hide', !showSourceSwitch);
 					}
 				}
 			}

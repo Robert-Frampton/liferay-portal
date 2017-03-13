@@ -118,7 +118,7 @@ if (editorOptions != null) {
 </script>
 
 <liferay-util:buffer var="alloyEditor">
-	<div class="alloy-editor alloy-editor-placeholder <%= HtmlUtil.escapeAttribute(cssClass) %>" contenteditable="false" data-placeholder="<%= LanguageUtil.get(request, placeholder) %>" data-required="<%= required %>" id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>"></div>
+	<div class="alloy-editor alloy-editor-placeholder <%= HtmlUtil.escapeAttribute(cssClass) %>" contenteditable="false" data-placeholder="<%= LanguageUtil.get(request, placeholder) %>" id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>"></div>
 
 	<aui:icon cssClass="alloy-editor-icon" image="text-editor" markupView="lexicon" />
 </liferay-util:buffer>
@@ -145,8 +145,12 @@ if (editorOptions != null) {
 					<aui:icon cssClass="icon-monospaced" image="moon" markupView="lexicon" />
 				</button>
 
-				<button class="btn btn-default btn-xs editor-view lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "code-view") %>" id="<%= HtmlUtil.escapeAttribute(name) %>Switch" type="button">
+				<button class="btn btn-default btn-xs editor-view lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "code-view") %>" id="<%= HtmlUtil.escapeAttribute(name) %>CodeView" type="button">
 					<aui:icon cssClass="icon-monospaced" image="code" markupView="lexicon" />
+				</button>
+
+				<button class="btn btn-default btn-xs editor-view hide lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "text-view") %>" id="<%= HtmlUtil.escapeAttribute(name) %>TextView" type="button">
+					<aui:icon cssClass="icon-monospaced" image="text-editor" markupView="lexicon" />
 				</button>
 			</div>
 		</c:when>
