@@ -196,6 +196,12 @@
 							'dd-proxy'
 						]
 					},
+					'liferay-dynamic-inline-scroll': {
+						path: 'dynamic_inline_scroll.js',
+						requires: [
+							'aui-base'
+						]
+					},
 					'liferay-dynamic-select': {
 						path: 'dynamic_select.js',
 						requires: [
