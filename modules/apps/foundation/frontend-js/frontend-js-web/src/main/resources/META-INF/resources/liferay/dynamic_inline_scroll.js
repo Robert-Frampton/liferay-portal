@@ -11,6 +11,7 @@ AUI.add(
 			{
 				ATTRS: {
 					cur: {
+						getter: '_getValue',
 						value: 0
 					},
 
@@ -27,6 +28,7 @@ AUI.add(
 					},
 
 					initialPages: {
+						getter: '_getValue',
 						value: 0
 					},
 
@@ -39,6 +41,7 @@ AUI.add(
 					},
 
 					pages: {
+						getter: '_getValue',
 						value: 0
 					},
 
@@ -98,12 +101,16 @@ AUI.add(
 						return 'event.preventDefault(); ' + namespace + 'submitForm("' + namespace + curParam + ',' + pageIndex + '");';
 					},
 
+					_getValue: function(val) {
+						return Number(val);
+					},
+
 					_onScroll: function(event) {
 						var instance = this;
 
-						var currentPage = Number(instance.get('cur'));
-						var initialPages = Number(instance.get('initialPages'));
-						var pages = Number(instance.get('pages'));
+						var currentPage = instance.get('cur');
+						var initialPages = instance.get('initialPages');
+						var pages = instance.get('pages');
 
 						var target = event.target;
 
