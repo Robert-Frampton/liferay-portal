@@ -300,6 +300,7 @@ if (forcePost && (portletURL != null)) {
 				jsCall: '<%= jsCall %>',
 				namespace: '<%= namespace %>',
 				pages: '<%= pages %>',
+				randomNamespace: '<%= randomNamespace %>',
 				url: '<%= url %>',
 				urlAnchor: '<%= urlAnchor %>'
 			}

@@ -4,7 +4,7 @@ AUI.add(
 		var Lang = A.Lang;
 
 		var TPL_LIST_ITEM = '<li>' +
-				'<a href="{href}" onclick="{onlick}">{pageTitle}</a>' +
+				'<a href="{href}">{pageTitle}</a>' +
 			'</li>';
 
 		var DynamicInlineScroll = A.Component.create(
@@ -43,6 +43,10 @@ AUI.add(
 					pages: {
 						getter: '_getValue',
 						value: 0
+					},
+
+					randomNamespace: {
+						value: ''
 					},
 
 					url: {
@@ -92,15 +96,6 @@ AUI.add(
 						return 'javascript:document.' + formName + '.' + curParam + '.value = "' + pageIndex + '; ' + jsCall;
 					},
 
-					_getOnClick: function(pageIndex) {
-						var instance = this;
-
-						var curParam = instance.get('curParam');
-						var namespace = instance.get('namespace');
-
-						return 'event.preventDefault(); ' + namespace + 'submitForm("' + namespace + curParam + ',' + pageIndex + '");';
-					},
-
 					_getValue: function(val) {
 						return Number(val);
 					},
@@ -141,16 +136,35 @@ AUI.add(
 								listItemTPL,
 								{
 									href: instance._getHREF(pageIndex),
-									onclick: instance.get('forcePost') ? instance._getOnClick(pageIndex) : '',
 									pageTitle: pageIndex
 								}
+							);
+
+							listItemHtml = A.Node.create(listItemHtml);
+
+							listItemHtml.on(
+								'click',
+								function(event) {
+									if (instance.get('forcePost') == 'true') {
+										event.preventDefault();
+
+										var curParam = instance.get('curParam');
+										var namespace = instance.get('namespace');
+										var randomNamespace = instance.get('randomNamespace');
+
+										var form = document.getElementById(randomNamespace + namespace + 'pageIteratorFm');
+
+										form.elements[namespace + curParam].value = pageIndex - 1;
+
+										form.submit();
+									}
+								},
+								instance
 							);
 
 							pageIndex++;
 
 							event.target.setAttribute('data-pageindex', pageIndex);
-
-							listItemHtml = A.Node.create(listItemHtml);
 
 							event.target.append(listItemHtml);
 						}
