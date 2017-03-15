@@ -1793,6 +1793,15 @@
 		function(config, callback) {
 			var dialog = Window.getWindow(config);
 
+			if (dialog.iframe) {
+				dialog.iframe.on(
+					'load',
+					function (event) {
+						event.target.node.getDOMNode().contentWindow.focus();
+					}
+				);
+			}
+
 			if (Lang.isFunction(callback)) {
 				callback(dialog);
 			}
