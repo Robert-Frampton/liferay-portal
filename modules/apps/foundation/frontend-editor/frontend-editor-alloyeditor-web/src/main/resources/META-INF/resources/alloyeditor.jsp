@@ -38,7 +38,6 @@ String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:on
 String onFocusMethod = (String)request.getAttribute("liferay-ui:input-editor:onFocusMethod");
 String onInitMethod = (String)request.getAttribute("liferay-ui:input-editor:onInitMethod");
 String placeholder = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:placeholder"));
-String required = (String)request.getAttribute("liferay-ui:input-editor:required");
 boolean showSource = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:showSource"));
 boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:skipEditorLoading"));
 
@@ -118,7 +117,7 @@ if (editorOptions != null) {
 </script>
 
 <liferay-util:buffer var="alloyEditor">
-	<div class="alloy-editor alloy-editor-placeholder <%= HtmlUtil.escapeAttribute(cssClass) %>" contenteditable="false" data-placeholder="<%= LanguageUtil.get(request, placeholder) %>" data-required="<%= required %>" id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>"></div>
+	<div class="alloy-editor alloy-editor-placeholder <%= HtmlUtil.escapeAttribute(cssClass) %>" contenteditable="false" data-placeholder="<%= LanguageUtil.get(request, placeholder) %>" id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>"></div>
 
 	<aui:icon cssClass="alloy-editor-icon" image="text-editor" markupView="lexicon" />
 </liferay-util:buffer>
@@ -145,8 +144,12 @@ if (editorOptions != null) {
 					<aui:icon cssClass="icon-monospaced" image="moon" markupView="lexicon" />
 				</button>
 
-				<button class="btn btn-default btn-xs editor-view lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "code-view") %>" id="<%= HtmlUtil.escapeAttribute(name) %>Switch" type="button">
+				<button class="btn btn-default btn-xs editor-view lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "code-view") %>" id="<%= HtmlUtil.escapeAttribute(name) %>CodeView" type="button">
 					<aui:icon cssClass="icon-monospaced" image="code" markupView="lexicon" />
+				</button>
+
+				<button class="btn btn-default btn-xs editor-view hide lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "text-view") %>" id="<%= HtmlUtil.escapeAttribute(name) %>TextView" type="button">
+					<aui:icon cssClass="icon-monospaced" image="text-editor" markupView="lexicon" />
 				</button>
 			</div>
 		</c:when>
@@ -234,7 +237,6 @@ name = HtmlUtil.escapeJS(name);
 			plugins.push(
 				{
 					cfg: {
-						uploadItemReturnType: '<%= editorOptions.getUploadItemReturnType() %>',
 						uploadUrl: '<%= uploadURL %>'
 					},
 					fn: A.Plugin.LiferayEditorImageUploader
