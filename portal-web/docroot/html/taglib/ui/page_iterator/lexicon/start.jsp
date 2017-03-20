@@ -294,7 +294,7 @@ if (forcePost && (portletURL != null)) {
 			{
 				cur: '<%= cur %>',
 				curParam: '<%= curParam %>',
-				forcePost: '<%= forcePost %>',
+				forcePost: <%= forcePost %>,
 				formName: '<%= formName %>',
 				initialPages: '<%= initialPages %>',
 				jsCall: '<%= jsCall %>',
