@@ -23,21 +23,11 @@ class DynamicInlineScroll extends PortletBase {
 	attached() {
 		let inlineScrollers = this.all('ul.pagination ul.inline-scroller');
 
-		if (inlineScrollers) {
-			let inlineScrollersArr = [];
-
-			for (let i = 0; i < inlineScrollers.length; i++) {
-				inlineScrollersArr.push(inlineScrollers[i]);
+		inlineScrollers.forEach(
+			el => {
+				this.eventHandler_.add(el.addEventListener('scroll', this.onScroll_.bind(this)));
 			}
-
-			inlineScrollersArr.forEach(
-				el => {
-					this.eventHandler_.add(el.addEventListener('scroll', (event) => {
-						this.onScroll_(event);
-					}));
-				}
-			);
-		}
+		);
 	}
 
 	/**
@@ -45,7 +35,32 @@ class DynamicInlineScroll extends PortletBase {
 	 */
 	detached() {
 		super.detached();
+
 		this.eventHandler_.removeAllListeners();
+	}
+
+	/**
+	 * Dynamically adds list item elements to the dropdown menu.
+	 *
+	 * @param {element} listElement Dom node of the list element.
+	 * @param {number} pageIndex Index of page with an inline-scroller.
+	 * @protected
+	 */
+	addListItem_(listElement, pageIndex) {
+			const anchor = document.createElement('a');
+			const listItem = document.createElement('li');
+
+			anchor.innerText = pageIndex;
+			anchor.setAttribute('href', this.getHREF_(pageIndex));
+
+			listItem.appendChild(anchor);
+
+			pageIndex++;
+
+			listElement.appendChild(listItem);
+			listElement.setAttribute('data-page-index', pageIndex);
+
+			dom.on(listItem, 'click', this.handleListItemClick_.bind(this));
 	}
 
 	/**
@@ -56,11 +71,13 @@ class DynamicInlineScroll extends PortletBase {
 	 * @return {string} String value of href
 	 */
 	getHREF_(pageIndex) {
+		const {curParam, formName, jsCall, namespace, url, urlAnchor} = this;
+
 		if (this.url !== null) {
-			return this.url + this.namespace + this.curParam + '=' + pageIndex + this.urlAnchor;
+			return `${url}${namespace}${curParam}=${pageIndex}${urlAnchor}`;
 		}
 
-		return 'javascript:document.' + this.formName + '.' + this.namespace + this.curParam + '.value = "' + pageIndex + '; ' + this.jsCall;
+		return `javascript:document.${formName}.${namespace}${curParam}.value = "${pageIndex}; ${jsCall}`;
 	}
 
 	/**
@@ -75,6 +92,27 @@ class DynamicInlineScroll extends PortletBase {
 	}
 
 	/**
+	 * Handles click event of dynmaically added list item and submits search
+	 * container form.
+	 *
+	 * @param {Event} event The click event of the dynamically added list item.
+	 * @protected
+	 */
+	handleListItemClick_(event) {
+		if (this.forcePost) {
+			event.preventDefault();
+
+			const {curParam, namespace, randomNamespace} = this;
+
+			const form = document.getElementById(randomNamespace + namespace + 'pageIteratorFm');
+
+			form.elements[namespace + curParam].value = event.currentTarget.textContent;
+
+			form.submit();
+		}
+	}
+
+	/**
 	 * An event triggered when a dropdown menu with an inline-scroller is scrolled.
 	 * Dynamically adds list item elements to the dropdown menu as it is scrolled down.
 	 *
@@ -83,16 +121,14 @@ class DynamicInlineScroll extends PortletBase {
 	 * @protected
 	 */
 	onScroll_(event) {
-		let initialPages = this.initialPages;
-		let pages = this.pages;
+		const {cur, initialPages, pages} = this;
+		const {currentTarget} = event;
 
-		let target = event.currentTarget;
-
-		let pageIndex = this.getNumber_(target.getAttribute('data-page-index'));
-		let pageIndexMax = this.getNumber_(target.getAttribute('data-max-index'));
+		let pageIndex = this.getNumber_(currentTarget.getAttribute('data-page-index'));
+		let pageIndexMax = this.getNumber_(currentTarget.getAttribute('data-max-index'));
 
 		if (pageIndex === 0) {
-			let pageIndexCurrent = this.getNumber_(target.getAttribute('data-current-index'));
+			let pageIndexCurrent = this.getNumber_(currentTarget.getAttribute('data-current-index'));
 
 			if (pageIndexCurrent === 0) {
 				pageIndex = initialPages;
@@ -106,33 +142,8 @@ class DynamicInlineScroll extends PortletBase {
 			pageIndexMax = pages;
 		}
 
-		if ((this.cur <= pages) && (pageIndex < pageIndexMax) && (target.getAttribute('scrollTop') >= (target.getAttribute('scrollHeight') - 300))) {
-			let anchor = document.createElement('a');
-			let listItem = document.createElement('li');
-
-			anchor.innerText = pageIndex;
-
-			anchor.setAttribute('href', this.getHREF_(pageIndex));
-
-			listItem.appendChild(anchor);
-
-			pageIndex++;
-
-			event.target.appendChild(listItem);
-
-			event.target.setAttribute('data-page-index', pageIndex);
-
-			dom.on(listItem, 'click', (event) => {
-				if (this.forcePost == 'true') {
-					event.preventDefault();
-
-					let form = document.getElementById(this.randomNamespace + this.namespace + 'pageIteratorFm');
-
-					form.elements[this.namespace + this.curParam].value = event.currentTarget.textContent;
-
-					form.submit();
-				}
-			});
+		if ((cur <= pages) && (pageIndex < pageIndexMax) && (currentTarget.getAttribute('scrollTop') >= (currentTarget.getAttribute('scrollHeight') - 300))) {
+			this.addListItem_(event.target, pageIndex);
 		}
 	}
 }
@@ -169,10 +180,10 @@ DynamicInlineScroll.STATE = {
 	 * Forces a form post when a page on the dropdown menu is clicked
 	 * @instance
 	 * @memberof DynamicInlineScroll
-	 * @type {string}
+	 * @type {boolean}
 	 */
 	forcePost: {
-		validator: core.isString
+		validator: core.isBoolean
 	},
 
 	/**
