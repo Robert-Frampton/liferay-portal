@@ -1282,6 +1282,8 @@
 
 			iframeBody.addClass(dialog.iframeConfig.bodyCssClass);
 
+			event.win.focus();
+
 			var detachEventHandles = function() {
 				AArray.invoke(eventHandles, 'detach');
 
@@ -1792,15 +1794,6 @@
 		'_openWindowProvider',
 		function(config, callback) {
 			var dialog = Window.getWindow(config);
-
-			if (dialog.iframe) {
-				dialog.iframe.on(
-					'load',
-					function (event) {
-						event.target.node.getDOMNode().contentWindow.focus();
-					}
-				);
-			}
 
 			if (Lang.isFunction(callback)) {
 				callback(dialog);
