@@ -23,9 +23,17 @@ class DynamicInlineScroll extends PortletBase {
 	attached() {
 		let inlineScrollers = this.all('ul.pagination ul.inline-scroller');
 
-		inlineScrollers.forEach(
+		let inlineScrollersArr = [];
+
+		for (let i = 0; i < inlineScrollers.length; i++) {
+			inlineScrollersArr.push(inlineScrollers[i]);
+		}
+
+		inlineScrollersArr.forEach(
 			el => {
-				this.eventHandler_.add(el.addEventListener('scroll', this.onScroll_.bind(this)));
+				this.eventHandler_.add(el.addEventListener('scroll', (event) => {
+					this.onScroll_(event);
+				}));
 			}
 		);
 	}
