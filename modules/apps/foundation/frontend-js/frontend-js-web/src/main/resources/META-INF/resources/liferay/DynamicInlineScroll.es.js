@@ -55,20 +55,20 @@ class DynamicInlineScroll extends PortletBase {
 	 * @protected
 	 */
 	addListItem_(listElement, pageIndex) {
-			const anchor = document.createElement('a');
-			const listItem = document.createElement('li');
+		const anchor = document.createElement('a');
+		const listItem = document.createElement('li');
 
-			anchor.innerText = pageIndex;
-			anchor.setAttribute('href', this.getHREF_(pageIndex));
+		anchor.innerText = pageIndex;
+		anchor.setAttribute('href', this.getHREF_(pageIndex));
 
-			listItem.appendChild(anchor);
+		listItem.appendChild(anchor);
 
-			pageIndex++;
+		pageIndex++;
 
-			listElement.appendChild(listItem);
-			listElement.setAttribute('data-page-index', pageIndex);
+		listElement.appendChild(listItem);
+		listElement.setAttribute('data-page-index', pageIndex);
 
-			dom.on(listItem, 'click', this.handleListItemClick_.bind(this));
+		dom.on(listItem, 'click', this.handleListItemClick_.bind(this));
 	}
 
 	/**
