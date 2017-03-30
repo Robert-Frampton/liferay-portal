@@ -21,21 +21,11 @@ class DynamicInlineScroll extends PortletBase {
 	 * @inheritDoc
 	 */
 	attached() {
-		let inlineScrollers = this.all('ul.pagination ul.inline-scroller');
+		let {rootNode} = this;
 
-		let inlineScrollersArr = [];
+		rootNode = rootNode || document;
 
-		for (let i = 0; i < inlineScrollers.length; i++) {
-			inlineScrollersArr.push(inlineScrollers[i]);
-		}
-
-		inlineScrollersArr.forEach(
-			el => {
-				this.eventHandler_.add(el.addEventListener('scroll', (event) => {
-					this.onScroll_(event);
-				}));
-			}
-		);
+		this.eventHandler_.add(dom.delegate(rootNode, 'scroll', 'ul.pagination ul.inline-scroller', this.onScroll_.bind(this)));
 	}
 
 	/**
@@ -55,20 +45,16 @@ class DynamicInlineScroll extends PortletBase {
 	 * @protected
 	 */
 	addListItem_(listElement, pageIndex) {
-		const anchor = document.createElement('a');
 		const listItem = document.createElement('li');
 
-		anchor.innerText = pageIndex;
-		anchor.setAttribute('href', this.getHREF_(pageIndex));
-
-		listItem.appendChild(anchor);
+		dom.append(listItem, `<a href="${this.getHREF_(pageIndex)}">${pageIndex}</a>`);
 
 		pageIndex++;
 
 		listElement.appendChild(listItem);
 		listElement.setAttribute('data-page-index', pageIndex);
 
-		dom.on(listItem, 'click', this.handleListItemClick_.bind(this));
+		this.eventHandler_.add(dom.on(listItem, 'click', this.handleListItemClick_.bind(this)));
 	}
 
 	/**
@@ -130,13 +116,13 @@ class DynamicInlineScroll extends PortletBase {
 	 */
 	onScroll_(event) {
 		const {cur, initialPages, pages} = this;
-		const {currentTarget} = event;
+		const {target} = event;
 
-		let pageIndex = this.getNumber_(currentTarget.getAttribute('data-page-index'));
-		let pageIndexMax = this.getNumber_(currentTarget.getAttribute('data-max-index'));
+		let pageIndex = this.getNumber_(target.getAttribute('data-page-index'));
+		let pageIndexMax = this.getNumber_(target.getAttribute('data-max-index'));
 
 		if (pageIndex === 0) {
-			let pageIndexCurrent = this.getNumber_(currentTarget.getAttribute('data-current-index'));
+			let pageIndexCurrent = this.getNumber_(target.getAttribute('data-current-index'));
 
 			if (pageIndexCurrent === 0) {
 				pageIndex = initialPages;
@@ -150,8 +136,8 @@ class DynamicInlineScroll extends PortletBase {
 			pageIndexMax = pages;
 		}
 
-		if ((cur <= pages) && (pageIndex < pageIndexMax) && (currentTarget.getAttribute('scrollTop') >= (currentTarget.getAttribute('scrollHeight') - 300))) {
-			this.addListItem_(event.target, pageIndex);
+		if ((cur <= pages) && (pageIndex < pageIndexMax) && (target.getAttribute('scrollTop') >= (target.getAttribute('scrollHeight') - 300))) {
+			this.addListItem_(target, pageIndex);
 		}
 	}
 }
