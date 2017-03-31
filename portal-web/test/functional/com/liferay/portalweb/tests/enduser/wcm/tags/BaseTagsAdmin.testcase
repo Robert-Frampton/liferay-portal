@@ -1,6 +1,7 @@
 <definition component-name="portal-tags">
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
+	<property name="testray.component.names" value="Tags" />
 	<property name="testray.main.component.name" value="Tags" />
 
 	<set-up>
@@ -27,18 +28,6 @@
 		</if>
 	</tear-down>
 
-	<command name="AddMultipleTags" priority="4">
-		<for list="tagname1,tagname2,tagname3" param="tagName">
-			<execute macro="Tag#addCP">
-				<var name="tagName" value="${tagName}" />
-			</execute>
-
-			<execute macro="Tag#viewCP">
-				<var name="tagName" value="${tagName}" />
-			</execute>
-		</for>
-	</command>
-
 	<command name="AddTagWithAllowableSpecialCharacters" priority="4">
 		<var name="allowableCharacters"><![CDATA[-,_,^,(,),!,$]]></var>
 
@@ -51,28 +40,6 @@
 				<var name="tagName" value="${allowableCharacter}tag${allowableCharacter}" />
 			</execute>
 		</for>
-	</command>
-
-	<command name="AddTagWithMultipleWords" priority="5">
-		<property name="portal.acceptance" value="true" />
-
-		<execute macro="Tag#addCP">
-			<var name="tagName" value="tag name" />
-		</execute>
-
-		<execute macro="Tag#viewCP">
-			<var name="tagName" value="tag name" />
-		</execute>
-	</command>
-
-	<command name="AddTagWithSingleWord" priority="4">
-		<execute macro="Tag#addCP">
-			<var name="tagName" value="tagname" />
-		</execute>
-
-		<execute macro="Tag#viewCP">
-			<var name="tagName" value="tagname" />
-		</execute>
 	</command>
 
 	<command name="AddTagWithUTF8Encoding" priority="4">

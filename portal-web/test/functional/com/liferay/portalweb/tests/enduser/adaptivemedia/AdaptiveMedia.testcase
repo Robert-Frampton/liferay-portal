@@ -109,4 +109,86 @@
 
 		<execute macro="Button#clickPublish" />
 	</command>
+
+	<command name="EditImageResolutionWithOptimizedImages" priority="5">
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="Small Image Variant" />
+			<var name="maxHeight" value="100" />
+			<var name="maxWidth" value="100" />
+		</execute>
+
+		<execute macro="Alert#viewSuccessMessage" />
+
+		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
+			<var name="imageName" value="Small Image Variant" />
+			<var name="maxHeight" value="100" />
+			<var name="maxWidth" value="100" />
+			<var name="percentOptimized" value="0" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
+		<execute macro="DMDocument#addCP">
+			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFile" value="Document_1.jpg" />
+			<var name="dmDocumentTitle" value="Document_1.jpg" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#editImageResolution">
+			<var name="imageName" value="Small Image Variant" />
+			<var name="imageNameEdit" value="Small Image Variant Edited" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
+			<var name="imageName" value="Small Image Variant Edited" />
+			<var name="maxHeight" value="100" />
+			<var name="maxWidth" value="100" />
+		</execute>
+	</command>
+
+	<command name="EditImageResolutionWithoutOptimizedImage" priority="5">
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="Small Image Variant" />
+			<var name="maxHeight" value="100" />
+			<var name="maxWidth" value="100" />
+		</execute>
+
+		<execute macro="Alert#viewSuccessMessage" />
+
+		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
+			<var name="imageName" value="Small Image Variant" />
+			<var name="maxHeight" value="100" />
+			<var name="maxWidth" value="100" />
+			<var name="percentOptimized" value="0" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#editImageResolution">
+			<var name="imageIDEdit" value="large-image" />
+			<var name="imageName" value="Small Image Variant" />
+			<var name="imageNameEdit" value="Large Image Variant" />
+			<var name="maxHeightEdit" value="1000" />
+			<var name="maxWidthEdit" value="1000" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
+			<var name="imageName" value="Large Image Variant" />
+			<var name="maxHeight" value="1000" />
+			<var name="maxWidth" value="1000" />
+			<var name="percentOptimized" value="0" />
+		</execute>
+	</command>
 </definition>

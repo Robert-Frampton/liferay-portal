@@ -169,6 +169,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>IMAGE_ID</td>
+	<td>//input[contains(@id,'newUuid')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>IMAGE_URL</td>
 	<td>//div[label[contains(.,'Image URL')]]//input[@type='text']</td>
 	<td></td>

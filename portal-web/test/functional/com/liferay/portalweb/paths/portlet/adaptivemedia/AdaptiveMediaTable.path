@@ -9,6 +9,11 @@
 </thead>
 <tbody>
 <tr>
+	<td>IMAGE_RESOLUTION_OPTIONS</td>
+	<td>//a[contains(.,'${key_imageName}')]/../..//td//span/*[name()='svg'][contains(@class,'icon-ellipsis-v')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>NAME</td>
 	<td>//td[contains(@class,'name-column')]/a[contains(.,'${key_imageName}')]</td>
 	<td></td>
@@ -25,7 +30,12 @@
 </tr>
 <tr>
 	<td>PROGRESS</td>
-	<td>//a[contains(.,'${key_imageName}')]/../..//div[@class='progress']/div</td>
+	<td>//td[contains(.,'${key_imageName}')]/../..//div[contains(@class,'progress')]/div[@aria-valuenow='${key_percentOptimized}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>STATE</td>
+	<td>//a[contains(.,'${key_imageName}')]/../..//td[contains(@class,'lfr-state-column') and contains(.,'${key_imageState}')]</td>
 	<td></td>
 </tr>
 </tbody>

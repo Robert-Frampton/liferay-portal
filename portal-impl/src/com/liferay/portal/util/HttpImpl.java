@@ -55,7 +55,7 @@ import java.nio.charset.Charset;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -815,13 +815,11 @@ public class HttpImpl implements Http {
 
 	@Override
 	public Map<String, String[]> parameterMapFromString(String queryString) {
-		Map<String, String[]> parameterMap = new LinkedHashMap<>();
+		Map<String, String[]> parameterMap = new HashMap<>();
 
 		if (Validator.isNull(queryString)) {
 			return parameterMap;
 		}
-
-		Map<String, List<String>> tempParameterMap = new LinkedHashMap<>();
 
 		String[] parameters = StringUtil.split(queryString, CharPool.AMPERSAND);
 
@@ -853,25 +851,15 @@ public class HttpImpl implements Http {
 					}
 				}
 
-				List<String> values = tempParameterMap.get(key);
+				String[] values = parameterMap.get(key);
 
 				if (values == null) {
-					values = new ArrayList<>();
-
-					tempParameterMap.put(key, values);
+					parameterMap.put(key, new String[] {value});
 				}
-
-				values.add(value);
+				else {
+					parameterMap.put(key, ArrayUtil.append(values, value));
+				}
 			}
-		}
-
-		for (Map.Entry<String, List<String>> entry :
-				tempParameterMap.entrySet()) {
-
-			String key = entry.getKey();
-			List<String> values = entry.getValue();
-
-			parameterMap.put(key, values.toArray(new String[values.size()]));
 		}
 
 		return parameterMap;

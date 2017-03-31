@@ -137,7 +137,7 @@ public class JournalArticleStagedModelDataHandlerTest
 
 		Assert.assertNotNull(importJournalArticle);
 		Assert.assertEquals(
-			journalArticle.getVersion(), importJournalArticle.getVersion(), 0d);
+			journalArticle.getVersion(), importJournalArticle.getVersion(), 0D);
 	}
 
 	@Test

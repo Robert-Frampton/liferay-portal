@@ -35,8 +35,8 @@ public class WorkflowTaskModel {
 		_state = null;
 		_transitions = null;
 		_workflowAssetModel = null;
-		_workflowTaskId = 0;
 		_workflowAssigneeModel = null;
+		_workflowTaskId = 0;
 	}
 
 	public WorkflowTaskModel(

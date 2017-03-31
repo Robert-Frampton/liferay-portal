@@ -11,16 +11,87 @@
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 	</command>
 
+	<command name="editImageResolution">
+		<var name="key_imageName" value="${imageName}" />
+		<var name="key_percentOptimized" value="${percentOptimized}" />
+
+		<execute function="Click" locator1="AdaptiveMediaTable#IMAGE_RESOLUTION_OPTIONS" />
+
+		<execute function="AssertClick" locator1="MenuItem#EDIT" value1="Edit" />
+
+		<if>
+			<not>
+				<contains string="${imageNameEdit}" substring="{imageNameEdit}" />
+			</not>
+			<then>
+				<execute function="Type" locator1="TextInput#NAME" value1="${imageNameEdit}"  />
+			</then>
+		</if>
+
+		<if>
+			<condition function="IsTextEqual" locator1="Message#INFO" value1="This resolution has already optimized images. Please, if you want different dimension values you must create a new image resolution." />
+			<then>
+				<execute function="AssertNotEditable" locator1="TextInput#IMAGE_ID" />
+				<execute function="AssertNotEditable" locator1="TextInput#MAX_HEIGHT" />
+				<execute function="AssertNotEditable" locator1="TextInput#MAX_WIDTH" />
+				<execute function="AssertNotEditable" locator1="Radio#AUTOMATIC_URL" />
+				<execute function="AssertNotEditable" locator1="Radio#CUSTOM_URL" />
+			</then>
+			<else>
+
+				<execute function="AssertTextEquals" locator1="Message#INFO" value1="At least one dimension value is required (Max. Width or Max. Height)." />
+
+				<if>
+					<not>
+						<contains string="${maxHeightEdit}" substring="{maxHeightEdit}" />
+					</not>
+					<then>
+						<execute function="Type" locator1="TextInput#MAX_HEIGHT" value1="${maxHeightEdit}"  />
+					</then>
+				</if>
+
+				<if>
+					<not>
+						<contains string="${maxWidthEdit}" substring="{maxWidthEdit}" />
+					</not>
+					<then>
+						<execute function="Type" locator1="TextInput#MAX_WIDTH" value1="${maxWidthEdit}"  />
+					</then>
+				</if>
+
+				<if>
+					<not>
+						<contains string="${imageIDEdit}" substring="{imageIDEdit}" />
+					</not>
+					<then>
+						<execute function="Click" locator1="Radio#CUSTOM_URL" />
+
+						<execute function="Type" locator1="TextInput#IMAGE_ID" value1="${imageIDEdit}"  />
+					</then>
+				</if>
+			</else>
+		</if>
+
+		<execute macro="PortletEntry#save" />
+	</command>
+
 	<command name="viewImageResolutionTableEntry">
 		<var name="key_imageName" value="${imageName}" />
 
 		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#NAME" value1="${imageName}" />
 
-		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#PROGRESS" value1="${percentOptimized}" />
+		<var name="key_percentOptimized" value="${percentOptimized}" />
 
-		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#MAX_WIDTH" value1="${maxWidth}" />
+		<if>
+			<isset var="percentOptimized" />
+			<then>
+				<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#PROGRESS" value1="${percentOptimized}" />
+			</then>
+		</if>
 
-		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#MAX_HEIGHT" value1="${maxHeight}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#MAX_WIDTH" value1="${maxWidth}" />
+
+		<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#MAX_HEIGHT" value1="${maxHeight}" />
 	</command>
 
 	<command name="viewImageVariantURL">

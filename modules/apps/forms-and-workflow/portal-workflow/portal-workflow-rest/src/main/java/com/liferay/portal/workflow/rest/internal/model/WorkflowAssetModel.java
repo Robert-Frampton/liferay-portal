@@ -42,12 +42,13 @@ public class WorkflowAssetModel {
 			WorkflowUserModel workflowUserModel)
 		throws PortalException {
 
+		_workflowUserModel = workflowUserModel;
+
 		_className = assetEntry.getClassName();
 		_classPK = assetEntry.getClassPK();
 		_summary = assetEntry.getSummary(locale);
 		_title = assetEntry.getTitle(locale);
 		_url = assetEntry.getUrl();
-		_workflowUserModel = workflowUserModel;
 	}
 
 	@XmlElement
