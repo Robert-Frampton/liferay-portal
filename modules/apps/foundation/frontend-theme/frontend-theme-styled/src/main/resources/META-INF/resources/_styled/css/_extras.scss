@@ -297,17 +297,12 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 }
 
 .cke_toolbar {
-	&.cke_toolbar__a11yhelpbtn {
-		.cke_toolgroup, .cke_toolgroup:hover {
-			box-shadow: initial;
-		}
-
-		.cke_button {
+		.cke_button__a11ybtn {
 			&:hover {
 				box-shadow: none;
 			}
 
-			.cke_button_label {
+			.cke_button__a11ybtn_label {
 				&:after {
 					@include background-image(linear-gradient(#FFF, #E4E4E4));
 					border-radius: 2px;
@@ -318,7 +313,6 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 				}
 			}
 		}
-	}
 }
 
 /* ---------- Switches ---------- */
