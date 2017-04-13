@@ -74,6 +74,12 @@ String backURL = PortalUtil.getCurrentURL(request);
 											calendarResourceId: calendarResourceId
 										}
 									)
+								},
+								function(modal) {
+									modal.iframe.on(
+										'load',
+										A.bind(instance._afterAddEventModalLoad, instance)
+									);
 								}
 							);
 						}
@@ -131,6 +137,12 @@ String backURL = PortalUtil.getCurrentURL(request);
 								refreshWindow: window,
 								title: '<liferay-ui:message key="permissions" />',
 								uri: decodeURIComponent('<%= permissionsURL %>')
+							},
+							function(modal) {
+								modal.iframe.on(
+									'load',
+									A.bind(instance._afterAddEventModalLoad, instance)
+								);
 							}
 						);
 					},
@@ -193,6 +205,12 @@ String backURL = PortalUtil.getCurrentURL(request);
 									calendarId: activeCalendar.get('calendarId')
 								}
 							)
+						},
+						function(modal) {
+							modal.iframe.on(
+								'load',
+								A.bind(instance._afterAddEventModalLoad, instance)
+							);
 						}
 					);
 				},
@@ -271,6 +289,12 @@ String backURL = PortalUtil.getCurrentURL(request);
 									calendarResourceId: activeCalendar.get('calendarResourceId')
 								}
 							)
+						},
+						function(modal) {
+							modal.iframe.on(
+								'load',
+								A.bind(instance._afterAddEventModalLoad, instance)
+							);
 						}
 					);
 				},
@@ -320,6 +344,12 @@ String backURL = PortalUtil.getCurrentURL(request);
 									resourcePrimKey: activeCalendar.get('calendarId')
 								}
 							)
+						},
+						function(modal) {
+							modal.iframe.on(
+								'load',
+								A.bind(instance._afterAddEventModalLoad, instance)
+							);
 						}
 					);
 				},
