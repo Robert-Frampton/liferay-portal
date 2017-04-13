@@ -1507,6 +1507,12 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<description>Horizontal position of the popped up icon menu. Only accepts "left" or "right" and depends on the direction attribute, i.e. the horizontal overlay direction only will affect directions "top" or "down". The default value is <![CDATA[<code>left</code>]]>.</description>
+			<name>horizontalOverlayDirection</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>The location of an image file to use in the icon.</description>
 			<name>icon</name>
 			<required>false</required>

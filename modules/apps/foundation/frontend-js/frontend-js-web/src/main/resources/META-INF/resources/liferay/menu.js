@@ -67,6 +67,8 @@ AUI.add(
 
 		var REGEX_DIRECTION = /\bdirection-(down|left|right|up)\b/;
 
+		var REGEX_HORIZONTAL_OVERLAY_DIRECTION = /\bhorizontal-overlay-direction-(left|right)\b/;
+
 		var REGEX_MAX_DISPLAY_ITEMS = /max-display-items-(\d+)/;
 
 		var SELECTOR_ANCHOR = 'a';
@@ -142,10 +144,12 @@ AUI.add(
 
 					if (cssClass.indexOf(AUTO) === -1) {
 						var directionMatch = cssClass.match(REGEX_DIRECTION);
+						var horizontalOverlayDirectionMatch = cssClass.match(REGEX_HORIZONTAL_OVERLAY_DIRECTION);
 
 						var direction = directionMatch && directionMatch[1] || AUTO;
+						var horizontalOverlayDirection = horizontalOverlayDirectionMatch && horizontalOverlayDirectionMatch[1];
 
-						var overlayHorizontal = mapAlignHorizontalOverlay[direction] || defaultOverlayHorizontalAlign;
+						var overlayHorizontal = mapAlignHorizontalOverlay[direction] || mapAlignHorizontalOverlay[horizontalOverlayDirection] || defaultOverlayHorizontalAlign;
 						var overlayVertical = MAP_ALIGN_VERTICAL_OVERLAY[direction] || STR_TOP;
 
 						var triggerHorizontal = mapAlignHorizontalTrigger[direction] || defaultTriggerHorizontalAlign;
