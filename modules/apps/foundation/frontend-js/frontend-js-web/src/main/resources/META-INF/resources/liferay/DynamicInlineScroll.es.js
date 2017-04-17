@@ -1,7 +1,7 @@
 import core from 'metal';
 import dom from 'metal-dom';
 import { EventHandler } from 'metal-events';
-import PortletBase from 'frontend-js-web/liferay/PortletBase.es';
+import PortletBase from './PortletBase.es';
 
 /**
  * DynamicInlineScroll appends list item elements to dropdown menus with inline-scrollers
