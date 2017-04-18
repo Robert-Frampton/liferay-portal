@@ -99,10 +99,12 @@
 }
 
 .dropdown-toggle:after {
+  border-width: 0;
   content: normal;
 }
 
 .dropup .dropdown-toggle:after {
+  border-width: 0;
   content: normal;
 }
 
@@ -270,6 +272,33 @@ div.collapse-basic-search .basic-search .form-control {
   @extend .rounded;
 }
 
+// _input-groups.scss
+
+.input-group {
+  display: table;
+  width: auto;
+
+  .input-group-addon,
+  .input-group-btn {
+    display: table-cell;
+    width: 1%;
+  }
+
+  .form-control {
+    display: table-cell;
+    width: 100%;
+  }
+}
+
+
+
+.input-group-default {
+  .input-group-addon {
+    display: table-cell;
+    width: 1%;
+  }
+}
+
 // _labels.scss
 // Removed in Bootstrap 4
 
@@ -346,6 +375,10 @@ a.label {
 
 .nav {
   flex-direction: column;
+
+  > li {
+    position: relative;
+  }
 
   > li > a {
     display: block;
@@ -463,6 +496,8 @@ a.label {
 
   .navbar-collapse {
     flex-basis: auto;
+    padding-right: $navbar-padding-horizontal;
+    padding-left: $navbar-padding-horizontal;
 
     @include media-breakpoint-up(md) {
       display: block;
@@ -500,6 +535,11 @@ a.label {
     > img {
       display: block;
     }
+  }
+
+  .navbar-form {
+    margin-left: -$navbar-padding-horizontal;
+    margin-right: -$navbar-padding-horizontal;
   }
 }
 
@@ -697,7 +737,12 @@ a.label {
 // Panel contents
 .panel-body {
   padding: $panel-body-padding;
-  @include clearfix;
+
+  &:after,
+  &:before {
+    content: '';
+    display: table;
+  }
 }
 
 // Optional heading
@@ -1161,7 +1206,14 @@ a.label {
 // _liferay.scss
 
 #navigationCollapse {
+  padding-right: $navbar-padding-horizontal;
+  padding-left: $navbar-padding-horizontal;
+
   @include media-breakpoint-up(md) {
     display: block;
   }
+}
+
+#banner .row:first-child {
+  display: block;
 }
