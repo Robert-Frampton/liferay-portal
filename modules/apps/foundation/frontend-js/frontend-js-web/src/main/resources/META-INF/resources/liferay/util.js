@@ -31,7 +31,7 @@
 	var STR_RIGHT_SQUARE_BRACKET = ']';
 
 	var TPL_LEXICON_ICON = '<svg class="lexicon-icon lexicon-icon-{0} {1}" role="image">' +
-			'<use xlink:href="' + themeDisplay.getPathThemeImages() + '/lexicon/icons.svg#{0}" />' +
+			'<use data-href="' + themeDisplay.getPathThemeImages() + '/lexicon/icons.svg#{0}" />' +
 		'</svg>';
 
 	var Window = {

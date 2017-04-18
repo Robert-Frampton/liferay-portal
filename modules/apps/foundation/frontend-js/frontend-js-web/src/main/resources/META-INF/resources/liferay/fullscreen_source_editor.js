@@ -8,7 +8,7 @@ AUI.add(
 					'<button class="btn btn-default btn-xs lfr-portal-tooltip pull-right" data-title="{iconMoonTooltip}" id="switchTheme" type="button">' +
 						'<span class="icon-monospaced">' +
 							'<svg class="lexicon-icon lexicon-icon-moon" role="img">' +
-								'<use xlink:href="{pathThemeImages}/lexicon/icons.svg#moon" />' +
+								'<use data-href="{pathThemeImages}/lexicon/icons.svg#moon" />' +
 							'</svg>' +
 						'</span>' +
 					'</button>' +
