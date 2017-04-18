@@ -164,7 +164,7 @@ public class IconTag extends BaseIconTag {
 				jspWriter.write(
 					InlineUtil.buildDynamicAttributes(getDynamicAttributes()));
 				jspWriter.write(StringPool.GREATER_THAN);
-				jspWriter.write("<use xlink:href=\"");
+				jspWriter.write("<use data-href=\"");
 
 				String src = getSrc();
 
