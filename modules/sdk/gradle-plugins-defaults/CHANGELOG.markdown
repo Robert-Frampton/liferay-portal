@@ -1366,11 +1366,19 @@ fix for all tasks of type `FindBugs` related to source sets.
 ### Changed
 - [LPS-71722]: Update the [Liferay Gradle Plugins] dependency to version 3.2.39.
 
-## 3.6.0 - 2017-04-13
+## 3.6.0 - 2017-04-14
 
 ### Added
 - [LPS-71901]: Add task `updateFileSnapshotVersions` to update the project
 version in external files to the latest snapshot.
+
+### Changed
+- [LPS-71164]: Update the [Liferay Gradle Plugins] dependency to version 3.2.40.
+
+## 3.6.1 - 2017-04-17
+
+### Changed
+- [LPS-71686]: Update the [Liferay Gradle Plugins] dependency to version 3.2.41.
 
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
@@ -1508,6 +1516,7 @@ version in external files to the latest snapshot.
 [LPS-71535]: https://issues.liferay.com/browse/LPS-71535
 [LPS-71591]: https://issues.liferay.com/browse/LPS-71591
 [LPS-71603]: https://issues.liferay.com/browse/LPS-71603
+[LPS-71686]: https://issues.liferay.com/browse/LPS-71686
 [LPS-71722]: https://issues.liferay.com/browse/LPS-71722
 [LPS-71795]: https://issues.liferay.com/browse/LPS-71795
 [LPS-71826]: https://issues.liferay.com/browse/LPS-71826
