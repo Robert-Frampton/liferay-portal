@@ -5,7 +5,7 @@
 * All rights reserved.
 * MIT license
 */
-// Alerts
+// _alerts.scss
 
 @if (variable-exists(atlas-theme)) {
   .alert-mismissable,
@@ -16,7 +16,7 @@
   }
 }
 
-// Breadcrumbs
+// _breadcrumbs.scss
 
 .breadcrumb > li {
   float: left;
@@ -42,9 +42,8 @@
   text-decoration: none;
 }
 
-// Buttons
+// _buttons.scss
 
-// Renamed .btn-default to .btn-secondary
 .btn-default {
   @extend .btn-secondary;
 }
@@ -55,16 +54,28 @@
 
 // Removed .btn-xs in BS4
 .btn-xs {
-	@include button-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $line-height-small, $btn-border-radius-small);
+  @include button-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $line-height-small, $btn-border-radius-small);
 }
 
-// Button Groups
+// _button-groups.scss
 
 .btn-group.dropdown {
   display: inline-flex;
 }
 
-// Dropdowns
+// _cards.scss
+
+.card {
+  display: block; // FF doesn't display cards properly
+}
+
+// _component-animations.scss
+
+.collapse.in[aria-expanded="true"] {
+  @extend .collapse.show;
+}
+
+// _dropdowns.scss
 // Moved .caret to .dropdown-toggle:after in BS4
 .caret {
   display: inline-block;
@@ -99,13 +110,13 @@
   display: block;
 }
 
-// Figures
+// _figures.scss
 
 .figure {
   display: block;
 }
 
-// Forms
+// _forms.scss
 
 label {
   max-width: 100%;
@@ -165,8 +176,7 @@ fieldset {
   width: 100%;
 }
 
-
-// Form Validation
+// _form-validation.scss
 
 .help-block {
   display: block; // account for any element using help-block
@@ -204,24 +214,26 @@ fieldset {
   }
 }
 
-// Basic Search
+// _basic-search.scss
 
-.basic-search {
-  align-items: flex-start;
+.basic-search.input-group {
+  display: table;
+  width: auto;
+}
+
+.basic-search .input-group-input .form-control {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.basic-search .input-group-btn {
+  display: table-cell;
+  width: 1%;
 }
 
 .basic-search-transition {
   .basic-search-slider {
     transition: all 0.5s ease;
-  }
-}
-
-.collapse-basic-search .basic-search.input-group {
-  display: flex;
-  justify-content: flex-end;
-
-  .input-group-input {
-    flex: 1;
   }
 }
 
@@ -233,26 +245,7 @@ div.collapse-basic-search .basic-search .form-control {
   }
 }
 
-.input-group-input {
-  display: block;
-}
-
-// Input Groups
-
-.input-group-addon, .input-group-btn,
-.input-group .form-control {
-  flex-direction: row;
-}
-
-div.input-group-default {
-  display: flex;
-}
-
-div.input-group-default .input-group-addon {
-  align-items: center;
-}
-
-// Grid
+// _grid.scss
 
 // Renamed .col-xs-* to .col-*
 @for $i from 1 through $grid-columns {
@@ -264,7 +257,7 @@ div.input-group-default .input-group-addon {
 // Image
 // Renamed .img-responsive to .img-fluid
 .img-responsive {
-	@include img-fluid;
+  @include img-fluid;
 }
 
 // Renamed .img-circle to .rounded-circle
@@ -277,7 +270,7 @@ div.input-group-default .input-group-addon {
   @extend .rounded;
 }
 
-// Labels
+// _labels.scss
 // Removed in Bootstrap 4
 
 .label {
@@ -343,186 +336,247 @@ a.label {
   @include label-variant($label-danger-bg);
 }
 
-// Modals
+// _modals.scss
 
 .modal-header {
   display: block;
 }
 
-// Nav
+// _navs.scss
 
 .nav {
-  display: block;
-}
+  flex-direction: column;
 
-.nav-pills > li {
-  float: left;
+  > li > a {
+    display: block;
+    padding: $nav-link-padding-y $nav-link-padding-x;
 
-  > a {
-    border-radius: $nav-pills-border-radius;
+    @include hover-focus {
+      text-decoration: none;
+    }
   }
 
-  + li {
-    margin-left: 2px;
-  }
-}
-
-.nav-stacked > li {
-  float: none;
-
-  + li {
-    margin-left: 0;
-    margin-top: 2px;
+  .disabled > a {
+    color: $nav-disabled-link-color;
   }
 }
 
-// .nav-pills,
-// .nav-tabs {
-//   flex-direction: row;
-// }
+.nav-justified {
+  flex-direction: row;
 
-// .nav-stacked {
-//   flex-direction: column;
-// }
-
-// Management Bar
-// .navbar-nav,
-// .management-bar-nav {
-//   @include media-breakpoint-up(md) {
-//     flex-direction: row;
-//     flex-wrap: wrap;
-//   }
-
-//   > li {
-//     white-space: nowrap;
-//   }
-// }
-
-// .navbar-no-collapse,
-// .management-bar-no-collapse .nav,
-// .navbar-no-collapse .nav {
-//   flex-direction: row;
-// }
-
-// Navbars
-
-// .navbar {
-//   flex-direction: row;
-//   flex-wrap: wrap;
-// }
-
-// .navbar-form {
-//   align-items: flex-start;
-//   display: flex;
-// }
-
-// .navbar-toggle {
-//   @include media-breakpoint-up(md) {
-//     display: none;
-//   }
-// }
-
-// .navbar-collapse {
-//   display: none;
-
-//   @include media-breakpoint-up(md) {
-//     display: flex;
-//     flex: 1;
-//   }
-// }
-
-// .navbar-no-collapse .navbar-nav {
-//   flex: 1;
-// }
-
-// .navbar-no-collapse {
-//   @include clearfix;
-
-//   display: block;
-
-//   .navbar-nav {
-//     display: block;
-//   }
-// }
-
-.navbar {
-  @include clearfix;
-
-  display: block;
-  padding: 0;
+  > li {
+    flex: 1;
+    text-align: center;
+  }
 }
 
-.navbar-nav {
+.nav-stacked {
+  @extend .flex-column;
+}
+
+.nav.nav-pills {
+  flex-direction: row;
+}
+
+.nav-pills > li > a {
+  @include border-radius($nav-pills-border-radius);
+}
+
+.nav-pills > li.active > a {
+  background-color: $nav-pills-active-link-hover-bg;
+  color: $nav-pills-active-link-hover-color;
+}
+
+// _management-bar.scss
+
+.management-bar-nav {
   display: block;
 
   > li {
-    float: left;
+    @include media-breakpoint-down(sm) {
+      display: block;
+    }
+  }
+
+  .dropdown-menu {
+    @include media-breakpoint-down(sm) {
+      background-color: transparent;
+      border-width: 0;
+      box-shadow: none;
+      max-width: none;
+      position: relative;
+      width: 100%;
+    }
   }
 }
 
-.navbar-collapse {
+// _navbars.scss
+
+.navbar-toggle {
+  background-color: transparent;
+  background-image: none;
+  border-radius: $border-radius-base;
+  border: 1px solid transparent;
+  float: right;
+  margin-bottom: (($navbar-height - 34px) / 2);
+  margin-right: $navbar-padding-horizontal;
+  margin-top: (($navbar-height - 34px) / 2);
+  padding: 9px 10px;
+  position: relative;
+
   @include media-breakpoint-up(md) {
+    display: none;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  .icon-bar {
     display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+  }
+  .icon-bar + .icon-bar {
+    margin-top: 4px;
+  }
+}
+
+#navigation.site-navigation, // liferay portal specific
+.bs3-navbar,
+.navbar-default,
+.navbar-inverse {
+  border: 1px solid transparent;
+
+  @include clearfix;
+
+  display: block;
+  margin-bottom: $navbar-margin-bottom;
+  min-height: $navbar-height;
+  padding: 0;
+  position: relative;
+
+  @include media-breakpoint-up(md) {
+    border-radius: $navbar-border-radius;
+  }
+
+  .navbar-collapse {
+    flex-basis: auto;
+
+    @include media-breakpoint-up(md) {
+      display: block;
+    }
+  }
+
+  .navbar-nav {
+    display: block;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    > li {
+      @include media-breakpoint-up(md) {
+        float: left;
+      }
+    }
+  }
+
+  .navbar-brand {
+    float: left;
+    font-size: $font-size-large;
+    padding-left: $navbar-padding-horizontal;
+    padding-right: $navbar-padding-horizontal;
+
+    @include media-breakpoint-down(sm) {
+      padding-bottom: $navbar-padding-vertical;
+      padding-top: $navbar-padding-vertical;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
+    > img {
+      display: block;
+    }
   }
 }
 
 .navbar-default {
   background-color: $navbar-default-bg;
+  border-color: $navbar-default-border;
 }
 
 .navbar-inverse {
   background-color: $navbar-inverse-bg;
+  border-color: $navbar-inverse-border;
 }
 
-// Nav Tabs
+.navbar-form {
+  .form-group {
+    @include media-breakpoint-up(md) {
+      display: inline-block;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+  }
+}
+
+.navbar-header {
+  @include clearfix;
+
+  @include media-breakpoint-up(md) {
+    float: left;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .navbar-left {
+    float: left !important;
+  }
+
+  .navbar-right {
+    float: right !important;
+
+    ~ .navbar-right {
+      margin-right: 0;
+    }
+  }
+}
+
+// _nav-tabs.scss
+
+.nav-tabs {
+  flex-direction: row;
+}
 
 .nav-tabs > li {
-  float: left;
-  // Make the list-items overlay the bottom border
   margin-bottom: -$nav-tabs-border-width;
 
-  + .nav-item {
-    margin-left: $nav-item-margin;
-  }
-}
+  > a {
+    border: $nav-tabs-border-width solid transparent;
 
-.nav-tabs > li > a {
-  display: block;
-  padding: $nav-link-padding;
-  border: $nav-tabs-border-width solid transparent;
-  @include border-top-radius($nav-tabs-border-radius);
+    @include border-top-radius($border-radius);
 
-  @include hover-focus {
-    border-color: $nav-tabs-link-hover-border-color $nav-tabs-link-hover-border-color $nav-tabs-border-color;
-  }
-}
-
-.nav-tabs > li > a.disabled,
-.nav-tabs > li.disabled > a {
-  @include plain-hover-focus {
-    color: $nav-disabled-link-color;
-    background-color: transparent;
-    border-color: transparent;
+    @include hover-focus {
+      border-color: $nav-tabs-link-hover-border-color $nav-tabs-link-hover-border-color $nav-tabs-border-color;
+    }
   }
 }
 
 .nav-tabs > li > a.active,
-.nav-tabs > li.active > a {
-  @include plain-hover-focus {
-    color: $nav-tabs-active-link-hover-color;
-    background-color: $nav-tabs-active-link-hover-bg;
-    border-color: $nav-tabs-active-link-hover-border-color $nav-tabs-active-link-hover-border-color transparent;
+.nav-tabs > .active > a {
+  background-color: $nav-tabs-active-link-bg;
+  border-color: $nav-tabs-active-link-border-color $nav-tabs-active-link-border-color $nav-tabs-active-link-bg;
+  color: $nav-tabs-active-link-hover-color;
+
+  @include hover-focus {
+    border-color: $nav-tabs-active-link-border-color $nav-tabs-active-link-border-color $nav-tabs-active-link-bg;
   }
 }
 
-.nav-tabs-default > li > a.active,
-.nav-tabs-default > li.disabled a {
-  @include plain-hover-focus {
-    border-left-color: $nav-tabs-border-color;
-  }
-}
-
-// Pager Pagination
+// _pager.scss
 // Removed in Bootstrap 4
 
 .pager {
@@ -575,7 +629,7 @@ a.label {
   }
 }
 
-// Pagination
+// _pagination.scss
 
 .pagination > li {
   display: inline; // Remove list-style and block-level defaults
@@ -628,7 +682,7 @@ a.label {
   }
 }
 
-// Panels
+// _panels.scss
 // Removed in Bootstrap 4
 
 // Base class
@@ -896,7 +950,7 @@ a.label {
   @include panel-variant($panel-danger-border, $panel-danger-text, $panel-danger-heading-bg, $panel-danger-border);
 }
 
-// Progress Bars
+// _progress-bars.scss
 
 .progress-bar.active {
   @extend .progress-bar-animated;
@@ -932,7 +986,7 @@ a.label {
   background-color: $brand-warning;
 }
 
-// Responsive Utilities
+// _responsive-utilities.scss
 
 @include responsive-invisibility('.visible-xs');
 @include responsive-invisibility('.visible-sm');
@@ -1043,7 +1097,7 @@ a.label {
   @include responsive-invisibility('.hidden-lg');
 }
 
-// Tables
+// _tables.scss
 
 .table > thead > tr,
 .table > tbody > tr,
@@ -1084,8 +1138,30 @@ a.label {
   }
 }
 
-// User Icons
+// _user-icons.scss
 
 .user-icon img {
   vertical-align: baseline;
+}
+
+// _utilities.scss
+
+.hide {
+  @extend .d-none;
+}
+
+.pull-left {
+  @extend .float-left;
+}
+
+.pull-right {
+  @extend .float-right;
+}
+
+// _liferay.scss
+
+#navigationCollapse {
+  @include media-breakpoint-up(md) {
+    display: block;
+  }
 }
