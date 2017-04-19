@@ -163,7 +163,6 @@ buildSvg4everybody {
 	into new File(jsDestinationDir, "misc")
 }
 
-
 classes {
 	dependsOn buildAlloyUI
 	dependsOn buildJQuery
