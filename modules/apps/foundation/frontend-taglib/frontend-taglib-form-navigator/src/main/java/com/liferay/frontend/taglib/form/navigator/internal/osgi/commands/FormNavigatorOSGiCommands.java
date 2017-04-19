@@ -14,6 +14,8 @@
 
 package com.liferay.frontend.taglib.form.navigator.internal.osgi.commands;
 
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorCategoryUtil;
@@ -22,6 +24,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collector;
@@ -31,8 +34,6 @@ import java.util.stream.Stream;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Alejandro Tardín
@@ -76,6 +77,8 @@ public class FormNavigatorOSGiCommands {
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		_formNavigatorEntries = ServiceTrackerListFactory.open(
+			bundleContext, FormNavigatorEntry.class);
 		_formNavigatorEntriesMap = ServiceTrackerMapFactory.openMultiValueMap(
 			bundleContext, FormNavigatorEntry.class, null,
 			(serviceReference, emitter) -> {
@@ -93,13 +96,15 @@ public class FormNavigatorOSGiCommands {
 	}
 
 	private Set<String> _getAllFormNavigatorIds() {
-		Stream<FormNavigatorEntry> formNavigatorEntriesStream =
-			_formNavigatorEntries.stream();
+		Set<String> allFormNavigatorIds = new HashSet<>();
 
-		Stream<String> formNavigatorIdsStream = formNavigatorEntriesStream.map(
-			FormNavigatorEntry::getFormNavigatorId);
+		_formNavigatorEntries.forEach(
+			formNavigatorEntry -> {
+				allFormNavigatorIds.add(
+					formNavigatorEntry.getFormNavigatorId());
+			});
 
-		return formNavigatorIdsStream.collect(Collectors.toSet());
+		return allFormNavigatorIds;
 	}
 
 	private String _getCategoryLine(
@@ -143,10 +148,8 @@ public class FormNavigatorOSGiCommands {
 
 	private final Collector<CharSequence, ?, String> _collectorCSV =
 		Collectors.joining(StringPool.COMMA);
-
-	@Reference(policyOption = ReferencePolicyOption.GREEDY)
-	private List<FormNavigatorEntry> _formNavigatorEntries;
-
+	private ServiceTrackerList<FormNavigatorEntry, FormNavigatorEntry>
+		_formNavigatorEntries;
 	private ServiceTrackerMap<String, List<FormNavigatorEntry>>
 		_formNavigatorEntriesMap;
 

@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Hugo Huijser
  */
-public class GroovySourceProcessor extends JavaSourceProcessor {
+public class GroovySourceProcessor extends BaseSourceProcessor {
 
 	@Override
 	protected List<String> doGetFileNames() throws Exception {
@@ -47,10 +47,6 @@ public class GroovySourceProcessor extends JavaSourceProcessor {
 	@Override
 	protected void populateSourceChecks() {
 		_sourceChecks.add(new WhitespaceCheck());
-	}
-
-	@Override
-	protected void postFormat() throws Exception {
 	}
 
 	private static final String[] _INCLUDES = new String[] {"**/*.groovy"};

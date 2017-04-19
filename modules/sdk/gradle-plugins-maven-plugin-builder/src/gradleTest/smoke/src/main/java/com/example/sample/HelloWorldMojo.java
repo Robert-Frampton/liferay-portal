@@ -29,14 +29,16 @@ public class HelloWorldMojo extends AbstractMojo {
 
 	@Override
 	public void execute() {
-		if (_log.isInfoEnabled()) {
+		Log log = getLog();
+
+		if (log.isInfoEnabled()) {
 			String message = _message;
 
 			if (_upperCase) {
 				message = message.toUpperCase();
 			}
 
-			_log.info("Message from " + baseDir + ": " + message);
+			log.info("Message from " + baseDir + ": " + message);
 		}
 	}
 
@@ -61,8 +63,6 @@ public class HelloWorldMojo extends AbstractMojo {
 	 * @readonly
 	 */
 	protected File baseDir;
-
-	private static final Log _log = getLog();
 
 	private String _message = "Hello, World!";
 	private boolean _upperCase;

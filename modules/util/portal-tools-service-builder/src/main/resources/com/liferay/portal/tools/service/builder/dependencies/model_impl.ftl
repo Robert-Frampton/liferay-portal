@@ -52,8 +52,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
@@ -65,8 +63,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.trash.kernel.model.TrashEntry;
-import com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil;
 
 import java.io.Serializable;
 
@@ -309,14 +305,18 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 
 			<#compress>
 				public static final Object[][] MAPPING_TABLE_${stringUtil.upperCase(column.mappingTable)}_COLUMNS = {
-					<#list serviceBuilder.getMappingEntities(column.mappingTable) as mapColumn>
-						<#assign sqlType = serviceBuilder.getSqlType(mapColumn.getType()) />
+					<#assign mappingEntities = serviceBuilder.getMappingEntities(column.mappingTable) />
 
-						{"${mapColumn.DBName}", Types.${sqlType}}
+					<#list mappingEntities?keys as mapEntityName>
+						<#list mappingEntities[mapEntityName] as mapColumn>
+							<#assign sqlType = serviceBuilder.getSqlType(mapEntityName, mapColumn.getName(), mapColumn.getType()) />
 
-						<#if mapColumn_has_next>
-							,
-						</#if>
+							{"${mapColumn.DBName}", Types.${sqlType}}
+
+							<#if mapEntityName_has_next || mapColumn_has_next>
+								,
+							</#if>
+						</#list>
 					</#list>
 				};
 			</#compress>
@@ -868,18 +868,18 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 
 		@Override
-		public TrashEntry getTrashEntry() throws PortalException {
+		public com.liferay.trash.kernel.model.TrashEntry getTrashEntry() throws PortalException {
 			if (!isInTrash()) {
 				return null;
 			}
 
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
+			com.liferay.trash.kernel.model.TrashEntry trashEntry = com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
 
 			if (trashEntry != null) {
 				return trashEntry;
 			}
 
-			TrashHandler trashHandler = getTrashHandler();
+			com.liferay.portal.kernel.trash.TrashHandler trashHandler = getTrashHandler();
 
 			if (!Validator.isNull(trashHandler.getContainerModelClassName(getPrimaryKey()))) {
 				ContainerModel containerModel = null;
@@ -898,7 +898,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 						return trashedModel.getTrashEntry();
 					}
 
-					trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashHandler.getContainerModelClassName(containerModel.getContainerModelId()));
+					trashHandler = com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil.getTrashHandler(trashHandler.getContainerModelClassName(containerModel.getContainerModelId()));
 
 					if (trashHandler == null) {
 						return null;
@@ -916,9 +916,13 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			return getPrimaryKey();
 		}
 
+		/**
+		* @deprecated As of 7.0.0, with no direct replacement
+		*/
+		@Deprecated
 		@Override
-		public TrashHandler getTrashHandler() {
-			return TrashHandlerRegistryUtil.getTrashHandler(getModelClassName());
+		public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler() {
+			return com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil.getTrashHandler(getModelClassName());
 		}
 
 		@Override
@@ -933,7 +937,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 
 		@Override
 		public boolean isInTrashContainer() {
-			TrashHandler trashHandler = getTrashHandler();
+			com.liferay.portal.kernel.trash.TrashHandler trashHandler = getTrashHandler();
 
 			if ((trashHandler == null) || Validator.isNull(trashHandler.getContainerModelClassName(getPrimaryKey()))) {
 				return false;
@@ -962,7 +966,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 				return false;
 			}
 
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
+			com.liferay.trash.kernel.model.TrashEntry trashEntry = com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
 
 			if (trashEntry != null) {
 				return true;
@@ -977,7 +981,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 				return false;
 			}
 
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
+			com.liferay.trash.kernel.model.TrashEntry trashEntry = com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
 
 			if (trashEntry != null) {
 				return false;

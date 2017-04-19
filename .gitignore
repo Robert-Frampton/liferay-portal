@@ -199,6 +199,7 @@
 /lib/portal/juniversalchardet.jar
 /lib/portal/jurt.jar
 /lib/portal/kxml2.jar
+/lib/portal/liferay-icu4j.jar
 /lib/portal/log4j.jar
 /lib/portal/log4j-extras.jar
 /lib/portal/mchange-commons-java.jar

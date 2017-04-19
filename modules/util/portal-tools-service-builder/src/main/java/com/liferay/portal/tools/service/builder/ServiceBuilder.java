@@ -1290,10 +1290,11 @@ public class ServiceBuilder {
 		return sb.toString();
 	}
 
-	public List<EntityColumn> getMappingEntities(String mappingTable)
+	public Map<String, List<EntityColumn>> getMappingEntities(
+			String mappingTable)
 		throws Exception {
 
-		List<EntityColumn> mappingEntitiesPKList = new ArrayList<>();
+		Map<String, List<EntityColumn>> mappingEntities = new LinkedHashMap<>();
 
 		EntityMapping entityMapping = _entityMappings.get(mappingTable);
 
@@ -1304,10 +1305,10 @@ public class ServiceBuilder {
 				return null;
 			}
 
-			mappingEntitiesPKList.addAll(entity.getPKList());
+			mappingEntities.put(entity.getName(), entity.getPKList());
 		}
 
-		return mappingEntitiesPKList;
+		return mappingEntities;
 	}
 
 	public int getMaxLength(String model, String field) {
@@ -1510,6 +1511,9 @@ public class ServiceBuilder {
 		}
 		else if (type.equals("Date")) {
 			return "TIMESTAMP";
+		}
+		else if (type.equals("String")) {
+			return "VARCHAR";
 		}
 		else {
 			return null;
