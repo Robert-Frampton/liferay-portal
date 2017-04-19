@@ -540,6 +540,16 @@ a.label {
   .navbar-form {
     margin-left: -$navbar-padding-horizontal;
     margin-right: -$navbar-padding-horizontal;
+
+    .form-group {
+      @include media-breakpoint-down(sm) {
+        margin-bottom: 5px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
   }
 }
 
@@ -1216,4 +1226,8 @@ a.label {
 
 #banner .row:first-child {
   display: block;
+}
+
+.product-menu .panel-group .panel-heading + .panel-collapse.show {
+  border-bottom: 2px solid #65B6F0;
 }
