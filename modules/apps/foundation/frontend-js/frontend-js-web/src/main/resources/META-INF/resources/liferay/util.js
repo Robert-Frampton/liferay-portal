@@ -1,4 +1,4 @@
-d;(function(A, $, _, Liferay) {
+;(function(A, $, _, Liferay) {
 	A.use('aui-base-lang');
 
 	var AArray = A.Array;
