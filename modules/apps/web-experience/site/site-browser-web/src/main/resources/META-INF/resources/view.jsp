@@ -110,6 +110,8 @@ GroupSearch groupSearch = siteBrowserDisplayContext.getGroupSearch();
 
 			data.put("entityid", group.getGroupId());
 			data.put("entityname", group.getDescriptiveName(locale));
+			data.put("groupdescriptivename", group.getDescriptiveName(locale));
+			data.put("groupid", group.getGroupId());
 			data.put("grouptarget", target);
 			data.put("grouptype", LanguageUtil.get(request, group.getTypeLabel()));
 			data.put("url", group.getDisplayURL(themeDisplay));
