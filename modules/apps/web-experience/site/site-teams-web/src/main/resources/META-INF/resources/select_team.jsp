@@ -101,6 +101,8 @@ teamSearch.setTotal(teamsCount);
 			data.put("entityid", curTeam.getTeamId());
 			data.put("entityname", curTeam.getName());
 			data.put("teamdescription", curTeam.getDescription());
+			data.put("teamid", curTeam.getTeamId());
+			data.put("teamname", curTeam.getName());
 
 			Group group = themeDisplay.getScopeGroup();
 
