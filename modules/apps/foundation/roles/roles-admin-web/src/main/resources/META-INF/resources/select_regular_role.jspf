@@ -118,6 +118,8 @@ portletURL.setParameter("eventName", eventName);
 					data.put("entityid", role.getRoleId());
 					data.put("entityname", role.getTitle(locale));
 					data.put("iconcssclass", RolesAdminUtil.getIconCssClass(role));
+					data.put("roleid", role.getRoleId());
+					data.put("roletitle", role.getTitle(locale));
 					data.put("searchcontainername", "roles");
 
 					long[] defaultRoleIds = selUser.getRoleIds();
