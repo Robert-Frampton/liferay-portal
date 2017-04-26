@@ -102,6 +102,8 @@ if (folder != null) {
 
 					data.put("entityid", curFolder.getFolderId());
 					data.put("entityname", curFolder.getName());
+					data.put("folderid", curFolder.getFolderId());
+					data.put("name", curFolder.getName());
 					%>
 
 					<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
@@ -124,6 +126,8 @@ if (folder != null) {
 
 				data.put("entityid", folderId);
 				data.put("entityname", folderName);
+				data.put("folderid", folderId);
+				data.put("name", folderName);
 				%>
 
 				<aui:button cssClass="selector-button" data="<%= data %>" value="choose-this-folder" />
