@@ -3,6 +3,8 @@ import com.liferay.gradle.util.copy.StripPathSegmentsAction
 
 apply plugin: "com.liferay.gulp"
 
+node.npmVersion = "4.5.0"
+
 configurations {
 	alloyUI
 	jQuery
