@@ -124,6 +124,8 @@ renderResponse.setTitle(LanguageUtil.get(request, "user-groups"));
 
 					data.put("entityid", userGroup.getUserGroupId());
 					data.put("entityname", userGroup.getName());
+					data.put("usergroupid", userGroup.getUserGroupId());
+					data.put("usergroupname", userGroup.getName());
 
 					boolean disabled = false;
 
