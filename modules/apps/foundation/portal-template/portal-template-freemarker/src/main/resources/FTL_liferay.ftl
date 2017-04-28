@@ -107,18 +107,20 @@ ${languageUtil.format(locale, key, arguments)}</#macro>
 	default_preferences = ""
 	instance_id = ""
 >
-	<@liferay_portlet["runtime"]
-		defaultPreferences=default_preferences
-		instanceId=instance_id
-		portletProviderAction=portletProviderAction.VIEW
-		portletProviderClassName="com.liferay.portal.kernel.theme.NavItem"
-	/>
+	<#if themeDisplay.isImpersonated() || is_setup_complete>
+		<@liferay_portlet["runtime"]
+			defaultPreferences=default_preferences
+			instanceId=instance_id
+			portletProviderAction=portletProviderAction.VIEW
+			portletProviderClassName="com.liferay.portal.kernel.theme.NavItem"
+		/>
+	</#if>
 </#macro>
 
 <#macro search
 	default_preferences = ""
 >
-	<#if is_setup_complete>
+	<#if themeDisplay.isImpersonated() || is_setup_complete>
 		<@liferay_portlet["runtime"]
 			defaultPreferences=default_preferences
 			portletProviderAction=portletProviderAction.VIEW
