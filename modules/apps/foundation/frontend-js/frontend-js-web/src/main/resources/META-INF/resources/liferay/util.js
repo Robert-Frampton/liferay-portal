@@ -310,23 +310,35 @@
 				}
 			);
 
+			var elementFocusable = function(element) {
+				return !element.is(':disabled') && !element.is(':hidden');
+			};
+
 			if (!interacting && Util.inBrowserView(el)) {
 				var form = el.closest('form');
 
-				var focusable = !el.is(':disabled') && !el.is(':hidden');
-
-				if (!form.length || focusable) {
+				if (!form.length || elementFocusable(el)) {
 					el.focus();
 				}
 				else {
 					var portletName = form.data('fm-namespace');
 
-					Liferay.once(
-						portletName + 'formReady',
-						function() {
-							el.focus();
+					var formReadyEventName = portletName + 'formReady';
+
+					var focusOnField = function(event) {
+						if (event) {
+							var elFormName = form.attr('name');
+							var formName = event.formName;
+
+							if (elFormName === formName && elementFocusable(el)) {
+								el.focus();
+
+								Liferay.detach(formReadyEventName, focusOnField);
+							}
 						}
-					);
+					};
+
+					Liferay.on(formReadyEventName, focusOnField);
 				}
 			}
 		},
