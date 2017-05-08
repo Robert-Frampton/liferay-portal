@@ -310,14 +310,12 @@
 				}
 			);
 
-			var elementFocusable = function(element) {
-				return !element.is(':disabled') && !element.is(':hidden');
-			};
-
 			if (!interacting && Util.inBrowserView(el)) {
 				var form = el.closest('form');
 
-				if (!form.length || elementFocusable(el)) {
+				var focusable = !el.is(':disabled') && !el.is(':hidden');
+
+				if (!form.length || focusable) {
 					el.focus();
 				}
 				else {
@@ -325,18 +323,18 @@
 
 					var formReadyEventName = portletName + 'formReady';
 
-					var focusOnField = function(event) {
+					var formReadyHandler = function(event) {
 						var elFormName = form.attr('name');
 						var formName = event.formName;
 
-						if (elFormName === formName && elementFocusable(el)) {
+						if (elFormName === formName) {
 							el.focus();
 
-							Liferay.detach(formReadyEventName, focusOnField);
+							Liferay.detach(formReadyEventName, formReadyHandler);
 						}
 					};
 
-					Liferay.on(formReadyEventName, focusOnField);
+					Liferay.on(formReadyEventName, formReadyHandler);
 				}
 			}
 		},
