@@ -326,15 +326,13 @@
 					var formReadyEventName = portletName + 'formReady';
 
 					var focusOnField = function(event) {
-						if (event) {
-							var elFormName = form.attr('name');
-							var formName = event.formName;
+						var elFormName = form.attr('name');
+						var formName = event.formName;
 
-							if (elFormName === formName && elementFocusable(el)) {
-								el.focus();
+						if (elFormName === formName && elementFocusable(el)) {
+							el.focus();
 
-								Liferay.detach(formReadyEventName, focusOnField);
-							}
+							Liferay.detach(formReadyEventName, focusOnField);
 						}
 					};
 
