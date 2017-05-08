@@ -69,7 +69,7 @@ public class LayoutIconTag
 			jspWriter.write(themeDisplay.getPathImage());
 
 			jspWriter.write("/layout_icon?img_id=");
-			jspWriter.write(String.valueOf(layout.getIconImage()));
+			jspWriter.write(String.valueOf(layout.getIconImageId()));
 			jspWriter.write("&t=");
 			jspWriter.write(
 				WebServerServletTokenUtil.getToken(layout.getIconImageId()));

@@ -82,5 +82,10 @@
 		A.all('#<%= namespace + HtmlUtil.escapeJS(name) %> .input-container').removeAttribute('disabled');
 	</c:if>
 
-	Liferay.fire('<portlet:namespace />formReady');
+	Liferay.fire(
+		'<portlet:namespace />formReady',
+		{
+			'formName': '<%= namespace + HtmlUtil.escapeJS(name) %>'
+		}
+	);
 </aui:script>
