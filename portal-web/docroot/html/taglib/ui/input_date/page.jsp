@@ -74,10 +74,10 @@ String dayAbbreviation = LanguageUtil.get(resourceBundle, "day-abbreviation");
 String monthAbbreviation = LanguageUtil.get(resourceBundle, "month-abbreviation");
 String yearAbbreviation = LanguageUtil.get(resourceBundle, "year-abbreviation");
 
-String[] localizedAbbreviations = {monthAbbreviation, dayAbbreviation, yearAbbreviation};
-String[] originalAbbreviations = {"M", "d", "y"};
+String[] dateAbbreviations = {"M", "d", "y"};
+String[] localizedDateAbbreviations = {monthAbbreviation, dayAbbreviation, yearAbbreviation};
 
-String placeholderValue = StringUtil.replace(simpleDateFormatPattern, originalAbbreviations, localizedAbbreviations);
+String placeholderValue = StringUtil.replace(simpleDateFormatPattern, dateAbbreviations, localizedDateAbbreviations);
 
 boolean nullDate = false;
 
