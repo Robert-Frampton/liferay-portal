@@ -32,12 +32,12 @@ var initSPA = function(callback) {
 			{
 				handler: RenderURLScreen,
 				path: function(url) {
-					if (url.indexOf(themeDisplay.getPathMain()) === 0) {
+					if (url.indexOf(themeDisplay.getPathContext() + themeDisplay.getPathMain()) === 0) {
 						return false;
 					}
 
 					var excluded = Liferay.SPA.excludedPaths.some(
-						(excludedPath) => url.indexOf(excludedPath) === 0
+						(excludedPath) => url.indexOf(excludedPath.replace('{path-context}', themeDisplay.getPathContext())) === 0
 					);
 
 					if (excluded) {
