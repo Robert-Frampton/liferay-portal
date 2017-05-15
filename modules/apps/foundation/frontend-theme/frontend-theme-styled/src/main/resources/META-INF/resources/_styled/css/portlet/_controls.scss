@@ -86,12 +86,8 @@ body.portlet {
 	}
 }
 
-.controls-hidden {
-	.portlet {
-		.visible-interaction {
-			@media (max-width: $grid-float-breakpoint) {
-				display: none;
-			}
-		}
+.controls-hidden .portlet .visible-interaction {
+	@media (max-width: $grid-float-breakpoint) {
+		display: none;
 	}
 }
