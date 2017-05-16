@@ -74,7 +74,7 @@ body.portlet {
 
 .portlet {
 	.visible-interaction {
-		@media (min-width: $grid-float-breakpoint) {
+		@include sm {
 			display: none;
 		}
 	}
@@ -87,7 +87,7 @@ body.portlet {
 }
 
 .controls-hidden .portlet .visible-interaction {
-	@media (max-width: $grid-float-breakpoint) {
+	@include media-query(null, $screen-xs-max) {
 		display: none;
 	}
 }
