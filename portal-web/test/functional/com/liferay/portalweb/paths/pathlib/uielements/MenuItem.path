@@ -60,7 +60,7 @@
 </tr>
 <tr>
 	<td>ADD_DISPLAY_TEMPLATE</td>
-	<td>//div[contains(@class,'open')]//a[contains(@id,'menuItem') and contains(.,'Add Display Template')]</td>
+	<td>//div[contains(@class,'show')]//a[contains(@id,'menuItem') and contains(.,'Add Display Template')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -75,7 +75,7 @@
 </tr>
 <tr>
 	<td>ADD_FORM_TEMPLATE</td>
-	<td>//div[contains(@class,'open')]//a[contains(@id,'menuItem') and contains(.,'Add Form Template')]</td>
+	<td>//div[contains(@class,'show')]//a[contains(@id,'menuItem') and contains(.,'Add Form Template')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -180,7 +180,7 @@
 </tr>
 <tr>
 	<td>ASSIGN_USERS</td>
-	<td>//a[@role='menuitem' and contains(.,'Assign Users')] | //div[contains(@class,'open')]/ul[contains(@class,'dropdown')]//a[contains(.,'Assign Users')]</td>
+	<td>//a[@role='menuitem' and contains(.,'Assign Users')] | //div[contains(@class,'show')]/ul[contains(@class,'dropdown')]//a[contains(.,'Assign Users')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -200,12 +200,12 @@
 </tr>
 <tr>
 	<td>BASIC_DOCUMENT</td>
-	<td>//div[contains(@class,'open')]//a[contains(.,'Basic Document')] | //li[contains(@class,'open')]//a[contains(.,'Basic Document')]</td>
+	<td>//div[contains(@class,'show')]//a[contains(.,'Basic Document')] | //li[contains(@class,'open')]//a[contains(.,'Basic Document')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>BASIC_WEB_CONTENT</td>
-	<td>//div[contains(@class,'open')]//a[contains(.,'Basic Web Content')] | //li[contains(@class,'open')]//a[contains(.,'Basic Web Content')]</td>
+	<td>//div[contains(@class,'show')]//a[contains(.,'Basic Web Content')] | //li[contains(@class,'open')]//a[contains(.,'Basic Web Content')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -235,7 +235,7 @@
 </tr>
 <tr>
 	<td>CATEGORY</td>
-	<td>//div[contains(@class,'open')]//a[contains(.,'Category')]</td>
+	<td>//div[contains(@class,'show')]//a[contains(.,'Category')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -445,7 +445,7 @@
 </tr>
 <tr>
 	<td>FOLDER</td>
-	<td>//li[contains(@class,'open')]//a[contains(.,'Folder')] | //div[contains(@class,'open')]//a[contains(.,'Folder') and not(contains(.,'Add'))]</td>
+	<td>//li[contains(@class,'show')]//a[contains(.,'Folder')] | //div[contains(@class,'show')]//a[contains(.,'Folder') and not(contains(.,'Add'))]</td>
 	<td></td>
 </tr>
 <tr>
@@ -930,7 +930,7 @@
 </tr>
 <tr>
 	<td>THREAD</td>
-	<td>//div[contains(@class,'open')]//a[contains(.,'Thread')]</td>
+	<td>//div[contains(@class,'show')]//a[contains(.,'Thread')]</td>
 	<td></td>
 </tr>
 <tr>
