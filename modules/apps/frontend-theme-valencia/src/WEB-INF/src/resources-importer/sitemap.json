@@ -1,0 +1,86 @@
+{
+	"layoutTemplateId": "2_columns_ii",
+	"publicPages": [
+		{
+			"columns": [
+                [
+					{
+						"portletId": "com_liferay_journal_content_web_portlet_JournalContentPortlet",
+						"portletPreferences": {
+							"articleId": "Home Headline.xml",
+							"groupId": "${groupId}",
+							"portletSetupPortletDecoratorId": "barebone"
+						}
+					}
+				],
+				[
+					{
+						"portletId": "com_liferay_journal_content_web_portlet_JournalContentPortlet",
+						"portletPreferences": {
+							"articleId": "Home Content.xml",
+							"groupId": "${groupId}",
+							"portletSetupPortletDecoratorId": "barebone"
+						}
+					}
+				],
+				[
+					{
+						"portletId": "com_liferay_journal_content_web_portlet_JournalContentPortlet",
+						"portletPreferences": {
+							"articleId": "Home Hero Image.xml",
+							"groupId": "${groupId}",
+							"portletSetupPortletDecoratorId": "barebone"
+						}
+					}
+				]
+			],
+			"friendlyURL": "/home",
+			"layoutTemplateId": "1_2_columns_i",
+			"name": "Home",
+			"title": "Home",
+			"hidden": "true"
+		},
+		{
+			"friendlyURL": "/about",
+			"layouts": [
+				{
+					"friendlyURL": "/adventuretime",
+					"name": "Who is Adventure Time?",
+					"title": "Who is Adventure Time?"
+				},
+				{
+					"friendlyURL": "/contact",
+					"name": "Contact",
+					"title": "Contact"
+				}
+			],
+			"name": "About",
+			"title": "About"
+		},
+		{
+			"friendlyURL": "/england",
+			"name": "England",
+			"title": "England"
+		},
+		{
+			"friendlyURL": "/ireland",
+			"name": "Ireland",
+			"title": "Ireland"
+		},
+		{
+			"friendlyURL": "/scotland",
+			"name": "Scotland",
+			"title": "Scotland"
+		},
+		{
+			"friendlyURL": "/wales",
+			"name": "Wales",
+			"title": "Wales"
+		},
+		{
+			"friendlyURL": "/book-now",
+			"name": "Book Now!",
+			"title": "Book Now!"
+		}
+	]
+}

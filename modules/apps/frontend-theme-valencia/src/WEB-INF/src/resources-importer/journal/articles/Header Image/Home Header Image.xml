@@ -1,0 +1,15 @@
+
+Home Header Image
+<?xml version="1.0"?>
+
+<root available-locales="en_US" default-locale="en_US">
+	<dynamic-element name="Imagezngk" type="image" index-type="keyword" instance-id="vyuu">
+		<dynamic-content language-id="en_US"><![CDATA[{"groupId":"33755","name":"adventure-time","alt":"","title":"adventure-time","type":"document","uuid":"cd331a41-3039-07a8-c8aa-98d36603c4f0","resourcePrimKey":"46616"}]]></dynamic-content>
+	</dynamic-element>
+	<dynamic-element name="PageHeadline" type="text" index-type="keyword" instance-id="xlfq">
+		<dynamic-content language-id="en_US"><![CDATA[Travelouge]]></dynamic-content>
+	</dynamic-element>
+	<dynamic-element name="PageTagline" type="text" index-type="keyword" instance-id="vapy">
+		<dynamic-content language-id="en_US"><![CDATA[Start Your Journey]]></dynamic-content>
+	</dynamic-element>
+</root>

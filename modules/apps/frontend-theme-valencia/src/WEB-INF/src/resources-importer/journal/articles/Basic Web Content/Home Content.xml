@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<root available-locales="en_US" default-locale="en_US">
+	<dynamic-element index="0" index-type="keyword" name="content" type="text_area">
+		<dynamic-content language-id="en_US">
+			<![CDATA[
+				<p>
+					"Pshaw!" "Where could he go, then?" "Oh, I don't know that.  The world is big enough." "It was once," said Phileas Fogg, in a low tone.  "Cut, sir," he added, handing the cards to Thomas Flanagan. The discussion fell during the rubber, after which Stuart took up its thread. "What do you mean by `once'?  Has the world grown smaller?" "Certainly," returned Ralph.  "I agree with Mr. Fogg.  The world has grown smaller, since a man can now go round it ten times more quickly than a hundred years ago.  And that is why the search for this thief will be more likely to succeed." "And also why the thief can get away more easily." "Be so good as to play, Mr. Stuart," said Phileas Fogg.
+				</p>
+
+				<p>
+					But the incredulous Stuart was not convinced, and when the hand was finished, said eagerly: "You have a strange way, Ralph, of proving that the world has grown smaller.  So, because you can go round it in three months&mdash;" "In eighty days," interrupted Phileas Fogg. "That is true, gentlemen," added John Sullivan.  "Only eighty days, now that the section between Rothal and Allahabad, on the Great Indian Peninsula Railway, has been opened.  Here is the estimate made by the Daily Telegraph: "Yes, in eighty days!" exclaimed Stuart, who in his excitement made a false deal.  "But that doesn't take into account bad weather, contrary winds, shipwrecks, railway accidents, and so on." "All included," returned Phileas Fogg, continuing to play despite the discussion.
+				</p>
+			]]>
+		</dynamic-content>
+	</dynamic-element>
+</root>
