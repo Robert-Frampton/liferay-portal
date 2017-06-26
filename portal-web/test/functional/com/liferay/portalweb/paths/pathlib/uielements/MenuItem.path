@@ -920,7 +920,7 @@
 </tr>
 <tr>
 	<td>SUBFOLDER</td>
-	<td>//li[contains(@class,'open')]//a[contains(.,'Subfolder')] | //div[contains(@class,'open')]//a[contains(.,'Subfolder')]</td>
+	<td>//li[contains(@class,'show')]//a[contains(.,'Subfolder')] | //div[contains(@class,'show')]//a[contains(.,'Subfolder')]</td>
 	<td></td>
 </tr>
 <tr>
