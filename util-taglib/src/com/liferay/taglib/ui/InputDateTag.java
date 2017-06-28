@@ -52,6 +52,10 @@ public class InputDateTag extends BaseValidatorTagSupport {
 		_dayValue = dayValue;
 	}
 
+	public void setDisableCheckbox(boolean disableCheckbox) {
+		_disableCheckbox = disableCheckbox;
+	}
+
 	public void setDisabled(boolean disabled) {
 		_disabled = disabled;
 	}
@@ -116,6 +120,7 @@ public class InputDateTag extends BaseValidatorTagSupport {
 		_dayParam = null;
 		_dayValue = 0;
 		_disabled = false;
+		_disableCheckbox = false;
 		_disableNamespace = false;
 		_firstDayOfWeek = Calendar.SUNDAY - 2;
 		_firstEnabledDate = null;
@@ -146,6 +151,9 @@ public class InputDateTag extends BaseValidatorTagSupport {
 		request.setAttribute("liferay-ui:input-date:dayParam", _dayParam);
 		request.setAttribute(
 			"liferay-ui:input-date:dayValue", String.valueOf(_dayValue));
+		request.setAttribute(
+			"liferay-ui:input-date:disableCheckbox",
+			String.valueOf(_disableCheckbox));
 		request.setAttribute(
 			"liferay-ui:input-date:disabled", String.valueOf(_disabled));
 		request.setAttribute(
@@ -181,6 +189,7 @@ public class InputDateTag extends BaseValidatorTagSupport {
 	private String _dateTogglerCheckboxLabel;
 	private String _dayParam;
 	private int _dayValue;
+	private boolean _disableCheckbox;
 	private boolean _disabled;
 	private boolean _disableNamespace;
 	private int _firstDayOfWeek = Calendar.SUNDAY - 2;
