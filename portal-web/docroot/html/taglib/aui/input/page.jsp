@@ -17,7 +17,7 @@
 <%@ include file="/html/taglib/aui/input/init.jsp" %>
 
 <%
-if (BrowserSnifferUtil.isIe(request) && ((BrowserSnifferUtil.getMajorVersion(request) == 10.0) || (BrowserSnifferUtil.getMajorVersion(request) == 11.0)) && ((type == "text") || (type == "textarea"))) {
+if (BrowserSnifferUtil.isIe(request) && ((BrowserSnifferUtil.getMajorVersion(request) == 10.0) || (BrowserSnifferUtil.getMajorVersion(request) == 11.0)) && type.equals("textarea")) {
 	placeholder = StringPool.BLANK;
 }
 %>
