@@ -1698,7 +1698,7 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Whether the component's shows a checkbox to easily disable date.</description>
+			<description>Whether to disable the checkbox that disables input field.</description>
 			<name>disableCheckbox</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
