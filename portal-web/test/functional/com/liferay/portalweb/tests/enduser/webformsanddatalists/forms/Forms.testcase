@@ -303,7 +303,7 @@
 	</command>
 
 	<command name="ConfigureAutocompleteWithTextField" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="test.name.skip.portal.instance" value="Forms#ConfigureAutoCompleteWithTextField" />
 
 		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
@@ -519,7 +519,7 @@
 	</command>
 
 	<command name="ConfigureDataProviderWithSelectField" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="test.name.skip.portal.instance" value="Forms#ConfigureDataProviderWithSelectField" />
 
 		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
@@ -734,7 +734,6 @@
 		</execute>
 
 		<execute macro="FormFields#editDate">
-			<var name="fieldLabel" value="Date Field" />
 			<var name="fieldName" value="DateField" />
 			<var name="fieldValue" value="01/01/2016" />
 		</execute>
@@ -1505,7 +1504,7 @@
 
 	<command name="NavigateToCorrectForm" priority="5">
 		<description message="This is a use case for LPS-59331" />
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1606,7 +1605,7 @@
 
 	<command name="PreviewAndPublishForm" priority="5">
 		<description message="This is a use case for LPS-61740" />
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -2228,7 +2227,7 @@
 	</command>
 
 	<command name="SubmitFormWithAllFieldTypesAfterEditingFields" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -2545,7 +2544,6 @@
 		</execute>
 
 		<execute macro="FormFields#editDate">
-			<var name="fieldLabel" value="New Date" />
 			<var name="fieldName" value="Date" />
 			<var name="fieldValue" value="05/02/2016" />
 		</execute>
@@ -2836,7 +2834,6 @@
 		</execute>
 
 		<execute macro="FormFields#editDate">
-			<var name="fieldLabel" value="Date" />
 			<var name="fieldName" value="Date" />
 			<var name="fieldValue" value="05/02/2016" />
 		</execute>
@@ -2941,7 +2938,7 @@
 	</command>
 
 	<command name="SubmitFormWithCustomTextContainingValidation" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -3748,7 +3745,7 @@
 
 	<command name="SubmitFormWithRequiredRepeatingTextField" priority="5">
 		<description message="This is a use case for LPS-59335." />
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 
