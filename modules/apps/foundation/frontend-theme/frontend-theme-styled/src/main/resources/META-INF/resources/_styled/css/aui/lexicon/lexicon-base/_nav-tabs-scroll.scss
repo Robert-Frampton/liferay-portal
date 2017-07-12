@@ -1,10 +1,3 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 @keyframes slideIn {
 	0% {
 		transform: translateX(-100%);
@@ -45,7 +38,7 @@
 	}
 }
 
-@media (max-width: $grid-float-breakpoint-max) {
+@include media-breakpoint-down(sm) {
 	.nav-tabs-scrollbar {
 		$ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
 
@@ -89,7 +82,7 @@
 		&.open {
 			display: block;
 
-			@media (min-width: $grid-float-breakpoint) {
+			@include media-breakpoint-up(md) {
 				display: none;
 			}
 		}
@@ -98,7 +91,7 @@
 	.open > .dropdown-menu {
 		display: none;
 
-		@media (min-width: $grid-float-breakpoint) {
+		@include media-breakpoint-up(md) {
 			display: block;
 		}
 	}
@@ -108,13 +101,13 @@
 	.nav {
 		float: left;
 
-		@media (min-width: $grid-float-breakpoint) {
+		@include media-breakpoint-up(md) {
 			float: none;
 		}
 	}
 }
 
-@media (max-width: $grid-float-breakpoint-max) {
+@include media-breakpoint-down(sm) {
 	.nav-tabs-scroll .nav-tabs-default {
 		> li {
 			&:first-child > a {

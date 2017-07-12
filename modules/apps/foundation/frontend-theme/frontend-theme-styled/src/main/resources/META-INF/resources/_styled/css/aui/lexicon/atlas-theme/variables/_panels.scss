@@ -1,31 +1,28 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 $panel-border-bottom-width: 0 !default;
 $panel-border-left-width: 0 !default;
 $panel-border-right-width: 0 !default;
 $panel-border-top-width: 0 !default;
 
+$panel-border-radius: 0 !default;
+$panel-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2) !default;
+
+// Panel Header
+
+$panel-header-border-bottom-width: 2px !default;
+$panel-header-link-text-decoration: none !default;
+
+// Panel Footer
+
 $panel-footer-border-top-width: 0 !default;
 
-$panel-heading-border-bottom-width: 2px !default;
+// Panel Group
 
-$panel-group-panel-spacer: 0 !default;
+$panel-group-panel-margin-bottom: 1px !default;
 
-$panel-border-radius: 0 !default;
-$panel-footer-bg: #F5F8FA !default;
+// Panel Variants
 
-$panel-box-shadow: $list-group-box-shadow !default;
+$panel-primary-border-color: darken(map-get($theme-colors, primary), 25%) !default;
 
-$panel-blank-heading-link-color: $text-color !default;
-$panel-blank-heading-link-open-color: $brand-primary !default;
-
-$panel-default-border: $brand-primary !default;
-$panel-default-heading-bg: #F5F8FA !default;
-$panel-default-text: $brand-default !default;
-
-$panel-primary-border: darken($brand-primary, 25%) !default;
+$panel-secondary-border-color: map-get($theme-colors, primary) !default;
+$panel-secondary-header-bg: #F5F8FA !default;
+$panel-secondary-color: map-get($theme-colors, secondary) !default;

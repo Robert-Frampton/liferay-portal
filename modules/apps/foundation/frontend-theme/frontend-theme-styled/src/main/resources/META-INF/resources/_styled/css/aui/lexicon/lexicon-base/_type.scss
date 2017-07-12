@@ -1,19 +1,10 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 body {
 	-moz-osx-font-smoothing: grayscale;
 	-ms-overflow-style: scrollbar;
 	-webkit-font-smoothing: antialiased;
 
-	@if (variable-exists(atlas-theme)) {
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-base;
-		}
+	@include scale-component {
+		font-size: $font-size-base-mobile;
 	}
 }
 
@@ -25,65 +16,59 @@ body {
 	font-family: $font-family-sans-serif;
 }
 
-.serif {
-	font-family: $font-family-serif;
-}
-
 // Headings
 
-@if (variable-exists(atlas-theme)) {
-	h1,
-	.h1 {
-		font-size: $font-size-h1;
+h1,
+.h1 {
+	font-size: $h1-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h1;
-		}
+	@include scale-component {
+		font-size: $h1-font-size-mobile;
 	}
+}
 
-	h2,
-	.h2 {
-		font-size: $font-size-h2;
+h2,
+.h2 {
+	font-size: $h2-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h2;
-		}
+	@include scale-component {
+		font-size: $h2-font-size-mobile;
 	}
+}
 
-	h3,
-	.h3 {
-		font-size: $font-size-h3;
+h3,
+.h3 {
+	font-size: $h3-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h3;
-		}
+	@include scale-component {
+		font-size: $h3-font-size-mobile;
 	}
+}
 
-	h4,
-	.h4 {
-		font-size: $font-size-h4;
+h4,
+.h4 {
+	font-size: $h4-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h4;
-		}
+	@include scale-component {
+		font-size: $h4-font-size-mobile;
 	}
+}
 
-	h5,
-	.h5 {
-		font-size: $font-size-h5;
+h5,
+.h5 {
+	font-size: $h5-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h5;
-		}
+	@include scale-component {
+		font-size: $h5-font-size-mobile;
 	}
+}
 
-	h6,
-	.h6 {
-		font-size: $font-size-h6;
+h6,
+.h6 {
+	font-size: $h6-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h6;
-		}
+	@include scale-component {
+		font-size: $h6-font-size-mobile;
 	}
 }
 
@@ -116,10 +101,10 @@ body {
 
 // Contextual backgrounds
 
-@include bg-variant('.bg-default', $state-default-bg);
+@include bg-variant('.bg-default', map-get($theme-colors, secondary));
 
 @if (variable-exists(atlas-theme)) {
-	@include bg-variant('.bg-primary', $state-primary-bg);
+	@include bg-variant('.bg-primary', map-get($theme-colors, primary));
 }
 
 // Contextual Text
@@ -131,10 +116,10 @@ a.text-muted {
 	}
 }
 
-@include text-emphasis-variant('.text-default', $state-default-text);
+@include text-emphasis-variant('.text-default', map-get($theme-colors, secondary));
 
 @if (variable-exists(atlas-theme)) {
-	@include text-emphasis-variant('.text-primary', $state-primary-text);
+	@include text-emphasis-variant('.text-primary', map-get($theme-colors, primary));
 }
 
 // Marked Text
@@ -153,10 +138,12 @@ th {
 	}
 }
 
+// Will be safe to remove once https://github.com/twbs/bootstrap/pull/22739 is merged
+
 .truncate-text {
 	display: block;
 
-	@include text-overflow;
+	@include text-truncate;
 
 	word-break: normal \9; // IE 8, 9
 	word-wrap: normal;
@@ -167,7 +154,6 @@ th {
 .blockquote-xs {
 	border-left-width: $blockquote-xs-border-width;
 	font-size: $blockquote-xs-font-size;
-	padding: ($line-height-computed / 2) ($line-height-computed * 0.7);
 
 	&.blockquote-reverse {
 		border-left-width: 0;
@@ -178,7 +164,6 @@ th {
 .blockquote-sm {
 	border-left-width: $blockquote-sm-border-width;
 	font-size: $blockquote-sm-font-size;
-	padding: ($line-height-computed / 2) ($line-height-computed * 0.8);
 
 	&.blockquote-reverse {
 		border-left-width: 0;
@@ -189,7 +174,6 @@ th {
 .blockquote-lg {
 	border-left-width: $blockquote-lg-border-width;
 	font-size: $blockquote-lg-font-size;
-	padding: ($line-height-computed / 2) ($line-height-computed * 1.5);
 
 	&.blockquote-reverse {
 		border-left-width: 0;
