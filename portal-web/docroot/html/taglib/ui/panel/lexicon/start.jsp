@@ -71,5 +71,5 @@ if (persistState) {
 		</div>
 	</div>
 
-	<div aria-labelledby="<%= id %>Header" class="<%= collapsible ? "collapse panel-collapse" : StringPool.BLANK %> <%= !collapsed ? "in" : StringPool.BLANK %>" id="<%= id %>Content" role="tabpanel">
+	<div aria-labelledby="<%= id %>Header" class="<%= collapsible ? "collapse panel-collapse" : StringPool.BLANK %> <%= !collapsed ? "show" : StringPool.BLANK %>" id="<%= id %>Content" role="tabpanel">
 		<div class="panel-body">

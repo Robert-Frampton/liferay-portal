@@ -79,7 +79,7 @@
 									</div>
 								</div>
 
-								<div aria-expanded="false" aria-labelledby="<portlet:namespace />addContentHeading" class="collapse panel-collapse <%= selectedTab.equals("content") ? "in" : StringPool.BLANK %>" data-value="content" id="<portlet:namespace />addContentCollapse" role="tabpanel">
+								<div aria-expanded="false" aria-labelledby="<portlet:namespace />addContentHeading" class="collapse panel-collapse <%= selectedTab.equals("content") ? "show" : StringPool.BLANK %>" data-value="content" id="<portlet:namespace />addContentCollapse" role="tabpanel">
 									<div class="panel-body">
 										<liferay-util:include page="/add_content.jsp" servletContext="<%= application %>" />
 									</div>
