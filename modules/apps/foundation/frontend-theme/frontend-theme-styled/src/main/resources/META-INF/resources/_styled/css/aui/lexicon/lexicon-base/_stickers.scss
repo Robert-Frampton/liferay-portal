@@ -1,37 +1,37 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 .sticker {
-	border-radius: $sticker-border-radius;
+	@include border-radius($sticker-border-radius);
+
+	border-style: $sticker-border-style;
+	border-width: $sticker-border-width;
 	color: $sticker-color;
 	display: inline-block;
 	font-size: $sticker-font-size;
-	left: $sticker-gutter-width;
+	font-weight: $sticker-font-weight;
 
-	@include monospace($sticker-monospaced-size);
+	@include monospace($sticker-size);
 
-	padding: 0;
-	position: absolute;
+	overflow: hidden;
+	position: relative;
 	text-align: center;
-	top: $sticker-gutter-width;
 
-	.lexicon-icon {
-		margin-top: -1px;
+	img {
+		vertical-align: top;
 	}
 }
 
-.sticker-static {
-	position: static;
+.sticker-overlay {
+	display: block;
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 // Sticker Positions
 
 .sticker-bottom-left {
 	bottom: $sticker-gutter-width;
+	left: $sticker-gutter-width;
+	position: absolute;
 	right: auto;
 	top: auto;
 }
@@ -39,23 +39,22 @@
 .sticker-bottom-right {
 	bottom: $sticker-gutter-width;
 	left: auto;
+	position: absolute;
 	right: $sticker-gutter-width;
 	top: auto;
+}
+
+.sticker-top-left {
+	left: $sticker-gutter-width;
+	position: absolute;
+	top: $sticker-gutter-width;
 }
 
 .sticker-top-right {
 	left: auto;
+	position: absolute;
 	right: $sticker-gutter-width;
-}
-
-.sticker-bottom {
-	bottom: $sticker-gutter-width;
-	top: auto;
-}
-
-.sticker-right {
-	left: auto;
-	right: $sticker-gutter-width;
+	top: $sticker-gutter-width;
 }
 
 .sticker-outside {
@@ -78,90 +77,60 @@
 		left: auto;
 		right: -$sticker-gutter-width;
 	}
-
-	&.sticker-bottom {
-		bottom: -$sticker-gutter-width;
-		top: auto;
-	}
-
-	&.sticker-right {
-		left: auto;
-		right: -$sticker-gutter-width;
-	}
 }
 
 // Sticker Sizes
 
 .sticker-sm {
-	font-size: $sticker-sm-font-size;
+	font-size: $sticker-font-size-sm;
 
-	@include monospace($sticker-sm-monospaced-size);
+	@include monospace($sticker-size-sm);
 
 	.lexicon-icon {
-		height: $sticker-sm-font-size;
-		margin-top: -2px;
-		width: $sticker-sm-font-size;
+		height: $sticker-font-size-sm;
+		width: $sticker-font-size-sm;
 	}
 }
 
 .sticker-lg {
-	font-size: $sticker-lg-font-size;
+	font-size: $sticker-font-size-lg;
 
-	@include monospace($sticker-lg-monospaced-size);
+	@include monospace($sticker-size-lg);
 
 	.lexicon-icon {
-		height: $sticker-lg-font-size;
-		margin-top: -3px;
-		width: $sticker-lg-font-size;
+		height: $sticker-font-size-lg;
+		width: $sticker-font-size-lg;
 	}
 }
 
-// Sticker Skins
+.sticker-xl {
+	font-size: $sticker-font-size-xl;
 
-.sticker-circle {
-	@if ($sticker-border-radius != $sticker-circle-border-radius) {
-		border-radius: $sticker-circle-border-radius;
+	@include monospace($sticker-size-xl);
+
+	.lexicon-icon {
+		height: $sticker-font-size-xl;
+		width: $sticker-font-size-xl;
 	}
 }
 
-.sticker-rounded {
-	@if ($sticker-border-radius != $sticker-rounded-border-radius) {
-		border-radius: $sticker-rounded-border-radius;
+.sticker-xxl {
+	font-size: $sticker-font-size-xxl;
+
+	@include monospace($sticker-size-xxl);
+
+	.lexicon-icon {
+		height: $sticker-font-size-xxl;
+		width: $sticker-font-size-xxl;
 	}
 }
 
-.sticker-square {
-	@if ($sticker-border-radius != null or $sticker-border-radius != $sticker-square-border-radius) {
-		border-radius: $sticker-square-border-radius;
+// Sticker Variants
+
+@each $color, $value in $sticker-palette {
+	.sticker-#{$color} {
+		background-color: nth($value, 1);
+		border-color: nth($value, 2);
+		color: nth($value, 3);
 	}
-}
-
-.sticker-danger {
-	background-color: $sticker-danger-bg;
-	color: $sticker-danger-color;
-}
-
-.sticker-default {
-	background-color: $sticker-default-bg;
-	color: $sticker-default-color;
-}
-
-.sticker-info {
-	background-color: $sticker-info-bg;
-	color: $sticker-info-color;
-}
-
-.sticker-primary {
-	background-color: $sticker-primary-bg;
-	color: $sticker-primary-color;
-}
-
-.sticker-success {
-	background-color: $sticker-success-bg;
-	color: $sticker-success-color;
-}
-
-.sticker-warning {
-	background-color: $sticker-warning-bg;
-	color: $sticker-warning-color;
 }

@@ -19,6 +19,7 @@
   position: relative;
   display: flex;
   flex-wrap: wrap; // allow us to do the line break for collapsing content
+  align-items: center;
   justify-content: space-between; // space out brand from logo
   padding: $navbar-padding-y $navbar-padding-x;
 
@@ -28,10 +29,11 @@
   > .container-fluid {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
 
     @include media-breakpoint-down(nth(map-keys($grid-breakpoints), 1)) {
-      width: 100%; // prevent flex parent container(-fluid) from collapsing
+      width: 100%; // prevent flex parent container from collapsing
       margin-right: 0;
       margin-left: 0;
     }
@@ -45,7 +47,6 @@
 
 .navbar-brand {
   display: inline-block;
-  align-self: flex-start;
   padding-top: $navbar-brand-padding-y;
   padding-bottom: $navbar-brand-padding-y;
   margin-right: $navbar-padding-x;
@@ -73,6 +74,11 @@
   .nav-link {
     padding-right: 0;
     padding-left: 0;
+  }
+
+  .dropdown-menu {
+    position: static;
+    float: none;
   }
 }
 
@@ -102,7 +108,6 @@
 
 // Button for toggling the navbar when in its collapsed state
 .navbar-toggler {
-  align-self: flex-start; // Prevent toggler from growing to full width when it's the only visible navbar child
   padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
   font-size: $navbar-toggler-font-size;
   line-height: 1;
@@ -136,13 +141,6 @@
 
     &#{$infix} {
       @include media-breakpoint-down($breakpoint) {
-        .navbar-nav {
-          .dropdown-menu {
-            position: static;
-            float: none;
-          }
-        }
-
         > .container,
         > .container-fluid {
           padding-right: 0;
@@ -153,11 +151,19 @@
       @include media-breakpoint-up($next) {
         flex-direction: row;
         flex-wrap: nowrap;
-        align-items: center;
         justify-content: flex-start;
 
         .navbar-nav {
           flex-direction: row;
+
+          .dropdown-menu {
+            position: absolute;
+          }
+
+          .dropdown-menu-right {
+            right: 0;
+            left: auto; // Reset the default from `.dropdown-menu`
+          }
 
           .nav-link {
             padding-right: .5rem;
@@ -169,7 +175,6 @@
         > .container,
         > .container-fluid {
           flex-wrap: nowrap;
-          align-items: center;
         }
 
         // scss-lint:disable ImportantRule
@@ -214,9 +219,9 @@
       }
     }
 
-    .open > .nav-link,
+    .show > .nav-link,
     .active > .nav-link,
-    .nav-link.open,
+    .nav-link.show,
     .nav-link.active {
       color: $navbar-light-active-color;
     }
@@ -224,11 +229,11 @@
 
   .navbar-toggler {
     color: $navbar-light-color;
-    border-color: $navbar-light-toggler-border;
+    border-color: $navbar-light-toggler-border-color;
   }
 
   .navbar-toggler-icon {
-    background-image: $navbar-light-toggler-bg;
+    background-image: $navbar-light-toggler-icon-bg;
   }
 
   .navbar-text {
@@ -237,46 +242,46 @@
 }
 
 // White links against a dark background
-.navbar-inverse {
+.navbar-dark {
   .navbar-brand {
-    color: $navbar-inverse-active-color;
+    color: $navbar-dark-active-color;
 
     @include hover-focus {
-      color: $navbar-inverse-active-color;
+      color: $navbar-dark-active-color;
     }
   }
 
   .navbar-nav {
     .nav-link {
-      color: $navbar-inverse-color;
+      color: $navbar-dark-color;
 
       @include hover-focus {
-        color: $navbar-inverse-hover-color;
+        color: $navbar-dark-hover-color;
       }
 
       &.disabled {
-        color: $navbar-inverse-disabled-color;
+        color: $navbar-dark-disabled-color;
       }
     }
 
-    .open > .nav-link,
+    .show > .nav-link,
     .active > .nav-link,
-    .nav-link.open,
+    .nav-link.show,
     .nav-link.active {
-      color: $navbar-inverse-active-color;
+      color: $navbar-dark-active-color;
     }
   }
 
   .navbar-toggler {
-    color: $navbar-inverse-color;
-    border-color: $navbar-inverse-toggler-border;
+    color: $navbar-dark-color;
+    border-color: $navbar-dark-toggler-border-color;
   }
 
   .navbar-toggler-icon {
-    background-image: $navbar-inverse-toggler-bg;
+    background-image: $navbar-dark-toggler-icon-bg;
   }
 
   .navbar-text {
-    color: $navbar-inverse-color;
+    color: $navbar-dark-color;
   }
 }

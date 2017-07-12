@@ -1,10 +1,3 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 @import "1bs3-components-compat";
 
 @import "alerts";
@@ -14,21 +7,18 @@
 @import "button-groups";
 @import "buttons";
 @import "cards";
-@import "clamp";
 @import "crop-image";
 @import "grid";
 @import "icons";
 @import "input-groups";
 @import "forms";
 @import "form-validation";
-@import "figures";
 @import "labels";
 @import "list-group";
 @import "navs";
 @import "navbar";
 @import "nav-tabs";
-@import "management-bar"; // Management-bar styles should win over nav styles
-@import "pager";
+// @import "pager"; // dropped
 @import "pagination";
 @import "panels";
 @import "popovers";
@@ -41,15 +31,14 @@
 @import "toggle-card";
 @import "toggle-switch";
 @import "type";
-@import "user-icons";
 
 @import "dropdowns";
 @import "modals";
-@import "nameplates";
 @import "timelines";
 @import "toolbars";
-@import "nav-tabs-scroll";
-@import "list-group-deprecated";
+// @import "nav-tabs-scroll";
+
+@import "borders";
+@import "utilities";
 
 @import "loaders";
-@import "simple-flexbox-grid";
