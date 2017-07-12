@@ -11,6 +11,7 @@
   text-align: center;
   background-color: $progress-bg;
   @include border-radius($progress-border-radius);
+  @include box-shadow($progress-box-shadow);
 }
 
 .progress-bar {
@@ -18,6 +19,7 @@
   line-height: $progress-height;
   color: $progress-bar-color;
   background-color: $progress-bar-bg;
+  @include transition($progress-bar-transition);
 }
 
 .progress-bar-striped {
