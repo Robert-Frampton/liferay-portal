@@ -1,12 +1,5 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 .timeline {
-	@extend .list-unstyled;
+	@include list-unstyled;
 
 	padding-left: $timeline-outer-spacing;
 
@@ -18,15 +11,31 @@
 
 .timeline-icon {
 	background-color: $timeline-icon-bg;
-	border: $timeline-icon-border-width solid $timeline-icon-border;
+	border: $timeline-icon-border-width solid $timeline-icon-border-color;
 	border-radius: $timeline-icon-border-radius;
 	display: block;
 
 	@include monospace($timeline-icon-size);
 }
 
-.timeline-increment-label {
-	color: $timeline-increment-label-color;
+.timeline-increment {
+	background-color: $timeline-increment-bg;
+	left: -($timeline-inner-spacing - $timeline-border-modifier);
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	z-index: 1;
+}
+
+.timeline-increment-text {
+	display: block;
+	max-width: $timeline-inner-spacing + $timeline-outer-spacing;
+}
+
+.timeline-item-label {
+	color: $timeline-item-label-color;
 }
 
 .timeline-item {
@@ -36,7 +45,7 @@
 	position: relative;
 
 	&:before {
-		background-color: $timeline-border;
+		background-color: $timeline-border-color;
 		bottom: 0;
 		content: '';
 		display: block;
@@ -49,7 +58,7 @@
 	&.active {
 		.timeline-icon {
 			background-color: $timeline-icon-active-bg;
-			border-color: $timeline-icon-active-border;
+			border-color: $timeline-icon-active-border-color;
 		}
 	}
 
@@ -59,18 +68,9 @@
 	}
 
 	.panel {
-		.timeline-increment-icon {
-			margin-left: -$panel-border-left-width;
+		.timeline-increment {
+			margin-left: -$card-border-width;
 		}
-	}
-
-	.timeline-increment-icon {
-		left: -($timeline-inner-spacing - $timeline-border-modifier);
-		position: absolute;
-		top: 50%;
-		-ms-transform: translate(-50%, -50%);
-		transform: translate(-50%, -50%);
-		z-index: 1;
 	}
 }
 
@@ -86,7 +86,7 @@
 }
 
 .timeline-right-xs-only {
-	@media (max-width: $screen-xs-max) {
+	@include media-breakpoint-down(xs) {
 		padding-left: 0;
 		padding-right: $timeline-outer-spacing;
 
@@ -99,14 +99,14 @@
 // Timeline Center
 
 .timeline-center {
-	@media (min-width: $grid-float-breakpoint) {
+	@include media-breakpoint-up(md) {
 		padding-left: 0;
 
 		.timeline-item {
 			margin-left: 50%;
 			width: 50%;
 
-			.timeline-increment-label {
+			.timeline-item-label {
 				left: -100%;
 				margin-left: -($timeline-inner-spacing * 2);
 				position: absolute;
@@ -123,7 +123,7 @@
 
 			margin-left: 0;
 
-			.timeline-increment-label {
+			.timeline-item-label {
 				margin-left: auto;
 				margin-right: -($timeline-inner-spacing * 2);
 				right: -100%;
@@ -135,12 +135,12 @@
 
 .timeline-even .timeline-item:nth-of-type(even),
 .timeline-odd .timeline-item:nth-of-type(odd) {
-	@media (min-width: $grid-float-breakpoint) {
+	@include media-breakpoint-up(md) {
 		@include timeline-item-reverse;
 
 		margin-left: 0;
 
-		.timeline-increment-label {
+		.timeline-item-label {
 			margin-left: auto;
 			margin-right: -($timeline-inner-spacing * 2);
 			right: -100%;
@@ -150,5 +150,9 @@
 }
 
 .timeline-spacing-xl {
-	@include timeline-spacing(25px, 50px, 15px);
+	@include timeline-spacing($timeline-outer-spacing-xl, $timeline-inner-spacing-xl, $timeline-item-padding-y-xl);
+
+	.timeline-increment-text {
+		max-width: $timeline-inner-spacing-xl + $timeline-outer-spacing-xl;
+	}
 }

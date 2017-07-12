@@ -1,70 +1,32 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
-@if (variable-exists(atlas-theme)) {
-	.alert {
+.alert {
+	@if ($alert-border-width != 1px) {
 		border-width: $alert-border-width;
-		font-size: $alert-font-size;
-
-		.close {
-			color: $alert-close-color;
-			opacity: 1;
-			top: -1px;
-		}
-
-		.lead {
-			font-size: $alert-lead-font-size;
-			font-weight: $alert-lead-font-weight;
-			margin-bottom: 0;
-			margin-right: 16px;
-		}
 	}
 
-	.alert-link {
-		text-decoration: underline;
+	font-size: $alert-font-size;
 
-		&:focus,
-		&:hover {
-			text-decoration: none;
-		}
+	.close {
+		opacity: $alert-close-opacity;
+		padding-bottom: $alert-close-padding-bottom;
+		padding-left: $alert-close-padding-left;
+		padding-right: $alert-close-padding-right;
+		padding-top: $alert-close-padding-top;
+		right: $alert-close-position-right;
+		top: $alert-close-position-top;
 	}
 
-	// Alert Skins
-
-	.alert-default {
-		background-color: $alert-default-bg;
-		border-color: $alert-default-border;
-		color: $alert-default-text;
-
-		hr {
-			border-top-color: $alert-default-border;
-		}
-
-		.alert-link,
-		.close,
-		.lead {
-			color: $alert-default-text-bold;
-		}
+	.lead {
+		font-size: $alert-lead-font-size;
+		font-weight: $alert-lead-font-weight;
+		margin-right: $alert-lead-margin-right;
 	}
+}
 
-	.alert-danger {
-		@include color-alert-text($alert-danger-text, $alert-danger-text-bold);
-	}
+.alert-link {
+	text-decoration: $alert-link-decoration;
 
-	.alert-info {
-		@include color-alert-text($alert-info-text, $alert-info-text-bold);
-	}
-
-	.alert-success {
-		@include color-alert-text($alert-success-text, $alert-success-text-bold);
-	}
-
-	.alert-warning {
-		@include color-alert-text($alert-warning-text, $alert-warning-text-bold);
+	@include hover-focus {
+		text-decoration: $alert-link-hover-decoration;
 	}
 }
 
@@ -73,7 +35,37 @@
 .alert-notification {
 	width: 100%;
 
-	@media (min-width: $grid-float-breakpoint) {
+	@include media-breakpoint-up(md) {
 		max-width: $alert-notification-max-width;
+	}
+}
+
+// Alert Variants
+
+@each $color, $value in $alert-palette {
+	.alert-#{$color} {
+		background-color: nth($value, 1);
+		border-color: nth($value, 2);
+		color: nth($value, 3);
+
+		.close {
+			color: nth($value, 4);
+
+			@include hover-focus {
+				color: nth($value, 5);
+			}
+		}
+
+		.alert-link {
+			color: nth($value, 7);
+
+			@include hover-focus {
+				color: nth($value, 8);
+			}
+		}
+
+		.lead {
+			color: nth($value, 6);
+		}
 	}
 }

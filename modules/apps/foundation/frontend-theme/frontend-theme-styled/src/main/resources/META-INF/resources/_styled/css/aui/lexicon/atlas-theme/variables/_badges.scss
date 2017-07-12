@@ -1,37 +1,59 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
-$badge-desktop-font-size: $label-desktop-font-size !default;
-$badge-font-size: $label-font-size !default;
+$badge-font-size: 0.875rem !default; // 14px
+$badge-font-size-mobile: 0.75rem !default; // 12px
 $badge-font-weight: 500 !default;
-$badge-padding-bottom: $label-padding-bottom !default;
-$badge-padding-left: $label-padding-left !default;
-$badge-padding-right: $label-padding-right !default;
-$badge-padding-top: $label-padding-top !default;
+$badge-padding-x: 12px !default;
+$badge-padding-y: 9px !default;
 
-$badge-lg-desktop-font-size: $label-lg-desktop-font-size !default;
-$badge-lg-font-size: $label-lg-font-size !default;
-$badge-lg-padding-bottom: $label-lg-padding-bottom !default;
-$badge-lg-padding-left: $label-lg-padding-left !default;
-$badge-lg-padding-right: $label-lg-padding-right !default;
-$badge-lg-padding-top: $label-lg-padding-top !default;
+$badge-font-size-lg: 1.125rem !default; // 18px
+$badge-font-size-lg-mobile: 1rem !default; // 16px
+$badge-padding-x-lg: 20px !default;
+$badge-padding-y-lg: 14px !default;
 
-$badge-sm-desktop-font-size: $label-sm-desktop-font-size !default;
-$badge-sm-font-size: $label-sm-font-size !default;
-$badge-sm-padding-bottom: $label-sm-padding-bottom !default;
-$badge-sm-padding-left: $label-sm-padding-left !default;
-$badge-sm-padding-right: $label-sm-padding-right !default;
-$badge-sm-padding-top: $label-sm-padding-top !default;
+$badge-font-size-sm: 0.75rem !default; // 12px
+$badge-font-size-sm-mobile: 0.6875rem !default; // 11px
+$badge-padding-x-sm: 10px !default;
+$badge-padding-y-sm: 4px !default;
 
-// Skin
+// Badge Variants
 
-$badge-default-bg: $label-default-bg !default;
-$badge-default-color: $label-default-color !default;
+$badge-primary-bg: map-get($theme-colors, primary) !default;
+$badge-primary-hover-bg: $badge-primary-bg !default;
+$badge-primary-color: #FFF !default;
+$badge-primary-hover-color: $badge-primary-color !default;
 
-// Deprecated `$badge-default-link-color` as of v1.0.16 and will be removed in v2.0.0
-$badge-default-hover-color: $badge-default-color !default;
-$badge-default-link-color: $badge-default-color !default;
+$badge-secondary-bg: #E7F1F9 !default;
+$badge-secondary-hover-bg: $badge-secondary-bg !default;
+$badge-secondary-color: map-get($theme-colors, primary) !default;
+$badge-secondary-hover-color: $badge-secondary-color !default;
+$badge-secondary-link-color: $badge-secondary-color !default;
+
+$badge-success-bg: map-get($theme-colors, success) !default;
+$badge-success-hover-bg: $badge-success-bg !default;
+$badge-success-color: #FFF !default;
+$badge-success-hover-color: $badge-success-color !default;
+
+$badge-info-bg: map-get($theme-colors, info) !default;
+$badge-info-hover-bg: $badge-info-bg !default;
+$badge-info-color: #FFF !default;
+$badge-info-hover-color: $badge-info-color !default;
+
+$badge-warning-bg: map-get($theme-colors, warning) !default;
+$badge-warning-hover-bg: $badge-warning-bg !default;
+$badge-warning-color: #FFF !default;
+$badge-warning-hover-color: $badge-warning-color !default;
+
+$badge-danger-bg: map-get($theme-colors, danger) !default;
+$badge-danger-hover-bg: $badge-danger-bg !default;
+$badge-danger-color: #FFF !default;
+$badge-danger-hover-color: $badge-danger-color !default;
+
+$badge-light-bg: map-get($theme-colors, light) !default;
+$badge-light-hover-bg: $badge-light-bg !default;
+$badge-light-color: #869CAD !default;
+$badge-light-hover-color: $badge-light-color !default;
+$badge-light-link-color: $badge-light-color !default;
+
+$badge-dark-bg: map-get($theme-colors, dark) !default;
+$badge-dark-hover-bg: $badge-dark-bg !default;
+$badge-dark-color: #FFF !default;
+$badge-dark-hover-color: $badge-dark-color !default;
