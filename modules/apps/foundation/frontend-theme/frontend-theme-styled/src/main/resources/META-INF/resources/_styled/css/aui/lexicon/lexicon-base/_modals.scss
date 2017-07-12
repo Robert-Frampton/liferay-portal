@@ -1,61 +1,21 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
-.modal-dialog {
-	@media (max-width: $grid-float-breakpoint-max) {
-		bottom: 0;
-		left: 0;
-		margin: 0;
-		overflow: hidden;
-		position: absolute;
-		right: 0;
-		top: 0;
-	}
-}
-
 .modal-content {
-	box-shadow: $modal-box-shadow;
-	overflow: auto;
-
-	@media (max-width: $grid-float-breakpoint-max) {
-		border-radius: 0;
-		border-width: 0;
-		box-shadow: none;
-		height: 100%;
+	@if not ($modal-content-border-radius == $border-radius-lg) {
+		@include border-radius($modal-content-border-radius);
 	}
+
+	overflow: hidden;
 }
 
 .modal-header {
 	background-color: $modal-header-bg;
 	border-color: $modal-header-border-color;
 	color: $modal-header-color;
-
-	@if (variable-exists(atlas-theme)) {
-		text-align: center;
-
-		@media (min-width: $grid-float-breakpoint) {
-			background-color: $modal-desktop-header-bg;
-			color: $modal-desktop-header-color;
-		}
-	}
+	flex-shrink: 0;
 }
 
 .modal-body {
 	background-color: $modal-body-bg;
 	color: $modal-body-color;
-
-	@media (max-width: $grid-float-breakpoint-max) {
-		bottom: $modal-footer-height;
-		left: 0;
-		overflow: auto;
-		position: absolute;
-		right: 0;
-		top: $modal-header-height;
-	}
 
 	&.inline-scroller {
 		-webkit-overflow-scrolling: touch;
@@ -64,104 +24,72 @@
 	}
 }
 
-.modal-body-no-header {
-	top: 0;
-}
-
-.modal-body-no-footer {
-	bottom: 0;
-}
-
 .modal-footer {
 	background-color: $modal-footer-bg;
-	border-color: $modal-footer-border-color;
 
-	@if (variable-exists(modal-footer-box-shadow)) {
-		box-shadow: $modal-footer-box-shadow;
-	}
+	@include box-shadow($modal-footer-box-shadow);
 
-	clear: both;
 	color: $modal-footer-color;
-	text-align: left;
-
-	@media (max-width: $grid-float-breakpoint-max) {
-		bottom: 0;
-		left: 0;
-		position: absolute;
-		right: 0;
-	}
-
-	@if (variable-exists(atlas-theme)) {
-		@media (min-width: $grid-float-breakpoint) {
-			background-color: $modal-desktop-footer-bg;
-			color: $modal-desktop-footer-color;
-			position: relative;
-		}
-	}
+	flex-shrink: 0;
 }
 
 // Modal Title
 
 .modal-title {
 	display: block;
+	font-size: $modal-title-font-size;
+	font-weight: $modal-title-font-weight;
+	flex-grow: 1;
+	text-align: $modal-title-text-align;
 
-	@if (variable-exists(atlas-theme)) {
-		font-size: 19px;
-		font-weight: normal;
-	}
-
-	text-align: center;
-
-	@include text-overflow;
+	@include text-truncate;
 }
 
-@if (variable-exists(atlas-theme)) {
-	h1.modal-title {
-		font-size: $font-size-h1;
+h1.modal-title {
+	font-size: $h1-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h1;
-		}
+	@include scale-component {
+		font-size: $h1-font-size-mobile;
 	}
+}
 
-	h2.modal-title {
-		font-size: $font-size-h2;
+h2.modal-title {
+	font-size: $h2-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h2;
-		}
+	@include scale-component {
+		font-size: $h2-font-size-mobile;
 	}
+}
 
-	h3.modal-title {
-		font-size: $font-size-h3;
+h3.modal-title {
+	font-size: $h3-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h3;
-		}
+	@include scale-component {
+		font-size: $h3-font-size-mobile;
 	}
+}
 
-	h4.modal-title {
-		font-size: $font-size-h4;
+h4.modal-title {
+	font-size: $h4-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h4;
-		}
+	@include scale-component {
+		font-size: $h4-font-size-mobile;
 	}
+}
 
-	h5.modal-title {
-		font-size: $font-size-h5;
+h5.modal-title {
+	font-size: $h5-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h5;
-		}
+	@include scale-component {
+		font-size: $h5-font-size-mobile;
 	}
+}
 
-	h6.modal-title {
-		font-size: $font-size-h6;
+h6.modal-title {
+	font-size: $h6-font-size;
 
-		@media (min-width: $grid-float-breakpoint) {
-			font-size: $font-size-desktop-h6;
-		}
+	@include scale-component {
+		font-size: $h6-font-size-mobile;
 	}
 }
 
@@ -171,7 +99,6 @@
 	float: left;
 	font-size: ($font-size-base * 1.5);
 	font-weight: $close-font-weight;
-	line-height: 1;
 	text-shadow: $close-text-shadow;
 }
 
@@ -193,17 +120,7 @@ button.modal-primary-action-button {
 		margin-top: -1px;
 		opacity: 1;
 
-		@if (variable-exists(atlas-theme)) {
-			height: $modal-title-line-height;
-			line-height: $modal-title-line-height;
-			width: $modal-title-line-height;
-		}
-
-		@media (min-width: $grid-float-breakpoint) {
-			@if (variable-exists(atlas-theme)) {
-				color: $modal-desktop-header-close-color;
-			}
-		}
+		@include monospace(32px);
 	}
 
 	.close,
@@ -232,12 +149,6 @@ button.modal-primary-action-button {
 			border-color: transparent;
 			box-shadow: none;
 			color: $modal-header-close-color;
-
-			@media (min-width: $grid-float-breakpoint) {
-				@if (variable-exists(atlas-theme)) {
-					color: $modal-desktop-header-close-color;
-				}
-			}
 		}
 	}
 }
@@ -262,8 +173,8 @@ button.modal-primary-action-button {
 
 	iframe {
 		border-width: 0;
-		float: left;
 		height: 100%;
+		position: absolute;
 		width: 100%;
 	}
 }
@@ -271,64 +182,62 @@ button.modal-primary-action-button {
 // Modal Full Screen
 
 .modal-full-screen {
-	bottom: 0;
-	left: 0;
+	bottom: 45px;
+	left: 45px;
 	margin: 0;
+	max-width: none;
 	position: absolute;
-	right: 0;
-	top: 0;
-	width: auto;
+	right: 45px;
+	top: 45px;
 
-	@media (min-width: $grid-float-breakpoint) {
-		bottom: 45px;
-		left: 45px;
-		right: 45px;
-		top: 45px;
+	@include scale-component {
+		bottom: 0;
+		left: 0;
+		right: 0;
+		top: 0;
 	}
 
 	.modal-content {
 		border-color: $modal-content-border-color;
-		border-radius: 0;
-		border-width: 0;
+
+		@include border-radius($modal-content-border-radius);
+
+		border-width: $modal-content-border-width;
 		height: 100%;
 
-		@media (min-width: $grid-float-breakpoint) {
-			border-radius: 6px;
-			border-width: 1px;
+		@include scale-component {
+			@include border-radius(0);
+
+			border-width: 0;
 		}
 	}
 
 	.modal-body {
-		bottom: $modal-footer-height;
-		left: 0;
 		overflow: auto;
-		position: absolute;
-		right: 0;
-		top: $modal-header-height;
-
-		@media (min-width: $grid-float-breakpoint) {
-			bottom: $modal-desktop-footer-height;
-			top: $modal-desktop-header-height;
-		}
 	}
+}
 
-	.modal-body-no-footer {
-		bottom: 0;
-	}
+// Modal Responsive Full Screen
 
-	.modal-body-no-header {
-		top: 0;
-	}
-
-	.modal-footer {
+.modal-full-screen-sm-down {
+	@include media-breakpoint-down(sm) {
 		bottom: 0;
 		left: 0;
+		margin: 0;
+		max-width: none;
 		position: absolute;
 		right: 0;
-		top: auto;
+		top: 0;
 
-		@media (min-width: $grid-float-breakpoint) {
-			padding: $modal-inner-padding;
+		.modal-body {
+			overflow: auto;
+		}
+
+		.modal-content {
+			@include border-radius(0);
+
+			border-width: 0;
+			height: 100%;
 		}
 	}
 }
@@ -349,23 +258,9 @@ button.modal-primary-action-button {
 		border-color: $modal-inverse-header-border-color;
 		color: $modal-inverse-header-color;
 
-		@if (variable-exists(atlas-theme)) {
-			@media (min-width: $grid-float-breakpoint) {
-				background-color: $modal-inverse-desktop-header-bg;
-				border-color: $modal-inverse-desktop-header-border-color;
-				color: $modal-inverse-desktop-header-color;
-			}
-		}
-
 		.close,
 		.modal-primary-action-button {
 			color: $modal-inverse-header-close-color;
-
-			@if (variable-exists(atlas-theme)) {
-				@media screen and (min-width: $grid-float-breakpoint) {
-					color: $modal-inverse-desktop-header-close-color;
-				}
-			}
 		}
 	}
 
@@ -378,13 +273,109 @@ button.modal-primary-action-button {
 		background-color: $modal-inverse-footer-bg;
 		border-color: $modal-inverse-footer-border-color;
 		color: $modal-inverse-footer-color;
+	}
+}
 
-		@if (variable-exists(atlas-theme)) {
-			@media (min-width: $grid-float-breakpoint) {
-				background-color: $modal-inverse-desktop-footer-bg;
-				border-color: $modal-inverse-desktop-footer-border-color;
-				color: $modal-inverse-desktop-footer-color;
-			}
+// Modal Danger
+
+.modal-danger {
+	.modal-header {
+		background-color: $modal-danger-header-bg;
+		border-color: $modal-danger-header-border-color;
+		color: $modal-danger-header-color;
+
+		.close,
+		.modal-primary-action-button {
+			color: $modal-danger-header-close-color;
 		}
+	}
+
+	.modal-body {
+		background-color: $modal-danger-body-bg;
+		color: $modal-danger-body-color;
+	}
+
+	.modal-footer {
+		background-color: $modal-danger-footer-bg;
+		border-color: $modal-danger-footer-border-color;
+		color: $modal-danger-footer-color;
+	}
+}
+
+// Modal Info
+
+.modal-info {
+	.modal-header {
+		background-color: $modal-info-header-bg;
+		border-color: $modal-info-header-border-color;
+		color: $modal-info-header-color;
+
+		.close,
+		.modal-primary-action-button {
+			color: $modal-info-header-close-color;
+		}
+	}
+
+	.modal-body {
+		background-color: $modal-info-body-bg;
+		color: $modal-info-body-color;
+	}
+
+	.modal-footer {
+		background-color: $modal-info-footer-bg;
+		border-color: $modal-info-footer-border-color;
+		color: $modal-info-footer-color;
+	}
+}
+
+// Modal Success
+
+.modal-success {
+	.modal-header {
+		background-color: $modal-success-header-bg;
+		border-color: $modal-success-header-border-color;
+		color: $modal-success-header-color;
+
+		.close,
+		.modal-primary-action-button {
+			color: $modal-success-header-close-color;
+		}
+	}
+
+	.modal-body {
+		background-color: $modal-success-body-bg;
+		color: $modal-success-body-color;
+	}
+
+	.modal-footer {
+		background-color: $modal-success-footer-bg;
+		border-color: $modal-success-footer-border-color;
+		color: $modal-success-footer-color;
+	}
+}
+
+// Modal Warning
+
+.modal-warning {
+	.modal-header {
+		background-color: $modal-warning-header-bg;
+		border-color: $modal-warning-header-border-color;
+		color: $modal-warning-header-color;
+
+		.close,
+		.modal-primary-action-button {
+			color: $modal-warning-header-close-color;
+		}
+	}
+
+	.modal-body {
+		background-color: $modal-warning-body-bg;
+		color: $modal-warning-body-color;
+	}
+
+	.modal-footer {
+		background-color: $modal-warning-footer-bg;
+		border-color: $modal-warning-footer-border-color;
+		color: $modal-warning-footer-color;
 	}
 }
