@@ -1,48 +1,105 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 .progress {
-	box-shadow: $progress-box-shadow;
-	height: $progress-bar-height;
+	// will be redundant with https://github.com/twbs/bootstrap/commit/2a833d559a51da21355360a56e29f1fb19c080dc
+	@include box-shadow($progress-box-shadow);
+
+	flex-grow: 1;
+	min-width: $progress-min-width;
 }
 
 .progress-bar {
-	box-shadow: $progress-bar-box-shadow;
-	font-size: $progress-bar-font-size;
-	line-height: $progress-bar-height;
-}
-
-.progress-xs {
-	border-radius: $progress-bar-xs-border-radius;
-	height: $progress-bar-xs-height;
-
-	.progress-bar {
-		font-size: $progress-bar-xs-font-size;
-		line-height: $progress-bar-xs-height;
-	}
+	@include box-shadow($progress-bar-box-shadow);
 }
 
 .progress-lg {
-	border-radius: $progress-bar-lg-border-radius;
-	height: $progress-bar-lg-height;
+	@include border-radius($progress-lg-border-radius);
+
+	font-size: $progress-lg-font-size;
 
 	.progress-bar {
-		font-size: $progress-bar-lg-font-size;
-		line-height: $progress-bar-lg-height;
+		height: $progress-lg-height;
+		line-height: $progress-lg-height;
 	}
 }
 
-.progress-xl {
-	border-radius: $progress-bar-xl-border-radius;
-	height: $progress-bar-xl-height;
+// Progress Group
 
+.progress-group {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.progress-group-addon {
+	font-size: $progress-group-addon-font-size;
+	margin-right: $progress-group-addon-spacer-x;
+	text-align: center;
+
+	&:first-child {
+		padding-left: 0;
+	}
+
+	&:last-child {
+		padding-right: 0;
+	}
+}
+
+.progress ~ .progress-group-addon {
+	margin-left: $progress-group-addon-spacer-x;
+	margin-right: 0;
+}
+
+.progress-group-stacked {
+	display: block;
+
+	.progress-group-addon {
+		margin-left: 0;
+		margin-right: 0;
+	}
+}
+
+// Progress States
+
+.progress-group-feedback {
+	color: $progress-group-feedback-color;
+}
+
+.has-danger {
 	.progress-bar {
-		font-size: $progress-bar-xl-font-size;
-		line-height: $progress-bar-xl-height;
+		background-color: $progress-bar-danger-bg;
+	}
+
+	.progress-group-feedback {
+		color: $progress-group-feedback-danger-color;
+	}
+}
+
+.has-info {
+	.progress-bar {
+		background-color: $progress-bar-info-bg;
+	}
+
+	.progress-group-feedback {
+		color: $progress-group-feedback-info-color;
+	}
+}
+
+.has-success {
+	.progress-bar {
+		background-color: $progress-bar-success-bg;
+	}
+
+	.progress-group-feedback {
+		color: $progress-group-feedback-success-color;
+	}
+}
+
+.has-warning {
+	.progress-bar {
+		background-color: $progress-bar-warning-bg;
+	}
+
+	.progress-group-feedback {
+		color: $progress-group-feedback-warning-color;
 	}
 }
 
@@ -141,22 +198,22 @@
 }
 
 .multi-step-progress-bar-collapse {
-	@media (max-width: $grid-float-breakpoint-max) {
+	@include media-breakpoint-down(sm) {
 		padding-top: 20px;
 	}
 
 	> li {
-		@media (max-width: $grid-float-breakpoint-max) {
+		@include media-breakpoint-down(sm) {
 			width: auto;
 		}
 
 		&:last-child {
-			@media (max-width: $grid-float-breakpoint-max) {
+			@include media-breakpoint-down(sm) {
 				width: 1%;
 			}
 
 			.divider {
-				@media (max-width: $grid-float-breakpoint-max) {
+				@include media-breakpoint-down(sm) {
 					width: 0;
 				}
 			}
@@ -165,7 +222,7 @@
 
 	> .active {
 		.progress-bar-title {
-			@media (max-width: $grid-float-breakpoint-max) {
+			@include media-breakpoint-down(sm) {
 				display: block;
 				left: 0;
 				position: absolute;
@@ -177,7 +234,7 @@
 	}
 
 	.progress-bar-title {
-		@media (max-width: $grid-float-breakpoint-max) {
+		@include media-breakpoint-down(sm) {
 			display: none;
 		}
 	}

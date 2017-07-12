@@ -1,11 +1,4 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
-$table-cell-gutters: floor($grid-gutter-width / 2) !default; // 15px
+$table-cell-gutters: $grid-gutter-width / 2 !default; // 15px
 
 $table-header-font-size: null !default;
 $table-header-font-weight: null !default;

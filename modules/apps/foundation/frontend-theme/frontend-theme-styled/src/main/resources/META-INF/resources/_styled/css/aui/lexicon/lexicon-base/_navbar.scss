@@ -1,28 +1,42 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
+// Navbar Dropdowns
+// TODO: Fix dropdowns in mobile, waiting for BS4 update
+
+// @if (variable-exists(atlas-theme)) {
+// 	.navbar-nav {
+// 		@include media-breakpoint-down(sm) {
+// 			.dropdown-menu {
+// 				max-width: none;
+// 			}
+
+// 			.open .dropdown-menu {
+// 				padding: 0;
+
+// 				> li > a,
+// 				.dropdown-header {
+// 					padding: $navbar-padding-y $navbar-padding-x;
+// 				}
+
+// 				.inline-scroller,
+// 				.linked-list {
+// 					li a {
+// 						padding: $navbar-padding-y $navbar-padding-x;
+
+// 						&:focus,
+// 						&:hover {
+// 							color: $navbar-light-active-color;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
 // Basic Search
 
 .basic-search {
-	float: right;
-	max-width: none;
-	padding: $navbar-form-padding-vertical $navbar-form-padding-horizontal;
-
-	@media (min-width: $grid-float-breakpoint) {
-		max-width: 220px;
-	}
-
 	&.open {
 		z-index: 10;
-	}
-
-	.form-control {
-		float: right;
-		width: 100%;
 	}
 
 	.input-group-input {
@@ -38,58 +52,6 @@
 	}
 }
 
-.basic-search-slider {
-	left: 101%;
-	position: relative;
-
-	@media (min-width: $grid-float-breakpoint) {
-		left: 0;
-	}
-
-	.basic-search-close {
-		border-bottom-right-radius: 0;
-		border-top-right-radius: 0;
-		left: 0;
-		position: absolute;
-		z-index: $zindex-basic-search-close;
-
-		@media (min-width: $grid-float-breakpoint) {
-			display: none;
-			line-height: normal;
-		}
-
-		&:focus {
-			border-color: $input-border-focus;
-			outline: none;
-		}
-
-		.basic-search.focus & {
-			@if not (variable-exists(atlas-theme)) {
-				border-right-color: $input-border-focus;
-			}
-		}
-	}
-
-	.basic-search.open & {
-		left: 0;
-	}
-}
-
-.basic-search {
-	.input-group-input {
-		text-align: right;
-
-		.form-control {
-			min-width: 100px;
-		}
-	}
-}
-
-.basic-search-autofit {
-	float: none;
-	max-width: none;
-}
-
 .basic-search-transition {
 	&:after {
 		transition: all 0.1s ease;
@@ -102,36 +64,51 @@
 
 // Collapse Basic Search
 
-.collapse-basic-search {
+.basic-search-slider {
+	left: 101%;
 	position: relative;
 
-	@media (min-width: $grid-float-breakpoint) {
-		&.navbar-no-collapse {
-			.navbar-nav:first-child {
-				float: left;
-			}
-		}
+	@include media-breakpoint-up(md) {
+		left: 0;
+	}
 
-		.basic-search-autofit {
-			float: none;
-			max-width: none;
+	.basic-search-close {
+		border-bottom-right-radius: 0;
+		border-top-right-radius: 0;
+		z-index: $zindex-basic-search-close;
+
+		@include media-breakpoint-up(md) {
+			display: none;
 		}
 	}
 
-	.basic-search {
-		display: block;
+	.basic-search.open & {
 		left: 0;
-		margin: 0;
-		position: absolute;
-		right: 0;
-		top: 0;
+	}
+}
 
-		@media (min-width: $grid-float-breakpoint) {
-			@if (variable-exists(atlas-theme)) {
-				margin-right: 12px;
+.collapse-basic-search {
+	.basic-search {
+		@include media-breakpoint-down(sm) {
+			border-color: transparent;
+
+			@include border-radius($navbar-border-radius);
+
+			border-style: solid;
+			border-width: $navbar-border-top-width $navbar-border-right-width $navbar-border-bottom-width $navbar-border-left-width;
+			left: -$navbar-border-left-width;
+			margin: 0;
+			position: absolute;
+			right: -$navbar-border-right-width;
+			top: -$navbar-border-top-width;
+
+			&.open {
+				background-color: $body-bg;
 			}
+		}
 
-			position: static;
+		@include media-breakpoint-up(md) {
+			position: relative;
 		}
 
 		&.basic-search-transition,
@@ -142,23 +119,23 @@
 		}
 
 		&.open .basic-search-close {
-			@media (min-width: $grid-float-breakpoint) {
+			@include media-breakpoint-up(md) {
 				display: none;
 			}
 		}
 
 		&.basic-search-transition .input-group-btn .btn:first-child,
 		&.open .input-group-btn .btn:first-child {
-			@media (max-width: $grid-float-breakpoint-max) {
+			@include media-breakpoint-down(sm) {
 				border-bottom-left-radius: 0;
 				border-top-left-radius: 0;
 			}
 		}
 
 		.input-group-btn .btn:first-child {
-			@media (max-width: $grid-float-breakpoint-max) {
-				border-bottom-left-radius: $btn-border-radius-base;
-				border-top-left-radius: $btn-border-radius-base;
+			@include media-breakpoint-down(sm) {
+				border-bottom-left-radius: $btn-border-radius;
+				border-top-left-radius: $btn-border-radius;
 			}
 		}
 
@@ -166,647 +143,752 @@
 			overflow: hidden;
 			visibility: hidden;
 
-			@media (min-width: $grid-float-breakpoint) {
+			@include media-breakpoint-up(md) {
 				overflow: visible;
 				visibility: visible;
 			}
 
 			.form-control {
-				@media (min-width: $grid-float-breakpoint) {
+				@include media-breakpoint-up(md) {
 					left: auto;
 				}
 			}
 		}
+	}
+}
 
-		.form-control {
-			padding-left: 47px;
+.collapse-basic-search {
+	flex-wrap: wrap;
 
-			@media (min-width: $grid-float-breakpoint) {
-				padding-left: 5px;
+	&.navbar .basic-search {
+		@include media-breakpoint-down(sm) {
+			margin-left: 0;
+			margin-right: 0;
+			padding-left: $navbar-link-padding-x;
+			padding-right: $navbar-link-padding-x;
+
+			> form {
+				width: 100%;
 			}
 		}
 	}
 
-	.navbar-nav:first-child {
-		float: none;
+	.basic-search {
+		@include media-breakpoint-up(md) {
+			max-width: 220px;
 
-		@media (min-width: $grid-float-breakpoint) {
-			float: left;
+			&.navbar-form-autofit {
+				max-width: none;
+			}
+		}
+
+		.input-group {
+			align-items: center;
+			margin-left: auto;
+
+			@include media-breakpoint-down(sm) {
+				height: $navbar-height - $navbar-border-bottom-width - $navbar-border-top-width;
+			}
+		}
+
+		.input-group-input {
+			flex: 1;
 		}
 	}
 
-	.navbar-nav > li > a,
-	.navbar-toggle {
+	.basic-search-slider {
+		display: flex;
+		flex: 1;
+
+		.form-control {
+			margin-left: -1px;
+		}
+	}
+
+	.navbar-collapse {
+		@include media-breakpoint-up(md) {
+			flex-basis: auto;
+		}
+	}
+
+	.nav-link,
+	.navbar-toggler {
 		z-index: 1;
 	}
 }
 
-// Navbar Basic Search
+.collapse-basic-search-transparent {
+	&.navbar .basic-search {
+		@include media-breakpoint-down(sm) {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
 
-@if (variable-exists(atlas-theme)) {
-	.navbar .basic-search {
+	.basic-search {
+		@include media-breakpoint-up(md) {
+			height: $navbar-height-desktop - ($navbar-padding-y * 2) - $navbar-border-bottom-width - $navbar-border-top-width;
+		}
+
 		&:after {
-			background-color: $input-border;
+			bottom: -$navbar-border-bottom-width;
 			content: '';
 			display: block;
 			height: 0;
+			left: 0;
 			overflow: hidden;
-			position: relative;
-			top: $navbar-border-bottom-width;
+			position: absolute;
+			right: 0;
 			z-index: $zindex-basic-search-close;
+
+			@include media-breakpoint-up(md) {
+				bottom: -$navbar-border-bottom-width - $navbar-padding-y;
+			}
 		}
 
 		&.focus:after {
-			background-color: $input-border-focus;
+			background-color: $input-focus-border-color;
 
-			@media (min-width: $grid-float-breakpoint) {
-				height: $navbar-link-active-bottom-border-width;
-				margin-top: -$navbar-link-active-bottom-border-width;
+			@include media-breakpoint-up(md) {
+				height: $navbar-active-border-bottom-width;
+				margin-top: -$navbar-active-border-bottom-width;
 			}
 		}
 
 		&.open {
 			&:after {
-				height: $navbar-link-active-bottom-border-width;
-				margin-top: -$navbar-link-active-bottom-border-width;
+				height: $navbar-active-border-bottom-width;
+				margin-top: -$navbar-active-border-bottom-width;
 
-				@media (min-width: $grid-float-breakpoint) {
+				@include media-breakpoint-up(md) {
 					background-color: transparent;
 				}
 			}
 
 			&.focus:after {
-				@media (min-width: $grid-float-breakpoint) {
-					background-color: $input-border-focus;
+				@include media-breakpoint-up(md) {
+					background-color: $input-focus-border-color;
 				}
 			}
 		}
-	}
 
-	.navbar.collapse-basic-search .basic-search {
-		padding: 0;
-
-		.btn-default {
-			background-color: $body-bg;
-			border-radius: 0;
-			border-width: 0;
-			color: $brand-default;
-			height: $navbar-height - $navbar-border-bottom-width - $navbar-border-top-width;
+		.btn {
+			background-color: transparent;
+			border-color: transparent;
+			box-shadow: none;
 			padding-left: 12px;
 			padding-right: 12px;
 
-			@media (min-width: $grid-float-breakpoint) {
-				height: $navbar-desktop-height - $navbar-border-bottom-width - $navbar-border-top-width;
-			}
-
 			&:focus {
-				color: $brand-primary;
-				outline: none;
+				color: $input-focus-border-color;
 			}
 		}
 
 		.form-control {
-			background-color: $body-bg;
-			border-width: 0;
-			height: $navbar-height - $navbar-border-bottom-width - $navbar-border-top-width;
-
-			@media (min-width: $grid-float-breakpoint) {
-				height: $navbar-desktop-height - $navbar-border-bottom-width - $navbar-border-top-width;
-			}
-
-			@media (max-width: $grid-float-breakpoint-max) {
-				padding-left: 45px;
-			}
+			background-color: transparent;
+			border-color: transparent;
 		}
-
-		.input-group-btn {
-			padding-right: 12px;
-
-			@media (min-width: $grid-float-breakpoint) {
-				padding-right: 0;
-			}
-		}
-	}
-
-	.navbar .basic-search-close {
-		height: $navbar-height;
 	}
 }
 
 // Navbar
 
 .navbar {
-	.container-fluid-1280 {
-		padding-left: 0;
-		padding-right: 0;
-	}
+	border-color: transparent;
 
-	.nav-tabs {
-		border-width: 0;
+	@include border-radius($navbar-border-radius);
 
-		> li > a {
-			&,
-			&:focus,
-			&:hover {
-				border-radius: 0;
-				border-width: 0;
-				margin-right: 0;
-			}
+	border-style: solid;
+	border-width: $navbar-border-width;
+
+	.container {
+		@include media-breakpoint-down(nth(map-keys($grid-breakpoints), 1)) {
+			margin-left: 0;
+			margin-right: 0;
+			width: 100%;
 		}
 	}
 }
-
-@if (variable-exists(atlas-theme)) {
-	.navbar {
-		border-width: $navbar-border-width;
-		margin-bottom: 0;
-		min-height: $navbar-height;
-
-		@media (min-width: $grid-float-breakpoint) {
-			min-height: $navbar-desktop-height;
-		}
-	}
-
-	.navbar-nav {
-		> .active > a {
-			&:after {
-				@media (min-width: $grid-float-breakpoint) {
-					background-color: $navbar-link-active-highlight;
-					bottom: -$navbar-border-bottom-width;
-
-					@if not ($navbar-link-active-highlight == transparent) {
-						content: '';
-					}
-
-					display: block;
-					height: $navbar-link-active-bottom-border-width;
-					left: $navbar-desktop-padding-horizontal;
-					position: absolute;
-					right: $navbar-desktop-padding-horizontal;
-					width: auto;
-				}
-			}
-		}
-	}
-
-	.navbar-no-collapse .navbar-nav {
-		> .active > a {
-			&:after {
-				background-color: $navbar-link-active-highlight;
-				bottom: -$navbar-border-bottom-width;
-
-				@if not ($navbar-link-active-highlight == transparent) {
-					content: '';
-				}
-
-				display: block;
-				height: $navbar-link-active-bottom-border-width;
-				left: $navbar-desktop-padding-horizontal;
-				position: absolute;
-				right: $navbar-desktop-padding-horizontal;
-				width: auto;
-			}
-		}
-	}
-}
-
-// Navbar Collapse
-
-.navbar-collapse {
-	@if (variable-exists(atlas-theme)) {
-		@media (min-width: $grid-float-breakpoint) {
-			padding-left: 0;
-			padding-right: 0;
-		}
-	}
-}
-
-.navbar-collapse-left {
-	@media (min-width: $grid-float-breakpoint) {
-		float: left;
-	}
-}
-
-.navbar .navbar-collapse:first-child,
-.navbar-collapse-absolute .navbar-collapse {
-	@media (max-width: $grid-float-breakpoint-max) {
-		background-color: $dropdown-bg;
-		border-color: transparent;
-		border-style: solid;
-		border-width: 0 1px 1px 1px;
-
-		@if (variable-exists(navbar-collapse-absolute-box-shadow)) {
-			box-shadow: $navbar-collapse-absolute-box-shadow;
-		}
-
-		left: -$navbar-border-left-width;
-		margin-top: 1px;
-		position: absolute;
-		right: -$navbar-border-right-width;
-		top: 100%;
-		z-index: $zindex-navbar;
-	}
-}
-
-// Navbar No Collapse
-
-.navbar-no-collapse .navbar-nav {
-	float: left;
-
-	@if (variable-exists(atlas-theme)) {
-		margin: 0;
-	}
-	@else {
-		margin: 0 $navbar-padding-horizontal;
-	}
-
-	> li {
-		float: left;
-	}
-
-	.dropdown-menu {
-		background-color: $dropdown-bg;
-		border: 1px solid $dropdown-border;
-		box-shadow: $dropdown-box-shadow;
-		position: absolute;
-	}
-
-	.open .dropdown-menu {
-		> li > a {
-			@media (max-width: $grid-float-breakpoint-max) {
-				color: $dropdown-link-color;
-				padding: $dropdown-link-padding;
-
-				&:focus,
-				&:hover {
-					background-color: $dropdown-link-hover-bg;
-					color: $dropdown-link-hover-color;
-				}
-			}
-		}
-
-		.divider {
-			@media (max-width: $grid-float-breakpoint-max) {
-				@include nav-divider($dropdown-divider-bg);
-			}
-		}
-
-		.dropdown-header {
-			padding: $dropdown-link-padding;
-		}
-	}
-}
-
-// Navbar Form
-
-.navbar-form {
-	padding: $navbar-form-padding-vertical $navbar-form-padding-horizontal;
-
-	@media (min-width: $grid-float-breakpoint) {
-		margin: 0;
-
-		@if (variable-exists(atlas-theme)) {
-			padding-bottom: ($navbar-desktop-height - $input-height-base - $navbar-border-bottom-width - $navbar-border-top-width) / 2;
-			padding-top: ($navbar-desktop-height - $input-height-base - $navbar-border-bottom-width - $navbar-border-top-width) / 2;
-		}
-	}
-}
-
-// Navbar Header
-
-.navbar-header .input-group-input .form-control {
-	@media (min-width: $grid-float-breakpoint) {
-		max-width: none;
-		min-width: 0;
-	}
-}
-
-.navbar-header-left-xs {
-	@media (max-width: $grid-float-breakpoint-max) {
-		float: left;
-	}
-}
-
-.navbar-header-right-xs {
-	@media (max-width: $grid-float-breakpoint-max) {
-		float: right;
-	}
-}
-
-.navbar-header-right {
-	@media (min-width: $grid-float-breakpoint) {
-		float: right;
-	}
-}
-
-// Navbar Nav
 
 .navbar-nav {
-	@media (min-width: $grid-float-breakpoint) {
-		margin-right: $navbar-padding-horizontal;
-	}
+	flex-direction: row;
 
-	&.navbar-right {
-		@media (min-width: $grid-float-breakpoint) {
-			margin-left: $navbar-padding-horizontal;
-			margin-right: 0;
-		}
-
-		&:last-child {
-			@media (min-width: $grid-float-breakpoint) {
-				margin-right: 0;
-			}
-		}
-	}
-
-	> li > a {
-		@if (variable-exists(atlas-theme)) {
-			line-height: $navbar-link-line-height;
-			padding-bottom: $navbar-padding-vertical;
-			padding-top: $navbar-padding-vertical;
-
-			@media (min-width: $grid-float-breakpoint) {
-				line-height: $navbar-desktop-link-line-height;
-				padding: $navbar-desktop-padding-vertical $navbar-desktop-padding-horizontal;
-			}
-		}
-		@else {
-			padding-bottom: ($navbar-height - $line-height-computed - $navbar-border-bottom-width - $navbar-border-top-width) / 2;
-			padding-top: ($navbar-height - $line-height-computed - $navbar-border-bottom-width - $navbar-border-top-width) / 2;
-		}
+	.nav-link {
+		padding: $navbar-link-padding-y $navbar-link-padding-x;
 	}
 }
 
-// Navbar Dropdowns
+// Navbar Toggler
 
-@if (variable-exists(atlas-theme)) {
-	.navbar-nav {
-		@media (max-width: $grid-float-breakpoint-max) {
-			.dropdown-menu {
-				max-width: none;
-			}
+.navbar-toggler {
+	height: $navbar-toggler-height;
+	margin-bottom: $navbar-toggler-margin-y;
+	margin-left: $navbar-toggler-margin-x;
+	margin-right: $navbar-toggler-margin-x;
+	margin-top: $navbar-toggler-margin-y;
+}
 
-			.open .dropdown-menu {
-				padding: 0;
+.navbar-toggler-link {
+	align-items: center;
+	display: flex;
+	border-width: 0;
+	height: $navbar-toggler-link-height;
+	font-size: $navbar-toggler-link-font-size;
+	line-height: $navbar-toggler-link-line-height;
+	padding-bottom: $navbar-toggler-link-padding-y;
+	padding-left: $navbar-toggler-link-padding-x;
+	padding-right: $navbar-toggler-link-padding-x;
+	padding-top: $navbar-toggler-link-padding-y;
+	position: relative;
+	z-index: 1;
 
-				> li > a,
-				.dropdown-header {
-					padding: $navbar-padding-vertical $navbar-padding-horizontal;
-				}
+	&:after {
+		background-color: $navbar-active-highlight;
+		bottom: -$navbar-border-bottom-width - $navbar-padding-y;
 
-				.inline-scroller,
-				.linked-list {
-					li a {
-						padding: $navbar-padding-vertical $navbar-padding-horizontal;
-
-						&:focus,
-						&:hover {
-							color: $navbar-default-link-active-color;
-						}
-					}
-				}
-			}
+		@if not ($navbar-active-highlight == transparent) {
+			content: '';
 		}
+
+		display: block;
+		height: $navbar-active-border-bottom-width;
+		left: $navbar-toggler-link-padding-x;
+		position: absolute;
+		right: $navbar-toggler-link-padding-x;
+		width: auto;
+	}
+
+	.lexicon-icon {
+		margin-right: 3px;
+		margin-top: 0;
+	}
+}
+
+.nav-item .navbar-toggler-link {
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: $navbar-link-padding-x;
+	padding-right: $navbar-link-padding-x;
+
+	&:after {
+		left: $navbar-link-padding-x;
+		right: $navbar-link-padding-x;
+	}
+}
+
+.navbar-toggler-text {
+	display: inline-block;
+	max-width: $navbar-toggler-text-max-width;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	+ .lexicon-icon {
+		margin-left: 5px;
+		margin-right: -5px;
 	}
 }
 
 // Navbar Brand
 
 .navbar-brand {
-	height: auto;
+	padding-left: $navbar-brand-padding-x;
+	padding-right: $navbar-brand-padding-x;
+}
 
-	@if (variable-exists(atlas-theme)) {
-		color: $nav-link-color;
-		line-height: $navbar-link-line-height;
+// Navbar Form
 
-		@media (min-width: $grid-float-breakpoint) {
-			line-height: $navbar-desktop-link-line-height;
-			padding: $navbar-desktop-padding-vertical $navbar-desktop-padding-horizontal;
+.navbar-form {
+	align-items: center;
+	display: flex;
+
+	@if not ($navbar-link-padding-x == 0.5rem) {
+		padding-left: $navbar-link-padding-x;
+		padding-right: $navbar-link-padding-x;
+	}
+}
+
+.navbar-form-autofit {
+	flex-basis: 100px;
+	flex-grow: 1;
+
+	form {
+		display: flex;
+		width: 100%;
+	}
+}
+
+.navbar-nav .nav-item > .form-check {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	padding-left: $navbar-link-padding-x;
+	padding-right: $navbar-link-padding-x;
+
+	.form-check-input {
+		margin-left: 0;
+		margin-top: 0;
+	}
+
+	.form-check-label {
+		display: flex;
+		padding-left: 0;
+	}
+}
+
+// Navbar Overlay
+
+.navbar-overlay {
+	background-color: $body-bg;
+}
+
+// Styles for `.navbar-overlay-xs-down`, `.navbar-overlay-sm-down`,
+// `.navbar-overlay-md-down`, `.navbar-overlay-lg-down`, `.navbar-overlay-up`
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+	$index: index(map-keys($grid-breakpoints), $breakpoint);
+	$length: length(map-keys($grid-breakpoints));
+	$infix: '.navbar-overlay-#{$breakpoint}-down';
+
+	@if ($index == $length) {
+		$infix: '.navbar-overlay-up';
+	}
+
+	#{$infix} {
+		@include media-breakpoint-down($breakpoint) {
+			@include navbar-overlay;
 		}
 	}
-	@else {
-		padding-bottom: ($navbar-height - $line-height-computed - $navbar-border-bottom-width - $navbar-border-top-width) / 2;
-		padding-top: ($navbar-height - $line-height-computed - $navbar-border-bottom-width - $navbar-border-top-width) / 2;
+}
+
+// Navbar Display Utilities
+
+.navbar-d-breakpoint-block {
+	display: none !important;
+}
+
+// Navbar Item Spacing
+// Override BS4 `.navbar-expand .navbar-nav .nav-link` should have padding if
+// not inside .navbar-collapse
+
+.navbar-expand .navbar-nav .nav-link,
+.navbar-nav .nav-link {
+	@if not ($navbar-link-padding-y == $nav-link-padding-y) {
+		padding-bottom: $navbar-link-padding-y;
+		padding-top: $navbar-link-padding-y;
 	}
 
-	&:focus {
-		position: relative;
-		z-index: 1;
+	@if not ($navbar-link-padding-x == 0.5rem) {
+		padding-left: $navbar-link-padding-x;
+		padding-right: $navbar-link-padding-x;
+	}
+
+	white-space: nowrap;
+}
+
+.navbar-nav .navbar-text {
+	padding: $navbar-link-padding-y $navbar-link-padding-x;
+}
+
+.navbar-nav .nav-item {
+	.dropdown-menu {
+		margin-top: $navbar-nav-item-dropdown-margin-top;
 	}
 }
 
-// Navbar Toggles
+// Navbar Expand
 
-.navbar-toggle {
-	height: $navbar-toggle-height;
-	margin-left: $navbar-padding-horizontal;
-	padding-bottom: 0;
-	padding-top: 0;
+.navbar-expand {
+	flex-wrap: wrap;
+	justify-content: space-between;
 
-	&:focus {
-		@include tab-focus;
+	.container,
+	.container-fluid {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
 	}
 
-	.icon-bar {
-		background-color: $navbar-toggle-icon-bar-color;
+	.navbar-nav {
+		flex-wrap: wrap;
+	}
 
-		@if (variable-exists(navbar-toggle-icon-bar-width)) {
-			width: $navbar-toggle-icon-bar-width;
+	@include media-breakpoint-up(md) {
+		.navbar-d-breakpoint-block {
+			display: block !important;
+		}
+
+		.navbar-d-breakpoint-none {
+			display: none !important;
 		}
 	}
-}
 
-.navbar-toggle-left {
-	float: left;
-}
+	@each $breakpoint in map-keys($grid-breakpoints) {
+		$next: breakpoint-next($breakpoint, $grid-breakpoints);
+		$infix: breakpoint-infix($next, $grid-breakpoints);
 
-.navbar-toggle-page-name {
-	@if (variable-exists(atlas-theme)) {
-		border-radius: $navbar-border-radius;
-		border-width: 0;
-		height: $navbar-height - $navbar-border-bottom-width - $navbar-border-top-width;
-		margin: 0;
-		padding-left: $navbar-padding-horizontal;
-		padding-right: $navbar-padding-horizontal;
-
-		&:after {
-			background-color: $navbar-link-active-highlight;
-			bottom: -$navbar-border-bottom-width;
-
-			@if not ($navbar-link-active-highlight == transparent) {
-				content: '';
+		&#{$infix} {
+			.container,
+			.container-fluid {
+				padding-left: 0;
+				padding-right: 0;
 			}
 
-			display: block;
-			height: $navbar-link-active-bottom-border-width;
-			left: $navbar-padding-horizontal;
-			position: absolute;
-			right: $navbar-padding-horizontal;
+			.nav-item {
+				align-items: center;
+				display: flex;
+			}
+
+			.navbar-nav .nav-btn {
+				margin-left: $navbar-link-padding-x;
+				margin-right: $navbar-link-padding-x;
+			}
+
+			@if not ($infix == '') {
+				@include media-breakpoint-down($breakpoint) {
+					&.navbar-collapse-absolute {
+						.navbar-collapse {
+							background-color: $dropdown-bg;
+							border-color: transparent;
+							border-style: solid;
+							border-width: 0 $navbar-border-right-width $navbar-border-bottom-width $navbar-border-left-width;
+							box-shadow: $navbar-collapse-absolute-box-shadow;
+							left: -$navbar-border-left-width;
+
+							@if ($navbar-border-bottom-width > 0) {
+								margin-top: $navbar-border-bottom-width;
+							}
+
+							@if not ($navbar-padding-x == 0) {
+								padding-left: $navbar-padding-x;
+								padding-right: $navbar-padding-x;
+							}
+
+							position: absolute;
+							right: -$navbar-border-right-width;
+							top: 100%;
+							z-index: $zindex-dropdown;
+						}
+
+						&.navbar-inverse-bg .navbar-collapse {
+							background-color: $navbar-dark-bg;
+							border-color: $navbar-dark-border-color;
+						}
+
+						&.navbar-light-bg .navbar-collapse {
+							background-color: $navbar-light-bg;
+							border-color: $navbar-light-border-color;
+						}
+					}
+
+					.navbar-collapse {
+						.navbar-nav {
+							flex-direction: column;
+						}
+
+						.nav-item {
+							display: block;
+						}
+
+						.nav-link {
+							@if ($navbar-link-padding-x == 0.5rem) {
+								padding-left: 0;
+								padding-right: 0;
+							}
+						}
+					}
+				}
+			}
+
+			@include media-breakpoint-up($next) {
+				@if ($infix == '') {
+					.container,
+					.container-fluid {
+						@include media-breakpoint-up(md) {
+							padding-left: $grid-gutter-width / 2;
+							padding-right: $grid-gutter-width / 2;
+						}
+					}
+				}
+
+				.navbar-form {
+					padding-left: $navbar-link-padding-x;
+					padding-right: $navbar-link-padding-x;
+				}
+
+				@if not ($infix == '') {
+					.container,
+					.container-fluid {
+						flex-wrap: nowrap;
+						padding-left: $grid-gutter-width / 2;
+						padding-right: $grid-gutter-width / 2;
+					}
+
+					.navbar-collapse {
+						flex-grow: 1;
+						flex-wrap: wrap;
+						justify-content: space-between;
+
+						.navbar-nav {
+							flex-wrap: wrap;
+						}
+					}
+
+					.navbar-d-breakpoint-block {
+						display: block !important;
+					}
+
+					.navbar-d-breakpoint-none {
+						display: none !important;
+					}
+				}
+
+				.navbar-nav .nav-link {
+					&.active:after {
+						// Will need to be revisted if https://github.com/twbs/bootstrap/pull/22926 is merged
+						border-width: 0; // Undo BS4 .dropdown-toggle caret styles
+						margin-left: 0;	 // Undo BS4 .dropdown-toggle caret styles
+
+						background-color: $navbar-active-highlight;
+						bottom: -$navbar-border-bottom-width - $navbar-padding-y;
+
+						@if not ($navbar-active-highlight == transparent) {
+							content: '';
+						}
+
+						display: block;
+						height: $navbar-active-border-bottom-width;
+						left: $navbar-link-padding-x-desktop;
+						position: absolute;
+						right: $navbar-link-padding-x-desktop;
+						width: auto;
+					}
+				}
+
+				&.navbar-inverse-bg .navbar-nav .nav-link.active:after {
+					background-color: $navbar-dark-active-highlight;
+
+					@if not ($navbar-dark-active-highlight == transparent) {
+						content: '';
+					}
+				}
+
+				&.navbar-light-bg .navbar-nav .nav-link.active:after {
+					background-color: $navbar-light-active-highlight;
+
+					@if not ($navbar-light-active-highlight == transparent) {
+						content: '';
+					}
+				}
+
+				@if ($enable-mobile-desktop-sizes) {
+					@if ($infix == '') {
+						@include media-breakpoint-up($mobile-desktop-breakpoint) {
+							@include navbar-expand-desktop;
+						}
+					}
+					@else {
+						@include navbar-expand-desktop;
+					}
+				}
+			}
 		}
 	}
 }
 
 // Skin
 
-.navbar-default {
-	@if (variable-exists(atlas-theme)) {
-		border-width: $navbar-default-border-width;
-		min-height: $navbar-default-height;
+.navbar-light {
+	&.collapse-basic-search-transparent .basic-search {
+		.btn {
+			color: $collapse-basic-search-transparent-light-btn-color;
 
-		@media (min-width: $grid-float-breakpoint) {
-			min-height: $navbar-default-desktop-height;
-		}
-	}
-}
-
-.navbar-default .navbar-collapse:first-child,
-.navbar-default.navbar-collapse-absolute .navbar-collapse {
-	@media (max-width: $grid-float-breakpoint-max) {
-		background-color: $navbar-default-bg;
-		border-color: $navbar-default-border;
-	}
-}
-
-.navbar-default {
-	.navbar-toggle {
-		color: $navbar-default-link-active-color;
-
-		.icon-bar {
-			background-color: $navbar-default-toggle-icon-bar-bg;
-		}
-	}
-}
-
-.navbar-default.collapse-basic-search .basic-search {
-	&.open {
-		background-color: if(variable-exists(atlas-theme), transparent, $navbar-default-bg);
-	}
-
-	.btn-default {
-		background-color: $navbar-default-collapsible-search-btn-default-bg;
-		border-color: $navbar-default-collapsible-search-btn-default-border;
-		color: $navbar-default-collapsible-search-btn-default-color;
-	}
-
-	.form-control {
-		background-color: $navbar-default-collapsible-search-input-bg;
-		border-color: $navbar-default-collapsible-search-input-border;
-		color: $navbar-default-collapsible-search-input-color;
-
-		@include placeholder($navbar-default-collapsible-search-input-placeholder-color);
-	}
-}
-
-@if (variable-exists(atlas-theme)) {
-	.navbar-default {
-		.navbar-nav {
-			> .active > a {
-				&:after {
-					@media (min-width: $grid-float-breakpoint) {
-						background-color: $navbar-default-link-active-highlight;
-
-						@if not ($navbar-default-link-active-highlight == transparent) {
-							content: '';
-						}
-					}
-				}
+			&:focus {
+				color: $collapse-basic-search-transparent-light-btn-focus-color;
 			}
 		}
 
-		&.navbar-no-collapse .navbar-nav > .active > a:after,
-		.navbar-toggle-page-name:after {
-			background-color: $navbar-default-link-active-highlight;
+		.form-control {
+			color: $collapse-basic-search-transparent-light-input-color;
 
-			@if not ($navbar-default-link-active-highlight == transparent) {
-				content: '';
+			&::placeholder {
+				color: $collapse-basic-search-transparent-light-input-placeholder-color;
+			}
+
+			&::placeholder:focus {
+				color: $collapse-basic-search-transparent-light-input-placeholder-focus-color;
+			}
+
+			&:focus {
+				color: $collapse-basic-search-transparent-light-input-focus-color;
 			}
 		}
 	}
 
-	.navbar-default .basic-search {
-		&:after {
-			background-color: $navbar-default-collapsible-search-highlight;
+	.navbar-brand {
+		@if not ($navbar-light-brand-color == $navbar-light-active-color) {
+			color: $navbar-light-brand-color;
 		}
 
+		@include hover-focus {
+			@if not ($navbar-light-brand-hover-color == $navbar-light-active-color) {
+				color: $navbar-light-brand-hover-color;
+			}
+		}
+	}
+
+	.navbar-toggler-link {
+		&[aria-expanded="true"] {
+			color: $navbar-light-active-color;
+		}
+	}
+}
+
+.navbar-light-bg {
+	background-color: $navbar-light-bg;
+	border-color: $navbar-light-border-color;
+
+	&.collapse-basic-search-transparent .basic-search {
 		&.focus:after {
-			background-color: $navbar-default-collapsible-search-focus-highlight;
+			background-color: $collapse-basic-search-transparent-light-focus-highlight;
+		}
+	}
+
+	.basic-search.open {
+		background-color: $navbar-light-bg;
+		border-color: $navbar-light-border-color;
+	}
+
+	.navbar-brand {
+		background-color: $navbar-light-brand-bg;
+
+		@include hover-focus {
+			background-color: $navbar-light-brand-hover-bg;
+		}
+	}
+
+	.nav-link {
+		@include hover-focus {
+			background-color: $navbar-light-hover-bg;
+		}
+
+		&.active,
+		&[aria-expanded="true"] {
+			background-color: $navbar-light-active-bg;
+		}
+
+		&.disabled {
+			background-color: $navbar-light-disabled-bg;
+		}
+	}
+
+	.navbar-overlay {
+		background-color: $navbar-light-bg;
+	}
+
+	.navbar-toggler-link:after {
+		background-color: $navbar-light-active-highlight;
+
+		@if not ($navbar-light-active-highlight == transparent) {
+			content: '';
 		}
 	}
 }
-
-// Navbar Inverse
 
 .navbar-inverse {
-	.navbar-collapse:first-child,
-	&.navbar-collapse-absolute .navbar-collapse {
-		@media (max-width: $grid-float-breakpoint-max) {
-			background-color: $navbar-inverse-bg;
-			border-color: $navbar-inverse-border;
-		}
-	}
+	&.collapse-basic-search-transparent .basic-search {
+		.btn {
+			color: $collapse-basic-search-transparent-inverse-btn-color;
 
-	.navbar-toggle {
-		color: $navbar-inverse-toggle-icon-bar-bg;
-
-		.icon-bar {
-			background-color: $navbar-inverse-toggle-icon-bar-bg;
-		}
-	}
-}
-
-.navbar-inverse.collapse-basic-search .basic-search {
-	&.open {
-		background-color: if(variable-exists(atlas-theme), transparent, $navbar-inverse-bg);
-	}
-
-	.btn-default {
-		background-color: $navbar-inverse-collapsible-search-btn-default-bg;
-		border-color: $navbar-inverse-collapsible-search-btn-default-border;
-		color: $navbar-inverse-collapsible-search-btn-default-color;
-	}
-
-	.form-control {
-		background-color: $navbar-inverse-collapsible-search-input-bg;
-		border-color: $navbar-inverse-collapsible-search-input-border;
-		color: $navbar-inverse-collapsible-search-input-color;
-
-		@include placeholder($navbar-inverse-collapsible-search-input-placeholder-color);
-	}
-}
-
-@if (variable-exists(atlas-theme)) {
-	.navbar-inverse {
-		.navbar-nav {
-			> .active > a {
-				&:after {
-					@media (min-width: $grid-float-breakpoint) {
-						background-color: $navbar-inverse-link-active-highlight;
-
-						@if not ($navbar-inverse-link-active-highlight == transparent) {
-							content: '';
-						}
-					}
-				}
+			&:focus {
+				color: $collapse-basic-search-transparent-inverse-btn-focus-color;
 			}
 		}
 
-		&.navbar-no-collapse .navbar-nav > .active > a:after,
-		.navbar-toggle-page-name:after {
-			background-color: $navbar-inverse-link-active-highlight;
+		.form-control {
+			color: $collapse-basic-search-transparent-inverse-input-color;
 
-			@if not ($navbar-inverse-link-active-highlight == transparent) {
-				content: '';
+			&::placeholder {
+				color: $collapse-basic-search-transparent-inverse-input-placeholder-color;
+			}
+
+			&:focus::placeholder {
+				color: $collapse-basic-search-transparent-inverse-input-placeholder-focus-color;
+			}
+
+			&:focus {
+				color: $collapse-basic-search-transparent-inverse-input-focus-color;
 			}
 		}
 	}
 
-	.navbar-inverse .basic-search {
-		&:after {
-			background-color: $navbar-inverse-collapsible-search-highlight;
+	.navbar-brand {
+		@if not ($navbar-dark-brand-color == $navbar-dark-active-color) {
+			color: $navbar-dark-brand-color;
 		}
 
+		@include hover-focus {
+			@if not ($navbar-dark-brand-hover-color == $navbar-dark-active-color) {
+				color: $navbar-dark-brand-hover-color;
+			}
+		}
+	}
+
+	.navbar-toggler-link {
+		&[aria-expanded="true"] {
+			color: $navbar-dark-active-color;
+		}
+	}
+}
+
+.navbar-inverse-bg {
+	background-color: $navbar-dark-bg;
+	border-color: $navbar-dark-border-color;
+
+	&.collapse-basic-search-transparent .basic-search {
 		&.focus:after {
-			background-color: $navbar-inverse-collapsible-search-focus-highlight;
+			background-color: $collapse-basic-search-transparent-inverse-focus-highlight;
+		}
+	}
+
+	.basic-search.open {
+		background-color: $navbar-dark-bg;
+		border-color: $navbar-dark-border-color;
+	}
+
+	.navbar-brand {
+		background-color: $navbar-dark-brand-bg;
+
+		@include hover-focus {
+			background-color: $navbar-dark-brand-hover-bg;
+		}
+	}
+
+	.nav-link {
+		@include hover-focus {
+			background-color: $navbar-dark-hover-bg;
+		}
+
+		&.active,
+		&[aria-expanded="true"] {
+			background-color: $navbar-dark-active-bg;
+		}
+
+		&.disabled {
+			background-color: $navbar-dark-disabled-bg;
+		}
+	}
+
+	.navbar-overlay {
+		background-color: $navbar-dark-bg;
+	}
+
+	.navbar-toggler-link:after {
+		background-color: $navbar-dark-active-highlight;
+
+		@if not ($navbar-dark-active-highlight == transparent) {
+			content: '';
 		}
 	}
 }
