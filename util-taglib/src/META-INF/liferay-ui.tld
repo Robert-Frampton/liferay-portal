@@ -1698,12 +1698,6 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>Whether to disable the checkbox that disables input field.</description>
-			<name>disableCheckbox</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
 			<description>Whether to disable the input field. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>disabled</name>
 			<required>false</required>
@@ -1779,6 +1773,12 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether to display the checkbox that disables input field.</description>
+			<name>showDisableCheckbox</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description>A variable name to refer to the year of the component.</description>
