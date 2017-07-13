@@ -1,10 +1,3 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 !function(root, factory) {
     "function" == typeof define && define.amd ? define([], function() {
         return root.svg4everybody = factory();
