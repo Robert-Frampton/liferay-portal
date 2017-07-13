@@ -1,10 +1,3 @@
-/**
-* Lexicon 1.0.15
-*
-* Copyright 2017, Liferay, Inc.
-* All rights reserved.
-* MIT license
-*/
 +function($) {
 	var NavTabsScrollDropdown = function(element, options) {
 		this.init(element, options);
