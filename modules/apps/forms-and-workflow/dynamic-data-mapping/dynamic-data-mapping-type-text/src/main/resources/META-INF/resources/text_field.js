@@ -133,7 +133,7 @@ AUI.add(
 						var height = instance.getTextHeight();
 
 						if (height < 2) {
-							inputNode.set('rows', 2);
+							inputNode.set('rows', 1);
 						}
 						else {
 							inputNode.set('rows', height);

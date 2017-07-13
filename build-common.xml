@@ -243,7 +243,7 @@ Error-Prone was automatically installed. Please rerun your task.
 		</then>
 	</if>
 
-	<fail message=".${line.separator}Please set the environment variable ANT_OPTS to the recommended value of${line.separator}&quot;-Xmx2048m -XX:MaxPermSize=512m&quot;.">
+	<fail message=".${line.separator}Please set the environment variable ANT_OPTS to the recommended value of${line.separator}&quot;-Xmx2048m&quot;.">
 		<condition>
 			<not>
 				<isset property="env.ANT_OPTS" />
@@ -1306,6 +1306,8 @@ rerun your task.
 			<echoproperties destfile="${gradle.properties.file}" >
 				<propertyset>
 					<propertyref name="app.server.type" />
+					<propertyref name="aspectj.agent" />
+					<propertyref name="aspectj.configuration" />
 					<propertyref name="baseline.jar.report.level" />
 					<propertyref name="baseline.jar.report.only.dirty.packages" />
 					<propertyref name="git.working.branch.name" />
