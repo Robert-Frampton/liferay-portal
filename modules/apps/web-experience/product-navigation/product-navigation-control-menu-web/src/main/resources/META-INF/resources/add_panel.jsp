@@ -57,7 +57,7 @@
 									</div>
 								</div>
 
-								<div aria-expanded="false" aria-labelledby="<portlet:namespace />addApplicationHeading" class="collapse panel-collapse <%= selectedTab.equals("applications") ? "in" : StringPool.BLANK %>" data-value="applications" id="<portlet:namespace />addApplicationCollapse" role="tabpanel">
+								<div aria-expanded="false" aria-labelledby="<portlet:namespace />addApplicationHeading" class="collapse panel-collapse <%= selectedTab.equals("applications") ? "show" : StringPool.BLANK %>" data-value="applications" id="<portlet:namespace />addApplicationCollapse" role="tabpanel">
 									<div class="panel-body">
 										<liferay-util:include page="/add_application.jsp" servletContext="<%= application %>" />
 									</div>
