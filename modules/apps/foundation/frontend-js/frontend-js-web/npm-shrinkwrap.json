@@ -633,7 +633,7 @@
 		},
 		"clay": {
 			"from": "liferay/clay#develop-compat-layer",
-			"resolved": "git://github.com/liferay/clay.git#d108f59417e29419e7bcc6a20e943c5a19253dd4",
+			"resolved": "git://github.com/liferay/clay.git#6fa515843fd8b733ad0cde30a3376c9c7196105e",
 			"version": "2.0.0-alpha.0"
 		},
 		"cli-cursor": {
