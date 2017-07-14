@@ -325,6 +325,7 @@ AUI.add(
 						modal = new LiferayModal(
 							A.merge(
 								{
+									cssClass: 'modal-full-screen',
 									headerContent: titleNode,
 									id: id
 								},
