@@ -6408,14 +6408,10 @@ portal.security.manager.strategy=liferay</echo>
 			</then>
 		</if>
 
-		<if>
-			<equals arg1="${javascript.fast.load}" arg2="false" />
-			<then>
-				<echo append="true" file="portal-impl/src/portal-ext.properties">
+
+		<echo append="true" file="portal-impl/src/portal-ext.properties">
 
 javascript.fast.load=false</echo>
-			</then>
-		</if>
 
 		<get-testcase-property property.name="blacklist.portal.profile.names.remove" />
 
