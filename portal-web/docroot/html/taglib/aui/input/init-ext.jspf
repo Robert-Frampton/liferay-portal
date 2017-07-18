@@ -62,7 +62,7 @@ if (type.equals("toggle-card")) {
 }
 
 if (type.equals("toggle-switch")) {
-	fieldCssClass += " toggle-switch";
+	fieldCssClass += " toggle-switch-check";
 }
 
 boolean useInputWrapper = true;
