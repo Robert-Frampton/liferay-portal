@@ -110,9 +110,21 @@ AUI.add(
 
 						if (Lang.isObject(responseText)) {
 							if (responseText.errorMessage) {
-								var messageNode = instance._getMessageNode(responseText.errorMessage, 'alert alert-danger');
+								var alert = new Liferay.Alert(
+									{
+										closeable: true,
+										delay: {
+											hide: 3000,
+											show: 0
+										},
+										duration: 500,
+										icon: 'exclamation-full',
+										message: responseText.errorMessage,
+										type: 'danger'
+									}
+								);
 
-								instance._formNode.prepend(messageNode);
+								alert.render();
 							}
 
 							if (responseText.tempImageFileName) {
@@ -297,6 +309,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-image-cropper', 'aui-io-request', 'liferay-crop-region', 'liferay-portlet-base', 'liferay-storage-formatter']
+		requires: ['aui-image-cropper', 'aui-io-request', 'liferay-crop-region', 'liferay-alert', 'liferay-portlet-base', 'liferay-storage-formatter']
 	}
 );
