@@ -35,7 +35,7 @@
 </tr>
 <tr>
 	<td>ANY_MENU_ITEM</td>
-	<td>//li[.//text()='${key_menuItem}']/a</td>
+	<td>xpath=(//div | //li)[contains(@class,'open') or contains(@class,'show')]/ul[contains(@class,'menu')]//a[.//text()='${key_menuItem}']</td>
 	<td></td>
 </tr>
 <tr>
