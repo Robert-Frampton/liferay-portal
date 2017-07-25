@@ -3,6 +3,8 @@
 	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Dynamic Data Lists" />
 
+	<property name="portal.acceptance" value="true" />
+
 	<var name="pageName" value="Dynamic Data Lists Display Page" />
 	<var name="portletName" value="Dynamic Data Lists Display" />
 
