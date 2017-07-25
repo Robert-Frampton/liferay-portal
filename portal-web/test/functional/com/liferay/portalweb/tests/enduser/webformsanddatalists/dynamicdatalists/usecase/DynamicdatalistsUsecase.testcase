@@ -3,6 +3,8 @@
 	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Dynamic Data Lists" />
 
+	<property name="portal.acceptance" value="true" />
+
 	<set-up>
 		<execute macro="TestCase#setUpPortalInstance" />
 
