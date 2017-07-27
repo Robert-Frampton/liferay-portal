@@ -61,7 +61,6 @@
 	</command>
 
 	<command name="AddNewWebContentViaAddContentPanel" priority="4">
-		<property name="portal.upgrades" value="true" />
 		<property name="testray.component.names" value="Web Content Display" />
 
 		<execute macro="Page#add">
@@ -483,7 +482,6 @@
 	</command>
 
 	<command name="LocalizeWebContent" priority="4">
-		<property name="portal.upgrades" value="true" />
 		<property name="test.name.skip.portal.instance" value="PGWebcontentdisplay#LocalizeWebContent" />
 		<property name="testray.component.names" value="Localization,Web Content Display" />
 
