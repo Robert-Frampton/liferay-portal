@@ -3037,7 +3037,6 @@
 	</command>
 
 	<command name="ViewUnchangedKBArticleTitleViaLocalizedPage" priority="3">
-		<property name="portal.acceptance" value="true" />
 		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
 
 		<execute macro="ProductMenu#gotoControlPanelSites">

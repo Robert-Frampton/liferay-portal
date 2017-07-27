@@ -27,7 +27,6 @@
 	</tear-down>
 
 	<command name="BreadcrumbConfiguration" priority="3">
-		<property name="portal.acceptance" value="true" />
 		<property name="test.name.skip.portal.instance" value="BreadcrumbUsecase#BreadcrumbConfiguration" />
 
 		<execute macro="ProductMenu#gotoControlPanelSites">
