@@ -2067,8 +2067,6 @@
 	</command>
 
 	<command name="ViewRelatedAssetViaDMPortlet" priority="3">
-		<property name="portal.upgrades" value="true" />
-
 		<execute macro="Page#add">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
