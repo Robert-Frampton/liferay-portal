@@ -3,8 +3,6 @@
 	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Breadcrumb" />
 
-	<property name="portal.acceptance" value="true" />
-
 	<set-up>
 		<execute macro="TestCase#setUpPortalInstance" />
 
