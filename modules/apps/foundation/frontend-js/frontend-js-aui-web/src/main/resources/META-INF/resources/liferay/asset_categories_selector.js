@@ -272,6 +272,7 @@ AUI.add(
 						var data = {};
 
 						data.p_auth = Liferay.authToken;
+						data.scopeGroupId = themeDisplay.getScopeGroupId();
 
 						var assetId = instance._getTreeNodeAssetId(treeNode);
 						var assetType = instance._getTreeNodeAssetType(treeNode);
@@ -279,6 +280,10 @@ AUI.add(
 						if (Lang.isValue(assetId)) {
 							if (assetType == 'category') {
 								data.categoryId = assetId;
+								var vocabularyId = instance._getTreeNodeVocabularyId(treeNode);
+								if (vocabularyId) {
+									data.vocabularyId = vocabularyId;
+								}
 							}
 							else {
 								data.vocabularyId = assetId;
@@ -378,6 +383,22 @@ AUI.add(
 						var match = treeId.match(/^(vocabulary|category)/);
 
 						return match ? match[1] : null;
+					},
+
+					_getTreeNodeVocabularyId: function(treeNode) {
+						var instance = this;
+
+						var parentNode = treeNode.get('parentNode');
+						var ancestorNode = parentNode.get('parentNode');
+
+						while (ancestorNode.get('parentNode')) {
+							parentNode = ancestorNode;
+							ancestorNode = ancestorNode.get('parentNode');
+						}
+
+						var parentId = instance._getTreeNodeAssetId(parentNode);
+						var parentType = instance._getTreeNodeAssetType(parentNode);
+						return parentType == 'vocabulary'? parentId : null;
 					},
 
 					_initSearch: EMPTY_FN,
