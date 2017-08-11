@@ -84,7 +84,9 @@ public class GetCategoriesAction extends JSONAction {
 			if (scopeGroupId > 0) {
 				categories = AssetCategoryServiceUtil.getVocabularyCategories(
 					scopeGroupId, categoryId, vocabularyId, start, end, null);
-			} else
+			}
+
+			else
 			{
 				categories = AssetCategoryServiceUtil.getChildCategories(
 					categoryId, start, end, null);
