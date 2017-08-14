@@ -280,7 +280,9 @@ AUI.add(
 						if (Lang.isValue(assetId)) {
 							if (assetType == 'category') {
 								data.categoryId = assetId;
+
 								var vocabularyId = instance._getTreeNodeVocabularyId(treeNode);
+
 								if (vocabularyId) {
 									data.vocabularyId = vocabularyId;
 								}
@@ -393,12 +395,14 @@ AUI.add(
 
 						while (ancestorNode.get('parentNode')) {
 							parentNode = ancestorNode;
+
 							ancestorNode = ancestorNode.get('parentNode');
 						}
 
 						var parentId = instance._getTreeNodeAssetId(parentNode);
 						var parentType = instance._getTreeNodeAssetType(parentNode);
-						return parentType == 'vocabulary'? parentId : null;
+
+						return parentType == 'vocabulary' ? parentId : null;
 					},
 
 					_initSearch: EMPTY_FN,
