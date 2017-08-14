@@ -399,10 +399,10 @@ AUI.add(
 							ancestorNode = ancestorNode.get('parentNode');
 						}
 
-						var parentId = instance._getTreeNodeAssetId(parentNode);
-						var parentType = instance._getTreeNodeAssetType(parentNode);
+						var assetId = instance._getTreeNodeAssetId(parentNode);
+						var assetType = instance._getTreeNodeAssetType(parentNode);
 
-						return parentType == 'vocabulary' ? parentId : null;
+						return assetType == 'vocabulary' ? assetId : null;
 					},
 
 					_initSearch: EMPTY_FN,
