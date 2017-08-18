@@ -134,37 +134,37 @@ public class LanguageFilterTracker {
 			Object contextName = serviceReference.getProperty(
 				HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME);
 
-			StringBundler filterString = new StringBundler();
+			StringBundler filterSB = new StringBundler();
 
 			if (contextName == null) {
-				filterString.append("(&");
-				filterString.append("(bundle.symbolic.name=");
-				filterString.append(bundle.getSymbolicName());
-				filterString.append(")");
-				filterString.append("(objectClass=");
-				filterString.append(ResourceBundleLoader.class.getName());
-				filterString.append(")");
-				filterString.append("(resource.bundle.base.name=*)");
-				filterString.append(")");
+				filterSB.append("(&");
+				filterSB.append("(bundle.symbolic.name=");
+				filterSB.append(bundle.getSymbolicName());
+				filterSB.append(")");
+				filterSB.append("(objectClass=");
+				filterSB.append(ResourceBundleLoader.class.getName());
+				filterSB.append(")");
+				filterSB.append("(resource.bundle.base.name=*)");
+				filterSB.append(")");
 			}
 			else {
-				filterString.append("(&");
-				filterString.append("(|");
-				filterString.append("(bundle.symbolic.name=");
-				filterString.append(bundle.getSymbolicName());
-				filterString.append(")");
-				filterString.append("(&");
-				filterString.append("(servlet.context.name=");
-				filterString.append(contextName);
-				filterString.append(")");
-				filterString.append("(service.bundleid=0)");
-				filterString.append(")");
-				filterString.append(")");
-				filterString.append("(objectClass=");
-				filterString.append(ResourceBundleLoader.class.getName());
-				filterString.append(")");
-				filterString.append("(resource.bundle.base.name=*)");
-				filterString.append(")");
+				filterSB.append("(&");
+				filterSB.append("(|");
+				filterSB.append("(bundle.symbolic.name=");
+				filterSB.append(bundle.getSymbolicName());
+				filterSB.append(")");
+				filterSB.append("(&");
+				filterSB.append("(servlet.context.name=");
+				filterSB.append(contextName);
+				filterSB.append(")");
+				filterSB.append("(service.bundleid=0)");
+				filterSB.append(")");
+				filterSB.append(")");
+				filterSB.append("(objectClass=");
+				filterSB.append(ResourceBundleLoader.class.getName());
+				filterSB.append(")");
+				filterSB.append("(resource.bundle.base.name=*)");
+				filterSB.append(")");
 			}
 
 			Map<String, Object> properties = new HashMap<>();
@@ -174,9 +174,9 @@ public class LanguageFilterTracker {
 			properties.put("servlet.context.name", contextName);
 
 			return ServiceTrackerFactory.open(
-				bundle.getBundleContext(), filterString.toString(),
+				bundle.getBundleContext(), filterSB.toString(),
 				new ResourceBundleLoaderServiceTrackerCustomizer(
-					properties, filterString.toString(), contextName));
+					properties, filterSB.toString(), contextName));
 		}
 
 		@Override
