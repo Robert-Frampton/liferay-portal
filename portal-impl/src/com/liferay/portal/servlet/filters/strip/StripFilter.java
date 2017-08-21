@@ -657,22 +657,28 @@ public class StripFilter extends BasePortalFilter {
 					continue;
 				}
 				else if (hasMarker(charBuffer, _MARKER_STYLE_OPEN)) {
-					processCSS(request, response, charBuffer, writer, 
+					processCSS(
+						request, response, charBuffer, writer,
 						_MARKER_STYLE_OPEN);
 
 					continue;
 				}
-				else if (hasMarker(charBuffer, 
+				else if (hasMarker(
+							charBuffer,
 							_MARKER_STYLE_DATA_SENNA_TRACK_PERMANENT)) {
-					processCSS(request, response, charBuffer, writer,
+
+					processCSS(
+						request, response, charBuffer, writer,
 						_MARKER_STYLE_DATA_SENNA_TRACK_PERMANENT);
 
 					continue;
 				}
-				else if (hasMarker(charBuffer, 
+				else if (hasMarker(
+							charBuffer,
 							_MARKER_STYLE_DATA_SENNA_TRACK_TEMPORARY)) {
 
-					processCSS(request, response, charBuffer, writer,
+					processCSS(
+						request, response, charBuffer, writer,
 						_MARKER_STYLE_DATA_SENNA_TRACK_TEMPORARY);
 
 					continue;
