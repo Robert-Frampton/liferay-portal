@@ -1,3 +1,4 @@
+import com.liferay.gradle.plugins.js.transpiler.TranspileJSTask
 import com.liferay.gradle.util.FileUtil
 import com.liferay.gradle.util.copy.StripPathSegmentsAction
 
@@ -16,6 +17,7 @@ task buildLiferayAMDLoader(type: Copy)
 task buildLodash(type: Copy)
 task buildSvg4everybody(type: Copy)
 task testJS
+task transpileJSGlobal(type: TranspileJSTask)
 
 String jqueryPluginsFormVersion = "3.51"
 String jQueryVersion = "2.1.4"
@@ -131,6 +133,7 @@ classes {
 	dependsOn buildLiferayAMDLoader
 	dependsOn buildLodash
 	dependsOn buildSvg4everybody
+	dependsOn transpileJSGlobal
 }
 
 clean {
@@ -156,4 +159,15 @@ dependencies {
 
 testJS {
 	dependsOn gulpTest
+}
+
+transpileJSGlobal {
+	dependsOn npmInstall
+	bundleFileName = "liferay/global.js"
+	globalName = "metal"
+	modules = "globals"
+	sourceDir = "src/main/resources/META-INF/resources"
+	soySkipMetalGeneration = true
+	srcIncludes = "liferay/global.js"
+	workingDir = "${sourceSets.main.output.resourcesDir}/META-INF/resources"
 }
