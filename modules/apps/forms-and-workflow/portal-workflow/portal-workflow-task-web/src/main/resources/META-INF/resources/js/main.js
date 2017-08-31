@@ -22,10 +22,10 @@ AUI.add(
 
 				var title = icon.text();
 
-				WorkflowTasks.showPopup(icon.attr('href'), A.one(content), title, randomId, height);
+				WorkflowTasks._showPopup(icon.attr('href'), A.one(content), title, randomId, height);
 			},
 
-			showPopup: function(url, content, title, randomId, height) {
+			_showPopup: function(url, content, title, randomId, height) {
 				var instance = this;
 
 				var form = A.Node.create('<form />');
@@ -34,6 +34,13 @@ AUI.add(
 				form.setAttribute('method', 'POST');
 
 				var comments = A.one('#' + randomId + 'updateComments');
+
+				if (comments && !instance._comments[randomId]) {
+					instance._comments[randomId] = comments;
+				}
+				else if (!comments && instance._comments[randomId]) {
+					comments = instance._comments[randomId];
+				}
 
 				if (content && !instance._content[randomId]) {
 					instance._content[randomId] = content;
@@ -45,13 +52,6 @@ AUI.add(
 				if (content) {
 					form.append(content);
 					content.show();
-				}
-
-				if (comments && !instance._comments[randomId]) {
-					instance._comments[randomId] = comments;
-				}
-				else if (!comments && instance._comments[randomId]) {
-					comments = instance._comments[randomId];
 				}
 
 				if (comments) {
