@@ -38,8 +38,7 @@ AUI.add(
 				if (content && !instance._content[randomId]) {
 					instance._content[randomId] = content;
 				}
-
-				if (!content && title && title.trim().indexOf('Update Due Date') !== -1) {
+				else if (!content && title && title.trim().indexOf('Update Due Date') !== -1) {
 					content = instance._content[randomId];
 				}
 
@@ -51,14 +50,11 @@ AUI.add(
 				if (comments && !instance._comments[randomId]) {
 					instance._comments[randomId] = comments;
 				}
+				else if (!comments && instance._comments[randomId]) {
+					comments = instance._comments[randomId];
+				}
 
 				if (comments) {
-					form.append(comments);
-					comments.show();
-				}
-				else if (instance._comments[randomId]) {
-					comments = instance._comments[randomId];
-
 					form.append(comments);
 					comments.show();
 				}
