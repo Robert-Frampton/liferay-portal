@@ -2,47 +2,6 @@ AUI.add(
 	'liferay-workflow-tasks',
 	function(A) {
 		var WorkflowTasks = {
-			moveFormDataFromDialog: function(form) {
-				var children = form.get('children');
-
-				var entryActionColumn;
-				var updatedComments;
-				var updatedContent;
-
-				if (form && form.hasChildNodes() && children.size() >= 2) {
-					updatedContent = children.item(0);
-					updatedComments = children.item(1);
-				}
-
-				if (updatedContent) {
-					var contentId = updatedContent.attr('id');
-
-					var originalColumnId = contentId.substring(0, 4);
-
-					if (contentId.search('[a-zA-Z]{4}updateDueDate') != -1) {
-						originalColumnId += 'updateAsignee';
-					}
-
-					if (originalColumnId) {
-						var originalColumnNode = A.one('#' + originalColumnId);
-
-						if (originalColumnNode) {
-							entryActionColumn = originalColumnNode.get('parentNode');
-
-							entryActionColumn.append(updatedContent);
-
-							updatedContent.attr('hidden', true);
-						}
-					}
-				}
-
-				if (updatedComments && entryActionColumn) {
-					entryActionColumn.append(updatedComments);
-
-					updatedComments.attr('hidden', true);
-				}
-			},
-
 			onTaskClick: function(event, randomId) {
 				var instance = this;
 
@@ -110,11 +69,6 @@ AUI.add(
 							bodyContent: form,
 							destroyOnHide: true,
 							height: height,
-							on: {
-								destroy: function() {
-									instance.moveFormDataFromDialog(form);
-								}
-							},
 							toolbars: {
 								footer: [
 									{
