@@ -2004,7 +2004,8 @@ plugin is no longer applied to OSGi projects.
 ## 5.0.30 - 2017-08-29
 
 ### Added
-- [LPS-73070]: Check and keep version in the `package-lock.json` file in sync.
+- [LPS-73070]: Check the module's version in the `package-lock.json` file and
+ensure it matches the project version.
 
 ### Changed
 - [LPS-73472]: Update the [Liferay Gradle Plugins] dependency to version 3.4.44.
@@ -2018,6 +2019,29 @@ plugin is no longer applied to OSGi projects.
 
 ### Changed
 - [LPS-74433]: Update the [Liferay Gradle Plugins] dependency to version 3.4.46.
+
+## 5.0.33 - 2017-08-31
+
+### Changed
+- [LPS-72705]: Update the [Liferay Gradle Plugins] dependency to version 3.4.47.
+
+## 5.0.34 - 2017-08-31
+
+### Added
+- [LPS-74469]: Fail the build if the `soyCompile` configuration contains project
+dependencies that belong to a different sub-repository.
+
+### Changed
+
+- [LPS-74469]: Allow publishing modules whose `soyCompile` configuration
+contains project dependencies.
+
+## 5.0.35 - 2017-08-31
+
+### Changed
+- [LPS-74469]: Look for `.gitrepo` files instead of `settings.gradle` when
+checking if the `soyCompile` configuration contains project dependencies that
+belong to a different sub-repository.
 
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
@@ -2240,6 +2264,7 @@ plugin is no longer applied to OSGi projects.
 [LPS-74345]: https://issues.liferay.com/browse/LPS-74345
 [LPS-74368]: https://issues.liferay.com/browse/LPS-74368
 [LPS-74433]: https://issues.liferay.com/browse/LPS-74433
+[LPS-74469]: https://issues.liferay.com/browse/LPS-74469
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981
