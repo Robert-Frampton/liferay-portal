@@ -14,6 +14,7 @@
 
 package com.liferay.source.formatter;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -37,6 +38,7 @@ public class XMLSourceProcessorTest extends BaseSourceProcessorTestCase {
 			"Characters found after definition element");
 	}
 
+	@Ignore
 	@Test
 	public void testCharactersBeforeDefinitionTag() throws Exception {
 		test(
