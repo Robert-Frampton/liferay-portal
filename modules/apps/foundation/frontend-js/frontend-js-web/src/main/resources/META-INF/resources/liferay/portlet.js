@@ -210,18 +210,18 @@
 
 				var nestedPortletOffset = 0;
 
-				for (var i = 0; (nestedPortlets != null) && (i < nestedPortlets._nodes.length); i++) {
-					var nestedPortletsPortlet = nestedPortlets._nodes[i];
+				nestedPortlets.some(
+					function(nestedPortlet) {
+						var nestedPortletIndex = columnPortlets.indexOf(nestedPortlet);
 
-					var nestedPortletIndex = columnPortlets.indexOf(nestedPortletsPortlet);
-
-					if ((nestedPortletIndex != -1) && (nestedPortletIndex < portletPosition)) {
-						nestedPortletOffset += nestedPortletsPortlet.getElementsByClassName('portlet-boundary').length;
+						if ((nestedPortletIndex !== -1) && (nestedPortletIndex < portletPosition)) {
+							nestedPortletOffset += nestedPortlet.all('.portlet-boundary').size();
+						}
+						else if (nestedPortletIndex >= portletPosition) {
+							return true;
+						}
 					}
-					else if (nestedPortletIndex >= portletPosition) {
-						break;
-					}
-				}
+				);
 
 				portletPosition -= nestedPortletOffset;
 
