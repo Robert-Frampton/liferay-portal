@@ -1,5 +1,7 @@
 * [class*="ae-toolbar-"][role="toolbar"] {
-	z-index: 1000;
+	@media screen and (min-width: 768px) {
+		z-index: 1050;
+	}
 }
 
 .alloy-editor-container {
