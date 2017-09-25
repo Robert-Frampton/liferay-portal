@@ -639,7 +639,7 @@ public class AggregateFilter extends IgnoreModuleRequestFilter {
 		AggregateFilter.class);
 
 	private static final Pattern _pattern = Pattern.compile(
-		"^(\\.ie|\\.js\\.ie)([^}]*)}", Pattern.MULTILINE);
+		"(\.ie|\.js\.ie)(([^,{]+)([^{}]))", Pattern.MULTILINE);
 
 	private ServletContext _servletContext;
 	private File _tempDir;
