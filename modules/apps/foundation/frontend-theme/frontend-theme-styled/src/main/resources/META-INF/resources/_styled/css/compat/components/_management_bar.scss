@@ -257,10 +257,16 @@
 		}
 	}
 
-	.management-bar-nav > .dropdown > .dropdown-menu {
-		@include media-breakpoint-down($scaling-breakpoint-down) {
-			position: static !important;
-			transform: none !important;
+	.management-bar-nav > .dropdown {
+		> .dropdown-toggle {
+			display: flex;
+		}
+
+		> .dropdown-menu {
+			@include media-breakpoint-down($scaling-breakpoint-down) {
+				position: relative !important;
+				transform: none !important;
+			}
 		}
 	}
 }
