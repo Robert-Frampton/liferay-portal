@@ -9,11 +9,17 @@
 		.basic-search-slider .form-control {
 			border-bottom-right-radius: 0;
 			border-top-right-radius: 0;
+
+			&:focus {
+				z-index: 5;
+			}
 		}
 
 		.form-control {
-			border-bottom-left-radius: $input-border-radius;
-			border-top-left-radius: $input-border-radius;
+			@include media-breakpoint-up(md) {
+				border-bottom-left-radius: $input-border-radius;
+				border-top-left-radius: $input-border-radius;
+			}
 		}
 	}
 }
