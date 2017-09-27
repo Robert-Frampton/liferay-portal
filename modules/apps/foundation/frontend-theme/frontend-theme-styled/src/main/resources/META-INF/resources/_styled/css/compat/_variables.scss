@@ -2,6 +2,15 @@
 
 @import "clay/variables/icons";
 
+// Navbar
+
+$navbar-border-bottom-width: 0.0625rem !default;
+$navbar-border-left-width: 0 !default;
+$navbar-border-right-width: 0 !default;
+$navbar-border-top-width: 0 !default;
+
+$zindex-basic-search-close: 5 !default;
+
 // Mangagement bar
 
 $management-bar-border-bottom-width: 0.0625rem !default; // 1px
