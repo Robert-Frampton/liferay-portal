@@ -301,7 +301,7 @@
 			<var name="kbArticleAttachment" value="${kbArticleAttachment}" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="KnowledgeBaseArticle#ATTACHMENTS_INVALID_SIZE_ERROR" value1="Request is larger than ${maxFileSize} and could not be processed." />
+		<execute function="AssertTextEquals" locator1="KnowledgeBaseArticle#ATTACHMENTS_INVALID_SIZE_ERROR" value1="Request is larger than ${maxFileSize}KB and could not be processed." />
 
 		<execute macro="PortletEntry#publish" />
 	</command>
@@ -560,7 +560,9 @@
 
 		<execute function="SelectFrame" locator1="KnowledgeBaseSelectParent#SELECT_PARENT_DISPLAY_IFRAME" />
 
-		<execute function="AssertClick" locator1="KnowledgeBaseSelectParent#CHOOSE_FOLDER_BUTTON" value1="Choose" />
+		<execute function="AssertClick" locator1="KnowledgeBaseSelectParent#CHOOSE_FOLDER_BUTTON" value1="Choose">
+			<var name="key_kbFolderName" value="${kbFolderName}" />
+		</execute>
 
 		<execute function="SelectFrame" value1="relative=top" />
 
