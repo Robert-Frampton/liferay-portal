@@ -15,10 +15,8 @@
 package com.liferay.portal.servlet.filters.util;
 
 import com.liferay.portal.kernel.servlet.BrowserSniffer;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-
-import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,16 +35,16 @@ public class BrowserIdCacheFileNameContributor
 	public String getParameterValue(HttpServletRequest request) {
 		String browserId = ParamUtil.getString(request, "browserId");
 
-		if (_validBrowserIds.contains(browserId)) {
+		if (ArrayUtil.contains(_validBrowserIds, browserId)) {
 			return browserId;
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
-	private static final List<String> _validBrowserIds = Arrays.asList(
+	private static final String[] _validBrowserIds = {
 		BrowserSniffer.BROWSER_ID_EDGE, BrowserSniffer.BROWSER_ID_FIREFOX,
-		BrowserSniffer.BROWSER_ID_IE, BrowserSniffer.BROWSER_ID_OTHER);
+		BrowserSniffer.BROWSER_ID_IE, BrowserSniffer.BROWSER_ID_OTHER
+	};
 
 }
