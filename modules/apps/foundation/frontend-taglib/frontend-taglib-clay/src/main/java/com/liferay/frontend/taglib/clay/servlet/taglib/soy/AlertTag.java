@@ -46,7 +46,7 @@ public class AlertTag extends BaseClayTag {
 		return super.doStartTag();
 	}
 
-	public void setAutoclose(Boolean autoClose) {
+	public void setAutoClose(Boolean autoClose) {
 		putValue("autoClose", autoClose);
 	}
 
