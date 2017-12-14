@@ -61,3 +61,16 @@ renderResponse.setTitle(LanguageUtil.get(request, "compare-versions"));
 		targetVersion="<%= targetVersion %>"
 	/>
 </div>
+
+<div class="container-fluid-1280">
+	<liferay-frontend:diff-version-comparator-soy
+		availableLocales="<%= availableLocales %>"
+		diffHtmlResults="<%= diffHtmlResults %>"
+		diffVersionsInfo="<%= JournalUtil.getDiffVersionsInfo(groupId, articleId, sourceVersion, targetVersion) %>"
+		languageId="<%= languageId %>"
+		portletURL="<%= portletURL %>"
+		resourceURL="<%= resourceURL %>"
+		sourceVersion="<%= sourceVersion %>"
+		targetVersion="<%= targetVersion %>"
+	/>
+</div>

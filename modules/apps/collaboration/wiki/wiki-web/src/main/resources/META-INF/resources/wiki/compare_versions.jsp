@@ -72,3 +72,12 @@ if (portletTitleBasedNavigation) {
 	sourceVersion="<%= sourceVersion %>"
 	targetVersion="<%= targetVersion %>"
 />
+
+<liferay-frontend:diff-version-comparator-soy
+	diffHtmlResults="<%= diffHtmlResults %>"
+	diffVersionsInfo="<%= WikiUtil.getDiffVersionsInfo(nodeId, title, sourceVersion, targetVersion, request) %>"
+	portletURL="<%= portletURL %>"
+	resourceURL="<%= resourceURL %>"
+	sourceVersion="<%= sourceVersion %>"
+	targetVersion="<%= targetVersion %>"
+/>
