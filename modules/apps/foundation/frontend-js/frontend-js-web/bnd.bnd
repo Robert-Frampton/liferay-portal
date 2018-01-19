@@ -143,6 +143,7 @@ Liferay-Top-Head-JS-Resources:\
 	/liferay/events.js,\
 	/liferay/language.js,\
 	/liferay/liferay.js,\
+	/liferay/lazy.js,\
 	/liferay/util.js,\
 	\
 	/liferay/portal.js,\
