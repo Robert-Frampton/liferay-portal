@@ -8,6 +8,10 @@ AUI.add(
 		var STR_BLANK = '';
 
 		var STR_BOUNDING_BOX = 'boundingBox';
+		
+		var loadingAnimation = A.one('.loading-animation');
+
+		var hide = A.one('.hide');
 
 		var SearchContainer = A.Component.create(
 			{
@@ -64,7 +68,15 @@ AUI.add(
 						var id = instance.get('id');
 
 						var boundingBox = instance.get(STR_BOUNDING_BOX);
+						
+						if (loadingAnimation){
+							document.getElementsByClassName('loading-animation')[0].remove();
+						}
 
+						if(hide){
+							hide.removeClass('hide');
+						}
+						
 						instance._dataStore = A.one('#' + id + 'PrimaryKeys');
 						instance._emptyResultsMessage = A.one('#' + id + 'EmptyResultsMessage');
 
